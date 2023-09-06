@@ -1,41 +1,43 @@
 #include <stdio.h>
+#define MIN(a,b) ((a<b)?a:b)
+#define MAX(a,b) ((a>b)?a:b)
 
 int main() {
-	for (;;) {
-		int credit = 0;
-		int percent = 0;
-		int salary = 0;
-		int years = 0;
-		int start = 0;
+	int years = 20;
+	// Bob
+	int credit = 20000000;
+	int percent = 7;
+	int percent_active = 6;
+	int salary = 90000;
+	int start = 1000000;
+   	int expenses = 30000;
 
-	    printf("Credit: ");
-	    scanf("%d", &credit);
-	    //printf("Percent: ");
-	    //scanf("%d", &percent);  
-	    printf("Salary: ");
-	    scanf("%d", &salary);
-	    printf("years: ");
-	    scanf("%d", &years);
-	    printf("Start: ");
-	    scanf("%d", &start);
+   	credit = credit - start;
 
-	   	int expenses = 0;
-	   	int new_expenses = 0;
-	    do {
-	    	printf("Other expenses (0 to end):");
-	    	scanf("%d", &new_expenses);
-	    	expenses += new_expenses;
-	    } while(new_expenses != 0);
+    int bob_active = 0;
 
-	    credit = credit - start;
+    for (int i = 0; i != years; i++) {
+    	bob_active = bob_active - (int)(credit*percent/100);
+    	credit = credit - (credit + credit*percent/100)/((years-i));
+    	for (int n = 0; n != 12; n++) {
+    		bob_active = (bob_active + salary - expenses)*(1+percent_active/100);
+    	}
+    }
+    printf("Bob active = %d\n",bob_active);
 
-	    int sum = 0;
-	    int minus = credit / (12*years);
+    // alice
+	salary = 90000;
+	start = 1000000;
+   	expenses = 30000;
+   	percent_active = 6;
 
-	    for (int i = 0; i != years; i++) {
-	    	sum += (salary - expenses - minus);
-	    }
+    int alice_active = start;
 
-	    printf("Remainder = %d\n",sum);
-	}
+    for (int i = 0; i != years; i++) {
+    	for (int n = 0; n != 12; n++) {
+    		alice_active = (alice_active + salary - expenses)*(1+percent_active/100);
+    	}
+    }
+    printf("Alice active = %d\n", alice_active);
+    printf("Difference = %d\n", MAX(bob_active, alice_active) - MIN(bob_active, alice_active));
 }
