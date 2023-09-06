@@ -19,7 +19,8 @@ int main() {
 
     for (int i = 0; i != years; i++) {
     	bob_active = bob_active - (long)(credit*percent/100.0);
-    	credit = credit*(1+percent/100.0);
+    	credit = credit*(1+percent/100.0); 	
+    	bob_active = bob_active + (long)(credit/((years-i)));
     	credit = credit - credit/((years-i));
     	for (int n = 0; n != 12; n++) {
     		bob_active = (bob_active + salary - expenses)*(long)(1+percent_active/100.0);
