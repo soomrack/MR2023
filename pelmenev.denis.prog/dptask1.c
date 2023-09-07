@@ -14,9 +14,11 @@ double Perspective (char word) {
     double pp = p;
     double X = 0;
     double ppm;
+    double Xa;
     if (word == 'A') {
         ppm = rp;
         X = X0;
+        Xa = S*powf((1+infl), t);
     }
     else if (word == 'B') {
         ppm = (S-X0)*(st/12)/(1-powf((1+st/12), (1-t*12)));
@@ -33,6 +35,8 @@ double Perspective (char word) {
             pp = pp*(1+infl);
         };
     };
+    if (word == 'A')
+        X = X - Xa;
     return X;
 }
 
