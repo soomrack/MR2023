@@ -9,8 +9,8 @@ double infl = 0.07;
 double st = 0.09;
 int mw = 15000;
 
-double Bob (void) {
-    int Xb = S - X0;
+double Bob (double Ss) {
+    int Xb = Ss - X0;
     double ppm;
     ppm = Xb*(st/12)/(1-powf((1+st/12), (1-t*12)));
     int i = 0;
@@ -26,9 +26,9 @@ double Bob (void) {
     return zp;
 }
 
-double Alice (void) {
+double Alice (double Ss) {
     double Sa;
-    Sa = S*powf((1+infl), t);
+    Sa = Ss*powf((1+infl), t);
     double Xa = X0;
     int i = 0;
     double pp = p;
@@ -39,15 +39,16 @@ double Alice (void) {
         if ((i%12==0)&&(i>11)) {
             pp = pp*(1+infl);
         };
+    };
     Xa = Xa - Sa;
     return Xa;
-    }
 }
 
 int main(void) {
     double a, b;
-    a = Alice();
-    b = Bob();
-    printf("%2f\n", a, b, "\n");
+    a = Alice(S);
+    b = Bob(S);
+    printf("%2f\n", a, "\n");
+    printf("%2f\n", b, "\n");
     return 0;
 }
