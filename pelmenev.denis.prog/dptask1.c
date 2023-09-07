@@ -14,7 +14,7 @@ double Perspective (char word) {
     double pp = p;
     double X = 0;
     double ppm;
-    double Xa;
+    double Xa = 0;
     if (word == 'A') {
         ppm = rp;
         X = X0;
@@ -35,19 +35,17 @@ double Perspective (char word) {
             pp = pp*(1+infl);
         };
     };
-    if (word == 'A')
-        X = X - Xa;
+    X = X - Xa;
     return X;
 }
 
 int main(void) {
-    double a, b;
-    char c, d;
-    c = 'A';
-    d = 'B';
-    a = Perspective(c);
-    b = Perspective(d);
+    double a, b, c;
+    a = Perspective(65);
+    b = Perspective(66);
+    c = Perspective(67);
     printf("%2f\n", a, "\n");
     printf("%2f\n", b, "\n");
+    printf("%2f\n", c, "\n");
     return 0;
 }
