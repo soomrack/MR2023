@@ -7,7 +7,7 @@ const float ZP = 200000;
 
 float cap_bob(float traty, float proc_mes, float remont) // функция(траты боба в мес,ставка по ипотеке годовых, стоимость ремонта в мес)
 {
-	 float zp;
+	float zp;
 	proc_mes = proc_mes / 12;
 	float cap = 0;
 	float dolg_proc = 19000000 * (proc_mes * (powf(1 + proc_mes, 360)) / (powf(1 + proc_mes, 360) - 1));
@@ -19,7 +19,6 @@ float cap_bob(float traty, float proc_mes, float remont) // функция(тр�
 		{
 			remont = 0;
 		}
-
 		cap = (cap - dolg_proc - ((traty + remont) * powf(1 + (INFL / 12), i))) * (1 + (0.11 / 12));
 
 	}
@@ -38,7 +37,6 @@ float cap_alice(float traty, float arenda) //функция (траты элис
 	{
 		zp = ZP * powf(1 + INFL, i / 12);
 		cap += zp;
-
 		cap = (cap - ((traty + arenda) * powf(1 + (INFL / 12), i))) * (1 + (0.11 / 12));
 
 	}
@@ -49,12 +47,8 @@ float cap_alice(float traty, float arenda) //функция (траты элис
 
 
 int main()
-
 {
 	cap_bob(50000, 0.07, 10000);
-	cap_alice(50000,30000);
-	
-		
+	cap_alice(50000,30000);	
 	return 0;
-
 }
