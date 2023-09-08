@@ -51,8 +51,8 @@ float cap_alice(float traty, float arenda) //функция (траты элис
 int main()
 
 {
-	cap_bob(50, 0.07, 10);
-	cap_alice(50,30);
+	cap_bob(50000, 0.07, 10000);
+	cap_alice(50000,30000);
 	
 		
 	return 0;
