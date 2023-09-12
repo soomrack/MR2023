@@ -11,20 +11,23 @@ struct Holder {
 };
 
 double mortgage_calculus(double mortgage_debt, double mortgage_rate) {
+    // Mortgage monthly payment calculus using annuity loan scheme
     double coefficient = mortgage_rate / (1 - pow(1 + mortgage_rate, -HOLDING_YEARS * 12));
     double mortgage_payment = coefficient * mortgage_debt;
 
+    // Mortgage monthly payment output
     printf("Ежемесячная выплата Боба по ипотеке - %.2f рублей\n\n", mortgage_payment);
 
     return mortgage_payment;
 }
 
 int main() {
+    // Assuming that Bob bought the same apartment Alice wants to buy price-wise
     double mortgage_debt = APARTMENT_PRICE - 1000000.;
 
-    const double mortgage_rate = 0.07 / 12;  // monthly mortgage rate percentage
-    const double interest_rate = 1. + 0.09 / 12;  // monthly interest rate percentage
-    const double inflation_rate = 1.07;  // annually inflation rate percentage
+    const double mortgage_rate = 0.07 / 12;  // monthly mortgage rate
+    const double holding_rate = 1. + 0.09 / 12;  // monthly holding rate
+    const double inflation_rate = 1.07;  // annual inflation rate
 
     struct Holder alice, bob;
 
@@ -35,17 +38,18 @@ int main() {
     bob.account = 0.;
     alice.income = bob.income = 200000.;  // salary
     alice.outcome = 30000. + 15000. + 5000.;  // apartment rent + food + communal services
-    bob.outcome = mortgage_payment + 15000. + 5000.;  // ... + food + communal services
+    bob.outcome = mortgage_payment + 15000. + 5000.;  // mortgage payment + food + communal services
 
     for (int i = 0; i < HOLDING_YEARS * 12; i++) {
-        alice.account *= interest_rate;
+        alice.account *= holding_rate;
         alice.account += alice.income - alice.outcome;
 
-        bob.account *= interest_rate;
+        bob.account *= holding_rate;
         bob.account += bob.income - bob.outcome;
     }
 
-    alice.account -= APARTMENT_PRICE * pow(inflation_rate, HOLDING_YEARS);  // alice buys an overinflated house
+    // By the end of HOLDING_YEARS period Alice buys an apartment with a price that inflated over time
+    alice.account -= APARTMENT_PRICE * pow(inflation_rate, HOLDING_YEARS);
 
     // Results output
     printf("Итоговый капитал Алисы - %.2Lf рублей\n", alice.account);
