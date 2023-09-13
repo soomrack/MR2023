@@ -4,7 +4,7 @@
 
 int main(int argc, char * argv[]) // run this function with args : total amount of months - 1st arg, their other expenses - 2nd arg
 {
-    if (argc != 3) return 1;
+    if (argc != 3) return 1;  //  pass args when execute!!!
     int totalMonth = atoi(argv[1]);
     long otherExpenses = (long)atoi(argv[2]);
     struct Capital bob;
@@ -34,8 +34,8 @@ int main(int argc, char * argv[]) // run this function with args : total amount 
 
     //  defined Alice
 
-    long long int aliceTotalCapital = processFunction(&alice, totalMonth);
-    long long int bobTotalCapital = processFunction(&bob, totalMonth) + 20000000 * pow (1 + bob.inflation/100, 20);
+    long long int aliceTotalCapital = processFunction(&alice, totalMonth);  //  calculate Alice total capital after 20 years
+    long long int bobTotalCapital = processFunction(&bob, totalMonth) + 20000000 * pow (1 + bob.inflation/100, 20);  // calculate Bob capital
 
     printf("ALICE TOTAL CAPITAL %llu\n", aliceTotalCapital);
     printf("BOB TOTAL CAPITAL: %llu\n", bobTotalCapital);
