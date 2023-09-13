@@ -1,59 +1,103 @@
 #include <stdio.h>
 #include <math.h>
 
-#define APARTMENT_PRICE (20000000 * 100)
-#define HOLDING_YEARS 20
+typedef long long int kopeck;
+
+const kopeck APARTMENT_PRICE = 20 * 1000 * 1000 * 100;
+const int HOLDING_MONTHS = 20 * 12;
+
+const double MORTGAGE_RATE = 0.06, HOLDING_RATE = 0.09, INFLATION_RATE = 0.07;
 
 struct Holder {
-    long int account;  // current amount of stored money
-    long int income;  // salary (paid monthly)
-    long int outcome;  // apartment rent, mortgage payment, food and communal services (paid monthly)
+    kopeck capital;
+    kopeck earnings;
+    kopeck apartment_expenses;
+    kopeck food_expenses;
+    kopeck communal_expenses;
 };
 
-long int mortgage_calculus(const long int *mortgage_debt, const double *mortgage_rate) {
-    // Mortgage monthly payment calculus using annuity loan scheme
-    double coefficient = *mortgage_rate / (1 - pow(1. + *mortgage_rate, -HOLDING_YEARS * 12));
-    long int mortgage_payment = (long int) (coefficient * (double) *mortgage_debt);
 
-    // Mortgage monthly payment output
-    printf("Ежемесячная выплата Боба по ипотеке - %ld копеек\n\n", mortgage_payment);
+void print_mortgage_payment(const kopeck *mortgage_payment) {
+    printf("Ежемесячная выплата Боба по ипотеке - %lld копеек\n\n", *mortgage_payment);
+}
+
+
+void print_holding_results(struct Holder *Alice, struct Holder *Bob) {
+    printf("Итоговый капитал Алисы - %lld копеек\n", Alice->capital);
+    printf("Итоговый капитал Боба - %lld копеек\n", Bob->capital);
+}
+
+
+/**
+ * @brief Calculate monthly mortgage payment using annuity loan scheme (https://www.raiffeisen.ru/wiki/kak-rasschitat-annuitetnyj-platezh)
+ */
+kopeck calculate_mortgage_payment(const long int mortgage_debt) {
+    double coefficient = MORTGAGE_RATE / (12 * (1 - pow(1. + MORTGAGE_RATE / 12, -HOLDING_MONTHS)));
+    kopeck mortgage_payment = (long int) (coefficient * (double) mortgage_debt);
+
+    print_mortgage_payment(&mortgage_payment);
 
     return mortgage_payment;
 }
 
-int main() {
-    // Assuming that Bob bought the same apartment Alice wants to buy price-wise
-    const long int mortgage_debt = APARTMENT_PRICE - 1000000. * 100;
 
-    const double mortgage_rate = 0.07 / 12;  // monthly mortgage rate
-    const double holding_rate = 1. + 0.09 / 12;  // monthly holding rate
-    const double inflation_rate = 1.07;  // annual inflation rate
+/**
+ * @brief Insert holding data for both Alice and Bob into Holder struct instances
+ */
+void initialize_holders(struct Holder *Alice, struct Holder *Bob) {
+    kopeck alice_starting_capital = 1000 * 1000 * 100, bob_starting_capital = 0 * 100;
+    Alice->capital = alice_starting_capital;
+    Bob->capital = bob_starting_capital;
 
-    struct Holder alice, bob;
+    kopeck earnings = 200 * 1000 * 100;
+    Alice->earnings = Bob->earnings = earnings;
 
-    long int mortgage_payment = mortgage_calculus(&mortgage_debt, &mortgage_rate);  // mortgage monthly payment calculus
+    // By the start of the holding period Bob pays initially so his monthly mortgage payment decreases
+    const kopeck bob_mortgage_initial_payment = 1000 * 1000 * 100;
+    kopeck alice_apartment_expenses = 30 * 1000 * 100,
+            bob_apartment_expenses = calculate_mortgage_payment(APARTMENT_PRICE - bob_mortgage_initial_payment);
+    Alice->apartment_expenses = alice_apartment_expenses;
+    Bob->apartment_expenses = bob_apartment_expenses;
 
-    // Initializing structs
-    alice.account = 1000000 * 100;
-    bob.account = 0 * 100;
-    alice.income = bob.income = 200000 * 100;  // salary
-    alice.outcome = (30000 + 15000 + 5000) * 100;  // apartment rent + food + communal services
-    bob.outcome = mortgage_payment + (15000 + 5000) * 100;  // mortgage payment + food + communal services
+    kopeck food_expenses = 15 * 1000 * 100;
+    Alice->food_expenses = Bob->food_expenses = food_expenses;
 
-    for (int i = 0; i < HOLDING_YEARS * 12; i++) {
-        alice.account = (long int) ((double) alice.account * holding_rate);
-        alice.account += alice.income - alice.outcome;
+    kopeck communal_expenses = 5 * 1000 * 100;
+    Alice->communal_expenses = Bob->communal_expenses = communal_expenses;
+}
 
-        bob.account = (long int) ((double) bob.account * holding_rate);
-        bob.account += bob.income - bob.outcome;
+
+/**
+ * @brief Calculate Alice's and Bob's capitals after the holding period
+ */
+void calculate_holdings(struct Holder *Alice, struct Holder *Bob) {
+    for (int month = 0; month < HOLDING_MONTHS; month++) {
+        Alice->capital = (long int) ((double) Alice->capital * (1. + HOLDING_RATE / 12));
+        Alice->capital += Alice->earnings;
+        Alice->capital -= Alice->apartment_expenses;
+        Alice->capital -= Alice->food_expenses;
+        Alice->capital -= Alice->communal_expenses;
+
+        Bob->capital = (long int) ((double) Bob->capital * (1. + HOLDING_RATE / 12));
+        Bob->capital += Bob->earnings;
+        Bob->capital -= Bob->apartment_expenses;
+        Bob->capital -= Bob->food_expenses;
+        Bob->capital -= Bob->communal_expenses;
     }
 
-    // By the end of HOLDING_YEARS period Alice buys an apartment with a price that inflated over time
-    alice.account -= (long int) ((double) APARTMENT_PRICE * pow(inflation_rate, HOLDING_YEARS));
+    // By the end of the holding period Alice buys an apartment with a price that inflated over time
+    Alice->capital -= (long int) ((double) APARTMENT_PRICE * pow(1. + INFLATION_RATE, (int) (HOLDING_MONTHS / 12)));
 
-    // Results output
-    printf("Итоговый капитал Алисы - %ld копеек\n", alice.account);
-    printf("Итоговый капитал Боба - %ld копеек\n", bob.account);
+    print_holding_results(Alice, Bob);
+}
+
+
+int main() {
+    struct Holder Alice, Bob;
+
+    initialize_holders(&Alice, &Bob);
+
+    calculate_holdings(&Alice, &Bob);
 
     return 0;
 }
