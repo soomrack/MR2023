@@ -30,7 +30,7 @@ double calcBobApartmentFee(long debt, __uint8_t percent)
 }
 
 
-double processFunction(struct Capital * this, int totalMonthNum)
+long int processFunction(struct Capital * this, int totalMonthNum)
 {
     for (int i = 0; i < totalMonthNum; i++)
     {
