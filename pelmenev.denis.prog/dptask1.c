@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <math.h>
 
-int S = 2000000;
+int S = 20000000;
 int p = 200000;
 int X0 = 1000000;
 int t = 20;
 double infl = 0.07;
 double st = 0.09;
-int mw = 15000;
+int mw = 20000;
 int rp = 30000;
 
 double Perspective (char word) {
@@ -15,6 +15,7 @@ double Perspective (char word) {
     double X = 0;
     double ppm;
     double Xa = 0;
+    double mww = mw;
     if (word == 'A') {
         ppm = rp;
         X = X0;
@@ -27,12 +28,18 @@ double Perspective (char word) {
         printf("Who is this? \n");
         return 0;
     };
-    int i = 0;
+    int i = 1;
     while (i<t*12) {
         i+=1;
-        X = (X + pp - ppm - mw) * (1 + st/12);
-        if ((i%12==0)&&(i>11)) {
-            pp = pp*(1+infl);
+        X = (X + pp - ppm - mww) * (1 + st/12);
+        if ((i%2==0)&&(i>1)) {
+            mww = mww*(1+infl/6);
+            if ((i%12==0)&&(i>11)) {
+                pp = pp*(1+infl/2);
+                if (word == 'A') {
+                    ppm = ppm*(1+infl);
+                };
+            };
         };
     };
     X = X - Xa;
