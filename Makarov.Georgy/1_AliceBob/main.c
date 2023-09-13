@@ -31,9 +31,9 @@ void print_holding_results(struct Holder *Alice, struct Holder *Bob) {
 /**
  * @brief Calculate monthly mortgage payment using annuity loan scheme (https://www.raiffeisen.ru/wiki/kak-rasschitat-annuitetnyj-platezh)
  */
-kopeck calculate_mortgage_payment(const long int mortgage_debt) {
+kopeck calculate_mortgage_payment(const kopeck mortgage_debt) {
     double coefficient = MORTGAGE_RATE / (12 * (1 - pow(1. + MORTGAGE_RATE / 12, -HOLDING_MONTHS)));
-    kopeck mortgage_payment = (long int) (coefficient * (double) mortgage_debt);
+    kopeck mortgage_payment = (kopeck) (coefficient * (double) mortgage_debt);
 
     print_mortgage_payment(&mortgage_payment);
 
@@ -72,13 +72,13 @@ void initialize_holders(struct Holder *Alice, struct Holder *Bob) {
  */
 void calculate_holdings(struct Holder *Alice, struct Holder *Bob) {
     for (int month = 0; month < HOLDING_MONTHS; month++) {
-        Alice->capital = (long int) ((double) Alice->capital * (1. + HOLDING_RATE / 12));
+        Alice->capital = (kopeck) ((double) Alice->capital * (1. + HOLDING_RATE / 12));
         Alice->capital += Alice->earnings;
         Alice->capital -= Alice->apartment_expenses;
         Alice->capital -= Alice->food_expenses;
         Alice->capital -= Alice->communal_expenses;
 
-        Bob->capital = (long int) ((double) Bob->capital * (1. + HOLDING_RATE / 12));
+        Bob->capital = (kopeck) ((double) Bob->capital * (1. + HOLDING_RATE / 12));
         Bob->capital += Bob->earnings;
         Bob->capital -= Bob->apartment_expenses;
         Bob->capital -= Bob->food_expenses;
@@ -86,7 +86,7 @@ void calculate_holdings(struct Holder *Alice, struct Holder *Bob) {
     }
 
     // By the end of the holding period Alice buys an apartment with a price that inflated over time
-    Alice->capital -= (long int) ((double) APARTMENT_PRICE * pow(1. + INFLATION_RATE, (int) (HOLDING_MONTHS / 12)));
+    Alice->capital -= (kopeck) ((double) APARTMENT_PRICE * pow(1. + INFLATION_RATE, (int) (HOLDING_MONTHS / 12)));
 
     print_holding_results(Alice, Bob);
 }
