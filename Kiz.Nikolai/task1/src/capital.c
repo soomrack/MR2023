@@ -2,19 +2,19 @@
 #include "capital.h"
 
 
-void monthOperation(struct Capital *this, int monthNum)
+void monthOperation(Capital * this, int monthNum)
 {
-    this->currentCapital *= 1 + ((double)(this->interestRate)/100)/12;  // bank deposit income
+    this->currentCapital *= 1 + ((double)(this->interestRate/100))/12;  // bank deposit income
     this->currentCapital += this->monthlyIncome;  // payback
     this->currentCapital -= this->apartmentExpenses;  //  rent 
     this->currentCapital -= this->otherExpenses; // other
     if (monthNum + 1 % 12 == 0)  //  inflation changes
     {
-        this->monthlyIncome *= (1+ (double)(this->inflation)/100);
+        this->monthlyIncome *= (1+ (double)(this->inflation)/200); // we live in Russia, so payback is being indexed only on half of inflation level
         this->otherExpenses *= (1+ (double)(this->inflation)/100);
         if (this->name == "Alice")
         {
-            this->apartmentExpenses *= (1+ (double)(this->inflation)/100);
+            this->apartmentExpenses *= (1+ (double)(this->inflation)/100);  // rent is rising due to inflation
         }
     }
 }; // mothOperation function
@@ -29,7 +29,7 @@ double calcBobApartmentFee(long debt, __uint8_t percent)
 }
 
 
-long int processFunction(struct Capital * this, int totalMonthNum)
+long int processFunction(Capital * this, int totalMonthNum)
 {
     for (int i = 0; i < totalMonthNum; i++)
     {
