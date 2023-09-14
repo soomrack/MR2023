@@ -20,7 +20,7 @@ void monthOperation(Capital * this, int monthNum)
 }; // mothOperation function
 
 
-double calcBobApartmentFee(long debt, __uint8_t percent)
+double calcBobApartmentFee(long debt, const __uint8_t percent)
 {   
     double m = (1 +  (double)(percent)/100)/12;  
     __uint8_t n = 240; // number of month
@@ -29,7 +29,7 @@ double calcBobApartmentFee(long debt, __uint8_t percent)
 }
 
 
-long int processFunction(Capital * this, int totalMonthNum)
+long int processFunction(Capital * this, const int totalMonthNum)
 {
     for (int i = 0; i < totalMonthNum; i++)
     {
