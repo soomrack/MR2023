@@ -2,7 +2,7 @@
 #include <math.h>
 
 
-typedef long long int Money;  // рубли
+typedef long long int Money;  // рубли (для копеек не хватает места)
 
 
 struct Person
@@ -68,11 +68,13 @@ void estimate (char name)
 
     if (name == 'A') {
         Intermediary.capital = Intermediary.capital - Intermediary.overpayment;
+        Intermediary.overpayment = Intermediary.overpayment - PRICE;
+    } else {
+        Intermediary.overpayment = Intermediary.overpayment - PRICE + START_CAPITAL;
     };
-    Intermediary.overpayment = Intermediary.overpayment - PRICE;
     if (name == 'A') {
         Alice = Intermediary;
-    } else {
+    } else if (name == 'B') {
         Bob = Intermediary;
     };
     return;
@@ -83,6 +85,7 @@ int main(void)
 {
     estimate(65);
     estimate(66);
+    estimate(67);
     printf("A. Capital: %d\t", Alice.capital); printf("A. Income: %d\t", Alice.income); printf("A. Life spendings: "
     "%d\t", Alice.life_spendings); printf("A. Monthly payment: %d\t", Alice.monthly_payment); printf("A. Overpayment: " 
     "%d\n", Alice.overpayment);
