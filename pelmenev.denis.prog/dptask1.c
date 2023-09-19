@@ -24,7 +24,8 @@ const double BANK_RATE = 0.09;            // годовая ставка в ба
 const Money LIFE_SPENDINGS = 25 * 1000;   // траты на жизнь в рублях
 
 
-void preparation(char name)  // подготовка исходных данных для вычислений
+// подготовка исходных данных для вычислений
+void preparation(char name)
 {
     if (name == 'A') {
         Intermediary.monthly_payment = 40 * 1000;
@@ -42,7 +43,8 @@ void preparation(char name)  // подготовка исходных данны
 }
 
 
-void counting (int years)  // вычисления
+// вычисления
+void counting (int years)
 {
     for (int k = 1; k <= years * 12; k++) {
         Intermediary.capital = (Intermediary.capital + Intermediary.income - Intermediary.monthly_payment 
@@ -57,8 +59,11 @@ void counting (int years)  // вычисления
 }
 
 
-void estimate (char name) // окончательное формирование структуры-посредника и присваивание её значений главным структурам
+// окончательное формирование структуры-посредника и присваивание её значений главным структурам
+void estimate (char name)
 {
+    preparation(name);
+
     Intermediary.income = SALARY;
     Intermediary.life_spendings = LIFE_SPENDINGS;
     
