@@ -1,0 +1,111 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
+
+int main(void)
+{
+	system("chcp 1251 > nul");
+
+	long long int start = 2 * 1000 * 1000 * 100, asalary = 200 * 1000 * 100, bsalary = 200 * 1000 * 100; // все в копейках
+
+	int n = 30; // количество лет в рассмотрении
+
+	/* Вовина квартира стоила 20 000 000 рублей (не копеек). Он решил использовать аннутетную систему платежей,
+			то есть платить каждый месяц одинаковую сумму денжат, а именно 157 962 рублей (не копеек).
+			для справки: 10 процентов готовых и первый взнос 2 000 000 рублей (не копеек).
+			была использована какая-то программа в интернете.
+	*/ 
+
+	int years_for_repair = 2;
+	
+	int repair = 15 * 1000 * 100; // в копейках
+
+	long long int Avklad, Bvklad = 0;
+
+	long long int aflat, alife, blife1, blife2;
+
+	aflat = 100 * 1000 * 100; // она инфлюэнсер и живет на арбате
+	alife = 90 * 1000 * 100; // тратит деньги на модную одежду, косметологов, нутрициологов и ездит кадый сезон путешествовать
+	blife1 = 25 * 1000 * 100; // опять копейки
+	blife2 = 35 * 1000 * 100;
+
+	const long long int bflat = 157963 * 100;
+
+	int i, j;
+
+	double p_vklad = 1.05, p_inf = 1.07; // ежемесячная капитализация и ежегодная инфляция (+переиндексация зарплаты) в декабре каждого года 
+
+	// все про Алису
+	Avklad = start;
+	for (i = 1; i <= n; i++)
+	{
+		for (j = 1; j <= 12; j++)
+		{
+			Avklad = Avklad + asalary - aflat - alife;
+			Avklad *= p_vklad;
+			if (j == 12) 
+			{
+				aflat = aflat * p_inf;
+				alife = alife * p_inf;
+				asalary = asalary * p_inf;
+			}
+		}
+		// printf("номер года : %d сумма на вкладе у Алисы:  \t%lld\n", i, Avklad);
+	}
+	
+	// все про Вову
+	for (i = 1; i <= 3; i++)
+	{
+		for (j = 1; j <= 12; j++)
+		{
+			Bvklad = Bvklad + bsalary - bflat - blife1 - repair;
+			Bvklad *= p_vklad;
+			if (j == 12)
+			{
+				repair *= p_inf;
+				blife1 *= p_inf;
+				bsalary *= p_inf;
+			}
+		}
+		// printf("номер года : %d сумма на вкладе у Вовы: \t%lld\n", i, Bvklad);
+	}
+	for (i = 4; i <= 30; i++)
+	{
+		for (j = 1; j <= 12; j++)
+		{
+			Bvklad = Bvklad + bsalary - bflat - blife2;
+			Bvklad *= p_vklad;
+			if (j == 12)
+			{
+				blife2 *= p_inf;
+				bsalary *= p_inf;
+			}
+		}
+		// printf("номер года : %d сумма на вкладе у Вовы:\t%lld\n", i, Bvklad);
+	}
+
+	// небольшие корректировки и вывод промежуточных данных
+	printf("Алиса накопила сумму на счете: \t%.2lf\n", Avklad / 100.0);
+
+	printf("Капитал Алисы составил: \t%.2f\n", Avklad / 100.0);
+
+	printf("Володя накопил сумму на счете: \t%.2f\n", Bvklad / 100.0);
+
+	long double x;
+	x = pow(1.07, n);
+	printf("Капитал Володи составил: \t%.2f\n", Bvklad / 100.0 + x * 20 * 1000 * 1000);
+
+	// сравнение итоговых сумм на счете
+	if (Avklad > Bvklad)
+	{
+		printf("Алиса - молодец. Она накопила больше. А Володя ЛОШАРА!!!\n");
+	}
+	else
+	{
+		printf("Вова - молодец. Он накопил больше. А Алиса ЛОШАРА!!!\n");
+	}
+
+	printf("Разница в их капитале составила: %.2f", Avklad / 100.0 - (Bvklad / 100.0 + x * 20 * 1000 * 1000));
+
+	return 0;
+}
