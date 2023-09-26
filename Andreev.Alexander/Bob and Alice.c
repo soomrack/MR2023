@@ -1,14 +1,13 @@
 #include <stdio.h>
-#include <math.h>
 
 
 //переменные
 typedef long long int Money;  //копейки
 
-int MONTH = 240;  // месяцы
-double CREDITPERCENT = 0.07;  // процент по кредиту
-double m_koef = 0.07 / 12;  // коэфф расчета платежа
-double DEPOSIT = 0.09;  //проццент в банке
+const int MONTH = 240;  // месяцы
+const double CREDITPERCENT = 0.07;  // процент по кредиту
+const double m_koef = 0.07 / 12;  // коэфф расчета платежа
+const double DEPOSIT = 0.09;  //проццент в банке
 
 Money CREDIT = 19 * 1000 * 1000 * 100;  // сумма кредита
 Money CREDITPAYMENT;  //платеж по кредиту
