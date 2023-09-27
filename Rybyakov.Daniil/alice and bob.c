@@ -14,7 +14,7 @@ Money CREDITPAYMENT;  //платеж по кредиту
 Money FLAT = 20 * 1000 * 1000 * 100;  //стоимость квартиры
 
 
-struct Person 
+struct Person
 {
 	Money balance;  //кол-во денег после расходов на жизнь
 	Money bank;  //счте в банке
@@ -24,43 +24,6 @@ struct Person
 	double deposit;  //процент счета в банке
 };
 
-<<<<<<< HEAD
-struct Person Alice = { 0.0,  1 * 1000 * 1000 * 100,  0.0,  200 * 1000 * 100,  30 * 1000 * 100};
-struct Person Bob = {0.0,  0.0,  0.0,  200 * 1000 * 100,  0.0};
-
-
-Money creditpay(int credit, double m, int time) 
-{
-	int result;
-	result = credit * ((m * pow(1 + m, time)) / (pow(1 + m, time) - 1));  //платеж по кредиту
-	return result;
-}
-
-
-main()
-{
-	CREDITPAYMENT = creditpay(CREDIT, m_koef, MONTH);
-
-	Alice.balance = Alice.salary - Alice.rent;  // ежемесячный остаток денег
-	Bob.balance = Bob.salary - CREDITPAYMENT;  //ежемесячный остаток денег
-	Bob.bank = Bob.balance;
-
-		for (int i = 1; i <= MONTH; ++i)
-		{
-			Alice.bank += (Alice.bank * (DEPOSIT / 12));
-			Bob.bank += (Bob.bank * (DEPOSIT / 12));
-			Alice.bank -= Alice.bank * (0.07 / 12);
-			Bob.bank -= Bob.bank * (0.07 / 12);
-			Alice.bank += Alice.balance;
-			Bob.bank += Bob.balance;
-			FLAT += FLAT * (0.01 / 12);
-		}
-
-	Alice.total = Alice.bank / 100;
-	Bob.total = (Bob.bank + FLAT) / 100;
-
-	printf("%d   %d", Alice.total, Bob.total);
-=======
 struct Person Alice;
 struct Person Bob;
 
@@ -204,5 +167,4 @@ main()
 	final_Alice();
 	final_Bob();
 	result();
->>>>>>> c4b33d4801c02981fb57ce4437d9d7cbff90b1ea
 }
