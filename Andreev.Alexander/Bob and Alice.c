@@ -1,83 +1,80 @@
 #include <stdio.h>
+#include <math.h>
 
+// Объявление переменных
+typedef long long int Money;  // Для копеек
 
-//переменные
-typedef long long int Money;  //копейки
+const int MONTH = 240;  // Количество месяцев
+const double CREDITPERCENT = 0.07;  // Процент по кредиту
+const double M_KOEF = 0.07 / 12;  // Коэффициент расчета платежа
+const double DEPOSIT = 0.09;  // Процент по вкладу
+const double LOAN = 0.07;  // Процент по кредиту
 
-const int MONTH = 240;  // месяцы
-const double CREDITPERCENT = 0.07;  // процент по кредиту
-const double m_koef = 0.07 / 12;  // коэфф расчета платежа
-const double DEPOSIT = 0.09;  //проццент в банке
+Money CREDIT = 19 * 1000 * 1000 * 100;  // Сумма кредита
+Money CREDITPAYMENT;  // Платеж по кредиту
+Money FLAT = 20 * 1000 * 1000 * 100;  // Стоимость квартиры
 
-Money CREDIT = 19 * 1000 * 1000 * 100;  // сумма кредита
-Money CREDITPAYMENT;  //платеж по кредиту
-Money FLAT = 20 * 1000 * 1000 * 100;  //стоимость квартиры
-
-
-struct Person
+struct Person // Условия
 {
-	Money balance;
-	Money bank;
-	Money total;
-	Money salary;
-	Money rent;
+    Money balance;
+    Money bank;
+    Money total;
+    Money salary;
+    Money rent;
 };
 
-struct Person Alice = { 0,  1 * 1000 * 1000 * 100,  0,  200 * 1000 * 100,  30 * 1000 * 100 };
-struct Person Bob = { 0,  0,  0,  200 * 1000 * 100,  0 };
+struct Person Alice = { 0, 1 * 1000 * 100 * 100, 0, 200 * 1000 * 100, 30 * 1000 * 100 };
+struct Person Bob = { 0, 0, 0, 200 * 1000 * 100, 0 };
 
-
-Money creditpay()  //расчет платежа по кредиту
+Money creditpay()  // Расчет платежа по кредиту
 {
-	int result;
-	result = CREDIT * ((m_koef * pow(1 + m_koef, MONTH)) / (pow(1 + m_koef, MONTH) - 1));  //платеж по кредиту
-	return result;
+    int result;
+    result = CREDIT * ((M_KOEF * pow(1 + M_KOEF, MONTH)) / (pow(1 + M_KOEF, MONTH) - 1));  // Платеж по кредиту
+    return result;
 }
 
-
-int countAlice()  //расчет баланса алисы
+int countBob()
 {
-	for (int i = 0; i <= MONTH; ++i);
-	{
-		Alice.bank += Alice.bank * (DEPOSIT / 12);
-		Alice.bank -= Alice.bank * (0.07 / 12);
-		Alice.bank += Alice.balance;
-	}
-	return Alice.bank;
+    Bob.bank = 0; // Инициализируем банковский счет Bob
+    for (int i = 0; i <= MONTH; ++i)
+    {
+        Bob.bank += Bob.bank * (DEPOSIT / 12);
+        Bob.bank -= Bob.bank * (LOAN / 12);
+        Bob.bank += Bob.balance;
+    }
+    return Bob.bank;
 }
 
-
-int countBob()  //расчет баланса боба
+int countAlice()  // Расчет баланса Алисы
 {
-	for (int i = 0; i <= MONTH; ++i);
-	{
-		Bob.bank += Bob.bank * (DEPOSIT / 12);
-		Bob.bank -= Bob.bank * (0.07 / 12);
-		Bob.bank += Bob.balance;
-	}
-	return Bob.bank;
+    for (int i = 0; i <= MONTH; ++i)
+    {
+        Alice.bank += Alice.bank * (DEPOSIT / 12);
+        Alice.bank -= Alice.bank * (LOAN / 12);
+        Alice.bank += Alice.balance;
+    }
+    return Alice.bank;
 }
 
-
-int countFlat()  //расчет стоимости квартиры
+int countFlat()  // Расчет стоимости квартиры
 {
-	for (int i = 0; i <= MONTH; ++i);
-	{
-		FLAT += FLAT * (0.01 / 12);
-	}
-	return FLAT;
+    for (int i = 0; i <= MONTH; ++i)
+    {
+        FLAT += FLAT * (0.01 / 12);
+    }
+    return FLAT;
 }
 
-
-main()
+int main()
 {
-	CREDITPAYMENT = creditpay();
+    CREDITPAYMENT = creditpay();
 
-	Alice.balance = Alice.salary - Alice.rent;  // ежемесячный остаток денег
-	Bob.balance = Bob.salary - CREDITPAYMENT;  //ежемесячный остаток денег
+    Alice.balance = Alice.salary - Alice.rent;  // Ежемесячный остаток денег
+    Bob.balance = Bob.salary - CREDITPAYMENT;  // Ежемесячный остаток денег
 
-	Alice.total = countAlice() / 100;
-	Bob.total = (countBob() + countFlat()) / 100;
+    Alice.total = countAlice() / 100;
+    Bob.total = (countBob() + countFlat()) / 100;
 
-	printf("%d   %d", Alice.total, Bob.total);
+    printf("%lld   %lld", Alice.total, Bob.total);
+    return 0;
 }
