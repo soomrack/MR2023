@@ -1,4 +1,4 @@
-#define INIT_PERS(Name) struct Person* Name = init_pers(#Name); count_person += 1; person_list[count_person-1] = Name;
+#define INIT_PERS(Name) struct Person* Name = init_pers(#Name);
 #define name_is(n) (strcmp(pers->name, n) == 0)
 #define event(name, cost) void name(struct Person* pers) {add_bank_account(pers, cost);}
 

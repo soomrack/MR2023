@@ -9,7 +9,8 @@ event(dentist, -10000);
 event(premium, 40000);
 event(rent, -25000);
 event(eat, -15000);
-event(travel, -300000)
+event(travel, -300000);
+event(communal, -5000);
 
 void history(struct Person* pers) {
 	if (gmouth == 8 || gmouth == 2) dentist(pers);
@@ -18,7 +19,7 @@ void history(struct Person* pers) {
 	if (name_is("Bob") && gyear == 2026 && gmouth == 8) set_salary(pers, 100000);
 	if (have_property(pers, "Home")) percent_property(pers, "Home", 102);
 	if (have_property(pers, "UAZ-2121")) percent_property(pers, "UAZ-2121", 98);
-	if (!have_property(pers, "Home")) rent(pers);
+	(have_property(pers, "Home")) ? communal(pers) : rent(pers);
 	eat(pers);
 	if ((name_is("Bob") && gmouth == 3) || (name_is("Alice") && gyear%2 == 0 && gmouth == 3)) travel(pers);
 }

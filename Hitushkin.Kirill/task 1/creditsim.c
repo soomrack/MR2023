@@ -6,17 +6,30 @@
 int count_person = 0;
 
 struct Person* init_pers(char* name) {
+	if (count_person >= max_person) {
+		printf("_____________________________________________________________________\n");
+        printf("Too much person!\n");
+        exit(1);
+	}
 	struct Person* pers = (struct Person*) malloc(sizeof(struct Person));
+	if (pers == 0) {
+		printf("_____________________________________________________________________\n");
+        printf("Memory error!\n");
+        exit(1);
+	}
     pers->name = name;
     pers->bank_account = 0;
     pers->salary = 0;
     pers->count_credits = 0;
     pers->count_property = 0;
+    count_person += 1; 
+    person_list[count_person-1] = pers;
     return pers;
 }
 
 void deinit(){
 	for (int i=0; i<count_person; i++) free(person_list[i]);
+ 	count_person = 0;
 }
 
 void set_salary(struct Person* pers, int salary) {
@@ -134,7 +147,7 @@ void print_person_info(struct Person* pers){
 	printf("Salary: %lld\n", pers->salary);
     printf("Credit list:\n");
     for (int i=0; i<pers->count_credits; i++) 
-        printf("   Credit: %lld;  Percent: %d;  Years left: %d; Mounh left: %d.\n", 
+        printf("   Credit: %lld;  Percent: %d;  Years left: %d; Mouth left: %d.\n", 
         	pers->credit[i], pers->credit_percent[i], pers->credit_mouth[i]/12, pers->credit_mouth[i]%12);
     printf("Property list:\n");
     for (int i=0; i<pers->count_property; i++) 
@@ -171,8 +184,6 @@ void pass_to_date(int year, int mouth) {
 			}
 
     		pers->bank_account += pers->salary;
-			//active = active * 1 + inflation[i]/100.0;
-	    	//pers.salary = pers.salary * (1 + inflation[i]/100.0);
     	}
 		gmouth += 1;
 		if (gmouth == 13) {
