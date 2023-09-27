@@ -1,15 +1,15 @@
-/*Примеры усложнений:
-1. ставка в банке меняется
-2. зп в какой-то момент меняется (исчезает)
-3. Если на счёте больше 5 млн, то ставка по вкладу на 1% выше
-4. Раз в 10 лет они тратят 500000 на зубы 
+/*ГЏГ°ГЁГ¬ГҐГ°Г» ГіГ±Г«Г®Г¦Г­ГҐГ­ГЁГ©:
+1. Г±ГІГ ГўГЄГ  Гў ГЎГ Г­ГЄГҐ Г¬ГҐГ­ГїГҐГІГ±Гї
+2. Г§ГЇ Гў ГЄГ ГЄГ®Г©-ГІГ® Г¬Г®Г¬ГҐГ­ГІ Г¬ГҐГ­ГїГҐГІГ±Гї (ГЁГ±Г·ГҐГ§Г ГҐГІ)
+3. Г…Г±Г«ГЁ Г­Г  Г±Г·ВёГІГҐ ГЎГ®Г«ГјГёГҐ 5 Г¬Г«Г­, ГІГ® Г±ГІГ ГўГЄГ  ГЇГ® ГўГЄГ«Г Г¤Гі Г­Г  1% ГўГ»ГёГҐ
+4. ГђГ Г§ Гў 10 Г«ГҐГІ Г®Г­ГЁ ГІГ°Г ГІГїГІ 500000 Г­Г  Г§ГіГЎГ» 
 5. ...*/
 
 
 #include <stdio.h>
 #include <math.h>
 
-typedef long long int Money;// копейки
+typedef long long int Money;// ГЄГ®ГЇГҐГ©ГЄГЁ
 
 
 struct Person {
@@ -65,8 +65,8 @@ void simulation()
 
 
         bob_salary_income(year, month);
-        bob_deposite_income(year, month);
-        //bob_rent(year, month);
+        bob_rent_income(year, month);
+        //bob_deposite(year, month);
 
 
         ++month;
@@ -81,7 +81,7 @@ void simulation()
 
 
 
-void alice_salary_income(const int year, const int month) //чтобы прибавить зп Алисы и учесть непостоянность зп
+void alice_salary_income(const int year, const int month) //Г·ГІГ®ГЎГ» ГЇГ°ГЁГЎГ ГўГЁГІГј Г§ГЇ ГЂГ«ГЁГ±Г» ГЁ ГіГ·ГҐГ±ГІГј Г­ГҐГЇГ®Г±ГІГ®ГїГ­Г­Г®Г±ГІГј Г§ГЇ
 {
     if (year == 2024 && month == 10) 
     { 
@@ -97,14 +97,14 @@ void alice_salary_income(const int year, const int month) //чтобы прибавить зп А
 
 
 
-void alice_deposite_income(const int year, const int month) //прибавляет к счёту проценты с вложения Алисы
+void alice_deposite_income(const int year, const int month) //ГЇГ°ГЁГЎГ ГўГ«ГїГҐГІ ГЄ Г±Г·ВёГІГі ГЇГ°Г®Г¶ГҐГ­ГІГ» Г± ГўГ«Г®Г¦ГҐГ­ГЁГї ГЂГ«ГЁГ±Г»
 {
-    int percent_rate = 7; //процентная ставка
+    int percent_rate = 7; //ГЇГ°Г®Г¶ГҐГ­ГІГ­Г Гї Г±ГІГ ГўГЄГ 
     alice.bank_account += (Money)(alice.bank_account*(percent_rate / 100.0 / 12.0));
 }
 
 
-void alice_rent(const int year, const int mount)  //вычитает из счёта Алисы стоимость за квартиру
+void alice_rent(const int year, const int mount)  //ГўГ»Г·ГЁГІГ ГҐГІ ГЁГ§ Г±Г·ВёГІГ  ГЂГ«ГЁГ±Г» Г±ГІГ®ГЁГ¬Г®Г±ГІГј Г§Г  ГЄГўГ Г°ГІГЁГ°Гі
 {
     alice.bank_account -= 35000 * 100;
 }
@@ -117,17 +117,17 @@ void alice_food(const int year, const int mount)
 
 
 
-void bob_salary_income(const int year, const int mount) //чтобы прибавить зп Боба и учесть непостоянность зп
+void bob_salary_income(const int year, const int mount) //Г·ГІГ®ГЎГ» ГЇГ°ГЁГЎГ ГўГЁГІГј Г§ГЇ ГЃГ®ГЎГ  ГЁ ГіГ·ГҐГ±ГІГј Г­ГҐГЇГ®Г±ГІГ®ГїГ­Г­Г®Г±ГІГј Г§ГЇ
 {
     bob.bank_account += bob.salary;
 }
 
 
-void bob_deposite_income(const int year, const int mount) //прибавляет к счёту проценты с вложения Боба
+void bob_rent_income(const int year, const int mount) //ГЇГ°ГЁГЎГ ГўГ«ГїГҐГІ ГЄ Г±Г·ВёГІГі ГЇГ°Г®Г¶ГҐГ­ГІГ» Г± ГўГ«Г®Г¦ГҐГ­ГЁГї ГЃГ®ГЎГ 
 {
     
-    int total_month = Count_year * 12; //сколько всего месяцев платят кредит
-    double bet_mortgage = 0.07; //пр-я ставка за ипотеку
+    int total_month = Count_year * 12; //Г±ГЄГ®Г«ГјГЄГ® ГўГ±ГҐГЈГ® Г¬ГҐГ±ГїГ¶ГҐГў ГЇГ«Г ГІГїГІ ГЄГ°ГҐГ¤ГЁГІ
+    double bet_mortgage = 0.07; //ГЇГ°-Гї Г±ГІГ ГўГЄГ  Г§Г  ГЁГЇГ®ГІГҐГЄГі
     
     bob.bank_account -= (Money)(bob.bank_account* ((bet_mortgage / 12.0 * pow(1 + bet_mortgage / 12.0, total_month)) / (pow(1 + bet_mortgage / 12.0, total_month) - 1)));
 }
