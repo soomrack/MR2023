@@ -15,7 +15,7 @@ Money CREDITPAYMENT;  //платеж по кредиту
 Money FLAT = 20 * 1000 * 1000 * 100;  //стоимость квартиры
 
 
-struct Person
+struct Person 
 {
 	Money balance;
 	Money bank;
@@ -24,61 +24,39 @@ struct Person
 	Money rent;
 };
 
-struct Person Alice = { 0,  1 * 1000 * 1000 * 100,  0,  200 * 1000 * 100,  30 * 1000 * 100 };
-struct Person Bob = { 0,  0,  0,  200 * 1000 * 100,  0 };
+struct Person Alice = { 0.0,  1 * 1000 * 1000 * 100,  0.0,  200 * 1000 * 100,  30 * 1000 * 100};
+struct Person Bob = {0.0,  0.0,  0.0,  200 * 1000 * 100,  0.0};
 
 
-Money creditpay()  //расчет платежа по кредиту
+Money creditpay(int credit, double m, int time) 
 {
 	int result;
-	result = CREDIT * ((m_koef * pow(1 + m_koef, MONTH)) / (pow(1 + m_koef, MONTH) - 1));  //платеж по кредиту
+	result = credit * ((m * pow(1 + m, time)) / (pow(1 + m, time) - 1));  //платеж по кредиту
 	return result;
-}
-
-
-int countAlice()  //расчет баланса алисы
-{
-	for (int i = 0; i <= MONTH; ++i);
-	{
-		Alice.bank += Alice.bank * (DEPOSIT / 12);
-		Alice.bank -= Alice.bank * (0.07 / 12);
-		Alice.bank += Alice.balance;
-	}
-	return Alice.bank;
-}
-
-
-int countBob()  //расчет баланса боба
-{
-	for (int i = 0; i <= MONTH; ++i);
-	{
-		Bob.bank += Bob.bank * (DEPOSIT / 12);
-		Bob.bank -= Bob.bank * (0.07 / 12);
-		Bob.bank += Bob.balance;
-	}
-	return Bob.bank;
-}
-
-
-int countFlat()  //расчет стоимости квартиры
-{
-	for (int i = 0; i <= MONTH; ++i);
-	{
-		FLAT += FLAT * (0.01 / 12);
-	}
-	return FLAT;
 }
 
 
 main()
 {
-	CREDITPAYMENT = creditpay();
+	CREDITPAYMENT = creditpay(CREDIT, m_koef, MONTH);
 
 	Alice.balance = Alice.salary - Alice.rent;  // ежемесячный остаток денег
 	Bob.balance = Bob.salary - CREDITPAYMENT;  //ежемесячный остаток денег
+	Bob.bank = Bob.balance;
 
-	Alice.total = countAlice() / 100;
-	Bob.total = (countBob() + countFlat()) / 100;
+		for (int i = 1; i <= MONTH; ++i)
+		{
+			Alice.bank += (Alice.bank * (DEPOSIT / 12));
+			Bob.bank += (Bob.bank * (DEPOSIT / 12));
+			Alice.bank -= Alice.bank * (0.07 / 12);
+			Bob.bank -= Bob.bank * (0.07 / 12);
+			Alice.bank += Alice.balance;
+			Bob.bank += Bob.balance;
+			FLAT += FLAT * (0.01 / 12);
+		}
+
+	Alice.total = Alice.bank / 100;
+	Bob.total = (Bob.bank + FLAT) / 100;
 
 	printf("%d   %d", Alice.total, Bob.total);
 }
