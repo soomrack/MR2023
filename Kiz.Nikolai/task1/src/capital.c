@@ -1,6 +1,6 @@
 #include <math.h>
 #include "capital.h"
-
+#include <stdint.h>
 
 
 void bankDepositIncome(Capital * this)
