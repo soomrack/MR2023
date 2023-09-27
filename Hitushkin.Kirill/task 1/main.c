@@ -1,61 +1,51 @@
 #include <stdio.h>
-#define MIN(a,b) ((a<b)?a:b)
-#define MAX(a,b) ((a>b)?a:b)
+#include <string.h>
+#include "creditsim.h"
 
-struct person
-{
-	unsigned int credit;
-	unsigned int percent;
-	float percent_active;
-	unsigned int salary;
-	int start;
-   	unsigned int expenses;
-};
+int gmouth = 9;
+int gyear = 2023;
 
-double get_active(struct person pers, int years, int* inflation) {
-	unsigned int credit = 0;
-	if (pers.credit > pers.start) {
-		credit = pers.credit - pers.start;
-	}
+event(dentist, -10000);
+event(premium, 40000);
+event(rent, -25000);
+event(eat, -15000);
+event(travel, -300000)
 
-	double active = pers.start;
-	
-	for (int i = 0; i != years; i++) {
-		if (credit != 0) {
-			active = active - credit*pers.percent/100.0;
-			credit = credit*(1+pers.percent/100.0);
-			active = active + credit/(years-i);
-    		credit = credit - credit/(years-i);
-		}
-    	
-    	for (int n = 0; n != 12; n++) {
-    		active = (active + pers.salary - pers.expenses)*(1 + pers.percent_active/100.0);
-    	}
-
-    	active = active * 1 + inflation[i]/100.0;
-    	pers.salary = pers.salary * (1 + inflation[i]/100.0);
-    }
-    return active;
+void history(struct Person* pers) {
+	if (gmouth == 8 || gmouth == 2) dentist(pers);
+	if (name_is("Bob") && gmouth == 12) premium(pers);
+	(pers->bank_account > 2000000) ? percent_bank_account(pers, 102) : percent_bank_account(pers, 106);
+	if (name_is("Bob") && gyear == 2026 && gmouth == 8) set_salary(pers, 100000);
+	if (have_property(pers, "Home")) percent_property(pers, "Home", 102);
+	if (have_property(pers, "UAZ-2121")) percent_property(pers, "UAZ-2121", 98);
+	if (!have_property(pers, "Home")) rent(pers);
+	eat(pers);
+	if ((name_is("Bob") && gmouth == 3) || name_is("Alice") && gyear%2 == 0 && gmouth == 3) travel(pers);
 }
 
-int main() {
-	struct person bob = {20000000, 7, 0.7, 80000, 2000000, 78000};
-	struct person alice = {0, 0, 0.7, 80000, 2000000, 78000};
-	
-	int inflation[] = {7,6,4,2,6,3,4,1,4,6,2,7,6,4,2,6,3,4,1,4,6,2,7,6,4,2,6,3,4,1,4,6,2};
-	int years = 20;
+int main()
+{   
+    INIT_PERS(Bob);
+    set_salary(Bob, 80000);
+    add_bank_account(Bob, 2000000);
+    take_credit(Bob, 2000000, 7, 5);
+    buy_property(Bob, "Home", 3000000);
+    print_person_info(Bob);
 
-	if (years > (sizeof(inflation)/sizeof(inflation[0]))) {
-		printf("Error: out of range");
-		return -1;
-	}
+    INIT_PERS(Alice);
+    set_salary(Alice, 80000);
+    add_bank_account(Alice, 2000000);
+    print_person_info(Alice);
 
-	double bob_active = get_active(bob, years, inflation);
-	double alice_active = get_active(alice, years, inflation);
+    pass_time(2, 0);
+    buy_property(Alice, "Home", 2000000);
+    buy_property(Bob, "UAZ-2121", 200000);
+    print_all();
 
-	printf("Bob active = %f\n",bob_active);
-	printf("Alice active = %f\n", alice_active);
-    printf("Difference = %f\n", MAX(bob_active, alice_active) - MIN(bob_active, alice_active));
+    pass_to_date(2028, 9);
+    sold_property(Bob, "UAZ-2121");
+    print_all();
 
-	return 0;
+    deinit();
+    return 0;
 }
