@@ -103,6 +103,7 @@ void Bob_free_mooney()
 	Bob.balance = Bob.salary - CREDITPAYMENT;  //ежемесячный остаток денег
 }
 
+
 void count_Alice(int now_year, int now_month)  //расчет баланса алисы
 {
 	int year = 0;
