@@ -30,6 +30,8 @@ struct Person* init_pers(char* name) {
 void deinit(){
 	for (int i=0; i<count_person; i++) free(person_list[i]);
  	count_person = 0;
+ 	printf("_____________________________________________________________________\n");
+	printf("All person delete.\n");
 }
 
 void set_salary(struct Person* pers, int salary) {
