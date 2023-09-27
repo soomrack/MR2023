@@ -40,7 +40,7 @@ cents bob_init(){
 void alise_add_salary(){
     int salary_change;
     salary_change = 0; // здесь можно поменять переключатель или придумать ввод
-    scanf("%d \n",salary_change);
+    //scanf("%d \n",salary_change);
     if(salary_change){
         scanf("%li \n", Alise.salary); 
     }
@@ -72,13 +72,13 @@ void bob_payment(cents payment){
 }
 
 void alise_spend_for_life(year,month){
-    static cents life_exp = 30*1000*10;
+    static cents life_exp = 30*1000*100;
     Alise.bank_acc -= life_exp;
     life_exp *= (INFLATION+1);
 }
 
 void bob_spend_for_life(year,month){
-    static cents life_exp = 30*1000*10;
+    static cents life_exp = 30*1000*100;
     Bob.bank_acc -= life_exp;
     life_exp *= (INFLATION/12 + 1);
 }
@@ -86,7 +86,7 @@ void bob_spend_for_life(year,month){
 void alise_extra_spend(int year,int month){
     int voyage_to_eu =0;
     if(voyage_to_eu){
-        cents voyage_cost;
+        cents voyage_cost = 500*1000*1000*100;
         scanf("%li \n", voyage_cost);
         Alise.bank_acc -= voyage_cost;
     }
