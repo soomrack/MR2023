@@ -48,6 +48,9 @@ void buy_property(struct Person* pers, char* name, Money property) {
     if (pers->count_property == max_property) {
     	printf("_____________________________________________________________________\n");
         printf("Too much property!\n");
+    } else if (pers->bank_account < property) {
+    	printf("_____________________________________________________________________\n");
+        printf("Not enough money to buy %s!\n", name);
     } else {
         pers->count_property += 1;
         pers->property[pers->count_property-1] = property;

@@ -20,7 +20,7 @@ void history(struct Person* pers) {
 	if (have_property(pers, "UAZ-2121")) percent_property(pers, "UAZ-2121", 98);
 	if (!have_property(pers, "Home")) rent(pers);
 	eat(pers);
-	if ((name_is("Bob") && gmouth == 3) || name_is("Alice") && gyear%2 == 0 && gmouth == 3) travel(pers);
+	if ((name_is("Bob") && gmouth == 3) || (name_is("Alice") && gyear%2 == 0 && gmouth == 3)) travel(pers);
 }
 
 int main()
