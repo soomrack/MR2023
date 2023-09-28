@@ -3,19 +3,19 @@
 #include<string.h>
 #include<math.h>
 
-
-typedef long long int Money;
+	
+typedef long long int Money;  // копейки
 
 struct Person {
 	Money bank_account;
 	int bank_account_pp;
 	Money salary;
 	Money rent;
-	char name[5];
+	char name[6];
 	double inflation_pp;
 	Money house_price;
 	Money intal_fee;
-	Money expenses;
+	Money expenses;  // траты на еду, коммунальные платежи, одежду
 	double mortgage_pp;
 	Money monthly_payment;
 };
@@ -45,7 +45,7 @@ void bob_init()
 	bob.inflation_pp = 7;
 	bob.house_price = 20 * 1000 * 1000 * 100;
 	strcpy(bob.name, "Bob");
-	bob.intal_fee = 1000 * 1000 * 100;
+	bob.first_fee = 1000 * 1000 * 100;
 	bob.expenses = 10 * 1000 * 100;
 	bob.mortgage_pp = 7;
 	bob.monthly_payment = 0;
@@ -92,12 +92,12 @@ void alice_expenses(const int year, const int month)
 
 
 void bob_monthly_payment(const int year, const int month)
-{
-	 int month_mortgage = 30 * 12;
-	 Money monthly_installment = ((bob.house_price - bob.intal_fee) * (bob.mortgage_pp * 0.01 / 12) *
+
+	 int month_mortgage = 30 * 12;  // общее количество месяцев ипотеки
+	 Money monthly_installment = ((bob.house_price - bob.first_fee) * (bob.mortgage_pp * 0.01 / 12) *
 		pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage))) /
-		(pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage)) - 1.0);
-	 bob.bank_account -= bob.intal_fee;
+		(pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage)) - 1.0);  // формула аннуитетного платежа по ипотеке
+	 bob.bank_account -= bob.first_fee;
 	 bob.monthly_payment = monthly_installment;
 }
 
@@ -136,17 +136,16 @@ void simulation()
 	bob_monthly_payment(year,month);
 	
 
-	while (!(year  == 2053 && month == 9))
-	{
+	while (!(year  == 2053 && month == 9)) {
 
 		alice_deposite_income(year, month);
 		alice_salary_income(year, month);
 		alice_rent(year, month);
-		alice_expenses(year, month);
+		alice_expenses(year, month);  // траты на еду, коммунальные платежи, одежду
 
 		bob_deposite_income(year, month);
 		bob_salary_income(year, month);
-		bob_expenses(year, month);
+		bob_expenses(year, month);  // траты на еду, коммунальные платежи, одежду
 		bob_house_price(year, month);
 
 		++month;
