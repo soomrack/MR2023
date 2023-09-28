@@ -105,7 +105,7 @@ void bob_expenses(const int year, const int month)
     bob.bank_account -= bob.expenses;  // формула расчёта месячных расходов Боба
 }
 
-void inflation(const int year, const int month)  // расчёт годовой инфляции
+void inflation(const int year, const int month)  // расчёт месячной инфляции
 {
     alice.salary *= (1 + alice.inflation_pp / 100 / 12);
     alice.expenses *= (1 + alice.inflation_pp / 100 / 12);
