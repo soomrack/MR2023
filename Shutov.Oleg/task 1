@@ -33,7 +33,6 @@ void alice_init()
     alice.house_price = 0;
     strcpy_s(alice.name, "Alice");
     alice.expenses = 25 * 1000 * 100;
-    alice.capital = alice.bank_account + alice.house_price;
 }
 
 void bob_init()
@@ -48,8 +47,7 @@ void bob_init()
     bob.term = 30; 
     strcpy_s(bob.name, "Bob"); 
     bob.expenses = 25 * 1000 * 100; 
-    bob.annuity_payment = bob.house_price - bob.first_payment;
-    bob.capital = bob.bank_account + bob.house_price;
+    bob.annuity_payment = bob.first_payment;
 }
 
 void alice_deposite_income(const int year, const int month)
@@ -68,6 +66,9 @@ void alice_salary_income(const int year, const int month)
     alice.bank_account += alice.salary;  // Функция начисления зарплаты
     if (month == 12) {
         alice.bank_account += alice.salary;  // 13-ая зарплата
+    }
+    if (month == 1) {
+        alice.salary += (Money)(alice.salary * alice.inflation_pp / 100.0);  // индексация зарплаты
     }
 }
 
@@ -92,12 +93,18 @@ void bob_salary_income(const int year, const int month)
     if (month == 12) {
         bob.bank_account += bob.salary;  // 13-ая зарплата
     }
+    if (month == 1) {
+        bob.salary += (Money)(bob.salary * bob.inflation_pp / 100.0);  // индексация зарплаты
+    }
 }
 
 void bob_mortgage(const int year, const int month)  // формула рассчета ипотечного платежа Боба
 {
-    bob.annuity_payment = bob.annuity_payment * bob.mortgage_pp / 100 / (1 - (1 + bob.mortgage_pp / 100) ^ (-(bob.term * 12)));
+    int srok = bob.term * 12;
+    bob.house_price -= bob.annuity_payment;
+    bob.annuity_payment = bob.house_price * (bob.mortgage_pp / 100) / (1 - (1 + bob.mortgage_pp / 100) ^ (-srok));
     bob.bank_account -= bob.annuity_payment;
+    srok -= 1;
 }
 
 void bob_expenses(const int year, const int month)
@@ -107,22 +114,13 @@ void bob_expenses(const int year, const int month)
 
 void inflation(const int year)  // расчёт годовой инфляции
 {
-    alice.salary += (Money)(alice.salary * alice.inflation_pp / 100.0);
     alice.expenses += (Money)(alice.expenses * alice.inflation_pp / 100.0);
     alice.house_price += (Money)(alice.house_price * alice.inflation_pp / 100.0);
     alice.rent += (Money)(alice.rent * alice.inflation_pp / 100.0);
     
-    bob.salary += (Money)(bob.salary * bob.inflation_pp / 100.0);
     bob.expenses += (Money)(bob.expenses * bob.inflation_pp / 100.0);
     bob.house_price += (Money)(bob.house_price * bob.inflation_pp / 100.0);
-    bob.rent += (Money)(bob.rent * bob.inflation_pp / 100.0);
  }
-
-void capital(const int year)  // расчёт общего капитала Боба и Алисы
-{
-    alice.capital = alice.bank_account + alice.house_price;
-    bob.capital = bob.bank_account + bob.house_price;
-}
 
 void print_person(const struct Person person)  // Функция для вывода данных по человеку в рублях
 {
@@ -144,9 +142,9 @@ void simulation()  // функция хода времени
         bob_mortgage(year, month);
         bob_expenses(year, month);
 
-        inflation(year);
-        capital(year);
-
+        if (month == 1) {
+            inflation(year);
+        }
         ++month;
         if (month == 13) {
             month = 1;
