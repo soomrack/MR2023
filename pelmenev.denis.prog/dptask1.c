@@ -2,7 +2,7 @@
 #include <math.h>
 
 
-typedef long long int Money;  // рубли (для копеек не хватает места)
+typedef long long int Money;  // копейки
 
 
 struct Person
@@ -12,88 +12,197 @@ struct Person
     Money life_spendings;      // траты на существование
     Money monthly_payment;     // траты на квартиру (проживание или погашение ипотеки)
     Money overpayment;         // переплата при покупке квартиры
-} Alice, Bob, Intermediary;    // создание структур для Элис и Боба, а также структуры-посредника
+};                             
 
 
-const Money PRICE = 20 * 1000 * 1000;     // стоимость квартиры в рублях
-const Money SALARY = 200 * 1000;          // зарплата каждого в рублях
-const Money START_CAPITAL = 1000 * 1000;  // стартовый капитал каждого в рублях
-const int YEARS = 20;
-const double INFLATION = 0.07;            // процент инфляции в год
-const double BANK_RATE = 0.09;            // годовая ставка в банке
-const Money LIFE_SPENDINGS = 25 * 1000;   // траты на жизнь в рублях
+// создание структур для Элис и Боба
+struct Person Alice;
+struct Person Bob;
 
 
-// подготовка исходных данных для вычислений
-void preparation(char name)
+const Money PRICE = 20 * 1000 * 1000 * 100;     // стоимость квартиры в копейках
+const Money SALARY = 200 * 1000 * 100;          // зарплата каждого в копейках
+const Money START_CAPITAL = 1000 * 1000 * 100;  // стартовый капитал каждого в копейках
+const int YEARS = 20;                           
+const double INFLATION = 0.07;                  // сотая процента инфляции в год 
+double BANK_RATE = 0.09;                        // сотая годовой ставки в банке
+const Money LIFE_SPENDINGS = 25 * 1000 * 100;   // траты на жизнь в копейках
+const int START_MONTH = 9;                      // начальные временные условия
+const int START_YEAR = 2023;
+const int LAST_MONTH = 8;
+
+
+void alice_init()
 {
-    if (name == 'A') {
-        Intermediary.monthly_payment = 40 * 1000;
-        Intermediary.capital = START_CAPITAL;
-        Intermediary.overpayment = PRICE * powf((1 + INFLATION), YEARS);
-    } else if (name == 'B') {
-        Intermediary.monthly_payment = (PRICE - START_CAPITAL) * (BANK_RATE / 12) / (1 - powf((1 + BANK_RATE / 12), (1 - YEARS * 12)));
-        Intermediary.capital = 0;
-        Intermediary.overpayment = Intermediary.monthly_payment * 12 * YEARS;
-    } else {
-        printf("Who is this? \n");
+    Alice.income = SALARY;
+    Alice.capital = START_CAPITAL;
+    Alice.life_spendings = LIFE_SPENDINGS;
+    Alice.monthly_payment = 40 * 1000 * 100;
+    Alice.overpayment = PRICE * powf((1.0 + INFLATION), YEARS) - PRICE;
+}
+
+
+void alice_salary_income(const int year, const int month)
+{
+    if (month == 11) {
         return;
     };
-    return;
+    Alice.capital += Alice.income;
 }
 
 
-// вычисления
-void counting (int years)
+void alice_deposite_income(const int year, const int month)
 {
-    for (int k = 1; k <= years * 12; k++) {
-        Intermediary.capital = (Intermediary.capital + Intermediary.income - Intermediary.monthly_payment 
-        - Intermediary.life_spendings) * (1 + BANK_RATE / 12);
-        if ((k % 3 == 0) && (k > 2)) {
-            Intermediary.life_spendings = Intermediary.life_spendings * (1 + INFLATION / 4);
-            if ((k % 12 == 0) && (k > 11)) {
-                Intermediary.income = Intermediary.income * (1 + INFLATION / 2);
-            };
+    if (year == START_YEAR && month == START_MONTH) {
+        return;
+    };
+    if (year == 2033 && month == 1) {
+        BANK_RATE = 0.1;
+    };
+    Alice.capital = Alice.capital * (1.0 + BANK_RATE / 12.0);
+}
+
+
+void alice_life_spending(const int year, const int month)
+{
+    if (month == 12) {
+        Alice.capital -= Alice.life_spendings * 0.5;
+    };
+    Alice.capital -= Alice.life_spendings;
+}
+
+
+void alice_rent_payment(const int year, const int month)
+{
+    Alice.capital -= Alice.monthly_payment;
+}
+
+
+void bob_init()
+{
+    Bob.income = SALARY;
+    Bob.capital = 0;
+    Bob.life_spendings = LIFE_SPENDINGS;
+    Bob.monthly_payment = (PRICE - START_CAPITAL) * (BANK_RATE / 12.0) / (1 - powf((1 + BANK_RATE / 12.0), (1.0 - YEARS * 12.0)));
+    Bob.overpayment = Bob.monthly_payment * 12 * YEARS - PRICE;
+}
+
+
+void bob_salary_income(const int year, const int month)
+{
+    if (month == 12) {
+        Bob.capital += (Money)(Bob.income * 1.2);
+    };
+    Bob.capital += Bob.income;
+}
+
+
+void bob_deposite_income(const int year, const int month)
+{
+    if (year == 2033 && month == 1) {
+        BANK_RATE = 0.1;
+    };
+    Bob.capital = Bob.capital * (1.0 + BANK_RATE / 12.0); 
+}
+
+
+void bob_life_spending(const int year, const int month)
+{
+    if (month == 12) {
+        Bob.capital -= Bob.life_spendings * 0.5;
+    };
+    Bob.capital -= Bob.life_spendings;
+}
+
+
+void bob_mortgage_payment(const int year, const int month)
+{
+    Bob.capital -= Bob.monthly_payment;
+}
+
+
+void goods_inflation(const int year, const int month)
+{
+    if (month % 3 == 0 && month > 2) {
+        Alice.life_spendings += Alice.life_spendings * INFLATION / 4.0;
+        Bob.life_spendings += Bob.life_spendings * INFLATION / 4.0;
+    };
+}
+
+
+void real_estate_inflation(const int year, const int month)
+{
+    if (month == 12) {
+        Alice.monthly_payment = Alice.monthly_payment * (1.0 + INFLATION / 2.0);
+    };
+}
+
+
+void salary_inflation(const int year, const int month)
+{
+    if (month == 12) {
+        Alice.income = Alice.income * (1.0 + INFLATION / 2.0);
+        Bob.income = Bob.income * (1.0 + INFLATION / 2.0);
+    };
+}
+
+
+void simulation()
+{
+    int month = START_MONTH;
+    int year = START_YEAR;
+    int last_year = START_YEAR + YEARS;
+
+    while(!(year == last_year && month == LAST_MONTH)) {
+
+        alice_deposite_income(year, month);
+        alice_salary_income(year, month);
+        alice_life_spending(year, month);
+        alice_rent_payment(year, month);
+
+        bob_deposite_income(year, month);
+        bob_salary_income(year, month);
+        bob_life_spending(year, month);
+        bob_mortgage_payment(year, month);
+
+        goods_inflation(year, month);
+        salary_inflation(year, month);
+        real_estate_inflation(year, month);
+
+        month++;
+        if (month > 12) {
+            year++;
+            month -= 12;
+            printf("Happy New Year \n");  // DEBUG
         };
-    };
+        
+    }
 }
 
 
-// окончательное формирование структуры-посредника и присваивание её значений главным структурам
-void estimate (char name)
+void print_persons()
 {
-    preparation(name);
-
-    Intermediary.income = SALARY;
-    Intermediary.life_spendings = LIFE_SPENDINGS;
-    
-    counting(YEARS);
-
-    if (name == 'A') {
-        Intermediary.capital = Intermediary.capital - Intermediary.overpayment;
-        Intermediary.overpayment = Intermediary.overpayment - PRICE;
-    } else {
-        Intermediary.overpayment = Intermediary.overpayment - PRICE + START_CAPITAL;
-    };
-    if (name == 'A') {
-        Alice = Intermediary;
-    } else if (name == 'B') {
-        Bob = Intermediary;
-    };
-    return;
+    printf("A. Capital: %lld\t", Alice.capital);
+    printf("A. Income: %lld\t", Alice.income);
+    printf("A. Life spendings: %lld\t", Alice.life_spendings); 
+    printf("A. Monthly payment: %lld\t", Alice.monthly_payment); 
+    printf("A. Overpayment: %lld\n", Alice.overpayment);
+    printf("B. Capital: %lld\t", Bob.capital); 
+    printf("B. Income: %lld\t", Bob.income); 
+    printf("B. Life spendings: %lld\t", Bob.life_spendings); 
+    printf("B. Monthly payment: %lld\t", Bob.monthly_payment); 
+    printf("B. Overpayment: %lld\n", Bob.overpayment);
 }
 
 
-int main(void) 
+int main() 
 {
-    estimate(65);
-    estimate(66);
-    estimate(67);
-    printf("A. Capital: %d\t", Alice.capital); printf("A. Income: %d\t", Alice.income); printf("A. Life spendings: "
-    "%d\t", Alice.life_spendings); printf("A. Monthly payment: %d\t", Alice.monthly_payment); printf("A. Overpayment: " 
-    "%d\n", Alice.overpayment);
-    printf("B. Capital: %d\t", Bob.capital); printf("B. Income: %d\t", Bob.income); printf("B. Life spendings: "
-    "%d\t", Bob.life_spendings); printf("B. Monthly payment: %d\t", Bob.monthly_payment); printf("B. Overpayment: " 
-    "%d\n", Bob.overpayment);
+    alice_init();
+    bob_init();
+
+    simulation();
+
+    print_persons();
+
     return 0;
 }
