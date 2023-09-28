@@ -2,18 +2,18 @@
 #include <string.h>
 
 
-typedef long long int Money;
+typedef long long int Money; // kopeiki
 
 
 struct Hero {
-    Money start_capital;
-    Money income;
-    int monthly_expenses;
+    Money bank_account;
+    Money salary;
+    int monthly_expenses; // food, utilities
     double infl_procent;
     Money apartment_fee;
     Money apartment_price;
     int bank_pp;
-    Money monthly_installment;
+    Money mortgage_payment;
     char name[6];
 };
 
@@ -23,28 +23,28 @@ struct Hero Bob;
 
 void Alice_init()
 {
-    Alice.start_capital = 1000 * 1000 * 100;
-    Alice.income = 200 * 1000 * 100;
-    Alice.monthly_expenses = 90 * 1000 * 100;
+    Alice.bank_account = 1000 * 1000 * 100;
+    Alice.salary = 200 * 1000 * 100;
+    Alice.monthly_expenses = 60 * 1000 * 100; 
     Alice.infl_procent = 7.0; 
     Alice.apartment_fee = 30 * 1000 * 100;
     Alice.apartment_price = 0;
     Alice.bank_pp = 11.0;
-    Alice.monthly_installment = 0;
+    Alice.mortgage_payment = 0; 
     strcpy(Alice.name, "Alice");
 }
 
 
 void Bob_init()
 {
-    Bob.start_capital = 1000 * 1000 * 100;
-    Bob.income = 200 * 1000 * 100;
+    Bob.bank_account = 1000 * 1000 * 100;
+    Bob.salary = 200 * 1000 * 100;
     Bob.monthly_expenses = 60 * 1000 * 100;
     Bob.infl_procent = 7.0;
     Bob.apartment_fee = 0;
     Bob.apartment_price = 20 * 1000 * 1000 * 100;
     Bob.bank_pp = 7.0;
-    Bob.monthly_installment = 126407047; 
+    Bob.mortgage_payment = 126407047; 
     strcpy(Bob.name, "Bob");
 }
 
@@ -52,65 +52,78 @@ void Bob_init()
 void print_hero(const struct Hero hero)
 {
     printf("$s:\n", hero.name);
-    Money capital = hero.start_capital + hero.apartment_price;
+    Money capital = hero.bank_account + hero.apartment_price;
     printf("  capital = %lld rub, %lld kop\n", (Money)(capital / 100), capital % 100);
     printf("\n");
 }
 
+
 void Alice_deposite_income(const int year, const int month)
 {
-    Alice.start_capital += (Money)(Alice.start_capital * Alice.bank_pp / 100.0 / 12.0);
+    Alice.bank_account += (Money)(Alice.bank_account * Alice.bank_pp / 100.0 / 12.0);
 }
 
 
 void Alice_apartment_fee(const int year, const int month)
 {
-    Alice.start_capital -= Alice.apartment_fee;
+    Alice.bank_account -= Alice.apartment_fee;
 }
 
 
-void Alice_income(const int year, const int month)
+void Alice_salary(const int year, const int month)
 {
     if (month == 12) {
-        Alice.income = (Money)(Alice.income * (Alice.infl_procent / 100));
+        Alice.salary = (Money)(Alice.salary * (Alice.infl_procent / 100));
     }
 
-    Alice.start_capital += Alice.income;
+    Alice.bank_account += Alice.salary;
 }
 
 
 void Bob_deposite_income(const int year, const int month)
 {
-    Bob.start_capital += (Money)(Bob.start_capital * Bob.bank_pp / 100.0 / 12.0);
+    Bob.bank_account += (Money)(Bob.bank_account * Bob.bank_pp / 100.0 / 12.0);
 }
 
-void Bob_mortgage_repayment(const int year, const int month)
+
+void Bob_mortgage_payment(const int year, const int month)
 {
-    Bob.start_capital -= Bob.monthly_installment;
+    Bob.bank_account -= Bob.mortgage_payment;
 }
 
-void Bob_income(const int year, const int month)
+
+void Bob_salary(const int year, const int month)
 {
     if (month == 12) {
-       Bob.income = (Money)(Bob.income * (Bob.infl_procent / 100));
+       Bob.salary = (Money)(Bob.salary * (Bob.infl_procent / 100));
     }
 
-    Bob.start_capital += Bob.income;
+    Bob.bank_account += Bob.salary;
 }
 
 
-void total()
+void Bob_apartment_price(const int year, const int month)
+{
+    if (month == 12) {
+        Bob.apartment_price = (Money)(Bob.apartment_price * (Bob.infl_procent / 100));
+    }
+
+}
+
+
+void simulation()
 {
     int month = 1;
     int year = 2023;
-    while (year != 2053 && month != 1) {
+    while (!(year == 2053 && month == 1)) {
         Alice_deposite_income(year, month);
         Alice_apartment_fee(year, month);
-        Alice_income(year, month);
+        Alice_salary(year, month);
 
         Bob_deposite_income(year, month);
-        Bob_income(year, month);
-        Bob_mortgage_repayment(year, month);
+        Bob_salary(year, month);
+        Bob_mortgage_payment(year, month);
+        Bob_apartment_price(year, month);
 
         ++month;
         if (month == 13) {
@@ -120,10 +133,13 @@ void total()
     }
 }
 
+
 int main() {
     Alice_init();
     Bob_init();
-    total();
+
+    simulation();
+
     print_hero(Alice);
     print_hero(Bob);
     return 0;
