@@ -1,21 +1,21 @@
-#include <stdio.h>  //Подключаем стандартную библиотеку команд С
+#include <stdio.h>  
 #include <string.h>
 #include <math.h>
 
-typedef long long int Money; //  копейки
+typedef long long int Money; //  kopeiki
 
 
 struct Person
 {
-	Money bank_account;
-	int bank_account_pp;
-	Money salary;
-	Money rent;
-	char name [6];
-	double inflation_pp;
-	double ipoteka_pp;
-	Money house_price;
-	Money rashod;
+	Money bank_account; 
+	int bank_account_pp;  
+	Money salary;  
+	Money rent;  
+	char name[6];
+	double inflation_pp;  // Procent inflation
+	double ipoteka_pp;  // Procent ipoteka
+	Money house_price;  
+	Money rashod;  // food, taxi, hamster, pizza, ...
 	Money plata_ipoteka;
 };
 
@@ -52,28 +52,28 @@ void bob_init()
 
 
 
-void alice_deposite_income(const int year, const int month) // увеличение банковского счета на процент по вкладу
+void alice_deposite_income(const int year, const int month)
 {
 	alice.bank_account += (Money)(alice.bank_account * alice.bank_account_pp / 100.0 / 12.0);
 }
 
-void bob_deposite_income(const int year, const int month) // увеличение банковского счета на процент по вкладу
+
+void bob_deposite_income(const int year, const int month)
 {
 	bob.bank_account += (Money)(bob.bank_account * bob.bank_account_pp / 100.0 / 12.0);
 }
 
 
 
-void alice_salary_income(const int year, const int month) // расчет зарплаты Элис
+void alice_salary_income(const int year, const int month) 
 {
 	if (year == 2024 && month == 3) alice.salary = 0;
 	if(year == 2024 && month == 4) alice.salary = 200*1000*100;
 
 	alice.bank_account += alice.salary;
-	if (month == 12) {
-		alice.bank_account += alice.salary; // 13-я зарплата
-	}
+	if (month == 12) alice.bank_account += alice.salary; // 13-я зарплата
 }
+
 
 void bob_salary_income(const int year, const int month)
 {
@@ -87,15 +87,18 @@ void alice_rent(const int year, const int month)
 	alice.bank_account -= alice.rent;
 }
 
+
 void bob_ipoteka(const int year, const int month)
 {
-	int YEAR = 30;
-	int MONTHS = 12;
-	double r = (bob.inflation_pp / 100.0) / 12.0;   // Месячная ставка
-	int n = YEAR * MONTHS;   // Кол-во месяцев во всем сроке кредита
-	double result = pow((1.0 + r), (double)n);   // Возводим (1+r) в степень n, попутно переводя n из int в float
-	double plata = (bob.house_price-bob.bank_account) * ((r * result) / (result - 1.0));   // руб. Сумма ежемесячного платежа по ипотеке по формуле
-	bob.bank_account = 0; // деньги со счета отданы в качестве первого взноса
+	int srok = 30;
+	Money vznos = bob.bank_account;
+	Money sum = bob.house_price - vznos;
+	
+	bob.bank_account -= vznos;
+	double rate = (bob.inflation_pp / 100.0) / 12.0;  // Mesyachnaya stavka
+	int term = srok * 12;   // Srok kredita in month
+	double result = pow((1.0 + rate), (double)term);  // plata po ipoteke po formule annuitetnogo plateja
+	double plata = (sum) * ((rate * result) / (result - 1.0));
 	bob.plata_ipoteka = plata;
 }
 
@@ -106,10 +109,12 @@ void alice_rashod(const int year, const int month)
 	alice.bank_account -= alice.rashod;
 }
 
+
 void bob_rashod(const int year, const int month)
 {
 	bob.bank_account -= bob.rashod;
 }
+
 
 void bob_plata_ipoteka(const int year, const int month)
 {
@@ -120,17 +125,17 @@ void bob_plata_ipoteka(const int year, const int month)
 
 void inflation(const int year, const int month)
 {
-	alice.salary += (Money)(alice.salary * alice.inflation_pp / 100.0 / 12.0);
-	bob.salary += (Money)(bob.salary * bob.inflation_pp / 100.0 / 12.0);
+	alice.salary += (Money)(alice.salary * alice.inflation_pp / 100.0);
+	bob.salary += (Money)(bob.salary * bob.inflation_pp / 100.0);
 
-	alice.rent += (Money)(alice.rent * alice.inflation_pp / 100.0 / 12.0);
-	bob.rent += (Money)(bob.rent * bob.inflation_pp / 100.0 / 12.0);
+	alice.rent += (Money)(alice.rent * alice.inflation_pp / 100.0);
+	bob.rent += (Money)(bob.rent * bob.inflation_pp / 100.0);
 
-	alice.house_price += (Money)(alice.house_price * alice.inflation_pp / 100.0 / 12.0);
-	bob.house_price += (Money)(bob.house_price * bob.inflation_pp / 100.0 / 12.0);
+	alice.house_price += (Money)(alice.house_price * alice.inflation_pp / 100.0);
+	bob.house_price += (Money)(bob.house_price * bob.inflation_pp / 100.0);
 
-	alice.rashod += (Money)(alice.rashod * alice.inflation_pp / 100.0 / 12.0);
-	bob.rashod += (Money)(bob.rashod * bob.inflation_pp / 100.0 / 12.0);
+	alice.rashod += (Money)(alice.rashod * alice.inflation_pp / 100.0);
+	bob.rashod += (Money)(bob.rashod * bob.inflation_pp / 100.0);
 }
 
 
@@ -155,8 +160,7 @@ void simulation()
 
 
 		++month;
-		if (month == 13)
-		{
+		if (month == 13) {
 			inflation(year, month);
 			month = 1;
 			++year;
