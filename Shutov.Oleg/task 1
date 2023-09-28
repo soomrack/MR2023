@@ -16,6 +16,7 @@ struct Person {
     int term; // срок ипотеки
     char name[6]; // имя человека
     Money expenses; // месячные расходы
+    Money annuity_payment; // аннуитетный платёж
 };
 
 struct Person alice; // инициализация Алисы
@@ -45,6 +46,7 @@ void bob_init()
     bob.term = 30; // количесвто лет, на сколько Боб взял ипотеку
     strcpy_s(bob.name, "Bob"); // имя Боба
     bob.expenses = 25 * 1000 * 100; // месячные расходы Боба
+    bob.annuity_payment = bob.house_price - bob.first_payment; // аннуитетный платёж Боба
 }
 
 void print_person(const struct Person person ) // Функция для вывода данных по человеку
@@ -96,7 +98,8 @@ void bob_salary_income(const int year, const int month)
 
 void bob_mortgage(const int year, const int month) // формула рассчета ипотечного платежа Боба
 {
-    bob.bank_account -= (Money)((bob.house_price - bob.first_payment) * bob.mortgage_pp / 100 / (1 - (1 + bob.mortgage_pp / 100) ^ (-(bob.term * 12))));
+    bob.annuity_payment = bob.annuity_payment * bob.mortgage_pp / 100 / (1 - (1 + bob.mortgage_pp / 100) ^ (-(bob.term * 12)));
+    bob.bank_account -= bob.annuity_payment;
 }
 
 void bob_expenses(const int year, const int month)
@@ -104,7 +107,7 @@ void bob_expenses(const int year, const int month)
     bob.bank_account -= bob.expenses; // формула расчёта месячных расходов Боба
 }
 
-void inflation(const int year)
+void inflation(const int year) // расчёт годовой инфляции
 {
     alice.salary *= alice.inflation_pp / 100;
     alice.expenses *= alice.inflation_pp / 100;
