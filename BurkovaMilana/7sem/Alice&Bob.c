@@ -51,7 +51,7 @@ void Bob_init()
 
 void print_hero(const struct Hero hero)
 {
-    printf("$s:\n", hero.name);
+    printf("%s:\n", hero.name);
     Money capital = hero.bank_account + hero.apartment_price;
     printf("  capital = %lld rub, %lld kop\n", (Money)(capital / 100), capital % 100);
     printf("\n");
@@ -73,7 +73,7 @@ void Alice_apartment_fee(const int year, const int month)
 void Alice_salary(const int year, const int month)
 {
     if (month == 12) {
-        Alice.salary = (Money)(Alice.salary * (Alice.infl_procent / 100));
+        Alice.salary += (Money)(Alice.salary * (Alice.infl_procent / 100));
     }
 
     Alice.bank_account += Alice.salary;
@@ -107,7 +107,7 @@ void Bob_monthly_expenses(const int year, const int month)
 void Bob_salary(const int year, const int month)
 {
     if (month == 12) {
-       Bob.salary = (Money)(Bob.salary * (Bob.infl_procent / 100));
+       Bob.salary += (Money)(Bob.salary * (Bob.infl_procent / 100));
     }
 
     Bob.bank_account += Bob.salary;
@@ -131,13 +131,13 @@ void simulation()
         Alice_deposite_income(year, month);
         Alice_apartment_fee(year, month);
         Alice_salary(year, month);
-        Alice_monthly_expenses(year, month);
+        Alice_monthly_expenses(year, month);//food, utilities
 
         Bob_deposite_income(year, month);
         Bob_salary(year, month);
         Bob_mortgage_payment(year, month);
         Bob_apartment_price(year, month);
-        Bob_monthly_expenses(year, month);
+        Bob_monthly_expenses(year, month);// food, utilities
 
         ++month;
         if (month == 13) {
