@@ -17,7 +17,6 @@ struct Person {
     char name[6];  // имя человека
     Money expenses;  // месячные расходы
     Money annuity_payment;  // аннуитетный месячный платёж
-    Money capital;  // общий капитал
 };
 
 struct Person alice;
