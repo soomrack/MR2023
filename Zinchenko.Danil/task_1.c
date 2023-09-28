@@ -37,6 +37,7 @@ void bob_init()
 	bob.bank_account_pp = 11.0;
 	bob.traty = 50 * 1000 * 100;
 	strcpy(bob.name, "Bob");
+	bob.house_bills = monthly_ipoteka_pay_bob(7.0);
 };
 
 
@@ -97,7 +98,7 @@ void monthly_ipoteka_pay_bob(double procent)
 		((monthly_pp / 100.0) * (powf(1.0 + (monthly_pp / 100.0), (double)bob.srok))
 			/ (powf(1.0 + (monthly_pp / 100.0), (double)bob.srok) - 1.0));
 
-	bob.bank_account -= pay;
+	return pay;
 
 };
 
@@ -121,6 +122,13 @@ void bob_house_cost(const int year)
 };
 
 
+void bob_house_bills()
+{
+	bob.bank_account -= bob.house_bills;
+
+};
+
+
 void simulation(int month, int year)
 {
 
@@ -134,7 +142,7 @@ void simulation(int month, int year)
 
 
 		bob_salary(year, month);
-		monthly_ipoteka_pay_bob(7.0);
+		bob_house_bills();
 		bob_traty();
 		bob_deposite_income();
 
