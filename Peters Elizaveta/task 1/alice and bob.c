@@ -8,7 +8,7 @@ typedef long long int Money;
 
 struct Person {
 	Money bank_account;
-	int	  bank_account_pp;
+	int bank_account_pp;
 	Money salary;
 	Money rent;
 	char name[5];
