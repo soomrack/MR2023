@@ -1,7 +1,7 @@
 #include<stdio.h>
 //#include<string.h>
 
-typedef long long int Money;
+typedef long long int Money; // kopeiki
 
 struct Person
 {
@@ -79,7 +79,7 @@ void Alice_rent(const int year, const int month)
 	Alice.bank_account -= Alice.rent; 
 }
 
-void Bob_mortgage_outcome(const int year, const int month)
+//void Bob_mortgage_outcome(const int year, const int month)
 {
 	Bob.bank_account -= (Money)(Bob.credit * (Bob.credit_pp * (1 + Bob.credit_pp) ^ (Bob.credit_term)) / ((1 + Bob.credit_pp) ^ (Bob.credit_term) - 1));
 }
