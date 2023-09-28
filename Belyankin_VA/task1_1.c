@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 typedef long long int Money;  // kopeiki
 
@@ -32,7 +33,7 @@ void alice_init()
 	alice.arenda = 35 * 1000 * 100;
 	alice.inf_pp = 7.0;
 	alice.house_price = 0;
-	strcpy(alice.name, "Alice");
+	strcpy_s(alice.name, sizeof(alice.name), "Alice");
 	alice.monthly_mortgage = 0;
 	alice.mortgage_pp = 0;
 	bob.mortgage = 0;
@@ -48,7 +49,7 @@ void bob_init()
 	bob.arenda = 0;
 	bob.inf_pp = 7.0;
 	bob.house_price = 20 * 1000 * 1000 * 100;
-	strcpy(bob.name, "Bob's");
+	strcpy_s(bob.name, sizeof(bob.name), "Alice");
 	bob.mortgage_pp = 7.0;
 	bob.mortgage = 19 * 1000 * 1000 * 100;
 }
@@ -80,7 +81,7 @@ void bob_salary_income(const int year, const int month)
 }
 
 // eda, domashnie zhivontie, komunalka
-void alice_traty_loss(const int year, const int month) 
+void alice_traty_loss(const int year, const int month) {
 	alice.traty += (Money)(alice.traty * alice.inf_pp / 100.0 / 12.0);
 	alice.capital -= (alice.traty);
 }
@@ -104,7 +105,7 @@ void bob_monthly_mortgage(const int year, const int month)
 {
 	double pp = bob.mortgage_pp / 100.0 / 12.0;
 	bob.monthly_mortgage = (Money)(bob.mortgage * (pp 
-		* (powf(1 + pp, 360.0)) /
+		* (powf(1.0 + pp, 360.0)) /
 		(powf(1 + pp, 360.0) - 1.0)));
 	bob.capital -= bob.monthly_mortgage;
 }
@@ -143,7 +144,7 @@ void simulation()
 
 void print_person(const struct Person person)
 {
-	printf(person.name);
+	printf("%s:\n", person.name);
 	printf(" capital = %lld rub, %lld kop\n", (Money)((person.capital+person.house_price)/100), 
 		(person.capital + person.house_price) % 100);
 }
