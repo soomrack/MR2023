@@ -107,15 +107,15 @@ void bob_expenses(const int year, const int month)
 
 void inflation(const int year)  // расчёт годовой инфляции
 {
-    alice.salary *= (Money)(alice.salary * alice.inflation_pp / 100.0);
-    alice.expenses *= (Money)(alice.expenses * alice.inflation_pp / 100.0);
+    alice.salary += (Money)(alice.salary * alice.inflation_pp / 100.0);
+    alice.expenses += (Money)(alice.expenses * alice.inflation_pp / 100.0);
     alice.house_price += (Money)(alice.house_price * alice.inflation_pp / 100.0);
-    alice.rent *= (Money)(alice.rent * alice.inflation_pp / 100.0);
+    alice.rent += (Money)(alice.rent * alice.inflation_pp / 100.0);
     
-    bob.salary *= (Money)(bob.salary * bob.inflation_pp / 100.0);
-    bob.expenses *= (Money)(bob.expenses * bob.inflation_pp / 100.0);
+    bob.salary += (Money)(bob.salary * bob.inflation_pp / 100.0);
+    bob.expenses += (Money)(bob.expenses * bob.inflation_pp / 100.0);
     bob.house_price += (Money)(bob.house_price * bob.inflation_pp / 100.0);
-    bob.rent *= (Money)(bob.rent * bob.inflation_pp / 100.0);
+    bob.rent += (Money)(bob.rent * bob.inflation_pp / 100.0);
  }
 
 void capital(const int year)  // расчёт общего капитала Боба и Алисы
