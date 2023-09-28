@@ -15,12 +15,13 @@ struct Person
 	double inflation_pp;  // Procent inflation
 	double ipoteka_pp;  // Procent ipoteka
 	Money house_price;  
-	Money rashod;  // food, taxi, hamster, pizza, ...
+	Money rashod;  // food, taxi, hamster, pizza
 	Money plata_ipoteka;
 };
 
 struct Person alice;
 struct Person bob;
+
 
 void alice_init()
 {
@@ -35,6 +36,7 @@ void alice_init()
 	alice.rashod = 30 * 1000 * 100;
 	alice.plata_ipoteka = 0;
 }
+
 
 void bob_init()
 {
@@ -68,16 +70,20 @@ void bob_deposite_income(const int year, const int month)
 void alice_salary_income(const int year, const int month) 
 {
 	if (year == 2024 && month == 3) alice.salary = 0;
-	if(year == 2024 && month == 4) alice.salary = 200*1000*100;
+	if (year == 2024 && month == 4) alice.salary = 200 * 1000 * 100;
 
 	alice.bank_account += alice.salary;
-	if (month == 12) alice.bank_account += alice.salary; // 13-я зарплата
+	if (month == 12) alice.bank_account += alice.salary; // 13-th zarplata
+
+	if (month == 1) alice.salary += (Money)(alice.salary * alice.inflation_pp / 100.0);
 }
 
 
 void bob_salary_income(const int year, const int month)
 {
 	bob.bank_account += bob.salary;
+
+	if (month == 1) bob.salary += (Money)(bob.salary * bob.inflation_pp / 100.0);
 }
 
 
@@ -85,6 +91,8 @@ void bob_salary_income(const int year, const int month)
 void alice_rent(const int year, const int month)
 {
 	alice.bank_account -= alice.rent;
+
+	if (month == 1) alice.rent += (Money)(alice.rent * alice.inflation_pp / 100.0);
 }
 
 
@@ -107,12 +115,16 @@ void bob_ipoteka(const int year, const int month)
 void alice_rashod(const int year, const int month)
 {
 	alice.bank_account -= alice.rashod;
+	
+	if (month == 1) alice.rashod += (Money)(alice.rashod * alice.inflation_pp / 100.0);
 }
 
 
 void bob_rashod(const int year, const int month)
 {
 	bob.bank_account -= bob.rashod;
+	
+	if (month == 1) bob.rashod += (Money)(bob.rashod * bob.inflation_pp / 100.0);
 }
 
 
@@ -122,20 +134,10 @@ void bob_plata_ipoteka(const int year, const int month)
 }
 
 
-
-void inflation(const int year, const int month)
+void inflation_house_bob(const int year, const int month)
 {
-	alice.salary += (Money)(alice.salary * alice.inflation_pp / 100.0);
-	bob.salary += (Money)(bob.salary * bob.inflation_pp / 100.0);
-
-	alice.rent += (Money)(alice.rent * alice.inflation_pp / 100.0);
-	bob.rent += (Money)(bob.rent * bob.inflation_pp / 100.0);
-
-	alice.house_price += (Money)(alice.house_price * alice.inflation_pp / 100.0);
-	bob.house_price += (Money)(bob.house_price * bob.inflation_pp / 100.0);
-
-	alice.rashod += (Money)(alice.rashod * alice.inflation_pp / 100.0);
-	bob.rashod += (Money)(bob.rashod * bob.inflation_pp / 100.0);
+	
+	if (month == 1) bob.house_price += (Money)(bob.house_price * bob.inflation_pp / 100.0);
 }
 
 
@@ -151,17 +153,17 @@ void simulation()
 		alice_deposite_income(year, month);
 		alice_salary_income(year, month);
 		alice_rent(year, month);
-		alice_rashod(year, month);
+		alice_rashod(year, month);  // food, taxi, hamster, pizza
 		
 		bob_deposite_income(year, month);
 		bob_salary_income (year, month);
 		bob_plata_ipoteka(year, month);
-		bob_rashod(year, month);
-
+		bob_rashod(year, month);  // food, taxi, hamster, pizza
+		inflation_house_bob(year, month);
 
 		++month;
+
 		if (month == 13) {
-			inflation(year, month);
 			month = 1;
 			++year;
 		}
