@@ -105,18 +105,18 @@ void bob_expenses(const int year, const int month)
     bob.bank_account -= bob.expenses;  // формула расчёта месячных расходов Боба
 }
 
-void inflation(const int year, const int month)  // расчёт месячной инфляции
+void inflation(const int year)  // расчёт годовой инфляции
 {
-    alice.salary *= (1 + alice.inflation_pp / 100 / 12);
-    alice.expenses *= (1 + alice.inflation_pp / 100 / 12);
-    alice.house_price *= (1 + alice.inflation_pp / 100 / 12);
-    alice.rent *= (1 + alice.inflation_pp / 100 / 12);
+    alice.salary *= (Money)(alice.salary * alice.inflation_pp / 100.0 / 12.0);
+    alice.expenses *= (Money)(alice.expenses * alice.inflation_pp / 100.0 / 12.0);
+    alice.house_price += (Money)(alice.house_price * alice.inflation_pp / 100.0 / 12.0);
+    alice.rent *= (Money)(alice.rent * alice.inflation_pp / 100.0 / 12.0);
     
-    bob.salary *= (1 + bob.inflation_pp / 100 / 12);
-    bob.expenses *= (1 + bob.inflation_pp / 100 / 12);
-    bob.house_price *= (1 + bob.inflation_pp / 100 / 12);
-    bob.rent *= (1 + bob.inflation_pp / 100 / 12);
-    }
+    bob.salary *= (Money)(bob.salary * bob.inflation_pp / 100.0 / 12.0);
+    bob.expenses *= (Money)(bob.expenses * bob.inflation_pp / 100.0 / 12.0);
+    bob.house_price += (Money)(bob.house_price * bob.inflation_pp / 100.0 / 12.0);
+    bob.rent *= (Money)(bob.rent * bob.inflation_pp / 100.0 / 12.0);
+ }
 
 void capital(const int year)  // расчёт общего капитала Боба и Алисы
 {
@@ -124,7 +124,7 @@ void capital(const int year)  // расчёт общего капитала Бо
     bob.capital = bob.bank_account + bob.house_price;
 }
 
-void print_person(const struct Person person)  // Функция для вывода данных по человеку
+void print_person(const struct Person person)  // Функция для вывода данных по человеку в рублях
 {
     printf("bank_account = %lld, house_price = %lld %s\n", person.bank_account / 100, person.house_price / 100, person.name);
 }
@@ -144,7 +144,7 @@ void simulation()  // функция хода времени
         bob_mortgage(year, month);
         bob_expenses(year, month);
 
-        inflation(year, month);
+        inflation(year);
         capital(year);
 
         ++month;
