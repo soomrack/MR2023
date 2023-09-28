@@ -140,7 +140,9 @@ void alice_appartment (const int year, const int month)
 {
     if (alice.buy_appartment == true) {
     alice.bank_account -= alice.appartment_first_payment;
-    alice.hypotec += (Money)(((alice.appartment_cost - alice.appartment_first_payment) * (alice.appartment_procent / 100.0 / 12.0) * pow((1 + alice.appartment_procent / 100.0 / 12.0), (alice.appartment_period * 12))) / (pow((1.0 + alice.appartment_procent / 100.0 / 12.0), (alice.appartment_period * 12.0)) - 1.0));
+    alice.hypotec += (Money)(((alice.appartment_cost - alice.appartment_first_payment)
+     * (alice.appartment_procent / 100.0 / 12.0) * pow((1 + alice.appartment_procent / 100.0 / 12.0), (alice.appartment_period * 12)))
+     / (pow((1.0 + alice.appartment_procent / 100.0 / 12.0), (alice.appartment_period * 12.0)) - 1.0));
     alice.appartment += alice.appartment_cost;
     alice.buy_appartment = false;
     // printf("Alice %lld\n", alice.hypotec);
