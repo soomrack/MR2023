@@ -22,8 +22,10 @@ struct Person
 	char name[6];
 };
 
+
 struct Person alice;
 struct Person bob;
+
 
 void bob_init()
 {
@@ -56,25 +58,25 @@ void alice_deposite_income()
 	alice.bank_account += (Money)(alice.bank_account * alice.bank_account_pp / 100.0 / 12.0);
 };
 
+
 Money alice_salary(const int year, const int month)
 {
-	alice.bank_account += alice.salary;
 	if (month == 12) alice.salary += (Money)(alice.salary * inflation_pp / 100);
+	alice.bank_account += alice.salary;
 };
 
 
 void alice_house_bills()
 {
-	alice.house_bills += (Money)(alice.house_bills * inflation_pp / 100 / 12);
 	alice.bank_account -= alice.house_bills;
-
+	alice.house_bills += (Money)(alice.house_bills * inflation_pp / 100 / 12);
 };
+
 
 void alice_traty()
 {
-	alice.traty += (Money)(alice.traty * inflation_pp / 100 / 12);
 	alice.bank_account -= alice.traty;
-
+	alice.traty += (Money)(alice.traty * inflation_pp / 100 / 12);
 };
 
 
