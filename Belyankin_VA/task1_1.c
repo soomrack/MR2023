@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-typedef long long int Money;  // копейки
+typedef long long int Money;  // kopeiki
 
 
 struct Person
@@ -8,7 +8,7 @@ struct Person
 	Money capital;
 	int bank_pp;
 	Money salary;
-	Money traty;  // еда, домашние животные, комуналка и т.д.
+	Money traty;  // eda, domashnie zhivontie i t.d.
 	Money arenda;
 	double inf_pp;
 	Money house_price;
@@ -79,14 +79,13 @@ void bob_salary_income(const int year, const int month)
 	if (year != 2030 && (month != 5 || month != 6)) bob.capital += (bob.salary);
 }
 
-void alice_traty_loss(const int year, const int month)  // еда, домашние животные, комуналка и т.д.
-{
+void alice_traty_loss(const int year, const int month)  // eda, domashnie zhivontie i t.d.
 	alice.traty += (Money)(alice.traty * alice.inf_pp / 100.0 / 12.0);
 	alice.capital -= (alice.traty);
 }
 
 
-void bob_traty_loss(const int year, const int month)  // еда, домашние животные, комуналка и т.д.
+void bob_traty_loss(const int year, const int month)  // eda, domashnie zhivontie i t.d.
 {
 	bob.traty += (Money)(bob.traty * bob.inf_pp / 100.0 / 12.0);
 	bob.capital -= (bob.traty);
