@@ -3,7 +3,7 @@
 #include<string.h>
 #include<math.h>
 
-	
+
 typedef long long int Money;  // копейки
 
 struct Person {
@@ -91,14 +91,14 @@ void alice_expenses(const int year, const int month)
 }
 
 
-void bob_mortgage_monthly_payment(const int year, const int month){
-	 int month_mortgage = 30 * 12;  // общее количество месяцев ипотеки
-	 // формула аннуитетного платежа по ипотеке
-	 Money mortgage_monthly_installment = ((bob.house_price - bob.mortgage_first_fee) * (bob.mortgage_pp * 0.01 / 12) *
+void bob_mortgage_monthly_payment(const int year, const int month, int month_mortgage = 30 * 12) {
+	// формула аннуитетного платежа по ипотеке
+	Money mortgage_monthly_installment = ((bob.house_price - bob.mortgage_first_fee) * (bob.mortgage_pp * 0.01 / 12) *
 		pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage))) /
-		(pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage)) - 1.0);  
-	 bob.mortgage_monthly_payment = mortgage_monthly_installment;
-	 bob.bank_account -= bob.mortgage_first_fee;
+		(pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage)) - 1.0);
+
+	bob.mortgage_monthly_payment = mortgage_monthly_installment;
+	bob.bank_account -= bob.mortgage_first_fee;
 }
 
 
@@ -133,10 +133,10 @@ void simulation()
 	int month = 9;
 	int year = 2023;
 
-	bob_mortgage_monthly_payment(year,month);
-	
+	bob_mortgage_monthly_payment(year, month);
 
-	while (!(year  == 2053 && month == 9)) {
+
+	while (!(year == 2053 && month == 9)) {
 
 		alice_deposite_income(year, month);
 		alice_salary_income(year, month);
@@ -165,7 +165,7 @@ void print_person(const struct Person person)
 	Money capital = person.bank_account + person.house_price;
 	printf(" capital = %lld rub, %lld kop\n", (Money)(capital / 100.0), capital % 100);
 	printf("\n");
-	
+
 
 }
 
