@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 #include <math.h>
 
 
@@ -10,19 +9,18 @@ typedef long long int Money;  // kopecks
 struct Person
 {
     Money bank_account;
-    int contribution_procent;
+    int bank_contribution_procent;
     char name[6];
     Money salary;
     Money rent;
     Money consumption;  // food, utility fee and other personal needs
     int inflation;
-    Money hypotec;
+    Money mortgage;
     Money appartment;
-    bool buy_appartment;
-    Money appartment_first_payment;
+    Money appartment_mortgage_first_payment;
     Money appartment_cost;
-    int appartment_procent;
-    int appartment_period;
+    int appartment_mortgage_procent;
+    int appartment_mortgage_period;
 };
 
 
@@ -34,18 +32,17 @@ void alice_int()
 {
     alice.bank_account = 1000 * 1000 * 100;
     strcpy(alice.name, "Alice");
-    alice.contribution_procent = 11;
+    alice.bank_contribution_procent = 11;
     alice.salary = 200 * 1000 * 100;
     alice.rent = 30 * 1000 * 100;
     alice.consumption = 30 * 1000 * 100;
     alice.inflation = 7;
-    alice.hypotec = 0;
+    alice.mortgage = 0;
     alice.appartment = 0;
-    alice.buy_appartment = false;
-    alice.appartment_first_payment = 3 * 1000 * 1000 * 100;
+    alice.appartment_mortgage_first_payment = 3 * 1000 * 1000 * 100;
     alice.appartment_cost = 3 * 1000 * 1000 * 100;
-    alice.appartment_procent = 7;
-    alice.appartment_period = 10;
+    alice.appartment_mortgage_procent = 7;
+    alice.appartment_mortgage_period = 10;
 }
 
 
@@ -53,18 +50,17 @@ void bob_int()
 {
     bob.bank_account = 1000 * 1000 * 100;
     strcpy(bob.name, "Bob");
-    bob.contribution_procent = 11;
+    bob.bank_contribution_procent = 11;
     bob.salary = 200 * 1000 * 100;
     bob.rent = 0;
     bob.consumption = 30 * 1000 * 100;
     bob.inflation = 7;
-    bob.hypotec = 0;
+    bob.mortgage = 0;
     bob.appartment = 0;
-    bob.buy_appartment = true;
-    bob.appartment_first_payment = 1000 * 1000 * 100;
+    bob.appartment_mortgage_first_payment = 1000 * 1000 * 100;
     bob.appartment_cost = 20 * 1000 * 1000 * 100;
-    bob.appartment_procent = 7;
-    bob.appartment_period = 30;
+    bob.appartment_mortgage_procent = 7;
+    bob.appartment_mortgage_period = 30;
 }
 
 
@@ -77,13 +73,13 @@ void print_person(const struct Person person)
 
 void alice_contribution(const int year, const int month)
 {
-    alice.bank_account += (Money)(alice.bank_account * alice.contribution_procent / 100.0 / 12.0);
+    alice.bank_account += (Money)(alice.bank_account * alice.bank_contribution_procent / 100.0 / 12.0);
 }
 
 
 void bob_contribution(const int year, const int month)
 {
-    bob.bank_account += (Money)(bob.bank_account * bob.contribution_procent / 100.0 / 12.0);
+    bob.bank_account += (Money)(bob.bank_account * bob.bank_contribution_procent / 100.0 / 12.0);
 }
 
 
@@ -138,18 +134,6 @@ void bob_consumption (const int year, const int month)
 
 void alice_appartment (const int year, const int month)
 {
-    if (alice.buy_appartment == true) {
-    alice.bank_account -= alice.appartment_first_payment;
-    alice.hypotec += (Money)(((alice.appartment_cost - alice.appartment_first_payment)
-     * (alice.appartment_procent / 100.0 / 12.0) * pow((1 + alice.appartment_procent / 100.0 / 12.0), (alice.appartment_period * 12)))
-     / (pow((1.0 + alice.appartment_procent / 100.0 / 12.0), (alice.appartment_period * 12.0)) - 1.0));
-    alice.appartment += alice.appartment_cost;
-    alice.buy_appartment = false;
-    // printf("Alice %lld\n", alice.hypotec);
-    };
-    
-    alice.bank_account -= alice.hypotec;
-
     if (year == 2053 && month == 9) {
     alice.bank_account += alice.appartment;
     };
@@ -159,16 +143,7 @@ void alice_appartment (const int year, const int month)
 
 
 void bob_appartment (const int year, const int month)
-{
-    if (bob.buy_appartment == true) {
-        bob.bank_account -= bob.appartment_first_payment;
-        bob.hypotec += (Money)(((bob.appartment_cost - bob.appartment_first_payment) * (bob.appartment_procent / 100.0 / 12.0) * pow((1 + bob.appartment_procent / 100.0 / 12.0), (bob.appartment_period * 12))) / (pow((1.0 + bob.appartment_procent / 100.0 / 12.0), (bob.appartment_period * 12.0)) - 1.0));
-        bob.appartment += bob.appartment_cost;
-        bob.buy_appartment = false;
-        // printf("Bob %lld\n", bob.hypotec);
-    };
-
-    bob.bank_account -= bob.hypotec;
+{  
 
     if (year == 2053 && month == 9) {
     bob.bank_account += bob.appartment;
@@ -178,7 +153,37 @@ void bob_appartment (const int year, const int month)
 }
 
 
-void profit_person (const struct Person person1, const struct Person person2)
+void alice_mortgage (const int year, const int month)
+{
+    if (year == 2023 && month == 9) {
+        alice.bank_account -= alice.appartment_mortgage_first_payment;
+        Money appartment_mortgage = alice.appartment_cost - alice.appartment_mortgage_first_payment;
+        double mortgage_month_procent = alice.appartment_mortgage_procent / 100.0 / 12.0;
+        double mortgage_power = pow(1 + mortgage_month_procent, alice.appartment_mortgage_period * 12.0);
+        alice.mortgage += (Money)(((appartment_mortgage) * (mortgage_month_procent) * mortgage_power) / (mortgage_power - 1.0));
+        alice.appartment += alice.appartment_cost;
+    };
+    
+    alice.bank_account -= alice.mortgage;
+}
+
+
+void bob_mortgage (const int year, const int month)
+{
+    if (year == 2023 && month == 9) {
+        bob.bank_account -= bob.appartment_mortgage_first_payment;
+        Money appartment_mortgage = bob.appartment_cost - bob.appartment_mortgage_first_payment;
+        double mortgage_month_procent = bob.appartment_mortgage_procent / 100.0 / 12.0;
+        double mortgage_power = pow(1 + mortgage_month_procent, bob.appartment_mortgage_period * 12.0);
+        bob.mortgage += (Money)(((appartment_mortgage) * (mortgage_month_procent) * mortgage_power) / (mortgage_power - 1.0));
+        bob.appartment += bob.appartment_cost;
+    };
+
+    bob.bank_account -= bob.mortgage;
+}
+
+
+void print_profit_person (const struct Person person1, const struct Person person2)
 {
     if (person1.bank_account > person2.bank_account) {
     printf("%s's strategy is more profit", person1.name);
@@ -196,15 +201,18 @@ void simulation()
     while (!(year == 2053 && month == 9)) {
         
         alice_appartment(year, month);
-        bob_appartment(year, month);
         alice_contribution(year, month);
-        bob_contribution(year, month);
         alice_salary(year, month);
-        bob_salary(year, month);
         alice_rent(year, month);
-        bob_rent(year, month);
         alice_consumption(year, month);  // food, utility fee and other personal needs
+        alice_mortgage(year, month);
+
+        bob_appartment(year, month);
+        bob_contribution(year, month);
+        bob_salary(year, month);
+        bob_rent(year, month);
         bob_consumption(year, month);  // food, utility fee and other personal needs
+        bob_mortgage(year, month);
 
         ++month;
         if (month == 13) {
@@ -223,6 +231,6 @@ int main() {
     simulation();
     print_person(alice);
     print_person(bob);
-    profit_person(alice, bob);
+    print_profit_person(alice, bob);
     return 0;
 }
