@@ -62,7 +62,7 @@ void alice_deposite_income()
 Money alice_salary(const int year, const int month)
 {
 	if (month == 12) alice.salary += (Money)(alice.salary * inflation_pp / 100);
-	alice.bank_account += alice.salary;
+	if (month !=3) alice.bank_account += alice.salary;
 };
 
 
@@ -104,7 +104,7 @@ void monthly_ipoteka_pay_bob(double procent)
 
 Money bob_salary(const int year, const int month)
 {
-	bob.bank_account += bob.salary;
+	if (!(month >= 4 && month <= 6 && year == 2030)) bob.bank_account += bob.salary;
 	if (month == 12) bob.salary += (Money)(bob.salary * inflation_pp / 100);
 };
 
