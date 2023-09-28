@@ -14,10 +14,10 @@ struct Person {
 	char name[6];
 	double inflation_pp;
 	Money house_price;
-	Money intal_fee;
+	Money motgage_first_fee;
 	Money expenses;  // траты на еду, коммунальные платежи, одежду
 	double mortgage_pp;
-	Money monthly_payment;
+	Money mortgage_monthly_payment;
 };
 
 struct Person alice;
@@ -45,10 +45,10 @@ void bob_init()
 	bob.inflation_pp = 7;
 	bob.house_price = 20 * 1000 * 1000 * 100;
 	strcpy(bob.name, "Bob");
-	bob.first_fee = 1000 * 1000 * 100;
+	bob.mortgage_first_fee = 1000 * 1000 * 100;
 	bob.expenses = 10 * 1000 * 100;
 	bob.mortgage_pp = 7;
-	bob.monthly_payment = 0;
+	bob.mortgage_monthly_payment = 0;
 }
 
 
@@ -91,14 +91,14 @@ void alice_expenses(const int year, const int month)
 }
 
 
-void bob_monthly_payment(const int year, const int month)
-
+void bob_mortgage_monthly_payment(const int year, const int month){
 	 int month_mortgage = 30 * 12;  // общее количество месяцев ипотеки
-	 Money monthly_installment = ((bob.house_price - bob.first_fee) * (bob.mortgage_pp * 0.01 / 12) *
+	 // формула аннуитетного платежа по ипотеке
+	 Money mortgage_monthly_installment = ((bob.house_price - bob.mortgage_first_fee) * (bob.mortgage_pp * 0.01 / 12) *
 		pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage))) /
-		(pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage)) - 1.0);  // формула аннуитетного платежа по ипотеке
-	 bob.bank_account -= bob.first_fee;
-	 bob.monthly_payment = monthly_installment;
+		(pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage)) - 1.0);  
+	 bob.mortgage_monthly_payment = mortgage_monthly_installment;
+	 bob.bank_account -= bob.mortgage_first_fee;
 }
 
 
@@ -133,7 +133,7 @@ void simulation()
 	int month = 9;
 	int year = 2023;
 
-	bob_monthly_payment(year,month);
+	bob_mortgage_monthly_payment(year,month);
 	
 
 	while (!(year  == 2053 && month == 9)) {
