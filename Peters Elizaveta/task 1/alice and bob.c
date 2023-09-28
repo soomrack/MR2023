@@ -14,7 +14,7 @@ struct Person {
 	char name[6];
 	double inflation_pp;
 	Money house_price;
-	Money motgage_first_fee;
+	Money mortgage_first_fee;
 	Money expenses;  // траты на еду, коммунальные платежи, одежду
 	double mortgage_pp;
 	Money mortgage_monthly_payment;
