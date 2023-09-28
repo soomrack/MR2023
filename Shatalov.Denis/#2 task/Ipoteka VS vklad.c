@@ -1,81 +1,192 @@
 #include <stdio.h>  //Подключаем стандартную библиотеку команд С
-#include <math.h> // Подключаем библиотеку математики
+#include <string.h>
+#include <math.h>
 
-int main() //Точка входа в программу на языке С, int - указывает, что функция main возвращает целочисленное значение (при успешном завершении main вернет 0)
+typedef long long int Money; //  копейки
+
+
+struct Person
 {
-    // Объявляем начальные условия
-    int start = 1000000; //Начальный капитал
-    float kvar = 20000000; //Стоимость квартиры вначале
-    float vklad = 11; // % по вкладу
-    float ipoteka = 7; // % по ипотеке
-    int year = 30; // лет в исследовании
-    int months = 12; // месяцев в исследовании
-    float zp = 200000; // зарплата сотрудника
-    float rent = 30000; // рента за съем квартиры
-    float rashod = 30000; // сумма месячных расходов
-    float inf = 7; // % инфляции
-    /////////////////////
+	Money bank_account;
+	int bank_account_pp;
+	Money salary;
+	Money rent;
+	char name [6];
+	double inflation_pp;
+	double ipoteka_pp;
+	Money house_price;
+	Money rashod;
+	Money plata_ipoteka;
+};
 
+struct Person alice;
+struct Person bob;
 
-    // В этом блоке считаем сумму аннуитетного платежа Боба
-    int S = kvar - start; // Сумма кредита
-    float r = (ipoteka / 100) / 12; // Месячная ставка
-    int n = year * 12; // Кол-во месяцев во всем сроке кредита
-    float result = pow((1 + r), (float)n); // Возводим (1+r) в степень n, попутно переводя n из int в float
-    float plata = S * ((r * result) / (result - 1)); // Сумма ежемесячного платежа по ипотеке по формуле
-    /////////////////////
+void alice_init()
+{
+	alice.bank_account = 1000 * 1000 * 100;
+	alice.bank_account_pp = 11;
+	alice.salary = 200 * 1000 * 100;
+	alice.rent = 35 * 1000 * 100;
+	strcpy_s(alice.name, sizeof(alice.name), "Alice");
+	alice.inflation_pp = 7.0;
+	alice.ipoteka_pp = 0;
+	alice.house_price = 0;
+	alice.rashod = 30 * 1000 * 100;
+	alice.plata_ipoteka = 0;
+}
 
-    
-    // В этом блоке идет расчет капитала Элис
-    float zp_Alice = zp;
-    float rashod_Alice = rashod;
-    float ost_Alice;
-    float schet_Alice = start; // Элис положила стартовый капитал на вклад
-
-    for (int i = 1; i <= year; i++) { // Счетчик лет        
-        for (int j = 1; j <= months; j++) { // Счетчик месяцев в каждом годе
-            ost_Alice = zp_Alice - (rent + rashod_Alice); // Элис оплатила расходы
-            schet_Alice = schet_Alice + ost_Alice; // Счет Элис пополнился остатком зарплаты
-            schet_Alice = schet_Alice * (1 + (vklad / 100) / 12); // Начисляем в конце месяца проценты по вкладу
-        }
-        zp_Alice = zp_Alice * (1 + (inf / 100)); // ЗП увеличилась на инфляцию
-        rashod_Alice = rashod_Alice * (1 + (inf / 100)); // расходы увеличились на инфляцию
-        rent = rent * (1 + (inf / 100)); // рента увеличилась на инфляцию
-    }
-    /////////////////////
-        
-
-    // В этом блоке идет расчет капитала Боба
-    float zp_Bob = zp;
-    float rashod_Bob = rashod;
-    float ost_Bob;
-    float schet_Bob = 0; // Стартовый капитал на первоначальный взнос по ипотеке
-
-    for (int i = 1; i <= year; i++) { // Счетчик лет
-        for (int j = 1; j <= months; j++) { // Счетчик месяцев в каждом годе
-            ost_Bob = zp_Bob - (plata + rashod_Bob); // Боб оплатил расходы и заплатил платеж по ипотеке
-            schet_Bob = (schet_Bob + ost_Bob); // Счет Боба пополнился остатком зарплаты
-            schet_Bob = schet_Bob * (1 + (vklad / 100) / 12); // Начисляем в конце месяца проценты по вкладу
-        }
-        zp_Bob = zp_Bob * (1 + (inf / 100)); // ЗП увеличилась на инфляцию
-        rashod_Bob = rashod_Bob * (1 + (inf / 100)); // расходы увеличились на инфляцию
-        kvar = kvar * (1 + (inf / 100)); // Инфляция на недвижимость
-    }
-    schet_Bob = schet_Bob + kvar;
-    /////////////////////
-
-
-    // В этом блоке выводим результаты
-    printf("Alice:                                 %.0f rub.\n", schet_Alice);
-    printf("Bob:                                   %.0f rub. \n", schet_Bob);
-    printf("Stoimost kvartiri na konec perioda:    %.0f rub. \n", kvar);
-    printf("Velichina platega po ipoteke:          %.0f rub. \n", plata);
-    /////////////////////
-  
-    getchar();getchar(); // Ждем символ, чтобы консоль не закрывалась автоматически
-    return 0; // Если дошло до этого момента, то возвращаем 0
-    
+void bob_init()
+{
+	bob.bank_account = 1000 * 1000 * 100;
+	bob.bank_account_pp = 11;
+	bob.salary = 200 * 1000 * 100;
+	bob.rent = 0;
+	strcpy_s(bob.name, sizeof(bob.name), "Bob");
+	bob.inflation_pp = 7.0;
+	bob.ipoteka_pp = 7.0;
+	bob.house_price = 20 * 1000 * 1000 * 100;
+	bob.rashod = 30 * 1000 * 100;
+	bob.plata_ipoteka = 0;
 }
 
 
 
+void alice_deposite_income(const int year, const int month) // увеличение банковского счета на процент по вкладу
+{
+	alice.bank_account += (Money)(alice.bank_account * alice.bank_account_pp / 100.0 / 12.0);
+}
+
+void bob_deposite_income(const int year, const int month) // увеличение банковского счета на процент по вкладу
+{
+	bob.bank_account += (Money)(bob.bank_account * bob.bank_account_pp / 100.0 / 12.0);
+}
+
+
+
+void alice_salary_income(const int year, const int month) // расчет зарплаты Элис
+{
+	if (year == 2024 && month == 3) alice.salary = 0;
+	if(year == 2024 && month == 4) alice.salary = 200*1000*100;
+
+	alice.bank_account += alice.salary;
+	if (month == 12) {
+		alice.bank_account += alice.salary; // 13-я зарплата
+	}
+}
+
+void bob_salary_income(const int year, const int month)
+{
+	bob.bank_account += bob.salary;
+}
+
+
+
+void alice_rent(const int year, const int month)
+{
+	alice.bank_account -= alice.rent;
+}
+
+void bob_ipoteka(const int year, const int month)
+{
+	int YEAR = 30;
+	int MONTHS = 12;
+	double r = (bob.inflation_pp / 100.0) / 12.0;   // Месячная ставка
+	int n = YEAR * MONTHS;   // Кол-во месяцев во всем сроке кредита
+	double result = pow((1.0 + r), (double)n);   // Возводим (1+r) в степень n, попутно переводя n из int в float
+	double plata = (bob.house_price-bob.bank_account) * ((r * result) / (result - 1.0));   // руб. Сумма ежемесячного платежа по ипотеке по формуле
+	bob.bank_account = 0; // деньги со счета отданы в качестве первого взноса
+	bob.plata_ipoteka = plata;
+}
+
+
+
+void alice_rashod(const int year, const int month)
+{
+	alice.bank_account -= alice.rashod;
+}
+
+void bob_rashod(const int year, const int month)
+{
+	bob.bank_account -= bob.rashod;
+}
+
+void bob_plata_ipoteka(const int year, const int month)
+{
+	bob.bank_account -= bob.plata_ipoteka;
+}
+
+
+
+void inflation(const int year, const int month)
+{
+	alice.salary += (Money)(alice.salary * alice.inflation_pp / 100.0 / 12.0);
+	bob.salary += (Money)(bob.salary * bob.inflation_pp / 100.0 / 12.0);
+
+	alice.rent += (Money)(alice.rent * alice.inflation_pp / 100.0 / 12.0);
+	bob.rent += (Money)(bob.rent * bob.inflation_pp / 100.0 / 12.0);
+
+	alice.house_price += (Money)(alice.house_price * alice.inflation_pp / 100.0 / 12.0);
+	bob.house_price += (Money)(bob.house_price * bob.inflation_pp / 100.0 / 12.0);
+
+	alice.rashod += (Money)(alice.rashod * alice.inflation_pp / 100.0 / 12.0);
+	bob.rashod += (Money)(bob.rashod * bob.inflation_pp / 100.0 / 12.0);
+}
+
+
+
+void simulation()
+{
+	int month = 9;
+	int year = 2023;
+
+	bob_ipoteka(year, month);
+
+	while (!(year == 2053 && month == 9)) {
+		alice_deposite_income(year, month);
+		alice_salary_income(year, month);
+		alice_rent(year, month);
+		alice_rashod(year, month);
+		
+		bob_deposite_income(year, month);
+		bob_salary_income (year, month);
+		bob_plata_ipoteka(year, month);
+		bob_rashod(year, month);
+
+
+		++month;
+		if (month == 13)
+		{
+			inflation(year, month);
+			month = 1;
+			++year;
+		}
+	}
+}
+
+
+
+void print_person(const struct Person person)
+{
+	printf("%s\n", person.name);
+	printf(" bank account = %lld rub. %lld kop\n", (Money)(person.bank_account / 100), person.bank_account % 100);
+
+	Money capital = person.bank_account + person.house_price;
+	printf(" capital = %lld rub. %lld kop\n", (Money)(capital / 100), capital % 100);
+
+	printf(" plata po ipoteke = %lld rub. %lld kop\n", (Money)(person.plata_ipoteka / 100), person.plata_ipoteka % 100);
+	printf("\n");
+}
+
+
+int main()
+{
+	alice_init();
+	bob_init();
+
+	simulation();
+
+	print_person(alice);
+	print_person(bob);
+	return 0;
+}
