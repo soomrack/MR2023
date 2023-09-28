@@ -4,7 +4,7 @@
 #include <math.h>
 
 
-typedef long long int Money; // kopecks
+typedef long long int Money;  // kopecks
 
 
 struct Person
@@ -14,7 +14,7 @@ struct Person
     char name[6];
     Money salary;
     Money rent;
-    Money consumption;
+    Money consumption;  // food, utility fee and other personal needs
     int inflation;
     Money hypotec;
     Money appartment;
@@ -89,26 +89,22 @@ void bob_contribution(const int year, const int month)
 
 void alice_salary (const int year, const int month)
 {
-    if (month == 12) {
+    if (month == 12) alice.bank_account += alice.salary;  // 13-th salary
+
     alice.bank_account += alice.salary;
-    };
-    alice.bank_account += alice.salary;
-    if (month == 1) {
-    alice.salary += (Money)(alice.salary * alice.inflation / 100.0);
-    };
+
+    if (month == 1) alice.salary += (Money)(alice.salary * alice.inflation / 100.0);  // salary growth
     
 }
 
 
 void bob_salary (const int year, const int month)
 {
-    if (month == 12) {
+    if (month == 12) bob.bank_account += bob.salary;  // 13-th salary
+    
     bob.bank_account += bob.salary;
-    };
-    bob.bank_account += bob.salary;
-    if (month == 1) {
-    bob.salary += (Money)(bob.salary * bob.inflation / 100.0);
-    };
+
+    if (month == 1) bob.salary += (Money)(bob.salary * bob.inflation / 100.0);  // salary growth
 }
 
 
@@ -147,13 +143,15 @@ void alice_appartment (const int year, const int month)
     alice.hypotec += (Money)(((alice.appartment_cost - alice.appartment_first_payment) * (alice.appartment_procent / 100.0 / 12.0) * pow((1 + alice.appartment_procent / 100.0 / 12.0), (alice.appartment_period * 12))) / (pow((1.0 + alice.appartment_procent / 100.0 / 12.0), (alice.appartment_period * 12.0)) - 1.0));
     alice.appartment += alice.appartment_cost;
     alice.buy_appartment = false;
-    printf("Alice %lld\n", alice.hypotec);
+    // printf("Alice %lld\n", alice.hypotec);
     };
     
     alice.bank_account -= alice.hypotec;
+
     if (year == 2053 && month == 9) {
     alice.bank_account += alice.appartment;
     };
+
     alice.appartment += (Money)(alice.appartment * alice.inflation / 100.0 / 12.0);    
 }
 
@@ -165,13 +163,15 @@ void bob_appartment (const int year, const int month)
         bob.hypotec += (Money)(((bob.appartment_cost - bob.appartment_first_payment) * (bob.appartment_procent / 100.0 / 12.0) * pow((1 + bob.appartment_procent / 100.0 / 12.0), (bob.appartment_period * 12))) / (pow((1.0 + bob.appartment_procent / 100.0 / 12.0), (bob.appartment_period * 12.0)) - 1.0));
         bob.appartment += bob.appartment_cost;
         bob.buy_appartment = false;
-        printf("Bob %lld\n", bob.hypotec);
+        // printf("Bob %lld\n", bob.hypotec);
     };
 
     bob.bank_account -= bob.hypotec;
+
     if (year == 2053 && month == 9) {
     bob.bank_account += bob.appartment;
     };
+
     bob.appartment += (Money)(bob.appartment * bob.inflation / 100.0 / 12.0);    
 }
 
@@ -191,7 +191,7 @@ void simulation()
     int year = 2023;
     int month = 9;
 
-    while ( !(year == 2053 && month == 9)) {
+    while (!(year == 2053 && month == 9)) {
         
         alice_appartment(year, month);
         bob_appartment(year, month);
@@ -201,8 +201,8 @@ void simulation()
         bob_salary(year, month);
         alice_rent(year, month);
         bob_rent(year, month);
-        alice_consumption(year, month);
-        bob_consumption(year, month);
+        alice_consumption(year, month);  // food, utility fee and other personal needs
+        bob_consumption(year, month);  // food, utility fee and other personal needs
 
         ++month;
         if (month == 13) {
