@@ -44,7 +44,7 @@ void Bob_init()
     Bob.apartment_fee = 0;
     Bob.apartment_price = 20 * 1000 * 1000 * 100;
     Bob.bank_pp = 7.0;
-    Bob.mortgage_payment = 126407047; 
+    Bob.mortgage_payment = 12640747; //mortgage calculator
     strcpy(Bob.name, "Bob");
 }
 
@@ -80,6 +80,12 @@ void Alice_salary(const int year, const int month)
 }
 
 
+void Alice_monthly_expenses(const int year, const int month)
+{
+    Alice.bank_account -= Alice.monthly_expenses;
+}
+
+
 void Bob_deposite_income(const int year, const int month)
 {
     Bob.bank_account += (Money)(Bob.bank_account * Bob.bank_pp / 100.0 / 12.0);
@@ -89,6 +95,12 @@ void Bob_deposite_income(const int year, const int month)
 void Bob_mortgage_payment(const int year, const int month)
 {
     Bob.bank_account -= Bob.mortgage_payment;
+}
+
+
+void Bob_monthly_expenses(const int year, const int month)
+{
+    Bob.bank_account -= Bob.monthly_expenses;
 }
 
 
@@ -119,11 +131,13 @@ void simulation()
         Alice_deposite_income(year, month);
         Alice_apartment_fee(year, month);
         Alice_salary(year, month);
+        Alice_monthly_expenses(year, month);
 
         Bob_deposite_income(year, month);
         Bob_salary(year, month);
         Bob_mortgage_payment(year, month);
         Bob_apartment_price(year, month);
+        Bob_monthly_expenses(year, month);
 
         ++month;
         if (month == 13) {
