@@ -91,11 +91,10 @@ void alice_expenses(const int year, const int month)
 }
 
 
-void bob_mortgage_monthly_payment(const int year, const int month, int month_mortgage = 30 * 12) {
+void bob_mortgage_monthly_payment(Money pay , double pp , int months) {
 	// формула аннуитетного платежа по ипотеке
-	Money mortgage_monthly_installment = ((bob.house_price - bob.mortgage_first_fee) * (bob.mortgage_pp * 0.01 / 12) *
-		pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage))) /
-		(pow((1.0 + (bob.mortgage_pp * 0.01 / 12)), (month_mortgage)) - 1.0);
+	Money mortgage_monthly_installment = ((pay) * (pp * 0.01 / 12) * pow((1.0 + (pp * 0.01 / 12)), (months))) /
+		(pow((1.0 + (pp * 0.01 / 12)), (months)) - 1.0);
 
 	bob.mortgage_monthly_payment = mortgage_monthly_installment;
 	bob.bank_account -= bob.mortgage_first_fee;
@@ -133,7 +132,7 @@ void simulation()
 	int month = 9;
 	int year = 2023;
 
-	bob_mortgage_monthly_payment(year, month);
+	bob_mortgage_monthly_payment(bob.house_price-bob.mortgage_first_fee, bob.mortgage_pp, 30 * 12);
 
 
 	while (!(year == 2053 && month == 9)) {
@@ -180,4 +179,3 @@ int main()
 	print_person(alice);
 	print_person(bob);
 	return 0;
-}
