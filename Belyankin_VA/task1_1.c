@@ -8,7 +8,7 @@ struct Person
 	Money capital;
 	int bank_pp;
 	Money salary;
-	Money traty;  // eda, domashnie zhivontie i t.d.
+	Money traty;  // eda, domashnie zhivontie, komunalka
 	Money arenda;
 	double inf_pp;
 	Money house_price;
@@ -79,14 +79,15 @@ void bob_salary_income(const int year, const int month)
 	if (year != 2030 && (month != 5 || month != 6)) bob.capital += (bob.salary);
 }
 
-void alice_traty_loss(const int year, const int month)  // eda, domashnie zhivontie i t.d.
+// eda, domashnie zhivontie, komunalka
+void alice_traty_loss(const int year, const int month) 
 	alice.traty += (Money)(alice.traty * alice.inf_pp / 100.0 / 12.0);
 	alice.capital -= (alice.traty);
 }
 
 
-void bob_traty_loss(const int year, const int month)  // eda, domashnie zhivontie i t.d.
-{
+// eda, domashnie zhivontie, komunalka
+void bob_traty_loss(const int year, const int month) {
 	bob.traty += (Money)(bob.traty * bob.inf_pp / 100.0 / 12.0);
 	bob.capital -= (bob.traty);
 }
@@ -122,12 +123,12 @@ void simulation()
 	while (year != 2053 || month != 9) {
 		alice_capital_income(year, month);
 		alice_salary_income(year, month);
-		alice_traty_loss(year, month);
+		alice_traty_loss(year, month);  // eda, domashnie zhivontie, komunalka
 		alice_arenda_loss(year, month);
 		
 		bob_capital_income(year, month);
 		bob_salary_income(year, month);
-		bob_traty_loss(year, month);
+		bob_traty_loss(year, month);  // eda, domashnie zhivontie, komunalka
 		bob_monthly_mortgage(year, month);
 		bob_house_price(year, month);
 		
