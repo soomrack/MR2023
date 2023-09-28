@@ -27,7 +27,7 @@ struct Person bob;
 
 void bob_init()
 {
-	bob.bank_account = 0; //1000 * 1000 * 100
+	bob.bank_account = 0;
 	bob.salary = 200 * 1000 * 100;
 	bob.house = 20 * 1000 * 1000 * 100;
 	bob.perv_vznos = 1000 * 1000 * 100;
@@ -65,35 +65,38 @@ Money alice_salary(const int year, const int month)
 
 void alice_house_bills()
 {
+	alice.house_bills += (Money)(alice.house_bills * inflation_pp / 100 / 12);
 	alice.bank_account -= alice.house_bills;
-	//if (month == 12) alice.salary = +(Money)(alice.salary * inflation_pp / 100);
+
 };
 
 void alice_traty()
 {
+	alice.traty += (Money)(alice.traty * inflation_pp / 100 / 12);
 	alice.bank_account -= alice.traty;
-	//if (month == 12) alice.traty += (Money)(alice.salary * inflation_pp / 100);
+
 };
 
 
 void bob_traty()
 {
 	bob.bank_account -= bob.traty;
-	//if (month == 12) alice.traty += (Money)(alice.salary * inflation_pp / 100);
+	bob.traty += (Money)(bob.traty * inflation_pp / 100 / 12);
+
 };
 
 
-Money monthly_ipoteka_pay_bob(const struct Person bob, double procent)
+void monthly_ipoteka_pay_bob(double procent)
 {
 	double  monthly_pp = procent / 12.0;
 	Money house_price = bob.house - bob.perv_vznos;
-	//printf("%lld\n", house_price);
 
 	Money pay = (double)house_price *
 		((monthly_pp / 100.0) * (powf(1.0 + (monthly_pp / 100.0), (double)bob.srok))
 			/ (powf(1.0 + (monthly_pp / 100.0), (double)bob.srok) - 1.0));
 
-	return pay;
+	bob.bank_account -= pay;
+
 };
 
 
@@ -115,45 +118,40 @@ void bob_house_cost(const int year)
 	bob.house += (Money)(bob.house * (inflation_pp / 100) * year);
 };
 
-//void print_person(const struct Person person)
 
-void simulation()
+void simulation(int month, int year)
 {
-	int month = 9;
-	int year = 2023;
-	Money a = monthly_ipoteka_pay_bob(bob, 7.0);
-	//printf("%lld", alice.traty);
+
 	bob.bank_account = 0;
 
-	while (year != 2053) //&& month != 9)
-	{
+	while (!(year == 2053 && month == 9)) {
 		alice_salary(year, month);
-		alice.traty += (Money)(alice.traty * inflation_pp / 100 / 12);
-		alice.house_bills += (Money)(alice.house_bills * inflation_pp / 100 / 12);
 		alice_house_bills();
 		alice_traty();
 		alice_deposite_income();
 
 
 		bob_salary(year, month);
-		bob.traty += (Money)(bob.traty * inflation_pp / 100 / 12);
-		bob.bank_account -= a;
+		monthly_ipoteka_pay_bob(7.0);
 		bob_traty();
 		bob_deposite_income();
 
 		++month;
-		if (month == 13)
-		{
+
+		if (month == 13) {
 			month = 1;
 			++year;
 		}
 	}
+
+	bob_house_cost(30);
+	bob.bank_account += bob.house;
 };
 
 
 void print_person(const struct Person person)
 {
-	printf("s:\n", person.name);
+	printf("%s:\n", person.name);
 	printf("  bank_account = %lld rub\n", (Money)(person.bank_account / 100));
 };
 
@@ -163,11 +161,10 @@ int main()
 	alice_init();
 	bob_init();
 
-	simulation();
-	bob_house_cost(30);
+	simulation(9, 2023);
 
 	print_person(bob);
 	print_person(alice);
-	
+
 	return 0;
 }
