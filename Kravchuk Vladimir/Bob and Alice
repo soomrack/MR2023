@@ -1,16 +1,18 @@
 #include <stdio.h>
 
-long long int alice_bank_account = 1000000 * 100;
-long long int bob_bank_account = 0;
-long long int alice_salary = 200000 * 100;
-long long int bob_salary = 200000 * 100;
-int percent_deposite = 9;
-long long int spend_for_rent_alice = 35000*100;
-long long int spending_alice = 20000*100;
-long long int spending_bob = 18000*100;
-long long int spend_for_hamster = 4000*100;
-long long int alice_bank_accont = 1000000 * 100;
-long long int bob_bank_accont = 0;
+long long int alice_bank_account = 1000000 * 100,
+bob_bank_account = 0,
+alice_salary = 200000 * 100,
+bob_salary = 200000 * 100,
+spend_for_rent_alice = 35000 * 100,
+spending_alice = 20000 * 100,
+spending_bob = 18000 * 100,
+spend_for_hamster = 4000 * 100,
+alice_bank_accont = 1000000 * 100,
+bob_bank_accont = 0;
+int percent_deposite = 9,
+home_cost = 20000000 * 100;
+
 
 void alice_salary_income( int year, int month)
 {
@@ -33,12 +35,12 @@ void alice_deposite_income( int year, int month)
 
 void bob_deposite_income( int year, int month)
 {
-	long long int bob_loan_payment = 110000 * 100;
+	int bob_loan_payment = 110000 * 100;
 	bob_bank_account -= bob_loan_payment;
 	bob_bank_account += bob_bank_account * (percent_deposite / (100 * 12));
 }
 
-void inflation( int year, int month)
+void inflation_all( int year, int month)
 {
 	int inflation = 3;
 	if (month == 12) {
@@ -48,6 +50,7 @@ void inflation( int year, int month)
 		spending_alice += spending_alice * (inflation / (3 * 100));
 		spending_bob += spending_bob * (inflation / (3 * 100));
 		spend_for_hamster += spend_for_hamster * (inflation / 100);
+		home_cost += home_cost * (inflation / (3 * 100));
 	}
 	if (year == 2036 && month == 11) percent_deposite += percent_deposite + 2;
 }
@@ -56,6 +59,15 @@ void inflation( int year, int month)
 void alice_rent_home( int year, int month)
 {
 	alice_bank_account -= spend_for_rent_alice;
+}
+
+void alice_buying_home(int year, int month)
+{
+	int home = 0;
+	if (alice_bank_account > home_cost && home == 0) {
+		alice_bank_account -= home_cost;
+		home++;
+	}
 }
 
 void alice_month_spending( int year, int month)
@@ -90,19 +102,19 @@ void alice_hamster( int year, int month)
 
 void information_alice()
 {
-	printf("Alice bank account = %lld\n", alice_bank_account);
+	printf("Alice bank account = %lld\n", alice_bank_account/100);
 }
 
 void information_bob()
 {
-	printf("Bob bank account = %lld\n", bob_bank_account);
+	printf("Bob bank account = %lld\n", bob_bank_account/100);
 }
 
 void simulation()
 {
 	int month = 9;
 	int year = 2023;
-	while (year != 2053 && month != 8) {
+	while (year != 2053 || (year < 2053 && month == 9)) {
 		alice_deposite_income(year, month);
 		alice_salary_income(year, month);
 		alice_rent_home(year, month);
@@ -113,7 +125,13 @@ void simulation()
 		bob_salary_income(year, month);
 		bob_month_spending(year, month);
 		bob_trip(year, month);
-		inflation(year, month);
+		inflation_all(year, month);
+		alice_buying_home(year, month);
+		
+		// FOR DEBUG
+		//information_alice();
+		//information_bob();
+
 		month++;
 		if (month == 12) {
 			year++;
@@ -121,8 +139,6 @@ void simulation()
 		}
 	}
 }
-
-
 
 int main(void)
 {
