@@ -81,5 +81,12 @@ int main(void)
         printf("Alice has larger capital\n");
     else
         printf("Bob has larger capital\n");
+<<<<<<< HEAD
     printf("Flat price =  %lld\n", flat_price);
+=======
+    
+    
+    Test commit
+
+>>>>>>> 9e3c59b97851e1e4c7b154bfd1a9d3a6cc6dd5d0
 }

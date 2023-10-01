@@ -13,8 +13,7 @@ kopeyki salary;
 kopeyki expenses;
 }alice, bob;
 
-struct Person alice;
-struct Person bob;
+
 
 void alice_init(){
     alice.capital = 1000 * 1000 * 100;
@@ -37,13 +36,23 @@ void bob_salary_income(){
 }
 
 void alice_deposite_income(){
-   int bank_p = 11;
- alice.capital += (kopeyki)(alice.capital*(bank_p/100.0/12.0));
+   int bank_p;
+if(alice.capital<1000*1000*10*100){
+    bank_p = 11;
+}else{
+    bank_p = 9;
+}
+alice.capital += (kopeyki)(alice.capital*(bank_p/100.0/12.0));
 }
 
 void bob_deposite_income(){
-   int bank_p = 11;
- bob.capital += (kopeyki)(bob.capital*(bank_p/100.0/12.0));
+    int bank_p;
+if(bob.capital<1000*1000*10*100){
+    bank_p = 11;
+}else{
+    bank_p = 9;
+}
+bob.capital += (kopeyki)(bob.capital*(bank_p/100.0/12.0));
 }
 
 void alice_expenses(){
@@ -64,7 +73,7 @@ void bob_rent(){
 
 void simulation(){
     int mounth = 9, year = 2023;
-for (mounth; mounth < 8 && year < 2053; mounth = 13 ? mounth =1, ++year : ++mounth){
+ while(year !=2053 && mounth !=8){
     alice_salary_income();
     alice_deposite_income();
     alice_rent();
@@ -74,11 +83,13 @@ for (mounth; mounth < 8 && year < 2053; mounth = 13 ? mounth =1, ++year : ++moun
     bob_deposite_income();
     bob_rent();
     bob_expenses();
+    ++mounth;
+     if(mounth==13){
+    mounth = 1;
+    ++year;
+ }
 }
-
 }
-
-
 
 
 void print_winner(){
@@ -92,16 +103,6 @@ setlocale(LC_ALL, "Ru");
 alice_init();
 bob_init();
 simulation();
-    /*
-    посчитать доходы алисы
-    посчитать доходы боба
-
-    посчитать траты алисы
-    посчитать траты боба
-
-    посчитать капитал боба и алисы и сравнить
-    
-    */
 print_winner();
     return 0 ;
 }
