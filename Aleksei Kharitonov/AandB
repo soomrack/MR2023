@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+typedef long long int money;
+
+struct person
+{
+	money schet;
+	char* name;
+	money salary;
+	money rent;
+	money platezh;
+	money hata;
+} alice, bob;
+
+void alice_init()
+{
+	alice.schet = 1000000;
+	alice.name = "Alice";
+	alice.salary = 200000;
+	alice.rent = 30000;
+	alice.platezh = 0;
+	alice.hata = 0;
+}
+
+void bob_init()
+{
+	//struct person alice = bob;
+	bob.schet = 1000000;
+	bob.name = "Bob";
+	bob.salary = 200000;
+	bob.rent = 10000;
+	bob.platezh = 0;
+	bob.hata = 20000000;
+}
+
+void bob_platezh(struct person person)
+{
+	float procent = (0.07/12) ;
+	money hata = 20000000;
+	money kredit = hata - bob.schet;
+	money n = 30 * 12;
+	float skobki = pow((procent+1),n); 
+	bob.platezh = kredit * (((procent) * skobki) / (skobki - 1)); 
+}
+
+void simulation(struct person person) 
+{
+	
+	double plusvklad = 1 + (0.11/12);
+	double inflation = 1.07;
+	int year = 1;
+	int month = 11;
+	int endyear = 30;
+	int endmonth = 12;
+	if (month != 1) 
+	{
+		endyear++;
+	}
+	for (int j = year; j <= endyear; j++)
+	{
+		for (int i = month; i <= endmonth; i++)
+		{
+			if (year > 30)
+			{
+				endmonth = month;
+			}
+			person.schet += person.salary - person.rent - person.platezh;
+			person.schet *= plusvklad;
+			printf("schet:%lld\n", person.schet);
+		}
+		person.salary *=  inflation;
+		person.rent *=  inflation;
+		person.hata *=  inflation;
+
+	}
+}
+
+void print (struct person person)
+{
+	person.schet += person.hata;
+	printf("Name:%s\n", person.name);
+	printf("schet:%lld\n", person.schet);
+	printf("salary:%lld\n", person.salary);
+	printf("rent:%lld\n", person.rent);
+	printf("platezh: % lld\n", person.platezh);
+}
+
+int main()
+{
+	alice_init();
+	bob_init();
+
+	bob_platezh(bob);
+	
+	simulation(alice);
+	print(alice);
+	
+	simulation(bob);
+	print(bob);
+	
+	return 0;
+}

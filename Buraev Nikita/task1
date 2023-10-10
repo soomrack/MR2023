@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <math.h>
+
+typedef struct {
+    long long unsigned int bank_balance;
+    int income;
+    int expenses;
+} Person;
+
+void initPerson(Person* person, long long unsigned int bank_balance, int income, int expenses) {
+    person->bank_balance = bank_balance;
+    person->income = income;
+    person->expenses = expenses;
+}
+
+void calculateAliceIncome(Person* alice, int month, int year) {
+    alice->bank_balance *= 1 + 9.0 / 1200.0;
+
+    if ((month == 6 || month == 7) && year == 2035) {
+        alice->income = 0;
+    }
+    if (month == 8 && year == 2035) {
+        alice->income = 200000;
+    }
+}
+
+void calculateAliceExpenses(Person* alice, int month, int year) {
+    alice->expenses *= 1 + 7.0 / 1200.0;
+
+    if (month == 12 && year == 2035) {
+        alice->expenses += 1000;
+    }
+}
+
+double computeAliceBankBalance(Person* alice) {
+    int months = 240;
+    for (int i = 0; i < months; i++) {
+        int month = i % 12 + 1;
+        int year = 2023 + i / 12;
+
+        calculateAliceIncome(alice, month, year);
+        calculateAliceExpenses(alice, month, year);
+
+        alice->bank_balance += alice->income - alice->expenses;
+    }
+
+    return alice->bank_balance;
+}
+
+int calculateMonthlyMortgagePayment(int principal, float annual_interest_rate, int num_of_payments) {
+    float monthly_interest_rate = annual_interest_rate / 12.0;
+    int monthly_payment = principal * monthly_interest_rate * pow(1 + monthly_interest_rate, num_of_payments) /
+                         (pow(1 + monthly_interest_rate, num_of_payments) - 1);
+    return monthly_payment;
+}
+
+void calculateBobIncome(Person* bob, int month, int year) {
+    bob->bank_balance *= 1 + 9.0 / 1200.0;
+}
+
+/*
+void calculateBobExpenses(Person* bob, int month, int year) {    
+}
+*/
+
+long long unsigned int computeBobBankBalance(Person* bob) {
+    float annual_interest_rate = 7.0 / 12.0 / 1200.0;
+    int principal = 19000000;
+    int num_of_payments = 240;
+    int mortgage = calculateMonthlyMortgagePayment(principal, annual_interest_rate, num_of_payments);
+
+    int months = 240;
+    for (int i = 0; i < months; i++) {
+        int month = i % 12 + 1;
+        int year = 2023 + i / 12;
+
+        calculateBobIncome(bob, month, year);
+        calculateBobExpenses(bob, month, year);
+
+        bob->bank_balance += bob->income - mortgage - bob->expenses;
+    }
+
+    bob->bank_balance *= 1 + 9.0 / 1200.0;
+    bob->bank_balance += bob->income - (principal - mortgage * 239);
+
+    return bob->bank_balance;
+}
+
+void printResult(Person* alice, Person* bob) {
+    printf("\n\n\t\tResult of simulation\n");
+    printf("\t\t===========================\n");
+    printf("\t\tAlice Bank: %llu\n", alice->bank_balance);
+    printf("\t\tBob Bank: %llu\n", bob->bank_balance);
+    printf("\t\t===========================\n\n\n");
+}
+
+int main() {
+    Person alice;
+    initPerson(&alice, 1000000, 200000, 60000);
+    Person bob;
+    initPerson(&bob, 0, 200000, 30000);
+
+    computeAliceBankBalance(&alice);
+    computeBobBankBalance(&bob);
+
+    printResult(&alice, &bob);
+
+    return 0;
+}

@@ -1,80 +1,154 @@
+п»ї// Libs
+
 #include <stdio.h>
 #include <math.h>
 #include <locale.h>
 
-/*
-Вычисляет капитал Алисы.
 
-На старте у неё 1 млн рублей, зарплата 200 тыс рублей,
-и она снимает квартиру за 30 тыс рублей. Остальные
-жизненные расходы обходятся ей в 30 тыс рублей.
-
-Каждый месяц ей начисляются проценты в банке на остаток по счёту.
-Также каждый месяц она кладёт новую сумму в банк - остаток после
-выплаты аренды - под 9% годовых. 
-
-Через 20 лет Алиса понимает, что из-за инфляции цены на квартиры стали
-настолько высокими, что она уже не сможет её себе позволить. 
-*/
-double computeAliceBank() {
-    double bank = 1000000;
-    float salary = 200000;
-    float arendPrice = 30000;
-    float life = 30000;
-
-
-    for (int i = 0; i < 240; i++) {
-        bank *= 1 + 9/1200;
-        bank += salary - arendPrice - life;
-    }
-
-    return bank;
+// Init Person
+typedef struct {
+<<<<<<< HEAD
+    long long int bank;
+=======
+    long long unsigned int bank;
+>>>>>>> 9e3c59b97851e1e4c7b154bfd1a9d3a6cc6dd5d0
+    int income;
+    int expenses;
+} Person;
+void initPerson (Person *person, long long int bank, int income, int expenses){
+    person->bank = bank;
+    person->income = income;
+    person->expenses = expenses;
 }
 
+// All about Alice
 
-/*
-Вычисляет капитал Боба.
+void aliceIncome(Person* alice, int month, int year) {
+    alice->bank *= 1 + 9.0 / 1200.0;
+    
 
-На старте у него пустой банк, так как 1 млн идёт первоначальным взносом, 
-зарплата 200 тыс рублей. Остальные
-жизненные расходы обходятся ему в 30 тыс рублей.
+    if ((month == 6 || month == 7) && year == 2035) {
+        alice->income = 0;
+    }
+    if (month == 8 && year == 2035) {
+<<<<<<< HEAD
+        alice->income = 200000;
+=======
+        alice->income = 200*1000*100;
+>>>>>>> 9e3c59b97851e1e4c7b154bfd1a9d3a6cc6dd5d0
+    }
+}
 
-Боб выплачивает ипотеку аннуитетными платежами,
-величина которых известна. Всё, что у него остаётся,
-Боб кладёт на счёт под 9% годовых.
+void aliceExpenses(Person* alice, int month, int year) {
+    alice->expenses *= 1 + 7.0 / 1200.0;
 
-Через 20 лет Боб полностью выплачивает кредит, после чего 
-продаёт квартиру и увольняется с работы, чтобы остаток жизни
-путешествовать и ни о чём не думать.
-*/
-double computeBobBank() {
-    double bank = 0;
-    int salary = 200000;
-    int life = 30000;
-    int percent = 7;
-    float monthlyPayment = 147306.8;
+    if (month == 12 && year == 2035) {
+        alice->expenses += 1000;
+    }
+}
 
-    for (int i = 0; i < 240; i++) {
-        bank *= 1 + 9 / 1200;
-        bank += salary - monthlyPayment - life;
+double computeAliceBank(Person* alice) {
+
+    int months = 240;
+    int month;
+    int year;
+<<<<<<< HEAD
+    for (int i = 0; i < months; i++, month = i % 12 + 1, year = 2023 + i / 12) {
+=======
+    for (int i = 0; i < months; i++) {
+        month = i % 12 + 1;
+        year = 2023 + i / 12;
+>>>>>>> 9e3c59b97851e1e4c7b154bfd1a9d3a6cc6dd5d0
+        aliceIncome(alice, month, year);
+        aliceExpenses(alice, month, year);
+        
+        alice->bank += alice->income - alice->expenses;
     }
 
-    bank *= 1 + 9 / 1200;
-    bank += salary - 142021.9;
-    bank += 20000000 * pow(1.07, 20);
-
-    return bank;
+    return alice->bank;
 }
+
+// All about Bob
+
+int mortgageCalc(int sum, float r, int n) {
+    int monthlyPayment = sum * r * pow(1 + r, n) / (pow(1 + r, n) - 1);
+    return monthlyPayment;
+}
+
+void bobIncome(Person* bob, int month, int year) {
+    bob->bank *= 1 + 9 / 1200;
+}
+
+void bobExpenses(Person* bob, int month, int year) {
+    
+}
+
+long long int computeBobBank(Person* bob) {
+
+    float r = 7.0 / 12.0 / 1200.0;
+<<<<<<< HEAD
+    int sum = 19000000;
+=======
+    int sum = 19*1000*1000*100;
+>>>>>>> 9e3c59b97851e1e4c7b154bfd1a9d3a6cc6dd5d0
+    int n = 240;
+    int mortgage = mortgageCalc(sum, r, n);
+
+    int months = 240;
+    int month;
+    int year;
+<<<<<<< HEAD
+    for (int i = 0; i < months; i++, month = i % 12 + 1, year = 2023 + i / 12) {
+=======
+    for (int i = 0; i < months; i++) {
+        month = i % 12 + 1;
+        year = 2023 + i / 12;
+>>>>>>> 9e3c59b97851e1e4c7b154bfd1a9d3a6cc6dd5d0
+        bobIncome(bob, month, year);
+        bobExpenses(bob, month, year);
+        bob->bank += bob->income - mortgage - bob->expenses;
+    }
+
+
+    bob->bank *= 1 + 9 / 1200;
+    bob->bank += bob->income - (sum - mortgage * 239);
+
+    return bob->bank;
+}
+
+// Print result of the program
+
+void printResult(Person *alice, Person *bob) {
+    printf("\n\n\n\n\n\n\t\tResult of simulation\n");
+    printf("\t\t===========================\n");
+<<<<<<< HEAD
+    printf("\t\tAlice Bank: %i\n", alice->bank);
+    printf("\t\tBob Bank: %i\n", bob->bank);
+=======
+    printf("\t\tAlice Bank: %lli\n", alice->bank/100);
+    printf("\t\tBob Bank: %lli\n", bob->bank/100);
+>>>>>>> 9e3c59b97851e1e4c7b154bfd1a9d3a6cc6dd5d0
+    printf("\t\t===========================\n\n\n\n\n\n\n\n\n\n");
+}
+
+// Entry Point
 
 int main() {
-    setlocale(LC_NUMERIC, "");
+    Person alice;
+<<<<<<< HEAD
+    initPerson(&alice, 1000000, 200000, 60000);
+    Person bob;
+    initPerson(&bob, 0, 200000, 30000);
+=======
+    initPerson(&alice, 1000*1000*100, 200*1000*100, 60*1000*100);
+    Person bob;
+    initPerson(&bob, 0, 200*1000*100, 30*1000*100);
+>>>>>>> 9e3c59b97851e1e4c7b154bfd1a9d3a6cc6dd5d0
 
-    double aliceBank = computeAliceBank();
-    double bobBank = computeBobBank();
+    computeAliceBank(&alice);
+    computeBobBank(&bob);
 
-    printf("%i - Alice Bank after 20 years\n", (int)aliceBank);
-    printf("%i - Bob Bank after 20 years\n", (int)bobBank);
-    printf("Bob is richer than Alice by %i rubles", (int)(bobBank - aliceBank));
+    printResult(&alice, &bob);
 
     return 0;
 }
