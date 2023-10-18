@@ -89,7 +89,9 @@ void matrix_sum(const struct Matrix matrix1, const struct Matrix matrix2, struct
     if (matrix_check_size(matrix1, matrix2, equal) != 1) {
         printf("Invalid matrix sizes \n");
         return;
-    };    
+    };
+
+    matrix_free(matrix3);  
 
     matrix_init(matrix1.cols, matrix1.rows, matrix3, random);
 
@@ -103,7 +105,9 @@ void matrix_minus(const struct Matrix matrix1, const struct Matrix matrix2, stru
     if (matrix_check_size(matrix1, matrix2, equal) != 1) {
         printf("Invalid matrix sizes \n");
         return;
-    };  
+    };
+
+    matrix_free(matrix3);
 
     matrix_init(matrix1.cols, matrix1.rows, matrix3, random);
 
@@ -119,6 +123,8 @@ void matrix_mult(const struct Matrix matrix1, const struct Matrix matrix2, struc
         return;
     };
 
+    matrix_free(matrix3);
+
     matrix_init(matrix2.cols, matrix1.rows, matrix3, random);
 
     for (int k = 1; k <= matrix1.rows; ++k)
@@ -131,6 +137,8 @@ void matrix_mult(const struct Matrix matrix1, const struct Matrix matrix2, struc
 
 void matrix_transp(const struct Matrix matrix1, struct Matrix *matrix2)
 {
+    matrix_free(matrix2);
+
     matrix_init(matrix1.rows, matrix1.cols, matrix2, random);
 
     for (int k = 1; k <= matrix1.rows; ++k)
@@ -150,6 +158,8 @@ void matrix_exponent(const struct Matrix matrix1, struct Matrix *matrix2, const 
     matrix_init(matrix1.cols, matrix1.rows, &buffer1, random);
     matrix_init(matrix1.cols, matrix1.rows, &buffer2, random);
     matrix_init(matrix1.cols, matrix1.rows, &buffer3, random);
+
+    matrix_free(matrix2);
 
     matrix_init(matrix1.cols, matrix1.rows, matrix2, zero);
 
