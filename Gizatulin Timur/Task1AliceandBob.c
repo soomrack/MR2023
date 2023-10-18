@@ -1,18 +1,18 @@
 #include <stdio.h>
-#include <math.h>
+#include <math.h> 
 
 
-typedef long long int Money;  // РєРѕРїРµР№РєРё
+typedef long long int Money;  // копейки 
 
 
 struct Person
 {
     Money capital;
-    Money income;              // zp
+    Money income;              // zp дддддддд
     Money life_spendings;      // expenses for life
     Money monthly_payment;     // expenses for monthly payment
     Money overpayment;         // overpayment 
- 
+
 };
 
 struct Person Alice;
@@ -20,13 +20,13 @@ struct Person Bob;
 
 
 const Money PRICE = 20 * 1000 * 1000 * 100;     // apartment cost
-const Money SALARY = 200 * 1000 * 100;          
+const Money SALARY = 200 * 1000 * 100;
 const Money START_CAPITAL = 1000 * 1000 * 100;  // START_CAPITAL
 const int YEARS = 30;
-const double INFLATION = 0.07;                  // СЃРѕС‚Р°СЏ РїСЂРѕС†РµРЅС‚Р° РёРЅС„Р»СЏС†РёРё РІ РіРѕРґ 
-double BANK_RATE = 0.09;                        // СЃРѕС‚Р°СЏ РіРѕРґРѕРІРѕР№ СЃС‚Р°РІРєРё РІ Р±Р°РЅРєРµ
-const Money LIFE_SPENDINGS = 25 * 1000 * 100;       
-const int START_MONTH = 9;                      // РЅР°С‡Р°Р»СЊРЅС‹Рµ РІСЂРµРјРµРЅРЅС‹Рµ СѓСЃР»РѕРІРёСЏ
+const double INFLATION = 0.07;                  // сотая процента инфляции в год 
+double BANK_RATE = 0.09;                        // сотая годовой ставки в банке
+const Money LIFE_SPENDINGS = 25 * 1000 * 100;
+const int START_MONTH = 9;                      // начальные временные условия
 const int START_YEAR = 2023;
 const int LAST_MONTH = 8;
 const int LAST_YEAR = 2053;
@@ -142,7 +142,7 @@ void simulation()
         bob_mortgage_payment(year, month);
 
         inflation(year, month);
-        
+
 
         month++;
 
