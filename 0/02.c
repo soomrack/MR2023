@@ -22,7 +22,7 @@ struct Matrix matrix_allocate(const size_t rows, const size_t cols)
         struct Matrix A = {.cols = cols, .rows = rows, .data = NULL};
         return A;
     }
-    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) return MATRIX_NULL;  // rows * cols < MAX_SIZE / sizeof(double)
+    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) return MATRIX_NULL;  // rows * cols < MAX_SIZE / sizeof(MatrixItem)
     
     struct Matrix A = {.cols = cols, .rows = rows, .data = NULL};
     A.data = (MatrixItem*)malloc(A.cols * A.rows * sizeof(MatrixItem));
@@ -83,7 +83,7 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
     if (A.cols != B.cols || A.rows != B.rows) return MATRIX_NULL;
 
     struct Matrix C = matrix_allocate(A.cols, A.rows);
-    if (C.data == NULL) return MATRIX_NULL;
+    if (C.data == NULL) return C;
     
     memcpy(C.data, A.data, C.cols * C.rows * sizeof(MatrixItem));
     matrix_add(C, B);
