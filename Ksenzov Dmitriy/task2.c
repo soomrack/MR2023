@@ -17,6 +17,20 @@ struct Matrix {
 const struct Matrix MATRIX_NULL = {.rows = 0, .cols = 0, .data = NULL};
 
 
+void matrix_set_zero(struct Matrix A)
+{
+    memset(A.data, 0, sizeof(double) * A.rows * A.cols);
+}
+
+
+void matrix_set_one(struct Matrix A)
+{
+    matrix_set_zero(A);
+    for (size_t idx = 0; idx < A.rows * A.cols; idx += A.cols + 1)
+    A.data[idx] = 1;
+}
+
+
 struct Matrix matrix_allocate(const size_t rows, const size_t cols)
 {
     if (cols == 0 || rows == 0) {
@@ -122,7 +136,7 @@ struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
     
     struct Matrix C = matrix_allocate(A.rows, B.cols);
     if (C.data == NULL) return C;
-    
+
     for (unsigned int C_col = 0; C_col < A.rows; ++C_col) {
         for (unsigned int C_row = 0; C_row < B.cols; ++C_row) {
             for (unsigned int idx = 0; idx < A.cols; ++idx) {
@@ -182,12 +196,12 @@ double matrix_determinant_3x3(struct Matrix A)
     if (A.cols != 3 && A.rows != 3) return NAN;
 
     C =
-      A.data[0] * A.data[4] * A.data[8]
-    + A.data[6] * A.data[1] * A.data[5]
-    + A.data[3] * A.data[7] * A.data[2]
-    - A.data[2] * A.data[4] * A.data[6]
-    - A.data[5] * A.data[7] * A.data[0]
-    - A.data[3] * A.data[1] * A.data[8];
+        + A.data[0] * A.data[4] * A.data[8]
+        + A.data[6] * A.data[1] * A.data[5]
+        + A.data[3] * A.data[7] * A.data[2]
+        - A.data[2] * A.data[4] * A.data[6]
+        - A.data[5] * A.data[7] * A.data[0]
+        - A.data[3] * A.data[1] * A.data[8];
     return C;
 }
 
@@ -195,6 +209,32 @@ double matrix_determinant_3x3(struct Matrix A)
 void determinant_print(const double A)
 {
     printf("\n Matrix determinant = %4.2lf", A);
+}
+
+
+// Function returns new matrix C = e^A or MATRIX_NULL if fail
+struct Matrix matrix_exponent(struct Matrix A)
+{
+    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    if (C.data == NULL) return C;
+
+    struct Matrix D = matrix_allocate(A.cols, A.rows);
+    matrix_set_one(D);
+
+    struct Matrix E = matrix_allocate(A.cols, A.rows);
+
+    matrix_set_one(C);
+
+    for (unsigned int k = 1; k <= 100; ++k) {
+        
+        D = matrix_mult(D, A);
+
+        for (unsigned int idx = 0; idx < E.cols * E.rows; ++idx)
+        E.data[idx] = D.data[idx] / k;
+
+        matrix_add(C, E);
+    };
+    return C;
 }
 
 
@@ -239,7 +279,7 @@ void determinant_print(const double A)
 
 int main ()
 {
-    struct Matrix A, B, C, D, E, F;
+    struct Matrix A, B, C, D, E, F, K;
     double G, H, I;
  
     A = matrix_create(3, 3, (MatrixItem[]){24., 15., 2.,
@@ -276,11 +316,15 @@ int main ()
     G = matrix_determinant_3x3(A);
     determinant_print(G);
 
+    K = matrix_exponent(A);
+    matrix_print(K);
+
     matrix_delete(&A);
     matrix_delete(&B);
     matrix_delete(&C);
     matrix_delete(&D);
     matrix_delete(&E);
     matrix_delete(&F);
+    matrix_delete(&K);
     return 0;
 }
