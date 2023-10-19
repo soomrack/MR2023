@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <math.h>
 
 
 typedef double MatrixItem;
@@ -13,7 +14,7 @@ struct Matrix {
 };
 
 
-const struct Matrix NULL_MATRIX = {.rows = 0, .cols = 0, .data = NULL};
+const struct Matrix MATRIX_NULL = {.rows = 0, .cols = 0, .data = NULL};
 
 
 struct Matrix matrix_allocate(const size_t rows, const size_t cols)
@@ -22,12 +23,12 @@ struct Matrix matrix_allocate(const size_t rows, const size_t cols)
         struct Matrix A = {.cols = cols, .rows = rows, .data = NULL};
         return A;
     };
-    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) return NULL_MATRIX; // rows * cols < MAX_SIZE / sizeof(double)
+    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) return MATRIX_NULL; // rows * cols < MAX_SIZE / sizeof(double)
 
     struct Matrix A = {.cols = cols, .rows = rows, .data = NULL};
     A.data = (MatrixItem*)malloc(A.cols * A.rows * sizeof(MatrixItem));
     if (A.data == NULL) {
-        return NULL_MATRIX;
+        return MATRIX_NULL;
     }
     return A;
 }
@@ -47,7 +48,7 @@ struct Matrix matrix_create(const size_t rows, const size_t cols, const MatrixIt
 void matrix_delete(struct Matrix *A)
 {
     free(A->data);
-    *A = NULL_MATRIX;
+    *A = MATRIX_NULL;
 }
 
 
@@ -75,13 +76,13 @@ int matrix_add(struct Matrix A, struct Matrix B)
 }
 
 
-// Function returns new matrix C = A + B or NULL_MATRIX if fail
+// Function returns new matrix C = A + B or MATRIX_NULL if fail
 struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 {
-    if (A.cols != B.cols || A.rows != B.rows) return NULL_MATRIX;
+    if (A.cols != B.cols || A.rows != B.rows) return MATRIX_NULL;
 
     struct Matrix C = matrix_allocate(A.cols, A.rows);
-    if (C.data == NULL) return NULL_MATRIX;
+    if (C.data == NULL) return C;
     
     memcpy(C.data, A.data, C.cols * C.rows * sizeof(MatrixItem));
     matrix_add(C, B);
@@ -100,13 +101,13 @@ int matrix_subtract(struct Matrix A, struct Matrix B)
 }
 
 
-// Function returns new matrix C = A - B or NULL_MATRIX if fail
+// Function returns new matrix C = A - B or MATRIX_NULL if fail
 struct Matrix matrix_subtration(const struct Matrix A, const struct Matrix B)
 {
-    if (A.cols != B.cols || A.rows != B.rows) return NULL_MATRIX;
+    if (A.cols != B.cols || A.rows != B.rows) return MATRIX_NULL;
 
     struct Matrix C = matrix_allocate(A.cols, A.rows);
-    if (C.data == NULL) return NULL_MATRIX;
+    if (C.data == NULL) return C;
     
     memcpy(C.data, A.data, C.cols * C.rows * sizeof(MatrixItem));
     matrix_subtract(C, B);
@@ -114,13 +115,13 @@ struct Matrix matrix_subtration(const struct Matrix A, const struct Matrix B)
 }
 
 
-// Function returns new matrix C = A * B or NULL_MATRIX if fail
+// Function returns new matrix C = A * B or MATRIX_NULL if fail
 struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
 {
-    if (A.cols != B.rows) return NULL_MATRIX;
+    if (A.cols != B.rows) return MATRIX_NULL;
     
     struct Matrix C = matrix_allocate(A.rows, B.cols);
-    if (C.data == NULL) return NULL_MATRIX;
+    if (C.data == NULL) return C;
     
     for (unsigned int C_col = 0; C_col < A.rows; ++C_col) {
         for (unsigned int C_row = 0; C_row < B.cols; ++C_row) {
@@ -134,11 +135,11 @@ struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
 }
 
 
-// Function returns new matrix C = A^T or NULL_MATRIX if fail
+// Function returns new matrix C = A^T or MATRIX_NULL if fail
 struct Matrix matrix_transposition(struct Matrix A)
 {
     struct Matrix C = matrix_allocate(A.cols, A.rows);
-    if (C.data == NULL) return NULL_MATRIX;
+    if (C.data == NULL) return C;
 
     for (unsigned int C_row = 0; C_row < A.cols; ++C_row) {
         for (unsigned int C_col = 0; C_col < A.rows; ++C_col) {
@@ -149,47 +150,81 @@ struct Matrix matrix_transposition(struct Matrix A)
 }
 
 
-// Function returns new matrix C = |A| (A[3x3]) or NULL_MATRIX if fail
-struct Matrix matrix_determinant_3x3(struct Matrix A)
+// Function returns C = |A| (A[1x1]) or NAN if fail
+double matrix_determinant_1x1(struct Matrix A)
 {
-    if (A.cols != 3 && A.rows != 3) return NULL_MATRIX;
+    double C;
 
-    struct Matrix C = matrix_allocate(1, 1);
-    if (C.data == NULL) return NULL_MATRIX;
+    if (A.cols != 1 && A.rows != 1) return NAN;
 
-    C.data[0] = A.data[0] * A.data[4] * A.data[8] + A.data[6] * A.data[1] * A.data[5] + A.data[3] * A.data[7] * A.data[2]
-    - A.data[2] * A.data[4] * A.data[6] - A.data[5] * A.data[7] * A.data[0] - A.data[3] * A.data[1] * A.data[8];
+    C = A.data[0];
     return C;
 }
 
 
-// Function returns new matrix C = |A| or NULL_MATRIX if fail
+// Function returns C = |A| (A[2x2]) or NAN if fail
+double matrix_determinant_2x2(struct Matrix A)
+{
+    double C;
+
+    if (A.cols != 2 && A.rows != 2) return NAN;
+
+    C = A.data[0] * A.data[3] - A.data[1] * A.data[2];
+    return C;
+}
+
+
+// Function returns C = |A| (A[3x3]) or NAN if fail
+double matrix_determinant_3x3(struct Matrix A)
+{
+    double C;
+
+    if (A.cols != 3 && A.rows != 3) return NAN;
+
+    C =
+      A.data[0] * A.data[4] * A.data[8]
+    + A.data[6] * A.data[1] * A.data[5]
+    + A.data[3] * A.data[7] * A.data[2]
+    - A.data[2] * A.data[4] * A.data[6]
+    - A.data[5] * A.data[7] * A.data[0]
+    - A.data[3] * A.data[1] * A.data[8];
+    return C;
+}
+
+
+void determinant_print(const double A)
+{
+    printf("\n Matrix determinant = %4.2lf", A);
+}
+
+
+// Function returns new matrix C = |A| or MATRIX_NULL if fail
 // struct Matrix matrix_determinant(struct Matrix A)
 // {
-//     if (A.cols != A.rows) return NULL_MATRIX;
+//     if (A.cols != A.rows) return MATRIX_NULL;
 
 //     struct Matrix C = matrix_allocate(1, 1);
-//     if (C.data == NULL) return NULL_MATRIX;
+//     if (C.data == NULL) return MATRIX_NULL;
 
 //     struct Matrix D = matrix_allocate(A.rows, A.cols);
-//     if (D.data == NULL) return NULL_MATRIX;
+//     if (D.data == NULL) return MATRIX_NULL;
 
 //     unsigned int shift_triangle = 0;
 //     MatrixItem E = 0;
 //     for (unsigned int row = 0; row < A.rows; ++row) {
-//         // if (A.data[row * A.cols + shift_triangle] = 0) {
-//         //     for (unsigned int change = 1; change <= A.rows - row; ++change) {
-//         //         if (A.data[row * A.cols + shift_triangle + change * A.cols] != 0) {
+//          if (A.data[row * A.cols + shift_triangle] = 0) {
+//              for (unsigned int change = 1; change <= A.rows - row; ++change) {
+//                  if (A.data[row * A.cols + shift_triangle + change * A.cols] != 0) {
 
-//         //         }
-//         //     };
-//         // }
-//         // else {
+//                  }
+//              };
+//          }
+//         else {
 //             E = A.data[(row + 1) * A.cols + shift_triangle] / A.data[row * A.cols + shift_triangle];
 //             for (unsigned int col = 0; col < A.cols; ++col) {
 //             D.data[col] = A.data[A.cols + A.cols * row + col] - E * A.data[A.cols * row + col];
 //             };
-//         // };
+//         };
 //         ++shift_triangle;
 //     };
 
@@ -204,7 +239,8 @@ struct Matrix matrix_determinant_3x3(struct Matrix A)
 
 int main ()
 {
-    struct Matrix A, B, C, D, E, F, G;
+    struct Matrix A, B, C, D, E, F;
+    double G, H, I;
  
     A = matrix_create(3, 3, (MatrixItem[]){24., 15., 2.,
                                            40., 5., 7.,
@@ -231,8 +267,14 @@ int main ()
     // G = matrix_determinant(A);
     // matrix_print(G);
 
+    H = matrix_determinant_1x1(B);
+    determinant_print(H);
+
+    I = matrix_determinant_2x2(B);
+    determinant_print(I);
+
     G = matrix_determinant_3x3(A);
-    matrix_print(G);
+    determinant_print(G);
 
     matrix_delete(&A);
     matrix_delete(&B);
@@ -240,6 +282,5 @@ int main ()
     matrix_delete(&D);
     matrix_delete(&E);
     matrix_delete(&F);
-    matrix_delete(&G);
     return 0;
 }
