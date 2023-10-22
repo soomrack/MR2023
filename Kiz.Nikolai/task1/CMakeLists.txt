@@ -12,7 +12,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_executable(${CMAKE_PROJECT_NAME} src/main.c
-                                    src/capital.c)            
+                                    src/bankModel.c)            
 
 target_link_libraries(${PROJECT_NAME} m)
 
