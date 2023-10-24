@@ -31,14 +31,14 @@ struct Holder {
 };
 
 
-void print_mortgage_payment(const kopeck *mortgage_payment) {
-    printf("Ежемесячная выплата Боба по ипотеке - %lld копеек\n\n", *mortgage_payment);
+void print_mortgage_payment(const kopeck mortgage_payment) {
+    printf("Ежемесячная выплата Боба по ипотеке - %lld копеек\n\n", mortgage_payment);
 }
 
 
-void print_holding_results(struct Holder *Alice, struct Holder *Bob) {
-    printf("Итоговый капитал Алисы - %lld копеек\n", Alice->capital);
-    printf("Итоговый капитал Боба  - %lld копеек\n", Bob->capital);
+void print_holding_results(const kopeck alice_capital, const kopeck bob_capital) {
+    printf("Итоговый капитал Алисы - %lld копеек\n", alice_capital);
+    printf("Итоговый капитал Боба  - %lld копеек\n", bob_capital);
 }
 
 
@@ -50,42 +50,42 @@ kopeck calculate_mortgage_payment(const kopeck mortgage_debt) {
     double coefficient = MORTGAGE_RATE / (12 * (1 - pow(1. + MORTGAGE_RATE / 12, -HOLDING_MONTHS)));
     kopeck mortgage_payment = (kopeck) (coefficient * (double) mortgage_debt);
 
-    print_mortgage_payment(&mortgage_payment);
+    print_mortgage_payment(mortgage_payment);
 
     return mortgage_payment;
 }
 
 
-/**
- * @brief Insert holding data for both Alice and Bob into Holder struct instances
- */
-void initialize_holders(struct Holder *Alice, struct Holder *Bob) {
+void initialize_alice(struct Holder *Alice) {
     kopeck alice_starting_capital = 1000 * 1000 * 100;
-    kopeck bob_starting_capital = 0 * 100;
-
     kopeck alice_earnings = 200 * 1000 * 100;
-    kopeck bob_earnings = 200 * 1000 * 100;
-
-    kopeck food_expenses = 15 * 1000 * 100;
-    kopeck communal_expenses = 5 * 1000 * 100;
-
+    kopeck alice_food_expenses = 15 * 1000 * 100;
+    kopeck alice_communal_expenses = 5 * 1000 * 100;
     kopeck alice_apartment_expenses = 30 * 1000 * 100;
-    kopeck bob_mortgage_initial_payment = 1000 * 1000 * 100;
-    kopeck bob_apartment_expenses =
-            calculate_mortgage_payment(APARTMENT_PRICE - bob_mortgage_initial_payment);
 
     Alice->holding_rate = HOLDING_RATE;
     Alice->capital = alice_starting_capital;
     Alice->earnings = alice_earnings;
-    Alice->food_expenses = food_expenses;
-    Alice->communal_expenses = communal_expenses;
+    Alice->food_expenses = alice_food_expenses;
+    Alice->communal_expenses = alice_communal_expenses;
     Alice->apartment_expenses = alice_apartment_expenses;
+}
+
+
+void initialize_bob(struct Holder *Bob) {
+    kopeck bob_starting_capital = 0 * 100;
+    kopeck bob_earnings = 200 * 1000 * 100;
+    kopeck bob_food_expenses = 15 * 1000 * 100;
+    kopeck bob_communal_expenses = 5 * 1000 * 100;
+    kopeck bob_mortgage_initial_payment = 1000 * 1000 * 100;
+    kopeck bob_apartment_expenses =
+            calculate_mortgage_payment(APARTMENT_PRICE - bob_mortgage_initial_payment);
 
     Bob->holding_rate = HOLDING_RATE;
     Bob->capital = bob_starting_capital;
     Bob->earnings = bob_earnings;
-    Bob->food_expenses = food_expenses;
-    Bob->communal_expenses = communal_expenses;
+    Bob->food_expenses = bob_food_expenses;
+    Bob->communal_expenses = bob_communal_expenses;
     Bob->apartment_expenses = bob_apartment_expenses;
 }
 
@@ -158,11 +158,12 @@ void calculate_holdings(struct Holder *Alice, struct Holder *Bob) {
 int main() {
     struct Holder Alice, Bob;
 
-    initialize_holders(&Alice, &Bob);
+    initialize_alice(&Alice);
+    initialize_bob(&Bob);
 
     calculate_holdings(&Alice, &Bob);
 
-    print_holding_results(&Alice, &Bob);
+    print_holding_results(Alice.capital, Bob.capital);
 
     return 0;
 }
