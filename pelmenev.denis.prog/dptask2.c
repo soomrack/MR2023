@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <math.h>
 
 
 typedef double MatrixItem;
@@ -146,42 +147,42 @@ struct Matrix matrix_transp(const struct Matrix A)
 }
 
 
-/*void matrix_exponent(const struct Matrix matrix1, struct Matrix *matrix2, const double accuracy) //accuracy - десятичная дробь
+struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //accuracy - десятичная дробь
 { 
-    if (matrix_check_size(matrix1, matrix1, square) != 1) {
-        printf("Invalid matrix size \n");
-        return;
-    };
+    if (A.cols != A.rows)
+        return MATRIX_NULL;    
 
-    struct Matrix buffer1, buffer2, buffer3;
-    matrix_init(matrix1.cols, matrix1.rows, &buffer1, random);
-    matrix_init(matrix1.cols, matrix1.rows, &buffer2, random);
-    matrix_init(matrix1.cols, matrix1.rows, &buffer3, random);
+    struct Matrix D = matrix_allocate(A.cols, A.rows);
+    if (D.data == NULL)
+        return D;
+    memcpy(D.data, A.data, D.cols * D.rows * sizeof(MatrixItem));
+    
+    struct Matrix E = matrix_allocate(A.cols, A.rows);
+    matrix_zero(&E);
 
-    matrix_free(matrix2);
-
-    matrix_init(matrix1.cols, matrix1.rows, matrix2, zero);
+    struct Matrix C;
 
     int degree;
     degree = (int)(round(1 / accuracy));
 
-    for (int k = 1; degree; ++k) {
-        buffer1 = matrix1;
-        for (int m = 1; m <= k; ++m) {
-            matrix_mult(buffer1, matrix1, &buffer2);
-            matrix_mult_by_coeff(&buffer2, 1 / m);
-            buffer1 = buffer2;
+    for (int trm = 1; trm <= degree; ++trm) {
+        for (int dgr = 1; dgr <= trm; ++dgr) {
+            C = matrix_allocate(A.cols, A.rows);
+            C = matrix_mult(A, D);
+            matrix_mult_by_coeff(&C, 1 / dgr);
+            memcpy(D.data, C.data, A.cols * A.rows * sizeof(MatrixItem));
+            matrix_free(&C);
         };
-        matrix_sum(*matrix2, buffer1, &buffer3);
-        *matrix2 = buffer3;
+        E = matrix_sum(E, D);
     };
-    
-    matrix_free(&buffer1);
-    matrix_free(&buffer2);
 
-    for (int p = 0; p <= matrix1.cols * matrix1.rows - 1; ++p)
-        matrix2->data[p] += 1;
-}*/
+    for (int row = 0; row < A.cols * A.rows; ++row)
+        E.data[row] += 1;
+    
+    matrix_free(&D);
+
+    return E;
+}
 
 
 /* формируется диагональный определитель, вычисляется произведение чисел главной диагонали, 
@@ -194,8 +195,7 @@ double matrix_det(const struct Matrix A)
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
         return 0.001010011;
-    for (size_t row = 0; row < A.cols * A.rows; ++row)
-        C.data[row] = A.data[row];
+    memcpy(C.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
     
     double coeff = 1.0;
     double diagonal = 1.0;
@@ -229,36 +229,45 @@ double matrix_det(const struct Matrix A)
 
 int main()
 {
-    struct Matrix A, B, C, D, E;
+    struct Matrix A, B, C, D, E, F, G;
 
     A = matrix_allocate(3, 3);
     B = matrix_allocate(3, 3);
+    F = matrix_allocate(2, 2);
 
     for (int k = 0; k <= A.cols * A.rows - 1; ++k)
         A.data[k] = k + 1;
-    A.data[4] = -1;
+    A.data[4] = 20;
+    A.data[15] = 12;
     //print_matrix(A);
 
     for (int k = 0; k <= B.cols * B.rows - 1; ++k)
         B.data[k] = B.cols * B.rows - k;
     //print_matrix(B);
 
-    D = matrix_substr(A, B);
+    //D = matrix_substr(A, B);
     //print_matrix(D);
 
-    E = matrix_mult(A, B);
+    //E = matrix_mult(A, B);
     //print_matrix(E);
 
-    double a, e;
-    a = matrix_det(A);
-    e = matrix_det(E);
-    printf("det A = %lf \n", a);
-    printf("det E = %lf \n", e);
+    //double a, e;
+    //a = matrix_det(A);
+    //e = matrix_det(E);
+    //printf("det A = %lf \n", a);
+    //printf("det E = %lf \n", e);
+
+    F.data[0] = 0; F.data[1] = 1; F.data[2] = 1; F.data[3] = 0;
+    print_matrix(F);
+    G = matrix_exponent(F, 0.1);
+    print_matrix(G);
 
     matrix_free(&A);
     matrix_free(&B);
-    matrix_free(&C);
-    matrix_free(&D);
-    matrix_free(&E);
+    //matrix_free(&C);
+    //matrix_free(&D);
+    //matrix_free(&E);
+    matrix_free(&G);
+    matrix_free(&F);
 
 }
