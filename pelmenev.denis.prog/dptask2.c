@@ -1,153 +1,145 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
+#include <stdint.h>
+#include <math.h>
+
+
+typedef double MatrixItem;
 
 
 enum MatrixTypes { zero, one, random };
-enum MatrixForms { equal, mult, square };
+//enum MatrixForms { equal, mult, square };
+//enum MATRIX_ERROR {};
 
 
 struct Matrix {
-    unsigned int cols;
-    unsigned int rows;
-    double *data;
+    size_t cols;
+    size_t rows;
+    MatrixItem *data;
 };
 
 
-int matrix_check_size(struct Matrix matrix1, struct Matrix matrix2, enum MatrixForms mform)
+const struct Matrix MATRIX_NULL = {.cols = 0, .rows = 0, .data = NULL};
+
+
+struct Matrix matrix_allocate(const size_t cols, const size_t rows)
 {
-    if (mform == equal) {
-        if (matrix1.cols == matrix2.cols && matrix1.rows == matrix2.rows)
-            return 1;
+    if (cols == 0 || rows == 0) {
+        struct Matrix A = {.cols = cols, .rows = rows, .data = NULL};
+        return A;
     };
 
-    if (mform == square) {
-        if (matrix1.cols == matrix1.rows)
-            return 1;
-    };
-
-    if (mform == mult) {
-        if (matrix1.cols == matrix2.rows)
-            return 1;
-    };
+    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) 
+        return MATRIX_NULL;
+    
+    struct Matrix A = {.cols = cols, .rows = rows, .data = NULL};
+    A.data = (MatrixItem*)malloc(A.cols * A.rows * sizeof(MatrixItem));
+    if (A.data == NULL) {
+        return MATRIX_NULL;
+    }
+    return A;
 }
 
 
-void matrix_init(const unsigned int cols, const unsigned int rows, struct Matrix *matrix, enum MatrixTypes matrix_types)
+/*struct Matrix matrix_init(size_t cols, size_t rows)
 {
-    matrix->cols = cols;
-    matrix->rows = rows;
-    matrix->data = (double*)malloc(cols * rows * sizeof(double));
-
-    if (matrix_types == zero)
-        memset(matrix->data, 0.0, cols * rows * sizeof(double));
-
-    if (matrix_types == one) {
-        if (matrix_check_size(*matrix, *matrix, square) != 1) {
-            printf("Invalid matrix size \n");
-            return;
-        };
-
-        memset(matrix->data, 0.0, cols * rows * sizeof(double));
-
-        for (int k = 0; k <= cols * rows - 1; k += (cols + 1))
-            matrix->data[k] = 1;
-    };
-}
+    struct Matrix A = matrix_allocate;
+    
+    return A;
+}*/
 
 
 void matrix_free(struct Matrix *matrix)
 {
-    matrix->cols = 0;
-    matrix->rows = 0;
     free(matrix->data);
-    matrix->data = NULL;
+    *matrix = MATRIX_NULL;
 }
 
 
-void print_matrix(const struct Matrix matrix)
+void print_matrix(const struct Matrix A)
 {
     printf("Matrix = \n");
-    for (int k = 1; k <= matrix.cols * matrix.rows; ++k) {
-        printf("%2f \t", matrix.data[k-1]);
-        if (k % matrix.cols == 0 && k >= matrix.cols)
+    for (size_t row = 0; row < A.cols * A.rows; ++row) {
+        printf("%2f \t", A.data[row]);
+        if (row % A.cols == 0 && row >= A.cols)
             printf("\n");
     };
 }
 
 
-void matrix_add_coefficient(struct Matrix *matrix, int coefficient)
+void matrix_mult_by_coeff(struct Matrix *A, const double coefficient)
 {
-    for (int k = 0; k <= (*matrix).cols * (*matrix).rows - 1; ++k)
-        matrix->data[k] = (*matrix).data[k] * coefficient;
+    for (size_t row = 0; row < A->cols * matrix->rows; ++row)
+        A->data[row] = A->data[row] * coefficient;
 }
 
 
-void matrix_sum(const struct Matrix matrix1, const struct Matrix matrix2, struct Matrix *matrix3)
+struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 {
-    if (matrix_check_size(matrix1, matrix2, equal) != 1) {
-        printf("Invalid matrix sizes \n");
-        return;
-    };
+    if (A.cols != B.cols || A.rows != B.rows)
+        return MATRIX_NULL;
 
-    matrix_free(matrix3);  
+    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    if (C.data == NULL)
+        return C;
 
-    matrix_init(matrix1.cols, matrix1.rows, matrix3, random);
+    for (size_t row = 0; size_t <= A.cols * A.rows - 1; row++)
+        C.data[row] = A.data[row] + B.data[row];
 
-    for (int k = 0; k <= matrix1.cols * matrix1.rows - 1; k++)
-        matrix3->data[k] = matrix1.data[k] + matrix2.data[k];
+    return C;
 }
 
 
-void matrix_minus(const struct Matrix matrix1, const struct Matrix matrix2, struct Matrix *matrix3)
+void matrix_substr(const struct Matrix A, const struct Matrix B)
 {
-    if (matrix_check_size(matrix1, matrix2, equal) != 1) {
-        printf("Invalid matrix sizes \n");
-        return;
-    };
+    if (A.cols != B.cols || A.rows != B.rows)
+        return MATRIX_NULL;
 
-    matrix_free(matrix3);
+    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    if (C.data == NULL)
+        return C;
 
-    matrix_init(matrix1.cols, matrix1.rows, matrix3, random);
+    for (size_t row = 0; size_t <= A.cols * A.rows - 1; row++)
+        C.data[row] = A.data[row] - B.data[row];
 
-    for (int k = 0; k <= matrix1.cols * matrix1.rows - 1; k++)
-        matrix3->data[k] = matrix1.data[k] - matrix2.data[k];
+    return C;
 }
 
 
-void matrix_mult(const struct Matrix matrix1, const struct Matrix matrix2, struct Matrix *matrix3)
+struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 {
-    if (matrix_check_size(matrix1, matrix2, mult) != 1) {
-        printf("Invalid matrix sizes \n");
-        return;
-    };
+    if (A.cols != B.rows)
+        return MATRIX_NULL;
+    
+    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    if (C.data == NULL)
+        return C;
 
-    matrix_free(matrix3);
-
-    matrix_init(matrix2.cols, matrix1.rows, matrix3, random);
-
-    for (int k = 1; k <= matrix1.rows; ++k)
-        for (int m = 0; m <= matrix2.cols - 1; ++m)
-            for (int p = 1; p <= matrix1.cols; ++p)
-                matrix3->data[matrix2.cols * (k - 1) + m] += matrix1.data[p - 1 + (k - 1) * matrix1.cols] 
-                * matrix2.data[matrix2.cols * (p - 1) + m];
+    for (size_t rowA = 0; rowA < A.rows; ++rowA)
+        for (size_t colB = 0; colB < B.cols; ++colB)
+            for (size_t colA = 0; colA < A.cols; ++colA)
+                C.data[B.cols * rowA + colB] += A.data[colA + rowA * A.cols] * B.data[B.cols * colA + colB];
+    
+    return C;
 }
 
 
-void matrix_transp(const struct Matrix matrix1, struct Matrix *matrix2)
+struct Matrix matrix_transp(const struct Matrix A)
 {
-    matrix_free(matrix2);
+    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    if (C.data == NULL)
+        return C;
 
-    matrix_init(matrix1.rows, matrix1.cols, matrix2, random);
-
-    for (int k = 1; k <= matrix1.rows; ++k)
-        for (int m = 1; m <= matrix1.cols; ++m)
-            matrix2->data[(k - 1) * matrix1.cols + m - 1] = matrix1.data[k - 1 + (m - 1) * matrix1.cols];
+    for (size_t row = 0; row < A.rows; ++row)
+        for (size_t col = 0; col < A.cols; ++col)
+            matrix2->data[row * A.cols + col] = matrix1.data[row + col * A.cols];
+    
+    return C;
 }
 
 
-void matrix_exponent(const struct Matrix matrix1, struct Matrix *matrix2, const double accuracy) //accuracy - десятичная дробь
+/*void matrix_exponent(const struct Matrix matrix1, struct Matrix *matrix2, const double accuracy) //accuracy - десятичная дробь
 { 
     if (matrix_check_size(matrix1, matrix1, square) != 1) {
         printf("Invalid matrix size \n");
@@ -170,7 +162,7 @@ void matrix_exponent(const struct Matrix matrix1, struct Matrix *matrix2, const 
         buffer1 = matrix1;
         for (int m = 1; m <= k; ++m) {
             matrix_mult(buffer1, matrix1, &buffer2);
-            matrix_add_coefficient(&buffer2, 1 / m);
+            matrix_mult_by_coeff(&buffer2, 1 / m);
             buffer1 = buffer2;
         };
         matrix_sum(*matrix2, buffer1, &buffer3);
@@ -182,6 +174,39 @@ void matrix_exponent(const struct Matrix matrix1, struct Matrix *matrix2, const 
 
     for (int p = 0; p <= matrix1.cols * matrix1.rows - 1; ++p)
         matrix2->data[p] += 1;
+}*/
+
+
+/* формируется диагональный определитель, вычисляется произведение чисел главной диагонали, 
+    умножается на коэффициент преобразования */
+double matrix_det(const struct Matrix A)
+{
+    if (A.cols != A.rows)
+        return MATRIX_NULL;
+    
+    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    if (C.data == NULL)
+        return;
+    C = A;
+    
+    double coeff = 1.0;
+    double dmult = 1.0;
+
+    for (size_t row1 = 0, col1 = 0; row1 < A.rows, col1 < A.cols; ++row1, ++col1) {
+        coeff *= A.data[row1 * col1 + col1];
+        for (size_t col2 = col1; col2 < A.cols; ++col2)
+            for (size_t row2 = row1; row2 < A.rows - 1; ++row2) {
+                C.data[row2 * col2 + col2] = C.data[row2 * col2 + col2] / A.data[row1 * col1 + col1];
+                C.data[(row2 + 1) * col2 + col2] -= C.data[row2 * col2 + col2];
+            };
+    };
+
+    for (size_t row = 0, col = 0; row < A.rows, col < A.cols; ++row, ++col)
+        dmult *= C.data[row * col + col];
+    
+    matrix_free(&C);
+    
+    return coeff * dmult;
 }
 
 
@@ -205,7 +230,7 @@ int main()
 
     //matrix_mult(C, B, &D);
 
-    matrix_exponent(C, &D, 1.0);
+    matrix_exponent(C, &D, 0.1);
 
     print_matrix(D);
 
