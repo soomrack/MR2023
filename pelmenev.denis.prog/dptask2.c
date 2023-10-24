@@ -2,15 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <math.h>
 
 
 typedef double MatrixItem;
-
-
-enum MatrixTypes { zero, one, random };
-//enum MatrixForms { equal, mult, square };
-//enum MATRIX_ERROR {};
 
 
 struct Matrix {
@@ -59,18 +53,19 @@ void matrix_free(struct Matrix *matrix)
 
 void print_matrix(const struct Matrix A)
 {
-    printf("Matrix = \n");
-    for (size_t row = 0; row < A.cols * A.rows; ++row) {
-        printf("%2f \t", A.data[row]);
+    printf("_____________________________________________ \n");
+    for (size_t row = 1; row <= A.cols * A.rows; ++row) {
+        printf("%4.2f \t", A.data[row-1]);
         if (row % A.cols == 0 && row >= A.cols)
             printf("\n");
     };
+    printf("\n");
 }
 
 
 void matrix_mult_by_coeff(struct Matrix *A, const double coefficient)
 {
-    for (size_t row = 0; row < A->cols * matrix->rows; ++row)
+    for (size_t row = 0; row < A->cols * A->rows; ++row)
         A->data[row] = A->data[row] * coefficient;
 }
 
@@ -84,14 +79,14 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
     if (C.data == NULL)
         return C;
 
-    for (size_t row = 0; size_t <= A.cols * A.rows - 1; row++)
+    for (size_t row = 0; row < A.cols * A.rows; ++row)
         C.data[row] = A.data[row] + B.data[row];
 
     return C;
 }
 
 
-void matrix_substr(const struct Matrix A, const struct Matrix B)
+struct Matrix matrix_substr(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows)
         return MATRIX_NULL;
@@ -100,7 +95,7 @@ void matrix_substr(const struct Matrix A, const struct Matrix B)
     if (C.data == NULL)
         return C;
 
-    for (size_t row = 0; size_t <= A.cols * A.rows - 1; row++)
+    for (size_t row = 0; row < A.cols * A.rows; ++row)
         C.data[row] = A.data[row] - B.data[row];
 
     return C;
@@ -133,7 +128,7 @@ struct Matrix matrix_transp(const struct Matrix A)
 
     for (size_t row = 0; row < A.rows; ++row)
         for (size_t col = 0; col < A.cols; ++col)
-            matrix2->data[row * A.cols + col] = matrix1.data[row + col * A.cols];
+            C.data[row * A.cols + col] = A.data[row + col * A.cols];
     
     return C;
 }
@@ -182,11 +177,11 @@ struct Matrix matrix_transp(const struct Matrix A)
 double matrix_det(const struct Matrix A)
 {
     if (A.cols != A.rows)
-        return;
+        return 0.000000011;
     
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
-        return;
+        return 0.000000011;
     C = A;
     
     double coeff = 1.0;
@@ -204,38 +199,51 @@ double matrix_det(const struct Matrix A)
         dmult *= C.data[row * col + col];
     
     matrix_free(&C);
+
+    double result = coeff * dmult;
     
-    return coeff * dmult;
+    return result;
 }
 
 
 int main()
 {
-    struct Matrix A, B, C, D;
+    struct Matrix A, B, C, D, E, F;
 
-    //matrix_init(3, 3, &A, one);
-    matrix_init(2, 2, &B, random);
-    matrix_init(2, 2, &C, random);
+    A = matrix_allocate(3, 3);
+    B = matrix_allocate(3, 3);
 
-    for (int k = 0; k <= C.cols * C.rows - 1; ++k)
-        C.data[k] = k + 1;
-    print_matrix(C);
+    for (int k = 0; k <= A.cols * A.rows - 1; ++k)
+        A.data[k] = k + 1;
+    //A.data[4] = 1;
+    print_matrix(A);
 
     for (int k = 0; k <= B.cols * B.rows - 1; ++k)
         B.data[k] = B.cols * B.rows - k;
     print_matrix(B);
 
-    //matrix_transp(C, &D);
+    /*C = matrix_sum(A, B);
+    print_matrix(C);*/
 
-    //matrix_mult(C, B, &D);
-
-    matrix_exponent(C, &D, 0.1);
-
+    D = matrix_substr(A, B);
     print_matrix(D);
 
-    //matrix_free(&A);
+    /*E = matrix_mult(A, B);
+    print_matrix(E);*/
+
+    /*F = matrix_transp(A);
+    print_matrix(F);*/
+
+    double a, c;
+    a = matrix_det(A);
+    c = matrix_det(C);
+    printf("det A = %lf \n", a);
+    printf("det C = %lf \n", c);
+
+    matrix_free(&A);
     matrix_free(&B);
     matrix_free(&C);
     matrix_free(&D);
+    matrix_free(&E);
 
 }
