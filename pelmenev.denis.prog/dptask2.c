@@ -70,6 +70,12 @@ void matrix_mult_by_coeff(struct Matrix *A, const double coefficient)
 }
 
 
+void matrix_zero(struct Matrix *A)
+{
+    memset(A->data, 0.0, A->cols * A->rows * sizeof(MatrixItem));
+}
+
+
 struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows)
@@ -78,6 +84,8 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
         return C;
+
+    matrix_zero(&C);
 
     for (size_t row = 0; row < A.cols * A.rows; ++row)
         C.data[row] = A.data[row] + B.data[row];
@@ -94,6 +102,8 @@ struct Matrix matrix_substr(const struct Matrix A, const struct Matrix B)
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
         return C;
+    
+    matrix_zero(&C);
 
     for (size_t row = 0; row < A.cols * A.rows; ++row)
         C.data[row] = A.data[row] - B.data[row];
@@ -110,6 +120,8 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
         return C;
+    
+    matrix_zero(&C);
 
     for (size_t rowA = 0; rowA < A.rows; ++rowA)
         for (size_t colB = 0; colB < B.cols; ++colB)
@@ -177,30 +189,39 @@ struct Matrix matrix_transp(const struct Matrix A)
 double matrix_det(const struct Matrix A)
 {
     if (A.cols != A.rows)
-        return 0.000000011;
+        return 0.001010011;
     
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
-        return 0.000000011;
-    C = A;
+        return 0.001010011;
+    for (size_t row = 0; row < A.cols * A.rows; ++row)
+        C.data[row] = A.data[row];
     
     double coeff = 1.0;
-    double dmult = 1.0;
+    double diagonal = 1.0;
+    double buff1, buff2;
 
-    for (size_t row1 = 0, col1 = 0; row1 < A.rows - 1; ++row1, ++col1) {
-        coeff *= A.data[row1 * A.cols + col1];
-        for (size_t col2 = col1; col2 < A.cols; ++col2) {
-            C.data[row1 * col2 + col2] = C.data[row1 * col2 + col2] / A.data[row1 * A.cols + col1];
-            C.data[(row1 + 1) * col2 + col2] -= C.data[row1 * col2 + col2] * C.data[(row1 + 1) * col2];
+    for (size_t diag = 0; diag < A.rows - 1; ++diag) {
+        coeff *= C.data[diag * A.cols + diag];
+        buff1 = C.data[diag * A.cols + diag];
+
+        for (size_t col = diag; col < A.cols; ++col)
+            C.data[diag * A.cols + col] /= buff1;
+
+        for (size_t row = diag + 1; row < A.rows; ++row) {
+            buff2 = C.data[row * A.cols + diag];
+            for (size_t col = diag; col < A.cols; ++col) {
+                C.data[row * A.cols + col] = C.data[row * A.cols + col] - C.data[diag * A.cols + col] * buff2;
+            };  
         };
     };
 
     for (size_t row = 0, col = 0; row < A.rows; ++row, ++col)
-        dmult *= C.data[row * col + col];
+        diagonal *= C.data[row * A.cols + col];
     
     matrix_free(&C);
 
-    double result = coeff * dmult;
+    double result = coeff * diagonal;
     
     return result;
 }
@@ -208,37 +229,31 @@ double matrix_det(const struct Matrix A)
 
 int main()
 {
-    struct Matrix A, B, C, D, E, F;
+    struct Matrix A, B, C, D, E;
 
     A = matrix_allocate(3, 3);
     B = matrix_allocate(3, 3);
 
     for (int k = 0; k <= A.cols * A.rows - 1; ++k)
         A.data[k] = k + 1;
-    //A.data[4] = 1;
-    print_matrix(A);
+    A.data[4] = -1;
+    //print_matrix(A);
 
     for (int k = 0; k <= B.cols * B.rows - 1; ++k)
         B.data[k] = B.cols * B.rows - k;
-    print_matrix(B);
-
-    /*C = matrix_sum(A, B);
-    print_matrix(C);*/
+    //print_matrix(B);
 
     D = matrix_substr(A, B);
-    print_matrix(D);
+    //print_matrix(D);
 
-    /*E = matrix_mult(A, B);
-    print_matrix(E);*/
+    E = matrix_mult(A, B);
+    //print_matrix(E);
 
-    /*F = matrix_transp(A);
-    print_matrix(F);*/
-
-    double a, c;
+    double a, e;
     a = matrix_det(A);
-    c = matrix_det(C);
+    e = matrix_det(E);
     printf("det A = %lf \n", a);
-    printf("det C = %lf \n", c);
+    printf("det E = %lf \n", e);
 
     matrix_free(&A);
     matrix_free(&B);
