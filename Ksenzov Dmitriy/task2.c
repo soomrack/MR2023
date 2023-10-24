@@ -139,6 +139,7 @@ struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
 
     for (unsigned int C_col = 0; C_col < A.rows; ++C_col) {
         for (unsigned int C_row = 0; C_row < B.cols; ++C_row) {
+            C.data[C_row + C_col * B.cols] = 0;
             for (unsigned int idx = 0; idx < A.cols; ++idx) {
                 C.data[C_row + C_col * B.cols] += A.data[idx + (C_col * A.cols)]
                 * B.data[idx * B.cols + C_row];
@@ -212,29 +213,46 @@ void determinant_print(const double A)
 }
 
 
+// Function returns c = n!
+unsigned long int factorial(const unsigned int n)
+{
+    unsigned long int c = 1;
+    for (unsigned int idx = 1; idx <= n; ++idx) c = (unsigned long int)idx * c;
+    return c;
+}
+
+
 // Function returns new matrix C = e^A or MATRIX_NULL if fail
 struct Matrix matrix_exponent(struct Matrix A)
 {
-    struct Matrix C = matrix_allocate(A.cols, A.rows);
-    if (C.data == NULL) return C;
+    struct Matrix Matrix_result = matrix_allocate(A.cols, A.rows);
+    if (Matrix_result.data == NULL) return Matrix_result;
 
-    struct Matrix D = matrix_allocate(A.cols, A.rows);
-    matrix_set_one(D);
+    struct Matrix Matrix_power;
 
-    struct Matrix E = matrix_allocate(A.cols, A.rows);
+    struct Matrix Matrix_copy_power = matrix_allocate(A.cols, A.rows);
+    memcpy(Matrix_copy_power.data, A.data,
+    Matrix_copy_power.rows * Matrix_copy_power.cols * sizeof(MatrixItem));
 
-    matrix_set_one(C);
+    struct Matrix Matrix_exp = matrix_allocate(A.cols, A.rows);
 
-    for (unsigned int k = 1; k <= 100; ++k) {
-        
-        D = matrix_mult(D, A);
+    matrix_set_one(Matrix_result);
+   
+    matrix_add(Matrix_result, A);
 
-        for (unsigned int idx = 0; idx < E.cols * E.rows; ++idx)
-        E.data[idx] = D.data[idx] / k;
+    for (unsigned int k = 2; k <= 5; ++k) { 
 
-        matrix_add(C, E);
+        Matrix_power = matrix_mult(Matrix_copy_power,A);
+        memcpy(Matrix_copy_power.data, Matrix_power.data,
+        Matrix_power.rows * Matrix_power.cols * sizeof(MatrixItem));
+
+        for (unsigned int idx = 0; idx < Matrix_exp.cols * Matrix_exp.rows; ++idx)
+        Matrix_exp.data[idx] = Matrix_power.data[idx] / factorial(k);
+
+        matrix_add(Matrix_result, Matrix_exp);
     };
-    return C;
+
+    return Matrix_result;
 }
 
 
@@ -298,7 +316,7 @@ int main ()
     D = matrix_subtration(A,B);
     matrix_print(D);
 
-    E = matrix_mult(A,B);
+    E = matrix_mult(A,A);
     matrix_print(E);
 
     F = matrix_transposition(A);
