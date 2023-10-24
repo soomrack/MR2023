@@ -182,7 +182,7 @@ struct Matrix matrix_transp(const struct Matrix A)
 double matrix_det(const struct Matrix A)
 {
     if (A.cols != A.rows)
-        return MATRIX_NULL;
+        return;
     
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
@@ -192,16 +192,15 @@ double matrix_det(const struct Matrix A)
     double coeff = 1.0;
     double dmult = 1.0;
 
-    for (size_t row1 = 0, col1 = 0; row1 < A.rows, col1 < A.cols; ++row1, ++col1) {
-        coeff *= A.data[row1 * col1 + col1];
-        for (size_t col2 = col1; col2 < A.cols; ++col2)
-            for (size_t row2 = row1; row2 < A.rows - 1; ++row2) {
-                C.data[row2 * col2 + col2] = C.data[row2 * col2 + col2] / A.data[row1 * col1 + col1];
-                C.data[(row2 + 1) * col2 + col2] -= C.data[row2 * col2 + col2];
-            };
+    for (size_t row1 = 0, col1 = 0; row1 < A.rows - 1; ++row1, ++col1) {
+        coeff *= A.data[row1 * A.cols + col1];
+        for (size_t col2 = col1; col2 < A.cols; ++col2) {
+            C.data[row1 * col2 + col2] = C.data[row1 * col2 + col2] / A.data[row1 * A.cols + col1];
+            C.data[(row1 + 1) * col2 + col2] -= C.data[row1 * col2 + col2] * C.data[(row1 + 1) * col2];
+        };
     };
 
-    for (size_t row = 0, col = 0; row < A.rows, col < A.cols; ++row, ++col)
+    for (size_t row = 0, col = 0; row < A.rows; ++row, ++col)
         dmult *= C.data[row * col + col];
     
     matrix_free(&C);
