@@ -64,10 +64,16 @@ void print_matrix(const struct Matrix A)
 }
 
 
-void matrix_mult_by_coeff(struct Matrix *A, const double coefficient)
+struct Matrix matrix_mult_by_coeff(struct Matrix A, const double coefficient)
 {
-    for (size_t row = 0; row < A->cols * A->rows; ++row)
-        A->data[row] = A->data[row] * coefficient;
+    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    if (C.data == NULL)
+        return C;
+
+    for (size_t row = 0; row < A.cols * A.rows; ++row)
+        C.data[row] = A.data[row] * coefficient;
+    
+    return C;
 }
 
 
@@ -170,8 +176,7 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
         for (int dgr = 1; dgr <= trm; ++dgr) {
             C = matrix_allocate(A.cols, A.rows);
             C = matrix_mult(D, A);
-            matrix_mult_by_coeff(&C, 1 / dgr);
-            memcpy(D.data, C.data, D.cols * D.rows * sizeof(MatrixItem));
+            D = matrix_mult_by_coeff(C, (double)(1 / dgr));
             matrix_free(&C);
         };
 
@@ -243,7 +248,7 @@ int main()
     for (int k = 0; k <= A.cols * A.rows - 1; ++k)
         A.data[k] = k + 1;
     A.data[4] = 20;
-    A.data[15] = 12;
+    //A.data[15] = 12;
     //print_matrix(A);
 
     for (int k = 0; k <= B.cols * B.rows - 1; ++k)
