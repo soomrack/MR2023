@@ -40,8 +40,10 @@ double matrix_det(const Matrix mat_one);
 
 void matrix_scalar_mult(const Matrix mat, const double factor);
 
+double max_matrix(const Matrix mat);
+
 Matrix matrix_expm(const Matrix a, const double accuracy);
 
-int compare_matrix(const Matrix one, const Matrix two);
+int matrix_compare(const Matrix one, const Matrix two);
 
-void print_matrix(const Matrix mat);
+void matrix_print(const Matrix mat);

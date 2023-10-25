@@ -1,9 +1,6 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <math.h>
 #include <stdint.h>
-#include <stdarg.h>
 #include "matrix.h"
 
 
@@ -20,7 +17,7 @@ Error MEMORY_ERROR = {"memory_error"};
 Error DOUBLE_FREE = {"double_free"};
 
 
-void print_error(Error err)
+static void print_error(Error err)
 {
     printf("[ERROR]: %s\n", err.mes);
 }
@@ -201,7 +198,7 @@ Matrix tran_matrix(const Matrix a)
 }
 
 
-void matrix_swap(char *one, char *two, size_t size)
+static void matrix_swap(char *one, char *two, size_t size)
 {
     while(size--) {
         *one = *one ^ *two;
@@ -317,7 +314,7 @@ Matrix matrix_expm(const Matrix a, const double accuracy)
 }
 
 
-int compare_matrix(const Matrix one, const Matrix two)
+int matrix_compare(const Matrix one, const Matrix two)
 {
     int compare_flag = 1;
 
@@ -335,7 +332,7 @@ int compare_matrix(const Matrix one, const Matrix two)
 }
 
 
-void print_matrix(const Matrix mat)
+void matrix_print(const Matrix mat)
 {
     for (size_t idx = 0; idx < (mat.rows * mat.cols); idx++)
     {
