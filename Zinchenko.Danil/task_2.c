@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <math.h>
 
 const int n = 2;
 
@@ -14,9 +13,7 @@ typedef struct Matrix
 	MatrixItem* data;
 };
 
-
 const struct Matrix Matrix_null = { .cols = 0,  .rows = 0, .data = NULL };
-
 
 struct Matrix matrix_create(const size_t cols, const size_t rows)
 {
