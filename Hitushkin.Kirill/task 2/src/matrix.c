@@ -201,9 +201,9 @@ Matrix tran_matrix(const Matrix a)
 }
 
 
-void matrix_swap(char *one, char *two, const size_t size)
+void matrix_swap(char *one, char *two, size_t size)
 {
-    for(size_t idx = 0; idx < size; idx++) {
+    while(size--) {
         *one = *one ^ *two;
         *two = *two ^ *one;
         *one = *one ^ *two;
@@ -297,13 +297,15 @@ Matrix matrix_expm(const Matrix a, const double accuracy)
 
     Matrix temp = matrix_allocate(a.rows, a.cols);
 
-    for(size_t count = 1; count < 200; count++) {
-        matrix_add(sum, term);
+    matrix_add(sum, term);
 
+    for(size_t count = 1; count < 200; count++) {
         matrix_scalar_mult(term, (1.0 / count));
 
         matrix_mult_to(temp, term, a);
         matrix_swap((char*) &term,(char*) &temp, sizeof(Matrix));
+
+        matrix_add(sum, term);
 
         if (max_matrix(term) < accuracy) break;
     }
