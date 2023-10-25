@@ -195,6 +195,56 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
 }
 
 
+int matrix_det_if_zero(const struct Matrix A)
+{
+    MatrixItem norms[A.cols + A.rows];
+
+    for (size_t row = 0; row < A.rows; ++row) // суммы по строкам
+        for (size_t col = 0; col < A.cols; ++col) {
+            norms[row] += A.data[row * A.cols + col];
+        };
+    
+    for (size_t col = 0; col < A.cols; ++col) // суммы по столбцам
+        for (size_t row = 0; row < A.rows; ++row) {
+            norms[col + A.rows] += A.data[row * A.cols + col];
+        };
+    
+    MatrixItem mult = 1.0;
+
+    for (int row = 0; row < A.cols + A.rows; ++row)
+        mult *= norms[row];
+    
+    if (mult == 0)
+        return 0;
+    
+    return 1;
+}
+
+
+void matrix_det_prep(const struct Matrix A, size_t diag, double coeff)
+{
+    size_t buff1 = diag; // запоминается номер строки
+
+    if (A.data[diag * A.cols + diag] == 0.0) {
+        for (size_t row = diag; row < A.rows; ++row) {
+            buff1 += 1;
+            if (A.data[row * A.cols] != 0)
+                break;
+        };
+
+        double buff2 = 0; // запоминается значение в ячейке
+        
+        for (size_t col = diag; col < A.cols; ++col) {
+            buff2 = A.data[diag * A.cols + col];
+            A.data[diag * A.cols + col] = A.data[buff1 * A.cols + col];
+            A.data[buff1 * A.cols + col] = buff2;
+        };
+    };
+
+    return;
+}
+
+
 /* формируется диагональный определитель, вычисляется произведение чисел главной диагонали, 
     умножается на коэффициент преобразования */
 double matrix_det(const struct Matrix A)
@@ -206,12 +256,16 @@ double matrix_det(const struct Matrix A)
     if (C.data == NULL)
         return NAN;
     memcpy(C.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+
+    if (matrix_det_if_zero(C) == 0)
+        return 0.0;
     
-    double coeff = 1.0;
+    static double coeff = 1.0;
     double diagonal = 1.0;
     double buff1, buff2;
 
     for (size_t diag = 0; diag < A.rows - 1; ++diag) {
+        matrix_det_prep(C, diag, coeff);
         coeff *= C.data[diag * A.cols + diag];
         buff1 = C.data[diag * A.cols + diag];
 
@@ -226,8 +280,8 @@ double matrix_det(const struct Matrix A)
         };
     };
 
-    for (size_t row = 0, col = 0; row < A.rows; ++row, ++col)
-        diagonal *= C.data[row * A.cols + col];
+    for (size_t diag = 0; diag < A.rows; ++diag)
+        diagonal *= C.data[diag * A.cols + diag];
     
     matrix_free(&C);
 
