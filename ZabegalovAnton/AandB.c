@@ -18,7 +18,6 @@ const double PERCENT_1 = 0.09; // процент по вкладу
 const double PERCENT_2 = 0.11; // увеличенная ставка по вкладу
 const double INFLATION = 0.07; // инфляция
 const Money RENT = 30 * 1000 * 100;  // квартплата
-int n = 0;
 
 
 void profit_deposit(struct Person* human, double percent_1, double percent_2)
@@ -59,9 +58,12 @@ void spend_rent(struct Person* human, Money rent)
 }
 
 
-void spend_mortgage(struct Person* human, Money pay)
+void spend_mortgage(struct Person* human, Money pay, Money pay_last, int *month, int *year)
 {
-    human->deposit = human->deposit - pay;
+    if(*month == 8 && *year == 2043)
+        human->deposit = human->deposit - pay_last;
+    else     
+        human->deposit = human->deposit - pay;
 }
 
 
@@ -70,7 +72,6 @@ void spend_dentist(struct Person* human, int *year, int *starting_point)
     if(*year - *starting_point == 10){
         human->deposit = human->deposit - 500 * 1000 * 100;
         *starting_point = *year;
-        n++;
     }
 }
 
@@ -110,25 +111,21 @@ void simulation(struct Person* bob, struct Person* alice)
         }
         
         profit_deposit(bob, PERCENT_1, PERCENT_2);
-        profit_deposit(alice, PERCENT_1, PERCENT_2);
+        spend_mortgage(bob, PAY, PAY_LAST, &month, &year);
         price_apartment(&APARTMENT, INFLATION);
         spend_food(bob);
-        spend_food(alice);
         spend_utilities(bob);
-        spend_utilities(alice);
-        spend_rent(alice, RENT);
         spend_dentist(bob, &year, &starting_point_bob);
+
+        profit_deposit(alice, PERCENT_1, PERCENT_2);
+        spend_rent(alice, RENT);
+        spend_food(alice);
+        spend_utilities(alice);
         spend_dentist(alice, &year, &starting_point_alice);
-
-        if(month == 8 && year == 2043)
-            break;
-
-        spend_mortgage(bob, PAY);
 
         month++;
     }
     
-    bob->deposit = bob->deposit - PAY_LAST; // последний платеж по ипотеке
     bob->capital = bob->deposit + APARTMENT;
     alice->capital = alice->deposit;
 }
@@ -153,7 +150,6 @@ int main()
     init_bob(&bob);
     simulation(&bob, &alice);
     printf_result(alice.capital, bob.capital);
-    printf("%d\n", n);
 
     return 0;
-} 
+}   
