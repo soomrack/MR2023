@@ -152,28 +152,33 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
     if (A.cols != A.rows)
         return MATRIX_NULL;    
 
-    struct Matrix D = matrix_allocate(A.cols, A.rows);
-    if (D.data == NULL)
-        return D;
-    memcpy(D.data, A.data, D.cols * D.rows * sizeof(MatrixItem));
-    
     struct Matrix E = matrix_allocate(A.cols, A.rows);
+    if (E.data == NULL)
+        return E;
     matrix_zero(&E);
 
-    struct Matrix C;
+    struct Matrix C, D, F;
 
     int degree;
     degree = (int)(round(1 / accuracy));
 
     for (int trm = 1; trm <= degree; ++trm) {
+        F = matrix_allocate(A.cols, A.rows);
+        D = matrix_allocate(A.cols, A.rows);
+        memcpy(D.data, A.data, D.cols * D.rows * sizeof(MatrixItem));
+
         for (int dgr = 1; dgr <= trm; ++dgr) {
             C = matrix_allocate(A.cols, A.rows);
-            C = matrix_mult(A, D);
+            C = matrix_mult(D, A);
             matrix_mult_by_coeff(&C, 1 / dgr);
-            memcpy(D.data, C.data, A.cols * A.rows * sizeof(MatrixItem));
+            memcpy(D.data, C.data, D.cols * D.rows * sizeof(MatrixItem));
             matrix_free(&C);
         };
-        E = matrix_sum(E, D);
+
+        F = matrix_sum(E, D);
+        matrix_free(&D);
+        memcpy(E.data, F.data, E.cols * E.rows * sizeof(MatrixItem));
+        matrix_free(&F);
     };
 
     for (int row = 0; row < A.cols * A.rows; ++row)
@@ -259,7 +264,7 @@ int main()
 
     F.data[0] = 0; F.data[1] = 1; F.data[2] = 1; F.data[3] = 0;
     print_matrix(F);
-    G = matrix_exponent(F, 0.1);
+    G = matrix_exponent(F, 0.5);
     print_matrix(G);
 
     matrix_free(&A);
