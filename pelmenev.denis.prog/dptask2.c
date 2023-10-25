@@ -221,7 +221,7 @@ int matrix_det_if_zero(const struct Matrix A)
 }
 
 
-void matrix_det_prep(const struct Matrix A, size_t diag, double coeff)
+void matrix_det_prep(const struct Matrix A, size_t diag, double *coeff)
 {
     size_t buff1 = diag; // запоминается номер строки
 
@@ -239,6 +239,8 @@ void matrix_det_prep(const struct Matrix A, size_t diag, double coeff)
             A.data[diag * A.cols + col] = A.data[buff1 * A.cols + col];
             A.data[buff1 * A.cols + col] = buff2;
         };
+
+        *coeff *= -1;
     };
 
     return;
@@ -260,12 +262,12 @@ double matrix_det(const struct Matrix A)
     if (matrix_det_if_zero(C) == 0)
         return 0.0;
     
-    static double coeff = 1.0;
+    double coeff = 1.0;
     double diagonal = 1.0;
     double buff1, buff2;
 
     for (size_t diag = 0; diag < A.rows - 1; ++diag) {
-        matrix_det_prep(C, diag, coeff);
+        matrix_det_prep(C, diag, &coeff);
         coeff *= C.data[diag * A.cols + diag];
         buff1 = C.data[diag * A.cols + diag];
 
