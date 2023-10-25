@@ -1,18 +1,16 @@
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include "MatrixHandler.h"
 
 
-// #define DEBUG
+#define DEBUG
 
 
-void initMatrix(Matrix * this)
+
+void init_data(Matrix * this)
 {
-    uint16_t rows = this->rows;
-    uint16_t cols = this->cols;
     int16_t len = this->rows * sizeof(double *) + this->rows * this->cols * sizeof(double);  //  выделяем память одним маллоком
     this->data = (double **)malloc(len);
 #ifdef DEBUG
@@ -26,88 +24,94 @@ void initMatrix(Matrix * this)
             printf("[DEBUG] ADRESS OF ROW: %p\n", &this->data[row]);
 #endif
         }
+#ifdef DEBUG
         size_t rowsize = this->data[1] - this->data[0];  // вычисляем размер одной строки
-#ifdef DEBUG
         printf("[DEBUG] SIZE OF ONE ROW: %lx\n\n", rowsize);
-
 #endif
     }
-    else errorHandler(MALLOC_ERROR, "initMatrix");
+    else error_handler(MALLOC_ERROR, "init_data");
 }
 
 
-void deleteData(Matrix *this)
+Matrix init_matrix(uint16_t rows, uint16_t cols) {
+    Matrix matrix = {
+        .rows = rows,
+        .cols = cols
+    };
+    init_data(&matrix);
+    return matrix;
+}
+
+void delete_data(Matrix *this)
 {
-
-    for (uint8_t rCounter = 0; rCounter < this->rows; rCounter++)
-    {
-        free(this->data[rCounter]);
-    }
     free(this->data);
-
 }
 
 
-void fillWithData(Matrix * this, const double * filling_array, const bool printOption) {
-    uint32_t size = this->rows * this->cols;
-    // size_t fill_arr_size = sizeof(filling_array);
-    // if (fill_arr_size != size) {
-    //     errorHandler(OPERATION_ERROR, "fillWithData");
-    //     return;
-    // }
-    double * row_poiner = this->data[0];
-
-    for (uint8_t counter = 0; counter < size; counter++) {
-        uint8_t col_index = counter % this->cols;
+void fill_with_data(Matrix * this, double * filling_array, const bool print_option, const bool dynamical_array) {
+    uint32_t size = matrix_size(this);
+    uint16_t row_counter = 0;
+    for (uint32_t counter = 0; counter < size; counter++) {
+        uint16_t col_index = counter % this->cols;
         double value = filling_array[counter];
-        row_poiner[col_index] = value;
+        this->data[row_counter][col_index] = value;
 #ifdef DEBUG
-        printf("[DEBUG] ADRESS OF ELEMENT: %p\n", &row_poiner[col_index]);
+        printf("[DEBUG] ADRESS OF ELEMENT: %p\n", &this->data[row_counter][col_index]);
 #endif
-        if (printOption) __printSingleVal(value, counter, this->cols);
-        if(col_index == this->cols -1) {
-            row_poiner+=this->rows; 
-            }
-        }
+        if (print_option) __print_single_val(value, counter, this->cols);
+        if(col_index == this->cols -1) 
+            row_counter++; 
+    }
+#ifdef DEBUG
+    printf("\n");
+#endif
+    if (dynamical_array) free(filling_array);
 }
 
 
-void fillMatrix(Matrix * this, enum InfillPattern pattern, const bool printOption) {
-    int32_t size = this->rows * this->cols;
-    double * fillData = (double *)malloc(size * sizeof(double));
+void fill_matrix(Matrix * this, enum InfillPattern pattern, const bool print_option) {
+    uint32_t size = matrix_size(this);
+    double * fill_data = (double *)malloc(size * sizeof(double));
+    if (!fill_data) error_handler(MALLOC_ERROR, "fill_matrix");
     switch (pattern) {
         case RANDOM: {
             srand(time(NULL));
-            for (uint8_t i = 0; i < size; i++) {
-                double val = (((double)rand() * pow(-1, rand()%2)) / (RAND_MAX - rand() + 1));
-                fillData[i] = val; // then add precision of values 
+            for (uint32_t i = 0; i < size; i++) {
+                double val = (((double)rand() * pow(-1, rand()%2)) / (RAND_MAX - rand() + (double)rand()));
+                fill_data[i] = val;
             }
             break;
         }
 
         case UNIT: {
-            if (this->rows != this->cols) printf("UNIT PARAMETER IS ONLY POSSIBLE FOR SQUARE MATRIX\n");
+            if (this->rows != this->cols) {
+                free(fill_data);
+                error_handler(MATH_DOMAIN_ERROR, "fill_matrix");
+            }
             else {
-                for (uint8_t i = 0; i < size; i++) 
-                    fillData[i] = i % (this->rows + 1) == 0 ? 1 : 0;
+                for (uint32_t i = 0; i < size; i++) 
+                    fill_data[i] = i % (this->rows + 1) == 0 ? 1 : 0;
             }
             break;
         }
 
+        case RAISING: {
+            for (uint32_t i = 0; i < size; i++)
+                fill_data[i] = i;
+        }
+
         case BLANK: {   
-            memset(fillData, 0, size);
+            memset(fill_data, 0, size);
             break;
         }
         default:
-            return;
             break;
     }  
-    fillWithData(this, fillData, printOption);
-    free(fillData);
+    fill_with_data(this, fill_data, print_option, true);
 }
 
 
-void __printSingleVal(const double val, const  uint8_t counter, const int16_t cols) {
+void __print_single_val(const double val, const  uint8_t counter, const int16_t cols) {
     printf("%0.3f\t", val);
     if ((counter + 1) % cols == 0)
     printf("\n");    
@@ -115,68 +119,149 @@ void __printSingleVal(const double val, const  uint8_t counter, const int16_t co
 }
 
 
-void printMatrix(const Matrix * this) {
-        for (uint8_t row = 0; row < this->rows; row++) {
+void print_matrix(const Matrix * this) {
+    printf("Matrix at : %p\n", this);
+    for (uint16_t row = 0; row < this->rows; row++) {
 
-        for (uint8_t col = 0; col < this->cols; col++)
-         __printSingleVal(this->data[row][col], col, this->cols);
-
-    } 
+        for (uint16_t col = 0; col < this->cols; col++)
+            __print_single_val(this->data[row][col], col, this->cols);
+    }
+    printf("\n"); 
 }
 
 
-Matrix  matrixSum(Matrix * matrix_1, Matrix * matrix_2) {
-    if (matrix_1->cols != matrix_2->cols | matrix_1->rows != matrix_2->rows) {
-        errorHandler(OPERATION_ERROR, "matrixSum");
-
-    }
+Matrix  matrix_sum(const Matrix * matrix_1, const Matrix * matrix_2) {
+    if (matrix_1->cols != matrix_2->cols | matrix_1->rows != matrix_2->rows)
+        error_handler(MATH_DOMAIN_ERROR, "matrix_sum");
     else {
-        Matrix  new_matrix = {
+        Matrix new_matrix = {
             .rows = matrix_1->rows,
             .cols = matrix_2->cols
         };
-        uint32_t size = new_matrix.cols * new_matrix.rows;
-        initMatrix(&new_matrix);
-        double * fillData = (double*)malloc(sizeof(double)*size);
-        memcpy(fillData, matrix_1->data[0], sizeof(double)*size);  // now it seems to work
+        uint32_t size = matrix_size(&new_matrix);
+        init_data(&new_matrix);
+        double * fill_data = (double*)malloc(sizeof(double)*size);
+        memcpy(fill_data, matrix_1->data[0], sizeof(double)*size);  // now it seems to work
         for (uint16_t element = 0; element < size; element++) {
-            fillData[element] += *(matrix_2->data[0]+element);
+            fill_data[element] += *(matrix_2->data[0]+element);
         }
-        fillWithData(&new_matrix, fillData, false);
-        free(fillData);
+        fill_with_data(&new_matrix, fill_data, false, true);
         return new_matrix;
     }   
 
 }
 
 
-void errorHandler(enum Errors error, const char * func_name) {
-    return;
-}
-
-
-Matrix  matrixSub(Matrix * matrix_1, Matrix * matrix_2) {
+Matrix  matrix_sub(const Matrix * matrix_1, const Matrix * matrix_2) {
     if (matrix_1->cols != matrix_2->cols | matrix_1->rows != matrix_2->rows) {
-        errorHandler(OPERATION_ERROR, "matrixSum");
+        error_handler(MATH_DOMAIN_ERROR, "matrix_sum");
     }
     else {
         Matrix  new_matrix = {
             .rows = matrix_1->rows,
             .cols = matrix_2->cols
         };
-        uint32_t size = new_matrix.cols * new_matrix.rows;
-        initMatrix(&new_matrix);
-        double * fillData = (double*)malloc(sizeof(double)*size);
-        memcpy(fillData, matrix_1->data[0], sizeof(double)*size);  // now it seems to work
+        uint32_t size = matrix_size(&new_matrix);
+        init_data(&new_matrix);
+        double * fill_data = (double*)malloc(sizeof(double)*size);
+        memcpy(fill_data, matrix_1->data[0], sizeof(double)*size);  // now it seems to work
         for (uint16_t element = 0; element < size; element++) {
-            fillData[element] -= *(matrix_2->data[0]+element);
+            fill_data[element] -= *(matrix_2->data[0]+element);
         }
-        printf("after concat: %f\n", fillData[0]);
-        fillWithData(&new_matrix, fillData, false);
-        free(fillData);
+        fill_with_data(&new_matrix, fill_data, false, true);
         return new_matrix;
     }   
 
+}
+
+
+void matrix_transposition(Matrix * this) {
+    uint32_t size = matrix_size(this);
+    double * fill_data = (double*)malloc(size*sizeof(double));
+    if (!fill_data) error_handler(MALLOC_ERROR, "matrix_transposition");
+    for (uint16_t col = 0; col < this->cols; col++) {
+        for (uint16_t row = 0; row < this->rows; row++) {
+            double value = this->data[row][col];
+            fill_data[col*this->rows + row] = value;
+#ifdef DEBUG
+            printf("%.3f\t", value);
+#endif
+        }
+#ifdef DEBUG
+        printf("\n");
+#endif
+    }
+    delete_data(this);
+    uint16_t new_rows = this->cols;
+    this->cols = this->rows;
+    this->rows = new_rows;
+    init_data(this);
+    fill_with_data(this, fill_data, false, true);
+}
+
+
+Matrix __get_submatrix(const Matrix * this, uint16_t row_to_delete, uint16_t col_to_delete) {
+
+    uint16_t new_rows = this->rows - 1;
+    uint16_t new_cols = this->cols - 1;
+    uint32_t size = matrix_size(this);
+    Matrix new_matrix = {
+        .cols = new_cols,
+        .rows = new_rows
+    };
+    init_data(&new_matrix);
+    uint32_t new_size = matrix_size(&new_matrix);
+    double * fill_data = (double*)malloc(new_size*sizeof(double));
+    if (!fill_data) error_handler(MALLOC_ERROR, "__get_submatrix");
+    uint32_t new_data_counter = 0;
+    uint16_t row_index = 0;
+    for (uint32_t count = 0; count < size; count++) {
+        uint16_t col_index = count % this->cols;
+        if (row_index != row_to_delete & col_index != col_to_delete) {
+            fill_data[new_data_counter] = this->data[row_index][col_index];
+            new_data_counter++;
+        }
+        if (col_index + 1 == this->cols) {
+            row_index++;
+        }
+    }
+    fill_with_data(&new_matrix, fill_data, false, true);
+    return new_matrix;
+}
+
+
+double matrix_determinant(const Matrix * this) {
+    if (this->rows != this->cols) error_handler(MATH_DOMAIN_ERROR, "martix_determinant");
+    switch (this->rows)
+    {
+    case 1:
+        return this->data[0][0];
+        break;
+    
+    case 2:
+        return this->data[0][0] * this->data[1][1] - 
+                this->data[0][1] * this->data[1][0];
+            break;
+    default:
+        double determinant = 0;
+        for (uint16_t col_counter = 0; col_counter < this->cols; col_counter++) {
+            Matrix submatrix = __get_submatrix(this, 0, col_counter);
+            determinant += this->data[0][col_counter] * pow(-1, col_counter) * matrix_determinant(&submatrix);
+        }
+#ifdef DEBUG
+        printf("[DEBUG] MATRIX AT %p. DETERMINANT: %0.3f\n", this, determinant);
+#endif
+        return determinant;
+        break;
+    }
+}
+
+// Matrix matrix_multiplication(const Matrix * )
+
+
+void error_handler(enum Errors error, const char * func_name) {
+    printf("Error occured in function: %s : %i\n", func_name, error);
+    exit(error);
 }
 
 
