@@ -200,11 +200,11 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
 double matrix_det(const struct Matrix A)
 {
     if (A.cols != A.rows)
-        return 0.001010011;
+        return NAN;
     
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
-        return 0.001010011;
+        return NAN;
     memcpy(C.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
     
     double coeff = 1.0;
