@@ -153,7 +153,7 @@ struct Matrix matrix_transp(const struct Matrix A)
 }
 
 
-struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //accuracy - десятичная дробь
+/*struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //accuracy - десятичная дробь
 { 
     if (A.cols != A.rows)
         return MATRIX_NULL;    
@@ -192,7 +192,7 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
     matrix_free(&D);
 
     return E;
-}
+}*/
 
 
 int matrix_det_if_zero(const struct Matrix A)
@@ -211,7 +211,7 @@ int matrix_det_if_zero(const struct Matrix A)
     
     MatrixItem mult = 1.0;
 
-    for (int row = 0; row < A.cols + A.rows; ++row)
+    for (size_t row = 0; row < A.cols + A.rows; ++row)
         mult *= norms[row];
     
     if (mult == 0)
@@ -317,7 +317,7 @@ int main()
     //E = matrix_mult(A, B);
     //print_matrix(E);
 
-    //double a, e;
+    double a, e;
     //a = matrix_det(A);
     //e = matrix_det(E);
     //printf("det A = %lf \n", a);
@@ -325,15 +325,17 @@ int main()
 
     F.data[0] = 0; F.data[1] = 1; F.data[2] = 1; F.data[3] = 0;
     print_matrix(F);
-    G = matrix_exponent(F, 0.5);
-    print_matrix(G);
+    //G = matrix_exponent(F, 0.5);
+    //print_matrix(G);
+    e = matrix_det(F);
+    printf("det F = %lf \n", e);
 
     matrix_free(&A);
     matrix_free(&B);
     //matrix_free(&C);
     //matrix_free(&D);
     //matrix_free(&E);
-    matrix_free(&G);
+    //matrix_free(&G);
     matrix_free(&F);
 
 }
