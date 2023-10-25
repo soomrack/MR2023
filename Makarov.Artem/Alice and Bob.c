@@ -5,7 +5,6 @@
 typedef long long int Money; 
 
 
-Money Mortgage = 19 * 1000 * 1000 * 100;
 Money Mortgage_payment = 147307 * 100;
 Money Flat_mortgage = 0;
 Money First_payment = 1000 * 1000 * 100;
@@ -128,13 +127,13 @@ void Bob_spend_for_life(const int year, const int month)
 }
 
 
-void cout()
+void simulation()
 {
 	int month = 9;
 	int year = 2023;
 
 
-	while (year != 2053 && month != 5) {
+	while (!(year == 2053 && month == 5)) {
 
 
 		Alice_deposite_income(year, month);
@@ -157,6 +156,10 @@ void cout()
 			month = 1;
 		}
 	}
+
+	Flat_cost = First_payment + Flat_mortgage;
+	Total_Bob_capital = Bob.bank_account + Flat_cost;
+
 }
 
 
@@ -166,10 +169,8 @@ int main()
 	Bob_initialization();
 
 
-	cout();
+	simulation();
 	
-	Flat_cost = First_payment + Flat_mortgage;
-	Total_Bob_capital = Bob.bank_account + Flat_cost;
 
 	print_Alice();
 	print_Bob();
