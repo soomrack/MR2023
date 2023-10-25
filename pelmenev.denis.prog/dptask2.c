@@ -49,6 +49,7 @@ void matrix_free(struct Matrix *matrix)
 {
     free(matrix->data);
     *matrix = MATRIX_NULL;
+    return;
 }
 
 
@@ -61,6 +62,7 @@ void print_matrix(const struct Matrix A)
             printf("\n");
     };
     printf("\n");
+    return;
 }
 
 
@@ -80,6 +82,7 @@ struct Matrix matrix_mult_by_coeff(struct Matrix A, const double coefficient)
 void matrix_zero(struct Matrix *A)
 {
     memset(A->data, 0.0, A->cols * A->rows * sizeof(MatrixItem));
+    return;
 }
 
 
@@ -153,7 +156,7 @@ struct Matrix matrix_transp(const struct Matrix A)
 }
 
 
-/*struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //accuracy - десятичная дробь
+struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //accuracy - десятичная дробь
 { 
     if (A.cols != A.rows)
         return MATRIX_NULL;    
@@ -192,7 +195,7 @@ struct Matrix matrix_transp(const struct Matrix A)
     matrix_free(&D);
 
     return E;
-}*/
+}
 
 
 int matrix_det_if_zero(const struct Matrix A)
@@ -228,7 +231,7 @@ void matrix_det_prep(const struct Matrix A, size_t diag, double *coeff)
     if (A.data[diag * A.cols + diag] == 0.0) {
         for (size_t row = diag; row < A.rows; ++row) {
             buff1 += 1;
-            if (A.data[row * A.cols] != 0)
+            if (A.data[row * A.cols] != 0.0)
                 break;
         };
 
@@ -258,6 +261,9 @@ double matrix_det(const struct Matrix A)
     if (C.data == NULL)
         return NAN;
     memcpy(C.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+
+    if (A.cols == 1)
+        return A.data[0];
 
     if (matrix_det_if_zero(C) == 0)
         return 0.0;
@@ -297,15 +303,15 @@ int main()
 {
     struct Matrix A, B, C, D, E, F, G;
 
-    A = matrix_allocate(3, 3);
+    A = matrix_allocate(2, 2);
     B = matrix_allocate(3, 3);
-    F = matrix_allocate(2, 2);
+    //F = matrix_allocate(2, 2);
 
     for (int k = 0; k <= A.cols * A.rows - 1; ++k)
-        A.data[k] = k + 1;
-    A.data[4] = 20;
+        A.data[k] = k;
+    A.data[3] = 20;
     //A.data[15] = 12;
-    //print_matrix(A);
+    print_matrix(A);
 
     for (int k = 0; k <= B.cols * B.rows - 1; ++k)
         B.data[k] = B.cols * B.rows - k;
@@ -318,17 +324,17 @@ int main()
     //print_matrix(E);
 
     double a, e;
-    //a = matrix_det(A);
+    a = matrix_det(A);
     //e = matrix_det(E);
-    //printf("det A = %lf \n", a);
+    printf("det A = %lf \n", a);
     //printf("det E = %lf \n", e);
 
-    F.data[0] = 0; F.data[1] = 1; F.data[2] = 1; F.data[3] = 0;
-    print_matrix(F);
+    //F.data[0] = 0.0; F.data[1] = 1.0; F.data[2] = 1.0; F.data[3] = 0.0;
+    //print_matrix(F);
     //G = matrix_exponent(F, 0.5);
     //print_matrix(G);
-    e = matrix_det(F);
-    printf("det F = %lf \n", e);
+    //e = matrix_det(F);
+    //printf("det F = %lf \n", e);
 
     matrix_free(&A);
     matrix_free(&B);
@@ -336,6 +342,7 @@ int main()
     //matrix_free(&D);
     //matrix_free(&E);
     //matrix_free(&G);
-    matrix_free(&F);
+    //matrix_free(&F);
 
+    return 0;
 }
