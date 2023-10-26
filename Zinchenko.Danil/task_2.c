@@ -15,7 +15,7 @@ struct Matrix
 };
 
 
-const struct Matrix Matrix_Null = { .cols = 0,  .rows = 0, .data = NULL };
+const struct Matrix MATRIX_NULL = { .cols = 0,  .rows = 0, .data = NULL };
 
 
 struct Matrix matrix_create(const size_t cols, const size_t rows)
@@ -24,10 +24,10 @@ struct Matrix matrix_create(const size_t cols, const size_t rows)
         struct Matrix A = { .cols = cols, .rows = rows, .data = NULL };
         return A;
     }
-    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) return Matrix_Null;
+    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) return MATRIX_NULL;
     struct Matrix A = { .cols = cols, .rows = rows, .data = NULL };
     A.data = malloc(sizeof(MatrixItem) * A.cols * A.rows);
-    if (A.data == NULL) return Matrix_Null;
+    if (A.data == NULL) return MATRIX_NULL;
     return A;
 }
 
