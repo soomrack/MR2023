@@ -223,7 +223,7 @@ struct Matrix matrix_division(struct Matrix A, const MatrixItem k)
     
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
         C.data[idx] = A.data[idx] / k;
-    return A;
+    return C;
 }
 
 
