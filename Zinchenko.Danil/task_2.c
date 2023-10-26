@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+
 const int n = 2;
 
-typedef double MatrixItem;
 
+typedef double MatrixItem;
 typedef struct Matrix
 {
     size_t cols;
@@ -36,7 +37,8 @@ void matrix_set_zero(struct Matrix A)
 void matrix_set_one(struct Matrix A)
 {
     matrix_set_zero(A);
-    for (size_t idx = 0; idx < A.cols * A.rows; idx += A.cols + 1) A.data[idx] = 1;
+    for (size_t idx = 0; idx < A.cols * A.rows; idx += A.cols + 1)
+    A.data[idx] = 1;
 }
 
 
@@ -59,7 +61,7 @@ void matrix_sum(const struct Matrix A, const struct Matrix B, const struct Matri
     else {
         for (size_t idx = 0; idx < B.cols * B.rows; ++idx)
         {
-        A.data[idx] = B.data[idx] + C.data[idx];
+            A.data[idx] = B.data[idx] + C.data[idx];
         }
     }
 }
@@ -71,7 +73,7 @@ void matrix_substraction(const struct Matrix A, const struct Matrix B, const str
     else {
         for (size_t idx = 0; idx < B.cols * B.rows; ++idx)
         {
-        A.data[idx] = B.data[idx] - C.data[idx];
+            A.data[idx] = B.data[idx] - C.data[idx];
         }
     }
 }
@@ -83,7 +85,7 @@ void matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matr
     else {
         for (size_t row = 0; row < B.rows; row++) {
             for (size_t col = 0; col < C.cols; col++) {
-            A.data[row * B.cols + col] = B.data[row * B.cols + col] * C.data[col * C.rows + row];
+                A.data[row * B.cols + col] = B.data[row * B.cols + col] * C.data[col * C.rows + row];
             }
         }
     }
@@ -156,9 +158,9 @@ struct Matrix matrix_exponent(struct Matrix A, struct Matrix AA)
 {
     struct Matrix E = matrix_create(A.cols, A.cols);
     matrix_set_one(E);
-    struct Matrix exp = matrix_create(A.cols, A.cols);
-    struct Matrix Exp = matrix_create(A.cols, A.cols);
-    matrix_sum(exp, E, A);
+    struct Matrix exp_1 = matrix_create(A.cols, A.cols);
+    struct Matrix exp_end = matrix_create(A.cols, A.cols);
+    matrix_sum(exp_1, E, A);
     struct Matrix AAA = matrix_create(A.cols, A.cols);
     struct Matrix AAD = matrix_create(A.cols, A.cols);
     if (n > 1) {
@@ -175,16 +177,16 @@ struct Matrix matrix_exponent(struct Matrix A, struct Matrix AA)
                     AAD.data[col * A.rows + row] = AAA.data[col * A.rows + row] / s;
                 }
             }
-            matrix_sum(Exp, exp, AAD);
+            matrix_sum(exp_end, exp_1, AAD);
         }
-        return(Exp);
+        return exp_end;
     }
     else {
-        matrix_sum(Exp, E, A);
-        return(Exp);
+        matrix_sum(exp_end, E, A);
+        return exp_end;
     }
     matrix_delete(&E);
-    matrix_delete(&exp);
+    matrix_delete(&exp_1);
     matrix_delete(&E);
     matrix_delete(&AAA);
     matrix_delete(&AAD);
@@ -217,9 +219,9 @@ int main()
     };
 
     MatrixItem values_B[] =
-    { 1., 1., 1.,
-      2., 2., 2.,
-      3., 3., 3.
+    { 1., 2., 3.,
+      1., 2., 3.,
+      1., 2., 3.
     };
 
     struct Matrix A = matrix_create(3, 3);
@@ -241,8 +243,7 @@ int main()
 
     matrix_fill(A, values_A);
     matrix_fill(AA, values_A);
-    matrix_fill(B, values_B);
-
+    matrix_fill(B, values_A);
     matrix_sum(C, A, B);
 
     matrix_substraction(D, A, B);
