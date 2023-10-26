@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-
+#include <string.h>
 
 const int n = 2;
 
 
 typedef double MatrixItem;
-typedef struct Matrix
+struct Matrix
 {
     size_t cols;
     size_t rows;
@@ -30,6 +30,7 @@ struct Matrix matrix_create(const size_t cols, const size_t rows)
 
 void matrix_set_zero(struct Matrix A)
 {
+    if (A.data == NULL) return;
     memset(A.data, 0, sizeof(MatrixItem) * A.cols * A.rows);
 }
 
@@ -50,43 +51,46 @@ void matrix_error()
 
 void matrix_fill(struct Matrix A, const MatrixItem values[])
 {
-    if (A.data == NULL) matrix_error();
-    else memcpy(A.data, values, A.rows * A.cols * sizeof(MatrixItem));
+    if (A.data == NULL) {
+        matrix_error();
+        return;
+    }
+    memcpy(A.data, values, A.rows * A.cols * sizeof(MatrixItem));
 }
 
 
 void matrix_sum(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
-    if (B.cols != C.cols || B.rows != C.rows) matrix_error();
-    else {
-        for (size_t idx = 0; idx < B.cols * B.rows; ++idx)
-        {
+    if (B.cols != C.cols || B.rows != C.rows) {
+        matrix_error();
+        return;
+    }
+    for (size_t idx = 0; idx < B.cols * B.rows; ++idx) {
             A.data[idx] = B.data[idx] + C.data[idx];
-        }
     }
 }
 
 
 void matrix_substraction(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
-    if (B.cols != C.cols || B.rows != C.rows) matrix_error();
-    else {
-        for (size_t idx = 0; idx < B.cols * B.rows; ++idx)
-        {
+    if (B.cols != C.cols || B.rows != C.rows) {
+        matrix_error();
+        return;
+    }
+    for (size_t idx = 0; idx < B.cols * B.rows; ++idx) {
             A.data[idx] = B.data[idx] - C.data[idx];
-        }
     }
 }
 
 
 void matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
-    if (B.cols != C.rows || B.rows != C.cols) matrix_error();
-    else {
-        for (size_t row = 0; row < B.rows; row++) {
-            for (size_t col = 0; col < C.cols; col++) {
+    if (B.cols != C.rows || B.rows != C.cols) {
+    matrix_error();
+    }
+    for (size_t row = 0; row < B.rows; row++) {
+        for (size_t col = 0; col < C.cols; col++) {
                 A.data[row * B.cols + col] = B.data[row * B.cols + col] * C.data[col * C.rows + row];
-            }
         }
     }
 }
@@ -94,10 +98,8 @@ void matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matr
 
 void matrix_trans(struct Matrix A, struct Matrix T)
 {
-    for (size_t row = 0; row < A.rows; row++)
-    {
-        for (size_t col = 0; col < A.cols; col++)
-        {
+    for (size_t row = 0; row < A.rows; row++) {
+        for (size_t col = 0; col < A.cols; col++) {
             T.data[col * A.rows + row] = A.data[row * A.cols + col];
         }
     }
@@ -131,7 +133,10 @@ struct Matrix Minor(const struct Matrix A, const size_t size, const size_t row, 
 
 
 double matrix_determinant(const struct Matrix A, const size_t size) {
-    if (A.rows != A.cols) matrix_error();
+    if (A.rows != A.cols) {
+        matrix_error();
+        return;
+    }
     double det = 0;
     int k = 1;
     if (size == 0) return 0;
@@ -196,12 +201,9 @@ struct Matrix matrix_exponent(struct Matrix A, struct Matrix AA)
 void matrix_print(const struct Matrix A, const char* text)
 {
     printf("%s\n", text);
-    for (size_t col = 0; col < A.cols; ++col)
-    {
+    for (size_t col = 0; col < A.cols; ++col) {
         printf("[");
-
-        for (size_t row = 0; row < A.rows; ++row)
-        {
+        for (size_t row = 0; row < A.rows; ++row) {
             printf("%4.2f ", A.data[A.cols * row + col]);
         }
         printf("]\n");
