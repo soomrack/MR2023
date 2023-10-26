@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <math.h>
 
-typedef MatrixItem MatrixItem;
+typedef double MatrixItem;
 
 struct Matrix {
     size_t cols;
