@@ -115,36 +115,36 @@ void matrix_delete(struct Matrix* A)
 }
 
 
-struct Matrix Minor(const struct Matrix A, const size_t size, const size_t row, const size_t col)
+struct Matrix Minor(const struct Matrix A, const size_t row, const size_t col)
 {
     struct Matrix Minor = matrix_create(A.rows - 1, A.cols - 1);
     unsigned int shiftrow = 0;
     unsigned int shiftcol = 0;
-    for (unsigned int rows = 0; rows < size - 1; rows++) {
+    for (unsigned int rows = 0; rows < A.rows - 1; rows++) {
         if (rows == row) shiftrow = 1;
         shiftcol = 0;
-        for (unsigned int cols = 0; cols < size - 1; cols++) {
+        for (unsigned int cols = 0; cols < A.rows - 1; cols++) {
             if (cols == col) shiftcol = 1;
-            Minor.data[rows * (size - 1) + cols] = A.data[(rows + shiftrow) * size + (cols + shiftcol)];
+            Minor.data[rows * (A.rows - 1) + cols] = A.data[(rows + shiftrow) * A.rows + (cols + shiftcol)];
         }
     }
     return Minor;
 }
 
 
-double matrix_determinant(const struct Matrix A, const size_t size) {
+double matrix_determinant(const struct Matrix A) {
     if (A.rows != A.cols) {
         matrix_error();
         return;
     }
     double det = 0;
     int k = 1;
-    if (size == 0) return 0;
-    if (size == 1) return A.data[0];
-    if (size == 2) return (A.data[0] * A.data[3] - A.data[2] * A.data[1]);
-    for (unsigned int idx = 0; idx < size; idx++) {
-        struct Matrix temp = Minor(A, size, 0, idx);
-        det += k * A.data[idx] * matrix_determinant(temp, size - 1);
+    if (A.rows == 0) return 0;
+    if (A.rows == 1) return A.data[0];
+    if (A.rows == 2) return (A.data[0] * A.data[3] - A.data[2] * A.data[1]);
+    for (unsigned int idx = 0; idx < A.rows; idx++) {
+        struct Matrix temp = Minor(A, 0, idx);
+        det += k * A.data[idx] * matrix_determinant(temp);
         k = -k;
         matrix_delete(&temp);
     }
@@ -155,7 +155,7 @@ double matrix_determinant(const struct Matrix A, const size_t size) {
 void determinant_print(struct Matrix A, const char* text)
 {
     printf("%s\n", text);
-    printf("%f\n", matrix_determinant(A, A.rows));
+    printf("%f\n", matrix_determinant(A));
 }
 
 
@@ -254,7 +254,7 @@ int main()
 
     matrix_trans(A, T);
 
-    matrix_determinant(A, A.rows);
+    matrix_determinant(A);
 
     struct Matrix Exp = matrix_exponent(A, AA);
 
