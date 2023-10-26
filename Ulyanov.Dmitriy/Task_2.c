@@ -197,6 +197,25 @@ double matrix_det3x3(struct Matrix A)
     return det;
 }
 
+
+// выбор определителя
+struct Matrix matrix_det(struct Matrix A)
+{
+    if (A.rows != A.cols) return MATRIX_NULL;
+
+    if (A.rows == 1) {
+        matrix_det1x1(A);
+    };
+    if (A.rows == 2) {
+        matrix_det2x2(A);
+    };
+    if (A.rows == 3) {
+        matrix_det3x3(A);
+    }
+    else return MATRIX_NULL;
+}
+
+
 struct Matrix matrix_division(struct Matrix A, const size_t k)
 {
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
@@ -204,61 +223,16 @@ struct Matrix matrix_division(struct Matrix A, const size_t k)
     return A;
 }
 
-
-size_t factorial(size_t n)
+void matrix_delete(struct Matrix* A)
 {
-    int result = 1; 
-    int i;
-    for (i = 2; i <= n; ++i) {
-        result *= i;
-    };
-    return result;
-}
 
-// возведение в степень
-struct Matrix matrix_power(struct Matrix A, int power)
-{
-    if (A.cols != A.rows) return MATRIX_NULL;
-
-    struct Matrix result = matrix_allocate(A.rows, A.cols);
-    if (result.data == 0) return MATRIX_NULL;
-    memcpy(result.data, A.data, result.cols * result.rows * sizeof(MatrixItem));
-
-    if (power < 0) return MATRIX_NULL;
-    if (power == 0) {
-        struct Matrix C = matrix_allocate(A.cols, A.rows);
-        if (C.data == 0) return MATRIX_NULL;
-        matrix_set_one(C);
-        return C;
-    };
-
-    if (power == 1) {
-        
-        return result;
-    }
-    int i;
-    
-    struct Matrix temp = matrix_allocate(A.rows, A.cols);
-    if (temp.data == 0) return MATRIX_NULL;
-    //memcpy(temp.data, A.data, temp.cols * temp.rows * sizeof(MatrixItem));
-
-    for (i = 2; i < power || i == power; ++i) {
-        temp = matrix_mult(result, A);
-        if (temp.data == NULL) {
-            return MATRIX_NULL;
-        };
-
-        memcpy(result.data, temp.data, result.cols * result.rows * sizeof(MatrixItem));
-        free(temp.data);
-        //не работает
-        
-    };
-    return result;
+    free(A->data);
+    A->data = NULL;
 }
 
 // e^A
 // Return e^A or MATRIX_NULL if fail
-struct Matrix matrix_exp(struct Matrix A, struct Matrix B)
+struct Matrix matrix_exp(struct Matrix A)
 {
     if (A.cols != A.rows) return MATRIX_NULL;
 
@@ -267,37 +241,29 @@ struct Matrix matrix_exp(struct Matrix A, struct Matrix B)
     matrix_set_one(I);
 
     struct Matrix temp = matrix_allocate(A.rows, A.cols);
-    if (temp.data == 0) return MATRIX_NULL;
+    if (temp.data == 0) {
+        matrix_delete(&I);
+        return MATRIX_NULL;
+    };
     matrix_set_one(temp);
 
-    struct Matrix temp2 = matrix_allocate(A.rows, A.cols);
-    if (temp2.data == 0) return MATRIX_NULL;
-    matrix_set_one(temp2);
-
-    /*struct Matrix Exp = matrix_allocate(A.rows, A.cols);
-    if (Exp.data == 0) return MATRIX_NULL;*/
-    
-    //size_t k = 1;
+    struct Matrix temp2;
 
     int idx;
 
     for (idx = 1; idx < 100; ++idx) {
-        temp = matrix_power(A, idx);
-        temp2 = matrix_division(temp, factorial(idx));
-        matrix_add(I, temp2);
-        free(temp.data);
-        free(temp2.data);
+        temp2 = matrix_mult(temp, A);
+        matrix_delete(&temp);
+        temp = matrix_division(temp2, idx);
+        //memcpy(temp.data, temp2.data, I.cols * I.rows * sizeof(MatrixItem));
+        matrix_delete(&temp2);
+        matrix_add(I, temp);
+
     }
     return I;
 
 }
 
-
-void matrix_delete(struct Matrix *A)
-{
-    free(A->data);
-    A->data = NULL;
-}
 
 
 int main()
@@ -310,7 +276,11 @@ int main()
     B = matrix_create(2, 2, values2);
     D = matrix_create(3, 3, values3);
 
-    C = matrix_power(A, 2);
+
+    /*C = matrix_power(A, 2);
+    matrix_print(C);*/
+
+    C = matrix_exp(A);
     matrix_print(C);
     
     //matrix_print(A);
