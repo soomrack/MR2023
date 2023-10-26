@@ -47,6 +47,7 @@ struct Matrix matrix_create(const size_t rows, const size_t cols, const MatrixIt
 
 void matrix_set_zero(struct Matrix A)
 {
+    if (A.data != NULL)
     memset(A.data, 0, sizeof(double) * A.rows * A.cols);
 }
 
@@ -70,7 +71,6 @@ void matrix_print(const struct Matrix A)
         printf(" ]\n");
     }
     printf("\n");
-
 
 }
 
@@ -113,7 +113,7 @@ int matrix_subs(const struct Matrix A, const struct Matrix B)
 
 // C = A - B
 // Function return C = A - B or MATRIX_NULL if fail 
-struct Matrix matrix_minus(struct Matrix A, struct Matrix B)
+struct Matrix matrix_subs_self(struct Matrix A, struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) return MATRIX_NULL;
 
@@ -144,8 +144,6 @@ struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
     };
     return C;
 }
-
-
 
 struct Matrix matrix_trans(struct Matrix A)
 {
@@ -198,10 +196,10 @@ double matrix_det3x3(struct Matrix A)
 }
 
 
-// выбор определителя
-struct Matrix matrix_det(struct Matrix A)
+// Function return det or NAN if fail
+double matrix_det(struct Matrix A)
 {
-    if (A.rows != A.cols) return MATRIX_NULL;
+    if (A.rows != A.cols) return NAN;
 
     if (A.rows == 1) {
         matrix_det1x1(A);
@@ -212,58 +210,59 @@ struct Matrix matrix_det(struct Matrix A)
     if (A.rows == 3) {
         matrix_det3x3(A);
     }
-    else return MATRIX_NULL;
+    else return NAN;
 }
 
 
-struct Matrix matrix_division(struct Matrix A, const size_t k)
+struct Matrix matrix_division(struct Matrix A, const double k)
 {
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
         A.data[idx] = A.data[idx] / k;
     return A;
 }
 
+
 void matrix_delete(struct Matrix* A)
 {
-
-    free(A->data);
-    A->data = NULL;
+    if (A->data != NULL) {
+        free(A->data);
+        A->data = NULL;
+    }
 }
 
-// e^A
-// Return e^A or MATRIX_NULL if fail
+
+// exp = exp(A)
+// Function return new exp = exp(A) or MATRIX_NULL if fail
 struct Matrix matrix_exp(struct Matrix A)
 {
     if (A.cols != A.rows) return MATRIX_NULL;
+    if (A.cols == 0 || A.rows == 0) return MATRIX_NULL;
 
-    struct Matrix I = matrix_allocate(A.rows, A.cols);
-    if (I.data == 0) return MATRIX_NULL;
-    matrix_set_one(I);
+    struct Matrix exp = matrix_allocate(A.rows, A.cols);
+    if (exp.data == 0) return MATRIX_NULL;
+    matrix_set_one(exp);
 
-    struct Matrix temp = matrix_allocate(A.rows, A.cols);
-    if (temp.data == 0) {
-        matrix_delete(&I);
+    struct Matrix term_prev = matrix_allocate(A.rows, A.cols);  // член a_n
+    if (term_prev.data == 0) {
+        matrix_delete(&exp);
         return MATRIX_NULL;
     };
-    matrix_set_one(temp);
+    matrix_set_one(term_prev);
 
-    struct Matrix temp2;
+    struct Matrix term_next;  // член a_n+1 
 
-    int idx;
-
-    for (idx = 1; idx < 100; ++idx) {
-        temp2 = matrix_mult(temp, A);
-        matrix_delete(&temp);
-        temp = matrix_division(temp2, idx);
-        //memcpy(temp.data, temp2.data, I.cols * I.rows * sizeof(MatrixItem));
-        matrix_delete(&temp2);
-        matrix_add(I, temp);
+    for (int idx = 1; idx < 100; ++idx) {
+        
+        term_next = matrix_mult(term_prev, A);
+        matrix_delete(&term_prev);
+        term_prev = matrix_division(term_next, idx);
+        matrix_delete(&term_next);
+        matrix_add(exp, term_prev);
 
     }
-    return I;
-
+    matrix_delete(&term_prev);
+    return exp;
 }
-
 
 
 int main()
@@ -276,27 +275,19 @@ int main()
     B = matrix_create(2, 2, values2);
     D = matrix_create(3, 3, values3);
 
-
-    /*C = matrix_power(A, 2);
-    matrix_print(C);*/
+    //matrix_print(A);
 
     C = matrix_exp(A);
     matrix_print(C);
-    
-    //matrix_print(A);
-    
 
    /* matrix_add(B, A);
     matrix_print(B);*/
 
-    /*C = matrix_sum(A, B);
-    //matrix_print(C);
+   /* C = matrix_sum(A, B);
+    matrix_print(C);
 
     matrix_subs(B, A);
-    matrix_print(B);
-
-    C = matrix_minus(A, B);
-    matrix_print(C);*/
+    matrix_print(B);*/
 
    /* C = matrix_mult(A, B);
     matrix_print(C);*/
@@ -310,13 +301,10 @@ int main()
     double det3 = matrix_det3x3(D);
     printf("\n%d\n", det3);*/
 
-    //matrix_set_one(A);
-
-
     matrix_delete(&A);
     matrix_delete(&B);
     matrix_delete(&C);
-    //matrix_delete(&D);
+    matrix_delete(&D);
 
     return 0;
 }
