@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <math.h>
 
-typedef double MatrixItem;
+typedef MatrixItem MatrixItem;
 
 struct Matrix {
     size_t cols;
@@ -48,7 +48,7 @@ struct Matrix matrix_create(const size_t rows, const size_t cols, const MatrixIt
 void matrix_set_zero(struct Matrix A)
 {
     if (A.data != NULL)
-    memset(A.data, 0, sizeof(double) * A.rows * A.cols);
+    memset(A.data, 0, sizeof(MatrixItem) * A.rows * A.cols);
 }
 
 
@@ -92,7 +92,7 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
         return MATRIX_NULL;
     }
     struct Matrix C = matrix_allocate(A.cols, A.rows);
-    if (C.data == 0) return MATRIX_NULL;
+    if (C.data == NULL) return MATRIX_NULL;
 
     memcpy(C.data, A.data, C.cols * C.rows * sizeof(MatrixItem));
     matrix_add(C, B);
@@ -145,10 +145,12 @@ struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
     return C;
 }
 
+
+
 struct Matrix matrix_trans(struct Matrix A)
 {
     struct Matrix B = matrix_allocate(A.cols, A.rows);
-    if (B.data == 0) return B;
+    if (B.data == NULL) return B;
 
     for (size_t row = 0; row < A.rows; ++row) {
         for (size_t col = 0; col < A.cols; ++col) {
@@ -161,31 +163,31 @@ struct Matrix matrix_trans(struct Matrix A)
 
 // det(A), A[1][1]
 // Function return det or NAN if fail
-double matrix_det1x1(struct Matrix A)
+MatrixItem matrix_det1x1(struct Matrix A)
 {
     if (A.rows != 1 || A.cols != 1) return NAN;
-    double det = A.data[0];
+    MatrixItem det = A.data[0];
     return det; 
 }
 
 
 // det(A), A[2][2]
 // Function return det(A) or NAN if fail
-double matrix_det2x2(struct Matrix A)
+MatrixItem matrix_det2x2(struct Matrix A)
 {
     if (A.rows != 2 || A.cols != 2) return NAN;
     
-    double det = A.data[0] * A.data[3] - A.data[1] * A.data[2];
+    MatrixItem det = A.data[0] * A.data[3] - A.data[1] * A.data[2];
     return det;
 }
 
 // det(A), A[3][3]
 // Function return det(A) or NAN if fail
-double matrix_det3x3(struct Matrix A)
+MatrixItem matrix_det3x3(struct Matrix A)
 {
     if (A.rows != 3 || A.cols != 3) return NAN;
 
-    double det = 
+    MatrixItem det = 
         + A.data[0] * A.data[4] * A.data[8] 
         + A.data[1] * A.data[5] * A.data[6] 
         + A.data[3] * A.data[7] * A.data[2] 
@@ -197,49 +199,53 @@ double matrix_det3x3(struct Matrix A)
 
 
 // Function return det or NAN if fail
-double matrix_det(struct Matrix A)
+MatrixItem matrix_det(struct Matrix A)
 {
     if (A.rows != A.cols) return NAN;
 
     if (A.rows == 1) {
-        matrix_det1x1(A);
+        return matrix_det1x1(A);
     };
     if (A.rows == 2) {
-        matrix_det2x2(A);
+        return matrix_det2x2(A);
     };
     if (A.rows == 3) {
-        matrix_det3x3(A);
+        return matrix_det3x3(A);
     }
-    else return NAN;
+    return NAN;
 }
 
 
-struct Matrix matrix_division(struct Matrix A, const double k)
+struct Matrix matrix_division(struct Matrix A, const MatrixItem k)
 {
+    struct Matrix C = matrix_allocate(A.rows, A.cols);
+    if (C.data == NULL) return MATRIX_NULL;
+    
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
-        A.data[idx] = A.data[idx] / k;
+        C.data[idx] = A.data[idx] / k;
     return A;
 }
 
 
 void matrix_delete(struct Matrix* A)
 {
-    if (A->data != NULL) {
-        free(A->data);
-        A->data = NULL;
-    }
+    if (A->data == NULL) return;
+
+    free(A->data);
+    A->data = NULL;
+    
 }
 
 
 // exp = exp(A)
-// Function return new exp = exp(A) or MATRIX_NULL if fail
+// Function return exp = exp(A) or MATRIX_NULL if fail
 struct Matrix matrix_exp(struct Matrix A)
 {
     if (A.cols != A.rows) return MATRIX_NULL;
-    if (A.cols == 0 || A.rows == 0) return MATRIX_NULL;
+    if (A.cols == 0) return MATRIX_NULL;
 
     struct Matrix exp = matrix_allocate(A.rows, A.cols);
-    if (exp.data == 0) return MATRIX_NULL;
+    if (exp.data == NULL) return MATRIX_NULL;
     matrix_set_one(exp);
 
     struct Matrix term_prev = matrix_allocate(A.rows, A.cols);  // член a_n
@@ -268,9 +274,9 @@ struct Matrix matrix_exp(struct Matrix A)
 int main()
 {
     struct Matrix  A, B, C, D;
-    double values[] = { 2., 2., 2., 2. };
-    double values2[] = { 2., 2., 2., 2. };
-    double values3[] = { 1., 2., 3., 4., 1., 1., 1., 1., 1.};
+    MatrixItem values[] = { 2., 2., 2., 2. };
+    MatrixItem values2[] = { 2., 2., 2., 2. };
+    MatrixItem values3[] = { 1., 2., 3., 4., 1., 1., 1., 1., 1.};
     A = matrix_create(2, 2, values);
     B = matrix_create(2, 2, values2);
     D = matrix_create(3, 3, values3);
@@ -295,10 +301,10 @@ int main()
     /*A = matrix_trans(A);
     matrix_print(A);
 
-    double det = matrix_det2x2(A);
+    MatrixItem det = matrix_det2x2(A);
     printf("\n%d\n", det);
 
-    double det3 = matrix_det3x3(D);
+    MatrixItem det3 = matrix_det3x3(D);
     printf("\n%d\n", det3);*/
 
     matrix_delete(&A);
