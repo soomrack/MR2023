@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <math.h>
 
+// Сделать единую функцию для определителя
+// Проверять matrix_set_zero на отсутствие null
 
 typedef double MatrixItem;
 
@@ -166,7 +168,7 @@ struct Matrix matrix_transposition(struct Matrix A)
 
 
 // Function returns C = |A| (A[1x1]) or NAN if fail
-double matrix_determinant_1x1(struct Matrix A)
+MatrixItem matrix_determinant_1x1(struct Matrix A)
 {
     double C;
 
@@ -178,7 +180,7 @@ double matrix_determinant_1x1(struct Matrix A)
 
 
 // Function returns C = |A| (A[2x2]) or NAN if fail
-double matrix_determinant_2x2(struct Matrix A)
+MatrixItem matrix_determinant_2x2(struct Matrix A)
 {
     double C;
 
@@ -190,7 +192,7 @@ double matrix_determinant_2x2(struct Matrix A)
 
 
 // Function returns C = |A| (A[3x3]) or NAN if fail
-double matrix_determinant_3x3(struct Matrix A)
+MatrixItem matrix_determinant_3x3(struct Matrix A)
 {
     double C;
 
@@ -213,15 +215,6 @@ void determinant_print(const double A)
 }
 
 
-// Function returns c = n!
-unsigned long int factorial(const unsigned int n)
-{
-    unsigned long int c = 1;
-    for (unsigned int idx = 1; idx <= n; ++idx) c = (unsigned long int)idx * c;
-    return c;
-}
-
-
 // Function returns new matrix C = e^A or MATRIX_NULL if fail
 struct Matrix matrix_exponent(struct Matrix A)
 {
@@ -230,28 +223,41 @@ struct Matrix matrix_exponent(struct Matrix A)
 
     struct Matrix Matrix_power;
 
-    struct Matrix Matrix_copy_power = matrix_allocate(A.cols, A.rows);
-    memcpy(Matrix_copy_power.data, A.data,
-    Matrix_copy_power.rows * Matrix_copy_power.cols * sizeof(MatrixItem));
+    struct Matrix Matrix_previous_step = matrix_allocate(A.cols, A.rows);
+    if (Matrix_previous_step.data == NULL) {
+        matrix_delete(&Matrix_result);
+        return Matrix_previous_step;
+    };
 
     struct Matrix Matrix_exp = matrix_allocate(A.cols, A.rows);
+    if (Matrix_exp.data == NULL) {
+        matrix_delete(&Matrix_result);
+        matrix_delete(&Matrix_previous_step);
+        return Matrix_exp;
+    };
 
-    matrix_set_one(Matrix_result);
+    matrix_set_one(Matrix_previous_step);
    
-    matrix_add(Matrix_result, A);
+    matrix_add(Matrix_previous_step, A);
 
     for (unsigned int k = 2; k <= 5; ++k) { 
 
-        Matrix_power = matrix_mult(Matrix_copy_power,A);
-        memcpy(Matrix_copy_power.data, Matrix_power.data,
-        Matrix_power.rows * Matrix_power.cols * sizeof(MatrixItem));
+        Matrix_power = matrix_mult(Matrix_previous_step, A);
 
         for (unsigned int idx = 0; idx < Matrix_exp.cols * Matrix_exp.rows; ++idx)
-        Matrix_exp.data[idx] = Matrix_power.data[idx] / factorial(k);
+            Matrix_exp.data[idx] = Matrix_power.data[idx] / k;
 
-        matrix_add(Matrix_result, Matrix_exp);
+        memcpy(Matrix_previous_step.data, Matrix_exp.data,
+               Matrix_exp.rows * Matrix_exp.cols * sizeof(MatrixItem));
+
+        matrix_delete(&Matrix_power);
+        matrix_delete(&Matrix_exp);
     };
 
+    memcpy(Matrix_result.data, Matrix_previous_step.data,
+           Matrix_previous_step.rows * Matrix_previous_step.cols * sizeof(MatrixItem));
+    matrix_delete(&Matrix_previous_step);
+    
     return Matrix_result;
 }
 
