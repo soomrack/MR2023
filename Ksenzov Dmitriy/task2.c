@@ -4,10 +4,9 @@
 #include <stdint.h>
 #include <math.h>
 
-// Сделать единую функцию для определителя
-// Проверять matrix_set_zero на отсутствие null
 
 typedef double MatrixItem;
+
 
 struct Matrix {
     size_t cols;
@@ -19,14 +18,17 @@ struct Matrix {
 const struct Matrix MATRIX_NULL = {.rows = 0, .cols = 0, .data = NULL};
 
 
+// Function returns zero matrix or MATRIX_NULL if fail
 void matrix_set_zero(struct Matrix A)
 {
+    if (A.cols == 0 || A.rows == 0) return MATRIX_NULL;
     memset(A.data, 0, sizeof(double) * A.rows * A.cols);
 }
 
-
+// Function returns unit matrix or MATRIX_NULL if fail
 void matrix_set_one(struct Matrix A)
 {
+    if (A.cols == 0 || A.rows == 0) return MATRIX_NULL;
     matrix_set_zero(A);
     for (size_t idx = 0; idx < A.rows * A.cols; idx += A.cols + 1)
     A.data[idx] = 1;
@@ -170,7 +172,7 @@ struct Matrix matrix_transposition(struct Matrix A)
 // Function returns C = |A| (A[1x1]) or NAN if fail
 MatrixItem matrix_determinant_1x1(struct Matrix A)
 {
-    double C;
+    MatrixItem C;
 
     if (A.cols != 1 && A.rows != 1) return NAN;
 
@@ -182,7 +184,7 @@ MatrixItem matrix_determinant_1x1(struct Matrix A)
 // Function returns C = |A| (A[2x2]) or NAN if fail
 MatrixItem matrix_determinant_2x2(struct Matrix A)
 {
-    double C;
+    MatrixItem C;
 
     if (A.cols != 2 && A.rows != 2) return NAN;
 
@@ -194,7 +196,7 @@ MatrixItem matrix_determinant_2x2(struct Matrix A)
 // Function returns C = |A| (A[3x3]) or NAN if fail
 MatrixItem matrix_determinant_3x3(struct Matrix A)
 {
-    double C;
+    MatrixItem C;
 
     if (A.cols != 3 && A.rows != 3) return NAN;
 
@@ -209,6 +211,29 @@ MatrixItem matrix_determinant_3x3(struct Matrix A)
 }
 
 
+// Function returns C = |A| (A[1x1], A[2x2], A[3x3]) or NAN if fail
+MatrixItem matrix_determinant(struct Matrix A)
+{
+    if (A.cols != A.rows) return NAN; 
+
+    switch (A.rows)
+    {
+    case 1:
+        return matrix_determinant_1x1(A);
+        break;
+    case 2:
+        return matrix_determinant_2x2(A);
+        break;
+    case 3:
+        return matrix_determinant_3x3(A);
+        break;    
+    default:
+        return NAN;
+        break;
+    };
+}
+
+
 void determinant_print(const double A)
 {
     printf("\n Matrix determinant = %4.2lf", A);
@@ -218,6 +243,10 @@ void determinant_print(const double A)
 // Function returns new matrix C = e^A or MATRIX_NULL if fail
 struct Matrix matrix_exponent(struct Matrix A)
 {
+    if (A.cols != A.rows) return MATRIX_NULL;
+
+    if (A.cols == 0 || A.rows == 0) return MATRIX_NULL;
+    
     struct Matrix Matrix_result = matrix_allocate(A.cols, A.rows);
     if (Matrix_result.data == NULL) return Matrix_result;
 
@@ -251,60 +280,20 @@ struct Matrix matrix_exponent(struct Matrix A)
                Matrix_exp.rows * Matrix_exp.cols * sizeof(MatrixItem));
 
         matrix_delete(&Matrix_power);
-        matrix_delete(&Matrix_exp);
     };
 
     memcpy(Matrix_result.data, Matrix_previous_step.data,
            Matrix_previous_step.rows * Matrix_previous_step.cols * sizeof(MatrixItem));
     matrix_delete(&Matrix_previous_step);
-    
+    matrix_delete(&Matrix_exp);
     return Matrix_result;
 }
-
-
-// Function returns new matrix C = |A| or MATRIX_NULL if fail
-// struct Matrix matrix_determinant(struct Matrix A)
-// {
-//     if (A.cols != A.rows) return MATRIX_NULL;
-
-//     struct Matrix C = matrix_allocate(1, 1);
-//     if (C.data == NULL) return MATRIX_NULL;
-
-//     struct Matrix D = matrix_allocate(A.rows, A.cols);
-//     if (D.data == NULL) return MATRIX_NULL;
-
-//     unsigned int shift_triangle = 0;
-//     MatrixItem E = 0;
-//     for (unsigned int row = 0; row < A.rows; ++row) {
-//          if (A.data[row * A.cols + shift_triangle] = 0) {
-//              for (unsigned int change = 1; change <= A.rows - row; ++change) {
-//                  if (A.data[row * A.cols + shift_triangle + change * A.cols] != 0) {
-
-//                  }
-//              };
-//          }
-//         else {
-//             E = A.data[(row + 1) * A.cols + shift_triangle] / A.data[row * A.cols + shift_triangle];
-//             for (unsigned int col = 0; col < A.cols; ++col) {
-//             D.data[col] = A.data[A.cols + A.cols * row + col] - E * A.data[A.cols * row + col];
-//             };
-//         };
-//         ++shift_triangle;
-//     };
-
-//     unsigned int shift_determinant = 1;
-//     for (unsigned int idx = 0; idx < A.cols; idx += A.cols + shift_determinant) {
-//             C.data[1] += D.data[idx];
-//             ++shift_determinant; 
-//     };
-//     return C;
-// }
 
 
 int main ()
 {
     struct Matrix A, B, C, D, E, F, K;
-    double G, H, I;
+    MatrixItem G;
  
     A = matrix_create(3, 3, (MatrixItem[]){24., 15., 2.,
                                            40., 5., 7.,
@@ -328,16 +317,7 @@ int main ()
     F = matrix_transposition(A);
     matrix_print(F);
 
-    // G = matrix_determinant(A);
-    // matrix_print(G);
-
-    H = matrix_determinant_1x1(B);
-    determinant_print(H);
-
-    I = matrix_determinant_2x2(B);
-    determinant_print(I);
-
-    G = matrix_determinant_3x3(A);
+    G = matrix_determinant(A);
     determinant_print(G);
 
     K = matrix_exponent(A);
