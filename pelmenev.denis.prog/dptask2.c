@@ -47,6 +47,9 @@ struct Matrix matrix_allocate(const size_t cols, const size_t rows)
 
 void matrix_free(struct Matrix *matrix)
 {
+    if (matrix->data == NULL)
+        return;
+    
     free(matrix->data);
     *matrix = MATRIX_NULL;
     return;
@@ -65,6 +68,11 @@ void print_matrix(const struct Matrix A)
     return;
 }
 
+void matrix_copy(const struct Matrix A, const struct Matrix B)
+{
+    memcpy(B.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+}
+
 
 struct Matrix matrix_mult_by_coeff(struct Matrix A, const double coefficient)
 {
@@ -79,9 +87,9 @@ struct Matrix matrix_mult_by_coeff(struct Matrix A, const double coefficient)
 }
 
 
-void matrix_zero(struct Matrix *A)
+void matrix_zero(struct Matrix A)
 {
-    memset(A->data, 0.0, A->cols * A->rows * sizeof(MatrixItem));
+    memset(A.data, 0, A.cols * A.rows * sizeof(MatrixItem));
     return;
 }
 
@@ -95,15 +103,16 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
     if (C.data == NULL)
         return C;
 
-    matrix_zero(&C);
+    matrix_zero(C);
 
-    for (size_t row = 0; row < A.cols * A.rows; ++row)
-        C.data[row] = A.data[row] + B.data[row];
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
+        C.data[idx] = A.data[idx] + B.data[idx];
 
     return C;
 }
 
 
+// C = A - B
 struct Matrix matrix_substr(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows)
@@ -113,15 +122,16 @@ struct Matrix matrix_substr(const struct Matrix A, const struct Matrix B)
     if (C.data == NULL)
         return C;
     
-    matrix_zero(&C);
+    matrix_zero(C);
 
-    for (size_t row = 0; row < A.cols * A.rows; ++row)
-        C.data[row] = A.data[row] - B.data[row];
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
+        C.data[idx] = A.data[idx] - B.data[idx];
 
     return C;
 }
 
 
+// C = A * B
 struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.rows)
@@ -131,12 +141,12 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
     if (C.data == NULL)
         return C;
     
-    matrix_zero(&C);
+    matrix_zero(C);
 
     for (size_t rowA = 0; rowA < A.rows; ++rowA)
         for (size_t colB = 0; colB < B.cols; ++colB)
             for (size_t colA = 0; colA < A.cols; ++colA)
-                C.data[B.cols * rowA + colB] += A.data[colA + rowA * A.cols] * B.data[B.cols * colA + colB];
+                C.data[C.cols * rowA + colB] += A.data[colA + rowA * A.cols] * B.data[B.cols * colA + colB];
     
     return C;
 }
@@ -156,6 +166,7 @@ struct Matrix matrix_transp(const struct Matrix A)
 }
 
 
+// C = e ^ (A)
 struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //accuracy - десятичная дробь
 { 
     if (A.cols != A.rows)
@@ -164,7 +175,7 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
     struct Matrix E = matrix_allocate(A.cols, A.rows);
     if (E.data == NULL)
         return E;
-    matrix_zero(&E);
+    matrix_zero(E);
 
     struct Matrix C, D, F;
 
@@ -174,12 +185,12 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
     for (int trm = 1; trm <= degree; ++trm) {
         F = matrix_allocate(A.cols, A.rows);
         D = matrix_allocate(A.cols, A.rows);
-        memcpy(D.data, A.data, D.cols * D.rows * sizeof(MatrixItem));
+        matrix_copy(D, A);
 
         for (int dgr = 1; dgr <= trm; ++dgr) {
             C = matrix_allocate(A.cols, A.rows);
             C = matrix_mult(D, A);
-            D = matrix_mult_by_coeff(C, (double)(1 / dgr));
+            D = matrix_mult_by_coeff(C, (double)(1.0 / dgr));
             matrix_free(&C);
         };
 
@@ -189,8 +200,8 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
         matrix_free(&F);
     };
 
-    for (int row = 0; row < A.cols * A.rows; ++row)
-        E.data[row] += 1;
+    for (int row = 0; row < A.rows; ++row)
+        E.data[row * A.cols + row] += 1;
     
     matrix_free(&D);
 
@@ -198,32 +209,34 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
 }
 
 
+// возвращается 0, если в матрице есть нулевые строки/столбцы
 int matrix_det_if_zero(const struct Matrix A)
 {
-    MatrixItem norms[A.cols + A.rows];
+    MatrixItem sum;
 
-    for (size_t row = 0; row < A.rows; ++row) // суммы по строкам
+    for (size_t row = 0; row < A.rows; ++row) { // суммы по строкам
+        sum = 0.0;
         for (size_t col = 0; col < A.cols; ++col) {
-            norms[row] += A.data[row * A.cols + col];
+            sum += A.data[row * A.cols + col];
+        if (sum == 0.0)
+            return 0;
         };
+    };
     
-    for (size_t col = 0; col < A.cols; ++col) // суммы по столбцам
+    for (size_t col = 0; col < A.cols; ++col) { // суммы по столбцам
+        sum = 0.0;
         for (size_t row = 0; row < A.rows; ++row) {
-            norms[col + A.rows] += A.data[row * A.cols + col];
+            sum += A.data[row * A.cols + col];
+        if (sum == 0.0)
+            return 0;
         };
-    
-    MatrixItem mult = 1.0;
-
-    for (size_t row = 0; row < A.cols + A.rows; ++row)
-        mult *= norms[row];
-    
-    if (mult == 0)
-        return 0;
+    };
     
     return 1;
 }
 
 
+// меняет строки местами, если первый символ в диагонали == 0
 void matrix_det_prep(const struct Matrix A, size_t diag, double *coeff)
 {
     size_t buff1 = diag; // запоминается номер строки
@@ -260,13 +273,17 @@ double matrix_det(const struct Matrix A)
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
         return NAN;
-    memcpy(C.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+    matrix_copy(C, A);
 
-    if (A.cols == 1)
+    if (A.cols == 1) {
+        matrix_free(C);
         return A.data[0];
+    }; 
 
-    if (matrix_det_if_zero(C) == 0)
+    if (matrix_det_if_zero(C) == 0) {
+        matrix_free(C);
         return 0.0;
+    };
     
     double coeff = 1.0;
     double diagonal = 1.0;
@@ -305,13 +322,13 @@ int main()
 
     A = matrix_allocate(2, 2);
     B = matrix_allocate(3, 3);
-    //F = matrix_allocate(2, 2);
+    F = matrix_allocate(2, 2);
 
     for (int k = 0; k <= A.cols * A.rows - 1; ++k)
         A.data[k] = k;
     A.data[3] = 20;
     //A.data[15] = 12;
-    print_matrix(A);
+    //print_matrix(A);
 
     for (int k = 0; k <= B.cols * B.rows - 1; ++k)
         B.data[k] = B.cols * B.rows - k;
@@ -326,13 +343,13 @@ int main()
     double a, e;
     a = matrix_det(A);
     //e = matrix_det(E);
-    printf("det A = %lf \n", a);
+    //printf("det A = %lf \n", a);
     //printf("det E = %lf \n", e);
 
-    //F.data[0] = 0.0; F.data[1] = 1.0; F.data[2] = 1.0; F.data[3] = 0.0;
-    //print_matrix(F);
-    //G = matrix_exponent(F, 0.5);
-    //print_matrix(G);
+    F.data[0] = 0.0; F.data[1] = 1.0; F.data[2] = 1.0; F.data[3] = 0.0;
+    print_matrix(F);
+    G = matrix_exponent(F, 0.5);
+    print_matrix(G);
     //e = matrix_det(F);
     //printf("det F = %lf \n", e);
 
@@ -341,8 +358,8 @@ int main()
     //matrix_free(&C);
     //matrix_free(&D);
     //matrix_free(&E);
-    //matrix_free(&G);
-    //matrix_free(&F);
+    matrix_free(&G);
+    matrix_free(&F);
 
     return 0;
 }
