@@ -59,9 +59,9 @@ void matrix_free(struct Matrix *matrix)
 void print_matrix(const struct Matrix A)
 {
     printf("_____________________________________________ \n");
-    for (size_t row = 1; row <= A.cols * A.rows; ++row) {
-        printf("%4.2f \t", A.data[row-1]);
-        if (row % A.cols == 0 && row >= A.cols)
+    for (size_t idx = 1; idx <= A.cols * A.rows; ++idx) {
+        printf("%4.2f \t", A.data[idx-1]);
+        if (idx % A.cols == 0 && idx >= A.cols)
             printf("\n");
     };
     printf("\n");
@@ -74,16 +74,16 @@ void matrix_copy(const struct Matrix A, const struct Matrix B)
 }
 
 
-struct Matrix matrix_mult_by_coeff(struct Matrix A, const double coefficient)
+// coeff * A
+void matrix_mult_by_coeff(struct Matrix A, const double coefficient)
 {
-    struct Matrix C = matrix_allocate(A.cols, A.rows);
-    if (C.data == NULL)
-        return C;
+    if (A.data == NULL)
+        return;
 
-    for (size_t row = 0; row < A.cols * A.rows; ++row)
-        C.data[row] = A.data[row] * coefficient;
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
+        A.data[idx] = A.data[idx] * coefficient;
     
-    return C;
+    return;
 }
 
 
@@ -94,6 +94,7 @@ void matrix_zero(struct Matrix A)
 }
 
 
+// C = A + B
 struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows)
@@ -109,6 +110,22 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
         C.data[idx] = A.data[idx] + B.data[idx];
 
     return C;
+}
+
+
+// A += B
+void matrix_add(const struct Matrix A, const struct Matrix B)
+{
+    if (A.cols != B.cols || A.rows != B.rows)
+        return MATRIX_NULL;
+
+    if (A.data == NULL || B.data == NULL)
+        return;
+
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
+        A.data[idx] = A.data[idx] + B.data[idx];
+
+    return;
 }
 
 
@@ -152,6 +169,30 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 }
 
 
+// A *= B
+void matrix_add_mult(const struct Matrix A, const struct Matrix B)
+{
+    if (A.cols != B.rows)
+        return MATRIX_NULL;
+    
+    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    if (C.data == NULL)
+        return C;
+    
+    matrix_zero(C);
+
+    for (size_t rowA = 0; rowA < A.rows; ++rowA)
+        for (size_t colB = 0; colB < B.cols; ++colB)
+            for (size_t colA = 0; colA < A.cols; ++colA)
+                C.data[C.cols * rowA + colB] += A.data[colA + rowA * A.cols] * B.data[B.cols * colA + colB];
+    
+    matrix_copy(A, C);
+    matrix_free(&C);
+
+    return;
+}
+
+
 struct Matrix matrix_transp(const struct Matrix A)
 {
     struct Matrix C = matrix_allocate(A.cols, A.rows);
@@ -170,42 +211,33 @@ struct Matrix matrix_transp(const struct Matrix A)
 struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //accuracy - десятичная дробь
 { 
     if (A.cols != A.rows)
-        return MATRIX_NULL;    
+        return MATRIX_NULL;
 
-    struct Matrix E = matrix_allocate(A.cols, A.rows);
-    if (E.data == NULL)
-        return E;
-    matrix_zero(E);
+    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    if (C.data == NULL)
+        return C;
+    matrix_zero(C);
 
-    struct Matrix C, D, F;
+    struct Matrix B = matrix_allocate(A.cols, A.rows);
+    matrix_copy(B, A);
 
     int degree;
-    degree = (int)(round(1 / accuracy));
+    degree = (int)(ceil(1.0 / accuracy));
 
-    for (int trm = 1; trm <= degree; ++trm) {
-        F = matrix_allocate(A.cols, A.rows);
-        D = matrix_allocate(A.cols, A.rows);
-        matrix_copy(D, A);
-
-        for (int dgr = 1; dgr <= trm; ++dgr) {
-            C = matrix_allocate(A.cols, A.rows);
-            C = matrix_mult(D, A);
-            D = matrix_mult_by_coeff(C, (double)(1.0 / dgr));
-            matrix_free(&C);
-        };
-
-        F = matrix_sum(E, D);
-        matrix_free(&D);
-        memcpy(E.data, F.data, E.cols * E.rows * sizeof(MatrixItem));
-        matrix_free(&F);
+    for (int trm = 2; trm <= degree; ++trm) {
+       matrix_add_mult(B, A);
+       matrix_mult_by_coeff(B, 1.0 / trm);
+       matrix_add(C, B);
     };
 
-    for (int row = 0; row < A.rows; ++row)
-        E.data[row * A.cols + row] += 1;
-    
-    matrix_free(&D);
+    matrix_add(C, A);
 
-    return E;
+    for (size_t diag = 0; diag < C.rows; ++diag)
+        C.data[diag * C.cols + diag] += 1;
+    
+    matrix_free(&B);
+
+    return C;
 }
 
 
