@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 
+
 const int n = 2;
 
 
@@ -87,14 +88,16 @@ void matrix_substraction(const struct Matrix A, const struct Matrix B, const str
 }
 
 
-void matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matrix C)
-{
+void matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matrix C) {
     if (B.cols != C.rows || B.rows != C.cols) {
-    matrix_error();
+        matrix_error();
+        return;
     }
-    for (size_t row = 0; row < B.rows; row++) {
-        for (size_t col = 0; col < C.cols; col++) {
-                A.data[row * B.cols + col] = B.data[row * B.cols + col] * C.data[col * C.rows + row];
+    for (size_t row = 0; row < A.rows; row++) {
+        for (size_t col = 0; col < A.cols; col++) {
+            for (size_t idx = 0; idx < B.cols; idx++) {
+                A.data[row * A.cols + col] += B.data[row * B.cols + idx] * C.data[col + idx * A.cols];
+            }
         }
     }
 }
@@ -243,13 +246,17 @@ int main()
     matrix_set_one(E);
 
     struct Matrix C = matrix_create(3, 3);
+   
+
     struct Matrix D = matrix_create(3, 3);
     struct Matrix P = matrix_create(3, 3);
+    matrix_set_zero(P);
+
     struct Matrix T = matrix_create(3, 3);
 
     matrix_fill(A, values_A);
     matrix_fill(AA, values_A);
-    matrix_fill(B, values_A);
+    matrix_fill(B, values_B);
     matrix_sum(C, A, B);
 
     matrix_substraction(D, A, B);
