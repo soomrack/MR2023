@@ -8,7 +8,7 @@
 const struct Matrix MATRIX_NULL = { .cols = 0, .rows = 0, .data = NULL };
 enum ErrorType { MEM_ALLOC_ERROR, FALSE_MATRIX, FALSE_ROWS_COLS, EMPTY_MATRIX };
 
-void matrix_exaption(enum Error_type error)
+void matrix_exaption(enum ErrorType error)
 {
     switch (error)
     {
