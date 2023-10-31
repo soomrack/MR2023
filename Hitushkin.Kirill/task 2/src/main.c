@@ -31,7 +31,7 @@ int main()
     
     
     Matrix M = matrix_allocate(2, 2);
-    matrix_set_null(M);
+    matrix_set_zero(M);
     matrix_sub_from(M, B);
     Matrix MM = matrix_sub(C, B);
     Matrix ans_M = matrix_allocate(2, 2);
@@ -55,9 +55,9 @@ int main()
     Matrix T = matrix_allocate(4, 2);
     matrix_set_items(T, (double[]){2, 6, 3, 7, 4, 8, 5, 9});
     Matrix ans_T = matrix_allocate(2, 4);
-    Matrix TT = tran_matrix(T);
+    Matrix TT = matrix_tran(T);
     matrix_set_items(ans_T, (double[]){2, 3, 4, 5, 6, 7, 8, 9});
-    int tran_test = matrix_compare(tran_matrix(T), ans_T);
+    int tran_test = matrix_compare(matrix_tran(T), ans_T);
     test("Tran", tran_test);
     
     Matrix D = matrix_allocate(3, 3);

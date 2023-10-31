@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 #include "matrix.h"
 
+
+#define INT_SWAP(a, b) {a ^= b; b ^= a; a ^= b;}
+#define ALL_SWAP(a, b) {size_t size = sizeof(a); while (size--) {INT_SWAP(((char*)&a)[size], ((char*)&b)[size]);}}
 
 const Matrix MATRIX_NULL = {.cols = 0, .rows = 0, .items = NULL};
 
@@ -52,7 +57,7 @@ void matrix_set_items(const Matrix mat, const double *values)
 }
 
 
-void matrix_set_null(const Matrix mat)
+void matrix_set_zero(const Matrix mat)
 {
     memset(mat.items, 0, sizeof(MatrixItem) * mat.cols * mat.rows);
 }
@@ -60,9 +65,9 @@ void matrix_set_null(const Matrix mat)
 
 void matrix_set_one(const Matrix mat)
 {
-    matrix_set_null(mat);
+    matrix_set_zero(mat);
     for (size_t idx = 0; idx < mat.cols; idx++)
-        mat.items[idx + idx * mat.cols] = 1;
+        mat.items[idx + idx * mat.cols] = 1.0;
 }
 
 
@@ -115,6 +120,11 @@ Matrix matrix_sum(const Matrix a, const Matrix b)
     
     Matrix sum = matrix_allocate(a.rows, a.cols);
 
+    if (sum.items == NULL) {
+        print_error(MEMORY_ERROR);
+        return MATRIX_NULL;
+    }
+
     memcpy(sum.items, a.items, sum.cols * sum.rows * sizeof(MatrixItem));
     matrix_add(sum, b);
 
@@ -142,6 +152,11 @@ Matrix matrix_sub(const Matrix a, const  Matrix b)
     }
     
     Matrix sub = matrix_allocate(a.rows, a.cols);
+
+    if (sub.items == NULL) {
+        print_error(MEMORY_ERROR);
+        return MATRIX_NULL;
+    }
     
     memcpy(sub.items, a.items, sub.cols * sub.rows * sizeof(MatrixItem));
     matrix_sub_from(sub, b);
@@ -180,13 +195,18 @@ Matrix matrix_mult(const Matrix a, const Matrix b)
     
     Matrix mult = matrix_allocate(a.rows, b.cols);
 
+    if (mult.items == NULL) {
+        print_error(MEMORY_ERROR);
+        return MATRIX_NULL;
+    }
+
     matrix_mult_to(mult, a, b);
 
     return mult;
 }
 
 
-Matrix tran_matrix(const Matrix a)
+Matrix matrix_tran(const Matrix a)
 {
     Matrix tran = matrix_allocate(a.cols, a.rows);
 
@@ -198,18 +218,6 @@ Matrix tran_matrix(const Matrix a)
 }
 
 
-static void matrix_swap(char *one, char *two, size_t size)
-{
-    while(size--) {
-        *one = *one ^ *two;
-        *two = *two ^ *one;
-        *one = *one ^ *two;
-        one ++;
-        two ++;
-    }
-}
-
-
 double matrix_det(const Matrix mat_one) {
     if (mat_one.cols != mat_one.rows) {
         print_error(WRONG_CONDITIONS);
@@ -217,6 +225,12 @@ double matrix_det(const Matrix mat_one) {
     }
 
     Matrix mat = matrix_allocate(mat_one.rows, mat_one.cols);
+
+    if (mat.items == NULL) {
+        print_error(MEMORY_ERROR);
+        return 0;
+    }
+
     memcpy(mat.items, mat_one.items, sizeof(MatrixItem) * mat_one.rows * mat_one.cols);
 
     double det = 1.0;
@@ -226,14 +240,15 @@ double matrix_det(const Matrix mat_one) {
     for (size_t num_col = 0; num_col < mat.cols; num_col++) {
         pivot = num_col;
 
-        for (int num_row = num_col + 1; num_row < mat.rows; num_row++) {
-            if (abs(mat.items[num_row * mat.cols + num_col]) > abs(mat.items[pivot * mat.cols + num_col]))
+        for (size_t num_row = num_col + 1; num_row < mat.rows; num_row++) {
+            if (fabs(mat.items[num_row * mat.cols + num_col]) > fabs(mat.items[pivot * mat.cols + num_col]))
                 pivot = num_row;
         }
 
         if (pivot != num_col) {
             for (size_t idx = 0; idx < mat.rows; idx++) 
-                matrix_swap((char*) &mat.items[num_col * mat.cols + idx], (char*) &mat.items[pivot * mat.cols + idx], sizeof(MatrixItem));
+                ALL_SWAP(mat.items[num_col * mat.cols + idx], mat.items[pivot * mat.cols + idx]);
+
             det *= -1;
         }
 
@@ -244,7 +259,7 @@ double matrix_det(const Matrix mat_one) {
 
         det *= mat.items[num_col * mat.cols + num_col];
 
-        for (int num_row = num_col + 1; num_row < mat.rows; num_row++) {
+        for (size_t num_row = num_col + 1; num_row < mat.rows; num_row++) {
             factor = mat.items[num_row * mat.cols + num_col] / mat.items[num_col * mat.cols + num_col];
 
             for (size_t idx = num_col + 1; idx < mat.cols; idx++)
@@ -287,12 +302,16 @@ Matrix matrix_expm(const Matrix a, const double accuracy)
     }
 
     Matrix sum = matrix_allocate(a.rows, a.cols);
-    matrix_set_null(sum);
-
     Matrix term = matrix_allocate(a.rows, a.cols);
-    matrix_set_one(term);
-
     Matrix temp = matrix_allocate(a.rows, a.cols);
+
+    if (sum.items == NULL || term.items == NULL || temp.items == NULL) {
+        print_error(MEMORY_ERROR);
+        return MATRIX_NULL;
+    }
+
+    matrix_set_one(term);
+    matrix_set_zero(sum);
 
     matrix_add(sum, term);
 
@@ -300,7 +319,7 @@ Matrix matrix_expm(const Matrix a, const double accuracy)
         matrix_scalar_mult(term, (1.0 / count));
 
         matrix_mult_to(temp, term, a);
-        matrix_swap((char*) &term,(char*) &temp, sizeof(Matrix));
+        ALL_SWAP(term.items, temp.items);
 
         matrix_add(sum, term);
 

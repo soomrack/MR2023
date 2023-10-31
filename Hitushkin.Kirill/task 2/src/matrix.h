@@ -14,7 +14,7 @@ Matrix matrix_allocate(const size_t rows, const size_t cols);
 
 void matrix_set_items(const Matrix mat, const double *values);
 
-void matrix_set_null(const Matrix mat);
+void matrix_set_zero(const Matrix mat);
 
 void matrix_set_one(const Matrix mat);
 
@@ -34,7 +34,7 @@ void matrix_mult_to(const Matrix target_mat, const Matrix a, const Matrix b);
 
 Matrix matrix_mult(const Matrix a, const Matrix b);
 
-Matrix tran_matrix(const Matrix a);
+Matrix matrix_tran(const Matrix a);
 
 double matrix_det(const Matrix mat_one);
 
