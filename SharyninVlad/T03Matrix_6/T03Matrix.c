@@ -36,7 +36,7 @@ void main(void)
             run = 0;
             break;
         case 1:
-            A = matrix_create(3, 3, random);
+            A = matrix_create(3, 3, I);
             B = matrix_create(3, 3, I);
             flag = 1;
             break;
@@ -73,7 +73,7 @@ void main(void)
             printf("determinan = %.1lf\n", determinant(A));
             break;
         case 10:
-            C = matrix_exponential(A, 5.0);
+            C = matrix_exponential(A, 25);
             matrix_print_free(&C);
             break;
         default:

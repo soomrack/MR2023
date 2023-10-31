@@ -6,21 +6,22 @@
 #include "Matrix.h"
 
 const struct Matrix MATRIX_NULL = { .cols = 0, .rows = 0, .data = NULL };
+enum ErrorType { MEM_ALLOC_ERROR, FALSE_MATRIX, FALSE_ROWS_COLS, EMPTY_MATRIX };
 
-void error_control(enum Error_type error)
+void matrix_exaption(enum Error_type error)
 {
     switch (error)
     {
-        case memory_alloccation_error:
+        case MEM_ALLOC_ERROR:
             printf("no memory was allocated for the array\n");
             break;
-        case false_matrix:
+        case FALSE_MATRIX:
             printf("the original matrix is incorrect or difficult to calculate\n");
             break;
-        case false_rows_or_cols:
+        case FALSE_ROWS_COLS:
             printf("the number of rows or columns in the matrices is incorrect\n");
             break;
-        case empty_matrix:
+        case EMPTY_MATRIX:
             printf("Matrix are empty\n");
             break;
         default:
@@ -33,7 +34,7 @@ void error_control(enum Error_type error)
 int matrix_print(struct Matrix *M)
 {
     if (M->data == NULL) {
-        error_control(empty_matrix);
+        matrix_exaption(EMPTY_MATRIX);
         return 0;
     }
 
@@ -41,7 +42,7 @@ int matrix_print(struct Matrix *M)
     for (size_t rows = 0; rows < M->rows; rows++) {
         printf("[");
         for (size_t cols = 0; cols < M->cols; cols++) {
-            printf("%.1lf", M->data[rows * M->cols + cols]);
+            printf("%.10lf", M->data[rows * M->cols + cols]);
             if (cols != M->cols - 1)
                 printf("\t");
         }
@@ -54,15 +55,23 @@ int matrix_print(struct Matrix *M)
 
 struct Matrix memory_allocation(const size_t rows, const size_t cols)
 {
-    if (cols == 0 || rows == 0) return MATRIX_NULL;
+    if (cols == 0 || rows == 0) {
+        struct Matrix M = { .cols = cols, .rows = rows, .data = NULL };
+        return M;
+    }
 
     if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) {
-        error_control(memory_alloccation_error);
+        matrix_exaption(MEM_ALLOC_ERROR);
         return MATRIX_NULL; 
     }
 
     struct Matrix M = { .cols = cols, .rows = rows, .data = NULL };
     M.data = (MatrixItem*)malloc(M.cols * M.rows * sizeof(MatrixItem));
+
+    if (M.data == NULL) {
+        matrix_exaption(MEM_ALLOC_ERROR);
+        return MATRIX_NULL;
+    }
 
     if (M.data == NULL) return MATRIX_NULL;
 
@@ -74,31 +83,27 @@ void matrix_fill(struct Matrix* M, enum MatrixType mat_type)
 {
     switch (mat_type)
     {
-    case (zero):
+    case (ZERO):
         for (size_t idx = 0; idx < M->cols * M->rows; idx++)
             M->data[idx] = 0.0;
         break;
 
-    case (ones):
+    case (ONES):
         for (size_t idx = 0; idx < M->cols * M->rows; idx++)
             M->data[idx] = 1.0;
         break;
 
-    case (random):
+    case (RANDOM):
         for (size_t idx = 0; idx < M->cols * M->rows; idx++)
             M->data[idx] = (double)(rand() % 100);
         break;
 
     case (I):
-        if (M->cols == M->rows)
-            for (size_t row_M = 0; row_M < M->rows; row_M++)
-                for (size_t col_M = 0; col_M < M->cols; col_M++) {
-
-                    if (row_M == col_M)
-                        M->data[row_M * M->cols + col_M] = 1.0;
-                    else
-                        M->data[row_M * M->cols + col_M] = 0.0;
-                }
+        if (M->cols == M->rows) {
+            matrix_fill(M, ZERO);
+            for (size_t row_col_M = 0; row_col_M < M->rows; row_col_M++)
+                M->data[row_col_M * M->cols + row_col_M] = 1.0;
+        }
         break;
     }
 }
@@ -123,7 +128,7 @@ void matrix_free(struct Matrix* M)
 struct Matrix matrix_subst(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows){
-        error_control(false_rows_or_cols);
+        matrix_exaption(FALSE_ROWS_COLS);
         return MATRIX_NULL;
     }
 
@@ -138,7 +143,7 @@ struct Matrix matrix_subst(const struct Matrix A, const struct Matrix B)
 int matrix_add(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) {
-        error_control(false_rows_or_cols);
+        matrix_exaption(FALSE_ROWS_COLS);
         return 1;
     }     
 
@@ -152,7 +157,7 @@ int matrix_add(const struct Matrix A, const struct Matrix B)
 struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) {
-        error_control(false_rows_or_cols);
+        matrix_exaption(FALSE_ROWS_COLS);
         return MATRIX_NULL;
     }
 
@@ -178,12 +183,12 @@ struct Matrix matrix_mult_on_number(const struct Matrix A, double multiplier)
 struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.rows) {
-        error_control(false_rows_or_cols);
+        matrix_exaption(FALSE_ROWS_COLS);
         return MATRIX_NULL;
     }
     
     struct Matrix C = memory_allocation(A.rows, B.cols);
-    matrix_fill(&C, zero);
+    matrix_fill(&C, ZERO);
 
     for (size_t row_A = 0; row_A < A.rows; row_A++)
         for (size_t col_B = 0; col_B < B.cols; col_B++)
@@ -196,7 +201,7 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 struct Matrix transposition(const struct Matrix A)
 {
     struct Matrix C = memory_allocation(A.cols, A.rows);
-    matrix_fill(&C, zero);
+    matrix_fill(&C, ZERO);
 
     for (size_t rows = 0; rows < A.rows; rows++)
         for (size_t cols = 0; cols < A.cols; cols++)
@@ -208,60 +213,65 @@ struct Matrix transposition(const struct Matrix A)
 double determinant(struct Matrix A)
 {
     if (A.cols != A.rows) {
-        error_control(false_rows_or_cols);
-        return 404.404;
+        matrix_exaption(FALSE_ROWS_COLS);
+        return NAN;
     }
 
-    if (A.cols == 2)
+    if (A.cols == 2) {
         return A.data[0] * A.data[3] - A.data[1] * A.data[2];
-    else if (A.cols == 3)
-        return (A.data[0] * A.data[4] * A.data[8]) + \
-                (A.data[1] * A.data[5] * A.data[6]) + \
-                (A.data[2] * A.data[3] * A.data[7]) - \
-                (A.data[2] * A.data[4] * A.data[6]) - \
-                (A.data[0] * A.data[5] * A.data[7]) - \
-                (A.data[1] * A.data[3] * A.data[8]);
-    else
-    {
-        error_control(false_matrix);
-        return 404.404;
     }
+
+    if (A.cols == 3) {
+        return (A.data[0] * A.data[4] * A.data[8]) + \
+            (A.data[1] * A.data[5] * A.data[6]) + \
+            (A.data[2] * A.data[3] * A.data[7]) - \
+            (A.data[2] * A.data[4] * A.data[6]) - \
+            (A.data[0] * A.data[5] * A.data[7]) - \
+            (A.data[1] * A.data[3] * A.data[8]);
+    }
+    
+    matrix_exaption(FALSE_MATRIX);
+    return NAN;
 }
 
 
-double fuctorial(double level)
-{
-    if (level == 1) return 1;
-
-    return level * fuctorial(level - 1);
-}
-
-
-struct Matrix matrix_stage(struct Matrix M, double level)
-{
-    if (level == 1) return M;
-
-    return matrix_mult(M, matrix_stage(M, level - 1));
-}
-
-
-struct Matrix matrix_exponential(struct Matrix M, double level)
+struct Matrix matrix_exponential_summand(struct Matrix M, unsigned int level)
 {
     struct Matrix C;
+    unsigned int n = 1;
+
+    for (unsigned int counter = 1; counter <= level; counter++) n *= counter;
+
+    for (unsigned int counter = 1; counter <= level; counter++) {
+        if (counter == 1) C = matrix_mult(M, M);
+        else C = matrix_mult(C, M);
+    }
+
+    return matrix_mult_on_number(C, 1/(double)n);
+}
+
+
+struct Matrix matrix_exponential(struct Matrix M, unsigned long int level)
+{
+    struct Matrix C, S;
 
     if (M.cols != M.rows) {
-        error_control(false_rows_or_cols);
+        matrix_exaption(FALSE_ROWS_COLS);
         return MATRIX_NULL;
-    }
+    }    
 
-    if (level == 0) {
-        C = memory_allocation(M.rows, M.cols);
-        matrix_fill(&C, I);
-        return C;
-    }
+    for (unsigned int count = 0; count <= level; count++) {
+        if (count == 0) {
+            S = memory_allocation(M.rows, M.cols);
+            matrix_fill(&S, I);
+            continue;
+        }
 
-    return matrix_sum(matrix_mult_on_number(matrix_stage(M, level), \
-        1/fuctorial(level)), matrix_exponential(M, level - 1));
+        C = matrix_exponential_summand(M, count);
+        matrix_add(S, C);
+        matrix_free(&C);
+    }
+    return S;
 }
 
 
