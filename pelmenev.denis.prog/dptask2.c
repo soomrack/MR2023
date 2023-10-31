@@ -278,7 +278,6 @@ void matrix_det_prep(const struct Matrix A, size_t diag, double *coeff)
     if (A.data[diag * A.cols + diag] == 0.0) {
         for (size_t row = diag; row < A.rows; ++row) {
             buff_one += 1;
-            printf("%d\n", buff_one);
             if (A.data[row * A.cols] != 0.0)
                 break;
         };
@@ -355,7 +354,7 @@ int main()
 {
     struct Matrix A, B, C, D, E, F, G;
 
-    A = matrix_allocate(2, 2);
+    A = matrix_allocate(3, 3);
     B = matrix_allocate(3, 3);
     F = matrix_allocate(2, 2);
 
@@ -367,7 +366,7 @@ int main()
 
     for (int k = 0; k <= B.cols * B.rows - 1; ++k)
         B.data[k] = B.cols * B.rows - k;
-    //print_matrix(B);
+    print_matrix(B);
 
     //D = matrix_substr(A, B);
     //print_matrix(D);
