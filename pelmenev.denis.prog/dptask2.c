@@ -68,7 +68,9 @@ void print_matrix(const struct Matrix A)
     return;
 }
 
-void matrix_copy(const struct Matrix A, const struct Matrix B)
+
+// B <- A
+void matrix_copy(const struct Matrix B, const struct Matrix A)
 {
     memcpy(B.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
 }
@@ -117,7 +119,7 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 void matrix_add(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows)
-        return MATRIX_NULL;
+        return;
 
     if (A.data == NULL || B.data == NULL)
         return;
@@ -173,11 +175,11 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 void matrix_add_mult(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.rows)
-        return MATRIX_NULL;
+        return;
     
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
-        return C;
+        return;
     
     matrix_zero(C);
 
@@ -248,20 +250,20 @@ int matrix_det_if_zero(const struct Matrix A)
 
     for (size_t row = 0; row < A.rows; ++row) { // суммы по строкам
         sum = 0.0;
-        for (size_t col = 0; col < A.cols; ++col) {
+        for (size_t col = 0; col < A.cols; ++col)
             sum += A.data[row * A.cols + col];
+        
         if (sum == 0.0)
             return 0;
-        };
     };
     
     for (size_t col = 0; col < A.cols; ++col) { // суммы по столбцам
         sum = 0.0;
-        for (size_t row = 0; row < A.rows; ++row) {
+        for (size_t row = 0; row < A.rows; ++row)
             sum += A.data[row * A.cols + col];
+        
         if (sum == 0.0)
             return 0;
-        };
     };
     
     return 1;
@@ -271,21 +273,22 @@ int matrix_det_if_zero(const struct Matrix A)
 // меняет строки местами, если первый символ в диагонали == 0
 void matrix_det_prep(const struct Matrix A, size_t diag, double *coeff)
 {
-    size_t buff1 = diag; // запоминается номер строки
+    size_t buff_one = diag; // запоминается номер строки
 
     if (A.data[diag * A.cols + diag] == 0.0) {
         for (size_t row = diag; row < A.rows; ++row) {
-            buff1 += 1;
+            buff_one += 1;
+            printf("%d\n", buff_one);
             if (A.data[row * A.cols] != 0.0)
                 break;
         };
 
-        double buff2 = 0; // запоминается значение в ячейке
+        double buff_two = 0; // запоминается значение в ячейке
         
         for (size_t col = diag; col < A.cols; ++col) {
-            buff2 = A.data[diag * A.cols + col];
-            A.data[diag * A.cols + col] = A.data[buff1 * A.cols + col];
-            A.data[buff1 * A.cols + col] = buff2;
+            buff_two = A.data[diag * A.cols + col];
+            A.data[diag * A.cols + col] = A.data[buff_one * A.cols + col];
+            A.data[buff_one * A.cols + col] = buff_two;
         };
 
         *coeff *= -1;
@@ -308,31 +311,31 @@ double matrix_det(const struct Matrix A)
     matrix_copy(C, A);
 
     if (A.cols == 1) {
-        matrix_free(C);
+        matrix_free(&C);
         return A.data[0];
     }; 
 
     if (matrix_det_if_zero(C) == 0) {
-        matrix_free(C);
+        matrix_free(&C);
         return 0.0;
     };
     
     double coeff = 1.0;
     double diagonal = 1.0;
-    double buff1, buff2;
+    double buff_one, buff_two;
 
     for (size_t diag = 0; diag < A.rows - 1; ++diag) {
         matrix_det_prep(C, diag, &coeff);
         coeff *= C.data[diag * A.cols + diag];
-        buff1 = C.data[diag * A.cols + diag];
+        buff_one = C.data[diag * A.cols + diag];
 
         for (size_t col = diag; col < A.cols; ++col)
-            C.data[diag * A.cols + col] /= buff1;
+            C.data[diag * A.cols + col] /= buff_one;
 
         for (size_t row = diag + 1; row < A.rows; ++row) {
-            buff2 = C.data[row * A.cols + diag];
+            buff_two = C.data[row * A.cols + diag];
             for (size_t col = diag; col < A.cols; ++col) {
-                C.data[row * A.cols + col] = C.data[row * A.cols + col] - C.data[diag * A.cols + col] * buff2;
+                C.data[row * A.cols + col] = C.data[row * A.cols + col] - C.data[diag * A.cols + col] * buff_two;
             };  
         };
     };
@@ -357,10 +360,10 @@ int main()
     F = matrix_allocate(2, 2);
 
     for (int k = 0; k <= A.cols * A.rows - 1; ++k)
-        A.data[k] = k;
-    A.data[3] = 20;
-    //A.data[15] = 12;
-    //print_matrix(A);
+        A.data[k] = k+1;
+    A.data[3] = 20.0;
+    A.data[0] = 0.0;
+    print_matrix(A);
 
     for (int k = 0; k <= B.cols * B.rows - 1; ++k)
         B.data[k] = B.cols * B.rows - k;
@@ -375,13 +378,13 @@ int main()
     double a, e;
     a = matrix_det(A);
     //e = matrix_det(E);
-    //printf("det A = %lf \n", a);
+    printf("det A = %lf \n", a);
     //printf("det E = %lf \n", e);
 
     F.data[0] = 0.0; F.data[1] = 1.0; F.data[2] = 1.0; F.data[3] = 0.0;
-    print_matrix(F);
-    G = matrix_exponent(F, 0.5);
-    print_matrix(G);
+    //print_matrix(F);
+    //G = matrix_exponent(F, 0.02);
+    //print_matrix(G);
     //e = matrix_det(F);
     //printf("det F = %lf \n", e);
 
@@ -390,7 +393,7 @@ int main()
     //matrix_free(&C);
     //matrix_free(&D);
     //matrix_free(&E);
-    matrix_free(&G);
+    //matrix_free(&G);
     matrix_free(&F);
 
     return 0;
