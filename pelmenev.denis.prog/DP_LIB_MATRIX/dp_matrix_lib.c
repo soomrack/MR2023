@@ -68,6 +68,18 @@ void print_matrix(const struct Matrix A)
 // B <- A
 void matrix_copy(const struct Matrix B, const struct Matrix A)
 {
+    if (A.data == NULL) {
+        matrix_free(B);
+        B = MATRIX_NULL;
+        return;
+    };
+    
+    if (!(A.cols == B.cols && A.rows == B.rows)) {
+        matrix_free(B);
+        B = MATRIX_NULL;
+        return;
+    };
+    
     memcpy(B.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
 }
 
@@ -102,8 +114,6 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
     if (C.data == NULL)
         return C;
 
-    matrix_zero(C);
-
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
         C.data[idx] = A.data[idx] + B.data[idx];
 
@@ -136,8 +146,6 @@ struct Matrix matrix_substr(const struct Matrix A, const struct Matrix B)
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
         return C;
-    
-    matrix_zero(C);
 
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
         C.data[idx] = A.data[idx] - B.data[idx];
@@ -170,22 +178,15 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 // A *= B
 void matrix_add_mult(const struct Matrix A, const struct Matrix B)
 {
-    if (A.cols != B.rows)
-        return;
-    
-    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    struct Matrix C;
+    C = matrix_mult(A, B);
+
     if (C.data == NULL)
         return;
     
-    matrix_zero(C);
-
-    for (size_t rowA = 0; rowA < A.rows; ++rowA)
-        for (size_t colB = 0; colB < B.cols; ++colB)
-            for (size_t colA = 0; colA < A.cols; ++colA)
-                C.data[C.cols * rowA + colB] += A.data[colA + rowA * A.cols] * B.data[B.cols * colA + colB];
-    
-    matrix_copy(A, C);
-    matrix_free(&C);
+    matrix_free(&A);
+    A = matrix_allocate(C.cols, C.rows);
+    A.data = C.data;
 
     return;
 }
@@ -206,7 +207,7 @@ struct Matrix matrix_transp(const struct Matrix A)
 
 
 // C = e ^ (A)
-struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //accuracy - десятичная дробь
+struct Matrix matrix_exponent(const struct Matrix A, const unsigned int degree) //accuracy - десятичная дробь
 { 
     if (A.cols != A.rows)
         return MATRIX_NULL;
@@ -219,9 +220,6 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
     struct Matrix B = matrix_allocate(A.cols, A.rows);
     matrix_copy(B, A);
 
-    int degree;
-    degree = (int)(ceil(1.0 / accuracy));
-
     for (int trm = 2; trm <= degree; ++trm) {
        matrix_add_mult(B, A);
        matrix_mult_by_coeff(B, 1.0 / trm);
@@ -231,7 +229,7 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
     matrix_add(C, A);
 
     for (size_t diag = 0; diag < C.rows; ++diag)
-        C.data[diag * C.cols + diag] += 1;
+        C.data[diag * C.cols + diag] += 1.0;
     
     matrix_free(&B);
 
@@ -242,23 +240,29 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
 // возвращается 0, если в матрице есть нулевые строки/столбцы
 int matrix_det_if_zero(const struct Matrix A)
 {
-    MatrixItem sum;
+    size_t count;
 
     for (size_t row = 0; row < A.rows; ++row) { // суммы по строкам
-        sum = 0.0;
-        for (size_t col = 0; col < A.cols; ++col)
-            sum += A.data[row * A.cols + col];
+        count = 0;
+        for (size_t col = 0; col < A.cols; ++col) {
+            count += 1;
+            if (A.data[row * A.cols + col] != 0.0)
+                break;
+        };
         
-        if (sum == 0.0)
+        if (count == A.cols)
             return 0;
     };
     
-    for (size_t col = 0; col < A.cols; ++col) { // суммы по столбцам
-        sum = 0.0;
-        for (size_t row = 0; row < A.rows; ++row)
-            sum += A.data[row * A.cols + col];
+    for (size_t col = 0; col < A.cols; ++col) { // суммы по строкам
+        count = 0;
+        for (size_t row = 0; row < A.rows; ++row) {
+            count += 1;
+            if (A.data[row * A.cols + col] != 0.0)
+                break;
+        };
         
-        if (sum == 0.0)
+        if (count == A.rows)
             return 0;
     };
     
@@ -271,14 +275,16 @@ void matrix_det_prep(const struct Matrix A, size_t diag, double *coeff)
 {
     size_t buff_one = diag; // запоминается номер строки
 
-    if (A.data[diag * A.cols + diag] == 0.0) {
+    if (A.data[diag * A.cols + diag] != 0.0) 
+        return;
+    else {
         for (size_t row = diag; row < A.rows; ++row) {
             buff_one += 1;
             if (A.data[row * A.cols] != 0.0)
                 break;
         };
 
-        double buff_two = 0; // запоминается значение в ячейке
+        double buff_two = 0.0; // запоминается значение в ячейке
         
         for (size_t col = diag; col < A.cols; ++col) {
             buff_two = A.data[diag * A.cols + col];
@@ -286,7 +292,7 @@ void matrix_det_prep(const struct Matrix A, size_t diag, double *coeff)
             A.data[buff_one * A.cols + col] = buff_two;
         };
 
-        *coeff *= -1;
+        *coeff *= -1.0;
     };
 
     return;
