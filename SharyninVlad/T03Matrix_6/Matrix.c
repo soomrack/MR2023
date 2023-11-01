@@ -104,6 +104,7 @@ void matrix_fill(struct Matrix* M, enum MatrixType mat_type)
             for (size_t row_col_M = 0; row_col_M < M->rows; row_col_M++)
                 M->data[row_col_M * M->cols + row_col_M] = 1.0;
         }
+        else matrix_fill(M, ZERO);
         break;
     }
 }
