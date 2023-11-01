@@ -37,14 +37,6 @@ struct Matrix matrix_allocate(const size_t cols, const size_t rows)
 }
 
 
-/*struct Matrix matrix_init(size_t cols, size_t rows)
-{
-    struct Matrix A = matrix_allocate;
-    
-    return A;
-}*/
-
-
 void matrix_free(struct Matrix *matrix)
 {
     if (matrix->data == NULL)
