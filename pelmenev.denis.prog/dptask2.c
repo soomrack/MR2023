@@ -72,6 +72,17 @@ void print_matrix(const struct Matrix A)
 // B <- A
 void matrix_copy(const struct Matrix B, const struct Matrix A)
 {
+    if (A.data == NULL) {
+        matrix_free(B);
+        B = MATRIX_NULL;
+        return;
+    };
+    
+    if (!(A.cols == B.cols && A.rows == B.rows)) {
+        matrix_free(B);
+        B = matrix_allocate(A.cols, A.rows);
+    };
+    
     memcpy(B.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
 }
 
@@ -106,8 +117,6 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
     if (C.data == NULL)
         return C;
 
-    matrix_zero(C);
-
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
         C.data[idx] = A.data[idx] + B.data[idx];
 
@@ -140,8 +149,6 @@ struct Matrix matrix_substr(const struct Matrix A, const struct Matrix B)
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL)
         return C;
-    
-    matrix_zero(C);
 
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
         C.data[idx] = A.data[idx] - B.data[idx];
@@ -174,22 +181,15 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 // A *= B
 void matrix_add_mult(const struct Matrix A, const struct Matrix B)
 {
-    if (A.cols != B.rows)
-        return;
-    
-    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    struct Matrix C;
+    C = matrix_mult(A, B);
+
     if (C.data == NULL)
         return;
     
-    matrix_zero(C);
-
-    for (size_t rowA = 0; rowA < A.rows; ++rowA)
-        for (size_t colB = 0; colB < B.cols; ++colB)
-            for (size_t colA = 0; colA < A.cols; ++colA)
-                C.data[C.cols * rowA + colB] += A.data[colA + rowA * A.cols] * B.data[B.cols * colA + colB];
-    
-    matrix_copy(A, C);
-    matrix_free(&C);
+    matrix_free(&A);
+    A = matrix_allocate(C.cols, C.rows);
+    A.data = C.data;
 
     return;
 }
@@ -246,23 +246,29 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
 // возвращается 0, если в матрице есть нулевые строки/столбцы
 int matrix_det_if_zero(const struct Matrix A)
 {
-    MatrixItem sum;
+    size_t count;
 
     for (size_t row = 0; row < A.rows; ++row) { // суммы по строкам
-        sum = 0.0;
-        for (size_t col = 0; col < A.cols; ++col)
-            sum += A.data[row * A.cols + col];
+        count = 0;
+        for (size_t col = 0; col < A.cols; ++col) {
+            count += 1;
+            if (A.data[row * A.cols + col] != 0.0)
+                break;
+        };
         
-        if (sum == 0.0)
+        if (count == A.cols)
             return 0;
     };
     
-    for (size_t col = 0; col < A.cols; ++col) { // суммы по столбцам
-        sum = 0.0;
-        for (size_t row = 0; row < A.rows; ++row)
-            sum += A.data[row * A.cols + col];
+    for (size_t col = 0; col < A.cols; ++col) { // суммы по строкам
+        count = 0;
+        for (size_t row = 0; row < A.rows; ++row) {
+            count += 1;
+            if (A.data[row * A.cols + col] != 0.0)
+                break;
+        };
         
-        if (sum == 0.0)
+        if (count == A.rows)
             return 0;
     };
     
@@ -372,6 +378,7 @@ int main()
     //print_matrix(D);
 
     //E = matrix_mult(A, B);
+    
     //print_matrix(E);
 
     double a, e;
