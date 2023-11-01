@@ -13,7 +13,8 @@ struct Matrix {
 const struct Matrix MATRIX_NULL = { .cols = 0, .rows = 0, .data = NULL };
 
 
-void error_message() {
+void error_message()
+{
     printf("Error! Check your actions!\n");
 }
 
@@ -34,7 +35,8 @@ struct Matrix matrix_init(const size_t rows, const size_t cols)
 }
 
 
-struct Matrix make_ident_matr(size_t rows, size_t cols) {
+struct Matrix make_ident_matr(size_t rows, size_t cols)
+{
     struct Matrix I = matrix_init(rows, cols);
     for (size_t idx = 0; idx < rows * cols; idx++) {
         if (idx % (rows + 1) == 0) {
@@ -133,7 +135,8 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 }
 
 
-struct Matrix matrix_transp(struct Matrix* A) {
+struct Matrix matrix_transp(struct Matrix* A)
+{
     struct Matrix C = matrix_init(A->rows, A->cols);
 
     for (size_t rowA = 0; rowA < A->rows; ++rowA) {
@@ -141,9 +144,7 @@ struct Matrix matrix_transp(struct Matrix* A) {
             C.data[(A->rows) * colsA + rowA] = A->data[colsA + rowA * A->cols];
         }
     }
-
     return C;
-
 }
 
 
@@ -172,7 +173,8 @@ double matrix_det(struct Matrix* A) {
 }
 
 
-struct Matrix factorial_form_e(const size_t deg_acc, const struct Matrix A) {
+struct Matrix factorial_form_e(const size_t deg_acc, const struct Matrix A)
+{
     struct Matrix E = A;
     for (size_t id = 1; id < deg_acc; ++id) {
         E = matrix_mult(E, A);
@@ -185,7 +187,8 @@ struct Matrix factorial_form_e(const size_t deg_acc, const struct Matrix A) {
     return E;
 }
 
-struct Matrix matrix_exp(struct Matrix* A, const size_t accuracy) {
+struct Matrix matrix_exp(struct Matrix* A, const size_t accuracy)
+{
     if (A->cols != A->rows) {
         error_message();
         return MATRIX_NULL;
