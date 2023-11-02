@@ -39,6 +39,7 @@ void matrix_delete(struct Matrix* A)
 
 void matrix_set_zero(struct Matrix A) 
 {
+    if (A.data == NULL) return;
     memset(A.data, 0, sizeof(double) * A.rows * A.cols);
 }
 
