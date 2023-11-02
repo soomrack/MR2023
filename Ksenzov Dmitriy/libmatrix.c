@@ -6,19 +6,6 @@
 #include "libmatrix.h"
 
 
-typedef double MatrixItem;
-
-
-struct Matrix {
-    size_t cols;
-    size_t rows;
-    MatrixItem *data;
-};
-
-
-const struct Matrix MATRIX_NULL = {.rows = 0, .cols = 0, .data = NULL};
-
-
 // Function returns zero matrix or MATRIX_NULL if fail
 void matrix_set_zero(const struct Matrix A)
 {
@@ -236,7 +223,7 @@ MatrixItem matrix_determinant(const struct Matrix A)
 }
 
 
-void determinant_print(const double A)
+void determinant_print(const MatrixItem A)
 {
     printf("\n Matrix determinant = %4.2lf", A);
 }
