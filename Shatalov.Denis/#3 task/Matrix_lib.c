@@ -175,7 +175,7 @@ void matrix_div_k(struct Matrix A, const MatrixItem k)
 struct Matrix matrix_transpose(struct Matrix A)
 {
     struct Matrix tpose = matrix_allocation(A.rows, A.cols);
-    if (tpose.data == NULL) return NULL_MATRIX;
+    if (tpose.data == NULL) return tpose;
 
     for (size_t row = 0; row < tpose.rows; row++) {
         for (size_t col = 0; col < tpose.cols; col++) {
@@ -185,15 +185,6 @@ struct Matrix matrix_transpose(struct Matrix A)
     return tpose;
 }
 
-
-// A = A^T
-void matrix_tpose(struct Matrix A)
-{
-    struct Matrix tpose = matrix_transpose(A);
-    memcpy(A.data, tpose.data, sizeof(MatrixItem) * A.cols * A.rows);
-
-    return;
-}
 
 
 // det (A)
@@ -248,6 +239,10 @@ struct Matrix matrix_exp(struct Matrix A)
     for (int idx = 1; idx < 100; ++idx) {
 
         term_next = matrix_mult(term_prev, A);
+if (term_next.data == NULL) {
+    return NULL_MATRIX;
+    matrix_delete(&term_prev);
+}
         matrix_delete(&term_prev);
         matrix_div_k(term_next, idx);
         memcpy(term_prev.data, term_next.data, sizeof(MatrixItem) * term_prev.cols * term_prev.rows);
