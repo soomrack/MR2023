@@ -240,8 +240,9 @@ struct Matrix matrix_exp(struct Matrix A)
 
         term_next = matrix_mult(term_prev, A);
 if (term_next.data == NULL) {
-    return NULL_MATRIX;
-    matrix_delete(&term_prev);
+ matrix_delete(&term_prev);
+ matrix_delete(&exp);
+ return NULL_MATRIX; 
 }
         matrix_delete(&term_prev);
         matrix_div_k(term_next, idx);
