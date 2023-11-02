@@ -20,16 +20,16 @@ const struct Matrix MATRIX_NULL = {.rows = 0, .cols = 0, .data = NULL};
 
 
 // Function returns zero matrix or MATRIX_NULL if fail
-void matrix_set_zero(struct Matrix A)
+void matrix_set_zero(const struct Matrix A)
 {
-    if (A.cols == 0 || A.rows == 0) return MATRIX_NULL;
+    if (A.cols == 0 || A.rows == 0) return; // MATRIX_NULL
     memset(A.data, 0, sizeof(double) * A.rows * A.cols);
 }
 
 // Function returns unit matrix or MATRIX_NULL if fail
-void matrix_set_one(struct Matrix A)
+void matrix_set_one(const struct Matrix A)
 {
-    if (A.cols == 0 || A.rows == 0) return MATRIX_NULL;
+    if (A.cols == 0 || A.rows == 0) return; // MATRIX_NULL
     matrix_set_zero(A);
     for (size_t idx = 0; idx < A.rows * A.cols; idx += A.cols + 1)
     A.data[idx] = 1;
@@ -64,7 +64,7 @@ struct Matrix matrix_create(const size_t rows, const size_t cols, const MatrixIt
 }
 
 
-void matrix_delete(struct Matrix *A)
+void matrix_delete(const struct Matrix *A)
 {
     free(A->data);
     *A = MATRIX_NULL;
@@ -74,9 +74,9 @@ void matrix_delete(struct Matrix *A)
 void matrix_print(const struct Matrix A)
 {
     printf("\n");
-    for (unsigned int col = 0; col < A.rows; ++col) {
+    for (size_t col = 0; col < A.rows; ++col) {
         printf("[ ");
-        for (unsigned int row = 0; row < A.cols; ++row) {
+        for (size_t row = 0; row < A.cols; ++row) {
             printf(" %4.2f", A.data[row + col * A.cols ]);
         }
         printf("]\n");
@@ -86,11 +86,11 @@ void matrix_print(const struct Matrix A)
 
 // A = A + B
 // Function return 0 if success
-int matrix_add(struct Matrix A, struct Matrix B)
+int matrix_add(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) return 1;
     
-    for (unsigned int idx = 0; idx < A.cols * A.rows; ++idx) A.data[idx] += B.data[idx];
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx) A.data[idx] += B.data[idx];
         return 0;
 }
 
@@ -110,11 +110,11 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 
 // A = A - B
 // Function return 0 if success
-int matrix_subtract(struct Matrix A, struct Matrix B)
+int matrix_subtract(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) return 1;
     
-    for (unsigned int idx = 0; idx < A.cols * A.rows; ++idx)
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
         A.data[idx] -= B.data[idx];
         return 0;
 }
@@ -135,17 +135,17 @@ struct Matrix matrix_subtration(const struct Matrix A, const struct Matrix B)
 
 
 // Function returns new matrix C = A * B or MATRIX_NULL if fail
-struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
+struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.rows) return MATRIX_NULL;
     
     struct Matrix C = matrix_allocate(A.rows, B.cols);
     if (C.data == NULL) return C;
 
-    for (unsigned int C_col = 0; C_col < A.rows; ++C_col) {
-        for (unsigned int C_row = 0; C_row < B.cols; ++C_row) {
+    for (size_t C_col = 0; C_col < A.rows; ++C_col) {
+        for (size_t C_row = 0; C_row < B.cols; ++C_row) {
             C.data[C_row + C_col * B.cols] = 0;
-            for (unsigned int idx = 0; idx < A.cols; ++idx) {
+            for (size_t idx = 0; idx < A.cols; ++idx) {
                 C.data[C_row + C_col * B.cols] += A.data[idx + (C_col * A.cols)]
                 * B.data[idx * B.cols + C_row];
             };
@@ -156,13 +156,13 @@ struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
 
 
 // Function returns new matrix C = A^T or MATRIX_NULL if fail
-struct Matrix matrix_transposition(struct Matrix A)
+struct Matrix matrix_transposition(const struct Matrix A)
 {
     struct Matrix C = matrix_allocate(A.cols, A.rows);
     if (C.data == NULL) return C;
 
-    for (unsigned int C_row = 0; C_row < A.cols; ++C_row) {
-        for (unsigned int C_col = 0; C_col < A.rows; ++C_col) {
+    for (size_t C_row = 0; C_row < A.cols; ++C_row) {
+        for (size_t C_col = 0; C_col < A.rows; ++C_col) {
             C.data[C_col + C_row * A.rows] = A.data[C_col * A.cols + C_row];
         };
     };
@@ -171,7 +171,7 @@ struct Matrix matrix_transposition(struct Matrix A)
 
 
 // Function returns C = |A| (A[1x1]) or NAN if fail
-MatrixItem matrix_determinant_1x1(struct Matrix A)
+MatrixItem matrix_determinant_1x1(const struct Matrix A)
 {
     MatrixItem C;
 
@@ -183,7 +183,7 @@ MatrixItem matrix_determinant_1x1(struct Matrix A)
 
 
 // Function returns C = |A| (A[2x2]) or NAN if fail
-MatrixItem matrix_determinant_2x2(struct Matrix A)
+MatrixItem matrix_determinant_2x2(const struct Matrix A)
 {
     MatrixItem C;
 
@@ -195,7 +195,7 @@ MatrixItem matrix_determinant_2x2(struct Matrix A)
 
 
 // Function returns C = |A| (A[3x3]) or NAN if fail
-MatrixItem matrix_determinant_3x3(struct Matrix A)
+MatrixItem matrix_determinant_3x3(const struct Matrix A)
 {
     MatrixItem C;
 
@@ -213,7 +213,7 @@ MatrixItem matrix_determinant_3x3(struct Matrix A)
 
 
 // Function returns C = |A| (A[1x1], A[2x2], A[3x3]) or NAN if fail
-MatrixItem matrix_determinant(struct Matrix A)
+MatrixItem matrix_determinant(const struct Matrix A)
 {
     if (A.cols != A.rows) return NAN; 
 
@@ -232,6 +232,7 @@ MatrixItem matrix_determinant(struct Matrix A)
         return NAN;
         break;
     };
+    return NAN;
 }
 
 
@@ -242,11 +243,11 @@ void determinant_print(const double A)
 
 
 // Function returns new matrix C = e^A or MATRIX_NULL if fail
-struct Matrix matrix_exponent(struct Matrix A)
+struct Matrix matrix_exponent(const struct Matrix A)
 {
     if (A.cols != A.rows) return MATRIX_NULL;
 
-    if (A.cols == 0 || A.rows == 0) return MATRIX_NULL;
+    if (A.cols == 0) return MATRIX_NULL;
     
     struct Matrix Matrix_result = matrix_allocate(A.cols, A.rows);
     if (Matrix_result.data == NULL) return Matrix_result;
@@ -273,6 +274,9 @@ struct Matrix matrix_exponent(struct Matrix A)
     for (unsigned int k = 2; k <= 5; ++k) { 
 
         Matrix_power = matrix_mult(Matrix_previous_step, A);
+
+        if (Matrix_power.data == NULL) return Matrix_power;
+        
 
         for (unsigned int idx = 0; idx < Matrix_exp.cols * Matrix_exp.rows; ++idx)
             Matrix_exp.data[idx] = Matrix_power.data[idx] / k;
