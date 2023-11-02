@@ -154,17 +154,17 @@ struct Matrix matrix_trans(struct Matrix A)
 float matrix_det(struct Matrix A)
 { 
     if (A.cols != A.rows) return NAN;
-    if (A.rows == 1) 
+    if (A.cols == 1 && A.rows == 1) 
     {
         int det = A.data[0];
         return det;
     }
-    if (A.rows == 2)
+    if (A.cols == 2 && A.rows == 2)
     {
         int det = A.data[0] * A.data[3] - A.data[1] * A.data[2];
         return det;
     }
-    if (A.rows == 3)
+    if (A.cols == 3 && A.rows == 3)
     {
         int tr_1 = A.data[0] * A.data[4] * A.data[8];
         int tr_2 = A.data[1] * A.data[5] * A.data[6];
