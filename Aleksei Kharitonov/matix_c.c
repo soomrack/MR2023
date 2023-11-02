@@ -32,7 +32,7 @@ void matrix_delete(struct Matrix* A)
 {
     A->rows = 0;
     A->cols = 0;
-    free(A->data);
+    if (A->data != NULL) free(A->data);
     A->data = NULL;
 }
 
@@ -71,10 +71,10 @@ struct Matrix matrix_add(const struct Matrix A,const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) return NULL_MATRIX;
     struct Matrix result = matrix_create(A.cols, A.rows);
+    if (result.data == NULL) return NULL_MATRIX;
     for (int idx = 0; idx < A.cols * A.rows;++idx)
         result.data[idx] = A.data[idx] + B.data[idx];
     return result;
-    matrix_delete(&result);
 }
 
 
@@ -83,10 +83,10 @@ struct Matrix matrix_minus(struct Matrix A, struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) return NULL_MATRIX;
     struct Matrix result = matrix_create(A.cols, A.rows);
+    if (result.data == NULL) return NULL_MATRIX;
     for (int idx = 0; idx < A.cols * A.rows;++idx)
         result.data[idx] = A.data[idx] - B.data[idx];
     return result;
-    matrix_delete(&result);
 }
 
 
@@ -95,6 +95,7 @@ struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
 {
     if (A.cols != B.rows) return NULL_MATRIX;
     struct Matrix result = matrix_create(A.cols, A.rows);
+    if (result.data == NULL) return NULL_MATRIX;
     for (int colB = 0; colB < B.cols; ++colB) 
     {
         for (int rowA = 0; rowA < A.rows; ++rowA) 
@@ -107,7 +108,6 @@ struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
         }
     };
     return result;
-    matrix_delete(&result);
 }
 
 
@@ -115,10 +115,10 @@ struct Matrix matrix_mult(struct Matrix A, struct Matrix B)
 struct Matrix matrix_mult_on_number(struct Matrix A, int number)
 {
     struct Matrix result = matrix_create(A.cols, A.rows);
+    if (result.data == NULL) return NULL_MATRIX;
     for (int idx = 0; idx < A.cols * A.rows;++idx)
         result.data[idx] = A.data[idx] * number;
     return result;
-    matrix_delete(&result);
 }
 
 
@@ -126,16 +126,17 @@ struct Matrix matrix_mult_on_number(struct Matrix A, int number)
 struct Matrix matrix_div_on_number(struct Matrix A, int number)
 {
     struct Matrix result = matrix_create(A.cols, A.rows);
+    if (result.data == NULL) return NULL_MATRIX;
     for (int idx = 0; idx < A.cols * A.rows;++idx)
         result.data[idx] = A.data[idx] / number;
     return result;
-    matrix_delete(&result);
 }
 
 //A = A^t
 struct Matrix matrix_trans(struct Matrix A)
 {
     struct Matrix result = matrix_create(A.cols, A.rows);
+    if (result.data == NULL) return NULL_MATRIX;
     int idx = 0;
     for (int col = 0;col < A.cols;++col)
     {
@@ -146,29 +147,25 @@ struct Matrix matrix_trans(struct Matrix A)
         }
     }
     return result;
-    matrix_delete(&result);
 }
 
 
 //Determinant
-float matrix_det(struct Matrix A, int size)
+float matrix_det(struct Matrix A)
 { 
     if (A.cols != A.rows) return NAN;
-    if (size == 1) 
+    if (A.rows == 1) 
     {
-        if (A.rows != 1 || A.cols != 1) return NAN;
         int det = A.data[0];
         return det;
     }
-    if (size == 2)
+    if (A.rows == 2)
     {
-        if (A.rows != 2 || A.cols != 2) return NAN;
         int det = A.data[0] * A.data[3] - A.data[1] * A.data[2];
         return det;
     }
-    if (size == 3) 
+    if (A.rows == 3)
     {
-        if (A.rows != 3 || A.cols != 3) return NAN;
         int tr_1 = A.data[0] * A.data[4] * A.data[8];
         int tr_2 = A.data[1] * A.data[5] * A.data[6];
         int tr_3 = A.data[2] * A.data[3] * A.data[7];
@@ -178,22 +175,27 @@ float matrix_det(struct Matrix A, int size)
         int det = tr_1 + tr_2 + tr_3 - tr_4 - tr_5 - tr_6;
         return det;
     }
+    return NAN;
 }
 
 // exponent
 struct Matrix matrix_exp(struct Matrix A, int N)
 {
     struct Matrix exp = matrix_create(A.cols, A.rows);
+    if (exp.data == NULL) return NULL_MATRIX;
     struct Matrix temp = matrix_create(A.cols, A.rows);
+    if (temp.data == NULL) return NULL_MATRIX;
     struct Matrix stepen = matrix_create(A.cols, A.rows);
+    if (stepen.data == NULL) return NULL_MATRIX;
     struct Matrix eCopy = matrix_create(A.cols, A.rows);
+    if (eCopy.data == NULL) return NULL_MATRIX;
 
     matrix_set_one(exp);
     matrix_set_one(stepen);
 
     for (int i = 1; i <= N; ++i)
     {
-        temp = matrix_mult(stepen, stepen);
+        temp = matrix_mult(stepen, A);
         matrix_delete(&stepen);
 
         stepen = matrix_div_on_number(temp, (float) i);
@@ -283,7 +285,7 @@ int main()
 
 
     printf("Matrix Determinant:");
-    printf("%4.2f\n", matrix_det(A, A.rows));
+    printf("%4.2f\n", matrix_det(A));
     printf("\n");
 
 
