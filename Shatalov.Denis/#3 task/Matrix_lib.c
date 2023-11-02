@@ -244,7 +244,6 @@ if (term_next.data == NULL) {
  matrix_delete(&exp);
  return NULL_MATRIX; 
 }
-        matrix_delete(&term_prev);
         matrix_div_k(term_next, idx);
         memcpy(term_prev.data, term_next.data, sizeof(MatrixItem) * term_prev.cols * term_prev.rows);
         matrix_delete(&term_next);
