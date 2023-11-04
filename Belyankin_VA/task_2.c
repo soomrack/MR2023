@@ -67,7 +67,7 @@ void matrix_fill(struct Matrix A, const MatrixItem values[])
 // A = B + C
 void matrix_sum(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
-    if (B.cols != C.cols || B.rows != C.rows) {
+    if (B.cols != C.cols || B.rows != C.rows || B.cols != A.cols || B.rows != A.rows) {
         matrix_error();
         return;
     }
@@ -79,7 +79,7 @@ void matrix_sum(const struct Matrix A, const struct Matrix B, const struct Matri
 // A = B - C
 void matrix_substraction(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
-    if (B.cols != C.cols || B.rows != C.rows) {
+    if (B.cols != C.cols || B.rows != C.rows || B.cols != A.cols || B.rows != A.rows) {
         matrix_error();
         return;
     }
@@ -92,7 +92,7 @@ void matrix_substraction(const struct Matrix A, const struct Matrix B, const str
 // A = B * C
 void matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
-    if (B.cols != C.rows || B.rows != C.cols)
+    if (B.cols != C.rows || B.rows != C.cols || B.cols != A.cols || B.rows != A.rows)
     {
         matrix_error();
     }
@@ -109,7 +109,7 @@ void matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matr
 }
 
 
-//T = A ^ T
+//TRANS = A ^ T
 void matrix_trans(struct Matrix A, struct Matrix T)
 {
     for (size_t row = 0; row < A.rows; row++) {
@@ -172,46 +172,63 @@ void determinant_print(struct Matrix A, const char* text)
 }
 
 
+// A += B
+int matrix_add(struct Matrix A, struct Matrix B)
+{
+    if (A.cols != B.cols || A.rows != B.rows) return 1;
+
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
+        A.data[idx] += B.data[idx];
+    return 0;
+}
+
+
+
 struct Matrix matrix_div(struct Matrix A, unsigned int n) {
     struct Matrix Div = matrix_create(A.cols, A.cols);
+    if (Div.data == NULL) return MATRIX_NULL;
     for (size_t rowA = 0; rowA < A.rows; ++rowA) {
         for (size_t colA = 0; colA < A.cols; ++colA) {
-            Div.data[rowA * A.rows + colA] = Div.data[rowA * A.rows + colA] / n;
+            Div.data[rowA * A.rows + colA] = A.data[rowA * A.rows + colA] / n;
         }
     }
     return Div;
-    matrix_delete(&Div);
 }
 
 
 struct Matrix matrix_exponent(struct Matrix A, unsigned int n)
 {
-    struct Matrix Exp_mult = matrix_create(A.cols, A.cols);
+    if (A.cols != A.rows) return MATRIX_NULL;
+    if (A.cols == 0) return MATRIX_NULL;
     struct Matrix Exp_old = matrix_create(A.cols, A.cols);
+    if (Exp_old.data == NULL) return MATRIX_NULL;
     matrix_set_one(Exp_old);
-    struct Matrix Exp_div = matrix_create(A.cols, A.cols);
-    matrix_set_one(Exp_div);
-    struct Matrix Exp_cpy = matrix_create(A.cols, A.cols);
     struct Matrix Exp = matrix_create(A.cols, A.cols);
-    if (n > 0) {
-        for (unsigned int i = 1; i < n; ++i) {
-            matrix_mult(Exp_mult, A, Exp_div);
-            memcpy(Exp_cpy.data, Exp_mult.data, A.rows * A.cols * sizeof(MatrixItem));
-            Exp_div = matrix_div(Exp_cpy, i);
-            matrix_sum(Exp, Exp_div, Exp_old);
-            memcpy(Exp_old.data, Exp.data, A.rows * A.cols * sizeof(MatrixItem));
+    if (Exp.data == NULL) return MATRIX_NULL;
+    matrix_set_one(Exp);
+    struct Matrix Exp_next = matrix_create(A.cols, A.cols);
+    if (Exp.data == NULL) return MATRIX_NULL;
+    struct Matrix Exp_div = matrix_create(A.cols, A.cols);
+    if (Exp_div.data == NULL) return MATRIX_NULL;
+    
+        for (int idx = 1; idx < n; ++idx) {
+        matrix_mult(Exp_next, A, Exp_old);
+        if (Exp_next.data == NULL) {
+            matrix_delete(&Exp_old);
+            matrix_delete(&Exp);
+            return MATRIX_NULL;
         }
+        Exp_div = matrix_div(Exp_next, idx);
+        memcpy(Exp_old.data, Exp_div.data, sizeof(MatrixItem) * Exp_old.cols * Exp_old.rows);
+        matrix_delete(&Exp_next);
+        matrix_delete(&Exp_div);
+        matrix_add(Exp, Exp_old);
+
+        }
+        matrix_delete(&Exp_old);
         return Exp;
     }
-    else {
-        return Exp_old;
-    }
-    matrix_delete(&Exp_mult);
-    matrix_delete(&Exp_old);
-    matrix_delete(&Exp_div);
-    matrix_delete(&Exp_cpy);
-    matrix_delete(&Exp);
-}
+
 
 
 void matrix_print(const struct Matrix A, const char* text)
@@ -272,7 +289,7 @@ int main()
 
     matrix_determinant(A);
 
-    struct Matrix Exp = matrix_exponent(A, 0);
+    struct Matrix Exp = matrix_exponent(A, 2);
 
     matrix_print(A, "Matrix A");
     matrix_print(B, "Matrix B");
