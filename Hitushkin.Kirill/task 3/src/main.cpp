@@ -1,24 +1,8 @@
 #include <iostream>
 #include <string>
 #include "matrix.hpp"
-/*
-int main()
-{
-    cout << "he" << endl;
-    
-    Matrix A(3, 2);
-    A = {2.5, 3, 4, 5, 1, 1};
-    cout << A;
 
-    Matrix C(5, 5);
-    C.set_one();
-    cout << C;
 
-    C = move(A);
-    
-    cout << C << endl;
-}
-*/
 void test(string name, bool success)
 {
     cout << name << " test: ";
