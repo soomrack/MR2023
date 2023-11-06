@@ -82,9 +82,9 @@ void fill_matrix(struct Matrix *M, enum MatrixType matrix_type) {
 void matrix_print(struct Matrix *M) {
     if (M->data != NULL) {
         printf("\n");
-        for (size_t row = 1; row <= M->cols * M->rows; ++row) {
-            printf("%.2f \t", M->data[row - 1]);
-            if (row % M->cols == 0 && row >= M->cols)
+        for (size_t idx = 1; idx <= M->cols * M->rows; ++idx) {
+            printf("%.2f \t", M->data[idx - 1]);
+            if (idx % M->cols == 0 && idx >= M->cols)
                 printf("\n");
         }
         printf("\n");
@@ -165,11 +165,11 @@ struct Matrix matrix_product(const struct Matrix A, const struct Matrix B) {
 
 
 struct Matrix matrix_transpose(const struct Matrix A) {
-    struct Matrix B = allocate_memory(A.cols, A.rows);
+    struct Matrix B = allocate_memory(A.rows, A.cols);
 
     for (size_t row = 0; row < A.rows; row++)
         for (size_t col = 0; col < A.cols; col++)
-            B.data[row * A.rows + col] = A.data[col * A.cols + row];
+            B.data[col * A.rows + row] = A.data[row * A.cols + col];
 
     return B;
 }
@@ -213,7 +213,7 @@ struct Matrix matrix_exp(const struct Matrix A, const int n) {
         return MATRIX_NULL;
     }
 
-    if (n == 1)
+    else if (n == 1)
         return A;
 
     return matrix_product(A, matrix_exp(A, n - 1));
