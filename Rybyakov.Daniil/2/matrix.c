@@ -84,6 +84,8 @@ Matrix matrix_sum(const Matrix A, const Matrix B)
     Matrix result = matrix_memory(A.cols, A.rows);
     size_t n_data = result.cols * result.rows;
 
+    if (result.data == NULL) return MATRIX_ZERO;
+
     for (size_t index = 0; index < n_data; ++index) {
         result.data[index] = A.data[index] + B.data[index];
     }
@@ -101,6 +103,8 @@ Matrix subtruct_matrices(const Matrix A, const Matrix B)
     Matrix result = matrix_memory(A.cols, A.rows);
     size_t n_data = result.cols * result.rows;
 
+    if (result.data == NULL) return MATRIX_ZERO;
+
     for (size_t index = 0; index < n_data; ++index) {
         result.data[index] = A.data[index] - B.data[index];
     }
@@ -112,6 +116,8 @@ Matrix multiply_on_number(const Matrix matrix, MatrixItem number)
 {
     Matrix result = matrix_memory(matrix.cols, matrix.rows);
     size_t n_data = result.cols * result.rows;
+
+    if (result.data == NULL) return MATRIX_ZERO;
 
     for (size_t index = 0; index < n_data; ++index) {
         result.data[index] = matrix.data[index] * number;
@@ -130,6 +136,8 @@ Matrix matrix__multiply(const Matrix A, const Matrix B)
     size_t n_cols = B.cols;
     size_t n_rows = A.rows;
     Matrix result = matrix_memory(n_cols, n_rows);
+
+    if (result.data == NULL) return MATRIX_ZERO;
 
     for (size_t rowA = 0; rowA < n_rows; ++rowA) {
         for (size_t colB = 0; colB < n_cols; ++colB) {
@@ -187,6 +195,8 @@ Matrix transpose(const Matrix matrix)
 {
     Matrix result = matrix_memory(matrix.rows, matrix.cols);
 
+    if (result.data == NULL) return MATRIX_ZERO;
+
     for (size_t row = 0; row < result.rows; ++row) {
         for (size_t col = 0; col < result.cols; ++col) {
             result.data[row * result.cols + col] = matrix.data[col * result.rows + row];
@@ -199,6 +209,8 @@ Matrix transpose(const Matrix matrix)
 Matrix unit(size_t dimention) 
 {
     Matrix result = matrix_memory(dimention, dimention);
+
+    if (result.data == NULL) return MATRIX_ZERO;
 
     for (size_t row = 0; row < result.rows; ++row) {
         for (size_t col = 0; col < result.cols; ++col) {
