@@ -23,6 +23,6 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B);
 struct Matrix matrix_mult_on_number(const struct Matrix A, double multiplier);
 struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B);
 struct Matrix transposition(const struct Matrix A);
-double determinant(struct Matrix A);
+MatrixItem determinant(struct Matrix A);
 struct Matrix matrix_exponential(struct Matrix M, unsigned long int level);
 void matrix_print_free(struct Matrix* M);

@@ -42,7 +42,7 @@ int matrix_print(struct Matrix *M)
     for (size_t rows = 0; rows < M->rows; rows++) {
         printf("[");
         for (size_t cols = 0; cols < M->cols; cols++) {
-            printf("%.10lf", M->data[rows * M->cols + cols]);
+            printf("%.1lf", M->data[rows * M->cols + cols]);
             if (cols != M->cols - 1)
                 printf("\t");
         }
@@ -95,7 +95,7 @@ void matrix_fill(struct Matrix* M, enum MatrixType mat_type)
 
     case (RANDOM):
         for (size_t idx = 0; idx < M->cols * M->rows; idx++)
-            M->data[idx] = (double)(rand() % 100);
+            M->data[idx] = (MatrixItem)(rand() % 10);
         break;
 
     case (I):
@@ -199,6 +199,25 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 }
 
 
+void matrix_mult_in(struct Matrix *A, const struct Matrix B)
+{
+    if (A->cols != B.rows) matrix_exaption(FALSE_ROWS_COLS);
+    
+    struct Matrix C = memory_allocation(A->rows, B.cols);
+    matrix_fill(&C, ZERO);
+
+    for (size_t row_A = 0; row_A < A->rows; row_A++)
+        for (size_t col_B = 0; col_B < B.cols; col_B++)
+            for (size_t idx = 0; idx < A->cols; idx++)
+                C.data[row_A * A->cols + col_B] += A->data[row_A * A->cols + idx] * B.data[idx * B.cols + col_B];
+
+    matrix_free(A);
+    *A = memory_allocation(C.rows, C.cols);
+    memcpy(A->data, C.data, C.cols * C.rows * sizeof(MatrixItem));
+    matrix_free(&C);
+}
+
+
 struct Matrix transposition(const struct Matrix A)
 {
     struct Matrix C = memory_allocation(A.cols, A.rows);
@@ -211,7 +230,7 @@ struct Matrix transposition(const struct Matrix A)
 }
 
 
-double determinant(struct Matrix A)
+MatrixItem determinant(struct Matrix A)
 {
     if (A.cols != A.rows) {
         matrix_exaption(FALSE_ROWS_COLS);
@@ -245,9 +264,8 @@ struct Matrix matrix_exponential_summand(struct Matrix M, unsigned int level)
 
     for (unsigned int counter = 1; counter <= level; counter++) {
         if (counter == 1) C = matrix_mult(M, M);
-        else C = matrix_mult(C, M);
+        else matrix_mult_in(&C, M);
     }
-
     return matrix_mult_on_number(C, 1/(double)n);
 }
 
