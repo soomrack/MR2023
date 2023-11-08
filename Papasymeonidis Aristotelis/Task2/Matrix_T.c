@@ -199,9 +199,13 @@ double matrix_det(struct Matrix *A){
 }
 
 
-struct Matrix sum_of_sum_for_e(const size_t deg_acc, const struct Matrix A)
+struct Matrix sum_for_e(const size_t deg_acc, const struct Matrix A)
 {
     struct Matrix E = matrix_init(A.rows, A.cols);
+
+    if(E.data == NULL){
+        return MATRIX_NULL;
+    }
 
     if(deg_acc == 1){
         struct Matrix E = matrix_make_ident(A.cols, A.rows);
@@ -237,7 +241,7 @@ struct Matrix matrix_exp(struct Matrix *A, const size_t accuracy)
     struct Matrix matrix_transfer = matrix_init(A->rows, A->cols);
 
     for(size_t deg_acc = 1; deg_acc <= accuracy ; ++deg_acc){
-        matrix_transfer = sum_of_sum_for_e(deg_acc, *A);
+        matrix_transfer = sum_for_e(deg_acc, *A);
         struct Matrix buf1 = E;
         E = matrix_sum(buf1, matrix_transfer);
         matrix_free(&buf1);
