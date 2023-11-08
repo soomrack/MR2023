@@ -238,16 +238,21 @@ struct Matrix matrix_exp(struct Matrix *A, const size_t accuracy)
     }
 
     struct Matrix E = matrix_init(A->rows, A->cols);
-    struct Matrix matrix_transfer = matrix_init(A->rows, A->cols);
+    
+     if(E.data == NULL){
+        return MATRIX_NULL;
+    }
+    struct Matrix matrix_transfer;
 
     for(size_t deg_acc = 1; deg_acc <= accuracy ; ++deg_acc){
         matrix_transfer = sum_for_e(deg_acc, *A);
         struct Matrix buf1 = E;
         E = matrix_sum(buf1, matrix_transfer);
         matrix_free(&buf1);
+        matrix_free(&matrix_transfer);
     }
 
-    matrix_free(&matrix_transfer);
+ 
 
     return E;
 }
