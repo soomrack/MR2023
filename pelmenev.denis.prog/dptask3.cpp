@@ -1,8 +1,10 @@
 #include <iostream>
 #include <cstdlib>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <stdint.h>
 #include <math.h>
-#include <stdint.h>
 
 
 typedef double MatrixItem;
@@ -109,12 +111,41 @@ void Matrix::print_matrix()
 }
 
 
+Matrix& Matrix::operator=(const Matrix& A)
+{
+    Matrix* result = new Matrix(*this);
+    if (A.cols != Matrix::cols || A.rows != Matrix::rows) {
+        result->matrix_null();
+        return *result;
+    };
+
+    result->data = A.data;
+
+    return *result;
+}
+
+
+Matrix& Matrix::operator=(const Matrix&& A)
+{
+    Matrix* result = new Matrix(*this);
+    if (A.cols != Matrix::cols || A.rows != Matrix::rows) {
+        result->matrix_null();
+        return *result;
+    };
+
+    memcpy(result->data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+    //A.matrix_free();
+
+    return *result;
+}
+
+
 Matrix& Matrix::operator+(const Matrix& A)
 {
     Matrix* result = new Matrix(*this);
     if (A.cols != Matrix::cols || A.rows != Matrix::rows) {
         result->matrix_null();
-        return;
+        return *result;
     };
 
     if (result->data == NULL)
@@ -125,6 +156,25 @@ Matrix& Matrix::operator+(const Matrix& A)
 
     return *result;
 }
+
+
+Matrix& Matrix::operator-(const Matrix& A)
+{
+    Matrix* result = new Matrix(*this);
+    if (A.cols != Matrix::cols || A.rows != Matrix::rows) {
+        result->matrix_null();
+        return *result;
+    };
+
+    if (result->data == NULL)
+        return *result;
+
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
+        result->data[idx] = Matrix::data[idx] - A.data[idx];
+
+    return *result;
+}
+
 
 
 int main()
