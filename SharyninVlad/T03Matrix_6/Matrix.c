@@ -284,8 +284,7 @@ struct Matrix matrix_exponential(struct Matrix M, unsigned long int level) //dou
     for (unsigned int count = 0; count <= level; count++) {
         if (count == 0) {
             S = memory_allocation(M.rows, M.cols);
-            if (S.data == NULL)
-                return MATRIX_NULL;
+            if (S.data == NULL) return MATRIX_NULL;
             matrix_fill(&S, I);
             continue;
         }
