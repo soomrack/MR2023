@@ -140,12 +140,13 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
     if(A.cols != B.rows ) return MATRIX_NULL;
     struct Matrix C = matrix_init(A.cols, B.rows);
     
-    for(size_t idx = 0; idx < A.rows * B.cols; ++idx){
-        C.data[idx] = 0;
+    if(C.data == NULL){
+        return MATRIX_NULL;
     }
     
     for(size_t rowA = 0; rowA < A.rows; ++rowA){
-        for(size_t colsB = 0; colsB < B.cols; ++colsB){
+        for(size_t colsB = 0; colsB < B.cols; ++colsB){ 
+            C.data[rowA * (A.cols) + colsB] = 0;
             for(size_t idx = 0; idx < A.cols; ++idx){
                 C.data[rowA * (A.cols) + colsB] += (A.data[(rowA * A.cols) + idx]) * (B.data[(idx * B.cols)+ colsB]);
             }
@@ -159,6 +160,10 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 struct Matrix matrix_transp(struct Matrix *A)
 {
     struct Matrix C = matrix_init(A->rows, A->cols);
+
+    if(C.data == NULL){
+        return MATRIX_NULL;
+    }
 
     for(size_t rowA = 0; rowA < A->rows; ++rowA){
         for(size_t colsA = 0; colsA < A->cols; ++colsA){
@@ -194,21 +199,28 @@ double matrix_det(struct Matrix *A){
 }
 
 
-struct Matrix factorial_form_e(const size_t deg_acc, const struct Matrix A)
+struct Matrix sum_of_sum_for_e(const size_t deg_acc, const struct Matrix A)
 {
     struct Matrix E = matrix_init(A.rows, A.cols);
+
     if(deg_acc == 1){
         struct Matrix E = matrix_make_ident(A.cols, A.rows);
         return E;
-    } else if(deg_acc == 2){
+    } 
+    
+    if(deg_acc == 2){
         return A;
-    }else if(deg_acc > 2){
+    }
+    
+    if(deg_acc > 2){
         E = A;
         for(size_t id = 2; id < deg_acc; ++id){
-            E = matrix_mult(E, A);
+            struct Matrix buf = E;
+            E = matrix_mult(buf, A);
             for(size_t idx = 0; idx < E.rows * E.cols; ++idx){
-                E.data[idx] /= (id );
+                E.data[idx] /= (id);
             }
+            matrix_free(&buf);
         }
     }
     return E;
@@ -225,8 +237,10 @@ struct Matrix matrix_exp(struct Matrix *A, const size_t accuracy)
     struct Matrix matrix_transfer = matrix_init(A->rows, A->cols);
 
     for(size_t deg_acc = 1; deg_acc <= accuracy ; ++deg_acc){
-        matrix_transfer = factorial_form_e(deg_acc, *A);
-        E = matrix_sum(E, matrix_transfer);
+        matrix_transfer = sum_of_sum_for_e(deg_acc, *A);
+        struct Matrix buf1 = E;
+        E = matrix_sum(buf1, matrix_transfer);
+        matrix_free(&buf1);
     }
 
     matrix_free(&matrix_transfer);
