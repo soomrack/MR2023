@@ -82,11 +82,9 @@ Matrix matrix_sum(const Matrix A, const Matrix B)
     }
 
     Matrix result = matrix_memory(A.cols, A.rows);
-    size_t n_data = result.cols * result.rows;
-
     if (result.data == NULL) return MATRIX_ZERO;
 
-    for (size_t index = 0; index < n_data; ++index) {
+    for (size_t index = 0; index < (result.cols * result.rows); ++index) {
         result.data[index] = A.data[index] + B.data[index];
     }
     return result;
@@ -126,7 +124,7 @@ Matrix multiply_on_number(const Matrix matrix, MatrixItem number)
 }
 
 
-Matrix matrix__multiply(const Matrix A, const Matrix B) 
+Matrix matrix_multiply(const Matrix A, const Matrix B) 
 {
     if (A.cols != B.rows) {
         errorofsize("Multiplication", "Matrixes should have certain sizes");
@@ -224,6 +222,7 @@ Matrix unit(size_t dimention)
 Matrix matrix_copy(const Matrix matrix) 
 {
     Matrix result = matrix_memory(matrix.cols, matrix.rows);
+    if (result.data == NULL) return MATRIX_ZERO;
     memcpy(result.data, matrix.data, matrix.rows * matrix.cols * sizeof(MatrixItem));
     
     return result;
@@ -237,23 +236,31 @@ Matrix matrix_expo(const Matrix matrix, size_t accuracy)
         return MATRIX_ZERO;
     }
 
-    Matrix result_, pow_help, multiplied;
+    Matrix result_help, pow_help, multiplied;
     Matrix result = unit(matrix.rows);
     Matrix pow = unit(matrix.rows);
+    if (result.data == NULL) return MATRIX_ZERO;
+    if (pow.data == NULL) return MATRIX_ZERO;
     int factorial = 1;
 
-    for (int acc = 1; acc <= accuracy; ++acc) {
+    for (size_t acc = 1; acc <= accuracy; ++acc) {
         factorial *= acc;
 
-        pow_help = matrix__multiply(pow, matrix);
+        pow_help = matrix_multiply(pow, matrix);
+        if (pow_help.data == NULL) return MATRIX_ZERO;
         pow = matrix_copy(pow_help);
+        if (pow.data == NULL) return MATRIX_ZERO;
+
         memory_clear(&pow_help);
 
         multiplied = multiply_on_number(pow, 1. / factorial);
-        result_ = matrix_sum(result, multiplied);
-        result = matrix_copy(result_);
+        if (multiplied.data == NULL) return MATRIX_ZERO;
+        result_help = matrix_sum(result, multiplied);
+        if (result_help.data == NULL) return MATRIX_ZERO;
+        result = matrix_copy(result_help);
+        if (result.data == NULL) return MATRIX_ZERO;
 
-        memory_clear(&result_);
+        memory_clear(&result_help);
         memory_clear(&multiplied);
     }
     memory_clear(&pow);
@@ -288,7 +295,7 @@ int main()
 
     printf("     Multiply\n");
     Matrix multiplication_matrices;
-    multiplication_matrices = matrix__multiply(mat1, mat2);
+    multiplication_matrices = matrix_multiply(mat1, mat2);
     matrix_print(multiplication_matrices);
     memory_clear(&multiplication_matrices);
 
