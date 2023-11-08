@@ -11,7 +11,7 @@
 
 void init_data(Matrix * this)
 {
-    if (SIZE_MAX / 8 < this->rows + this->rows * this->cols |
+    if (SIZE_MAX / 8 < this->rows + this->rows * this->cols ||
      (this->rows + this->cols) == 0) error_handler(SIZE_ERROR, "init_data");
     size_t len = this->rows * sizeof(matrix_element *) + this->rows * this->cols * sizeof(matrix_element);  //  выделяем память одним маллоком
     this->data = (matrix_element **)malloc(len);
@@ -150,7 +150,7 @@ void print_matrix(const Matrix * this) {
 
 
 Matrix  matrix_sum(const Matrix * matrix_1, const Matrix * matrix_2) {
-    if (matrix_1->cols != matrix_2->cols | matrix_1->rows != matrix_2->rows) {
+    if (matrix_1->cols != matrix_2->cols || matrix_1->rows != matrix_2->rows) {
         error_handler(MATH_DOMAIN_ERROR, "matrix_sum");
         return;
     }
@@ -173,7 +173,7 @@ Matrix  matrix_sum(const Matrix * matrix_1, const Matrix * matrix_2) {
 
 
 Matrix  matrix_sub(const Matrix * matrix_1, const Matrix * matrix_2) {
-    if (matrix_1->cols != matrix_2->cols | matrix_1->rows != matrix_2->rows) {
+    if (matrix_1->cols != matrix_2->cols || matrix_1->rows != matrix_2->rows) {
         error_handler(MATH_DOMAIN_ERROR, "matrix_sum");
         return;
     }
@@ -301,7 +301,7 @@ void constant_division(Matrix * this, double constant) {
 
 
 uint64_t factorial(const uint16_t number) {
-    if (number == 1 | number == 0) return 1;
+    if (number == 1 || number == 0) return 1;
     return number * factorial(number - 1);
 }
 
