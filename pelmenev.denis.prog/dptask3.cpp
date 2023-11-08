@@ -57,7 +57,7 @@ Matrix::Matrix(const size_t cols, const size_t rows)
     };
 
     if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) {
-        Matrix::matrix_null();
+        matrix_null();
         return;
     };
 
@@ -65,7 +65,7 @@ Matrix::Matrix(const size_t cols, const size_t rows)
     Matrix::rows = rows;
     Matrix::data = (MatrixItem*)malloc(Matrix::cols * Matrix::rows * sizeof(MatrixItem));
     if (Matrix::data == NULL) {
-        Matrix::matrix_null();
+        matrix_null();
         return;
     };
 
@@ -140,6 +140,44 @@ Matrix& Matrix::operator=(const Matrix&& A)
 }
 
 
+Matrix::Matrix(Matrix& A)
+{
+    if (A.data == NULL) {
+        matrix_free();
+        matrix_null;
+        return;
+    };
+    
+    if (!(A.cols == Matrix::cols && A.rows == Matrix::rows)) {
+        matrix_free();
+        Matrix(A.cols, A.rows);
+    };
+
+    Matrix = A;
+
+    return;
+}
+
+
+Matrix::Matrix(Matrix&& A)
+{
+    if (A.data == NULL) {
+        matrix_free();
+        matrix_null;
+        return;
+    };
+    
+    if (!(A.cols == Matrix::cols && A.rows == Matrix::rows)) {
+        matrix_free();
+        Matrix(A.cols, A.rows);
+    };
+
+    Matrix = A;
+
+    return;
+}
+
+
 Matrix& Matrix::operator+(const Matrix& A)
 {
     Matrix* result = new Matrix(*this);
@@ -174,7 +212,6 @@ Matrix& Matrix::operator-(const Matrix& A)
 
     return *result;
 }
-
 
 
 int main()
