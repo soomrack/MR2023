@@ -26,7 +26,6 @@ task0/helloworld
 # Compiled Static libraries
 *.lai
 *.la
-*.a
 *.lib
 
 # Executables
