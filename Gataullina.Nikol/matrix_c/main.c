@@ -1,14 +1,14 @@
 #include "matrix_lib.h"
 int main()
 {
-    Matrix A;
-    A = memory_allocation(3,3);
-    A = fill_random(A);
-    output("A",A);
-    Matrix B;
-    B = memory_allocation(3,3);
-    B = fill_random(B);
-    output("B",B);
+    // Matrix A;
+    // A = memory_allocation(3,3);
+    // A = fill_random(A);
+    // output("A",A);
+    // Matrix B;
+    // B = memory_allocation(3,3);
+    // B = fill_random(B);
+    // output("B",B);
     Matrix sum = addition(A, B);
     output("SUM", sum);
     Matrix mult = multiplication(A, B);
