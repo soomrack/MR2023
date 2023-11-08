@@ -221,13 +221,16 @@ struct Matrix matrix_exp(struct Matrix *A, const size_t accuracy)
         return MATRIX_NULL;
     }
 
-     struct Matrix E = matrix_init(A->rows, A->cols);
+    struct Matrix E = matrix_init(A->rows, A->cols);
+    struct Matrix matrix_transfer = matrix_init(A->rows, A->cols);
 
-    struct Matrix matrix_transfer;
     for(size_t deg_acc = 1; deg_acc <= accuracy ; ++deg_acc){
         matrix_transfer = factorial_form_e(deg_acc, *A);
         E = matrix_sum(E, matrix_transfer);
-       }
+    }
+
+    matrix_free(&matrix_transfer);
+
     return E;
 }
 
