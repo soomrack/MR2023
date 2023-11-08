@@ -1,9 +1,8 @@
-﻿#include <iostream>
+#include <iostream>
 #include <cstdlib>
 #include <stdint.h>
 #include <math.h>
-
-using namespace std;
+#include <stdint.h>
 
 
 typedef double MatrixItem;
@@ -87,16 +86,33 @@ void Matrix::matrix_free()
 
 void Matrix::print_matrix()
 {
-    cout << "_____________________________________________" << endl;
+    std::cout << "_____________________________________________" << std::endl;
 
     for (size_t idx = 1; idx <= Matrix::cols * Matrix::rows; ++idx) {
-        cout << Matrix::data[idx - 1] ;
+        std::cout << Matrix::data[idx - 1] ;
         if (idx % Matrix::cols == 0 && idx >= Matrix::cols)
-            cout << "" << endl;
+            std::cout << "" << std::endl;
     };
 
     return;
 }
+
+
+/*Matrix& Matrix::operator+(const Matrix& A)
+{
+    Matrix* result = new Matrix(*this);
+    if (A.cols != Matrix.cols || A.rows != Matrix.rows)
+        return MATRIX_NULL;
+
+    struct Matrix C = matrix_allocate(A.cols, A.rows);
+    if (C.data == NULL)
+        return C;
+
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
+        C.data[idx] = A.data[idx] + B.data[idx];
+
+    return *result;
+}*/
 
 
 int main()
