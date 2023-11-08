@@ -12,7 +12,10 @@
 void init_data(Matrix * this)
 {
     if (SIZE_MAX / 8 < this->rows + this->rows * this->cols ||
-     (this->rows + this->cols) < 2) error_handler(SIZE_ERROR, "init_data");
+     (this->rows + this->cols) < 2) {
+        error_handler(SIZE_ERROR, "init_data");
+        return;
+     } 
     size_t len = this->rows * sizeof(matrix_element *) + this->rows * this->cols * sizeof(matrix_element);  //  выделяем память одним маллоком
     this->data = (matrix_element **)malloc(len);
     if (!this->data) {
