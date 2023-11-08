@@ -257,7 +257,7 @@ MatrixItem determinant(struct Matrix A)
 
 struct Matrix matrix_exponential_summand(struct Matrix M, unsigned int level)
 {
-    struct Matrix C;
+    struct Matrix C, K;
     unsigned int n = 1;
 
     for (unsigned int counter = 1; counter <= level; counter++) n *= counter;
@@ -266,11 +266,13 @@ struct Matrix matrix_exponential_summand(struct Matrix M, unsigned int level)
         if (counter == 1) C = matrix_mult(M, M);
         else matrix_mult_in(&C, M);
     }
-    return matrix_mult_on_number(C, 1/(double)n);
+    K = matrix_mult_on_number(C, 1 / (double)n);
+    matrix_free(&C);
+    return K;
 }
 
 
-struct Matrix matrix_exponential(struct Matrix M, unsigned long int level)
+struct Matrix matrix_exponential(struct Matrix M, unsigned long int level) //double
 {
     struct Matrix C, S;
 
@@ -282,6 +284,8 @@ struct Matrix matrix_exponential(struct Matrix M, unsigned long int level)
     for (unsigned int count = 0; count <= level; count++) {
         if (count == 0) {
             S = memory_allocation(M.rows, M.cols);
+            if (S.data == NULL)
+                return MATRIX_NULL;
             matrix_fill(&S, I);
             continue;
         }
