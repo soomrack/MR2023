@@ -5,15 +5,16 @@
 #include "MatrixHandler.h"
 
 
-#define DEBUG
+// #define DEBUG
 
 
 
 void init_data(Matrix * this)
 {
-    if (SIZE_MAX / 8 < this->rows + this->rows * this->cols) error_handler(SIZE_ERROR, "init_data");
-    size_t len = this->rows * sizeof(double *) + this->rows * this->cols * sizeof(double);  //  выделяем память одним маллоком
-    this->data = (double **)malloc(len);
+    if (SIZE_MAX / 8 < this->rows + this->rows * this->cols |
+     (this->rows + this->cols) == 0) error_handler(SIZE_ERROR, "init_data");
+    size_t len = this->rows * sizeof(matrix_element *) + this->rows * this->cols * sizeof(matrix_element);  //  выделяем память одним маллоком
+    this->data = (matrix_element **)malloc(len);
     if (!this->data) {
         error_handler(MALLOC_ERROR, "init_data");
         return;
@@ -21,7 +22,7 @@ void init_data(Matrix * this)
 #ifdef DEBUG
     printf("[DEBUG] 2D ARRAY POINTER: %p\n", this->data);
 #endif
-    double * first_element = (double*)this->data + this->rows;  // создаем указатель на первый элемент массива
+    matrix_element * first_element = (matrix_element*)this->data + this->rows;  // создаем указатель на первый элемент массива
     for (size_t row = 0; row < this->rows; row++) {
             this->data[row] = first_element + row * this->cols;  //  помещаем в указатели на строки первый их элемент
 #ifdef DEBUG
@@ -56,10 +57,10 @@ void delete_matrix(Matrix *this)
 }
 
 
-void fill_with_data(Matrix * this, double * filling_array) {
+void fill_with_data(Matrix * this, matrix_element * filling_array) {
     size_t size = matrix_size(this);
-    double * first_element = this->data[0];
-    memcpy(first_element, filling_array, size * sizeof(double));
+    matrix_element * first_element = this->data[0];
+    memcpy(first_element, filling_array, size * sizeof(matrix_element));
 #ifdef DEBUG
         for (size_t row = 0; row < this->rows; row++)
             for (size_t col = 0; col < this->cols; col++) 
@@ -69,36 +70,39 @@ void fill_with_data(Matrix * this, double * filling_array) {
 }
 
 
-void random_pattern(Matrix * this, size_t size, double * fill_data) {
+void random_pattern(Matrix * this, size_t size, matrix_element * fill_data) {
     srand(time(NULL));
     for (size_t idx = 0; idx < size; idx++) {
-        double val = (((double)rand() * pow(-1, rand()%2)) / (RAND_MAX - rand() + (double)rand()));
+        matrix_element val = (((matrix_element)rand() * pow(-1, rand()%2)) / (RAND_MAX - rand() + (matrix_element)rand()));
         fill_data[idx] = val;
     }
 }
 
 
-void unit_pattern(Matrix * this, size_t size, double * fill_data) {
+void unit_pattern(Matrix * this, size_t size, matrix_element * fill_data) {
     for (size_t idx = 0; idx < size; idx++) 
         fill_data[idx] = idx % (this->rows + 1) == 0 ? 1 : 0;
 }
 
 
-void blank_pattern(Matrix * this, size_t size, double * fill_data) {
+void blank_pattern(Matrix * this, size_t size, matrix_element * fill_data) {
     memset(fill_data, 0, size);
 }
 
 
-void raising_pattern(Matrix * this, size_t size, double * fill_data) {
+void raising_pattern(Matrix * this, size_t size, matrix_element * fill_data) {
     for (size_t idx = 0; idx < size; idx++)
-        fill_data[idx] = idx;
+        fill_data[idx] = idx + 1;
 }
 
 
 void fill_matrix(Matrix * this, const enum InfillPattern pattern) {
     size_t size = matrix_size(this);
-    double fill_data[size];
-    if (!fill_data) error_handler(MALLOC_ERROR, "fill_matrix");
+    matrix_element fill_data[size];
+    if (!fill_data) {
+        error_handler(MALLOC_ERROR, "fill_matrix");
+        return;
+    } 
     switch (pattern) {
         case RANDOM: {
             random_pattern(this, size, fill_data);
@@ -127,7 +131,7 @@ void fill_matrix(Matrix * this, const enum InfillPattern pattern) {
 }
 
 
-void print_matrix_element(const double val, const  size_t counter, const size_t cols) {
+void print_matrix_element(const matrix_element val, const  size_t counter, const size_t cols) {
     printf("%0.3f\t", val);
     if ((counter + 1) % cols == 0)
     printf("\n");    
@@ -157,8 +161,8 @@ Matrix  matrix_sum(const Matrix * matrix_1, const Matrix * matrix_2) {
         };
         size_t size = matrix_size(&new_matrix);
         init_data(&new_matrix);
-        double fill_data[size];
-        memcpy(fill_data, matrix_1->data[0], sizeof(double) * size);  // now it seems to work
+        matrix_element fill_data[size];
+        memcpy(fill_data, matrix_1->data[0], sizeof(matrix_element) * size);  // now it seems to work
         for (size_t counter = 0; counter < size; counter++) {
             fill_data[counter] += *(matrix_2->data[0]+counter);
         }
@@ -179,8 +183,8 @@ Matrix  matrix_sub(const Matrix * matrix_1, const Matrix * matrix_2) {
     };
     size_t size = matrix_size(&new_matrix);
     init_data(&new_matrix);
-    double fill_data[size];
-    memcpy(fill_data, matrix_1->data[0], sizeof(double) * size);  // now it seems to work
+    matrix_element fill_data[size];
+    memcpy(fill_data, matrix_1->data[0], sizeof(matrix_element) * size);  // now it seems to work
     for (size_t counter = 0; counter < size; counter++)
         fill_data[counter] -= *(matrix_2->data[0]+counter);
     fill_with_data(&new_matrix, fill_data);
@@ -190,10 +194,10 @@ Matrix  matrix_sub(const Matrix * matrix_1, const Matrix * matrix_2) {
 
 void matrix_transposition(Matrix * this) {
     size_t size = matrix_size(this);
-    double fill_data[size];
+    matrix_element fill_data[size];
     for (size_t col = 0; col < this->cols; col++) {
         for (size_t row = 0; row < this->rows; row++) {
-            double value = this->data[row][col];
+            matrix_element value = this->data[row][col];
             fill_data[col*this->rows + row] = value;
 #ifdef DEBUG
             printf("%.3f\t", value);
@@ -211,7 +215,7 @@ void matrix_transposition(Matrix * this) {
 }
 
 
-Matrix __get_submatrix(const Matrix * this, const size_t row_to_delete, const size_t col_to_delete) {
+Matrix get_submatrix(const Matrix * this, const size_t row_to_delete, const size_t col_to_delete) {
     size_t new_rows = this->rows - 1;
     size_t new_cols = this->cols - 1;
     size_t size = matrix_size(this);
@@ -221,8 +225,7 @@ Matrix __get_submatrix(const Matrix * this, const size_t row_to_delete, const si
     };
     init_data(&new_matrix);
     size_t new_size = matrix_size(&new_matrix);
-    double fill_data[new_size];
-    if (!fill_data) error_handler(MALLOC_ERROR, "__get_submatrix");
+    matrix_element fill_data[new_size];
     size_t new_data_counter = 0;
     size_t row_index = 0;
     for (size_t count = 0; count < size; count++) {
@@ -241,7 +244,10 @@ Matrix __get_submatrix(const Matrix * this, const size_t row_to_delete, const si
 
 
 double matrix_determinant(const Matrix * this) {
-    if (this->rows != this->cols) error_handler(MATH_DOMAIN_ERROR, "martix_determinant");
+    if (this->rows != this->cols) {
+        error_handler(MATH_DOMAIN_ERROR, "martix_determinant");
+        return;
+    } 
     switch (this->rows)
     {
     case 1:
@@ -251,11 +257,11 @@ double matrix_determinant(const Matrix * this) {
     case 2:
         return this->data[0][0] * this->data[1][1] - 
                 this->data[0][1] * this->data[1][0];
-            break;
+        break;
     default:
         double determinant = 0;
         for (size_t col_counter = 0; col_counter < this->cols; col_counter++) {
-            Matrix submatrix = __get_submatrix(this, 0, col_counter);
+            Matrix submatrix = get_submatrix(this, 0, col_counter);
             Matrix * temp = &submatrix;
             determinant += this->data[0][col_counter] * pow(-1, col_counter) * matrix_determinant(temp);
             delete_matrix(&submatrix);
@@ -282,6 +288,54 @@ Matrix matrix_multiplication(const Matrix * matrix_1, const Matrix * matrix_2) {
                 new_matrix.data[row][col] += matrix_1->data[row][idx] * matrix_2->data[idx][col];
             
     return new_matrix;
+}
+
+
+void constant_division(Matrix * this, double constant) {
+    size_t size = matrix_size(this);
+    for (size_t idx = 0; idx < size; idx++) {
+        *(this->data[0] + idx) /= constant;
+    }
+
+}
+
+
+uint64_t factorial(const uint16_t number) {
+    if (number == 1 | number == 0) return 1;
+    return number * factorial(number - 1);
+}
+
+
+Matrix matrix_exponent(const Matrix * this, const int8_t degree) {
+    if (this->rows != this->cols) {
+        error_handler(MATH_DOMAIN_ERROR, "matrix_exponent");
+        return;
+    }
+    size_t dimension = this->rows;
+    Matrix exponent = init_matrix(dimension, dimension);
+    fill_matrix(&exponent, UNIT);
+    exponent = matrix_sum(&exponent, this);
+    Matrix powered_matrix = *this;
+    for (uint8_t idx = 2; idx < degree; idx++) {
+        print_matrix(&exponent);
+        powered_matrix = matrix_multiplication(&powered_matrix, this);
+#ifdef DEBUG
+        printf("Powered matrix:\n");
+        print_matrix(&powered_matrix);
+#endif
+        double dividor = factorial(idx); 
+        constant_division(&powered_matrix, dividor);
+        exponent = matrix_sum(&exponent, &powered_matrix);
+#ifdef DEBUG
+        printf("Dividor is: %f\n", dividor);
+        printf("Sum with matrix:\n");
+        print_matrix(&powered_matrix);
+        printf("Result is:\n");
+        print_matrix(&exponent);
+#endif
+    }
+    delete_matrix(&powered_matrix);
+    return exponent;
 }
 
 
