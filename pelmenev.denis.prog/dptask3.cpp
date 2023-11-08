@@ -21,6 +21,7 @@ public:
     void matrix_fill(MatrixItem* values);
     void matrix_free();
     void print_matrix();
+    void matrix_null();
     ~Matrix();
 public:
     Matrix& operator=(const Matrix& A);
@@ -28,6 +29,20 @@ public:
     Matrix& operator+(const Matrix& A);
     Matrix& operator-(const Matrix& A);
 };
+
+
+void Matrix::matrix_null()
+{
+    Matrix::cols = 0;
+    Matrix::rows = 0;
+
+    if (Matrix::data == NULL)
+        return;
+
+    Matrix::data = NULL;
+
+    return;
+}
 
 
 Matrix::Matrix(const size_t cols, const size_t rows)
@@ -40,9 +55,7 @@ Matrix::Matrix(const size_t cols, const size_t rows)
     };
 
     if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) {
-        Matrix::cols = 0;
-        Matrix::rows = 0;
-        Matrix::data = NULL;
+        Matrix::matrix_null();
         return;
     };
 
@@ -50,9 +63,7 @@ Matrix::Matrix(const size_t cols, const size_t rows)
     Matrix::rows = rows;
     Matrix::data = (MatrixItem*)malloc(Matrix::cols * Matrix::rows * sizeof(MatrixItem));
     if (Matrix::data == NULL) {
-        Matrix::cols = 0;
-        Matrix::rows = 0;
-        Matrix::data = NULL;
+        Matrix::matrix_null();
         return;
     };
 
@@ -98,21 +109,22 @@ void Matrix::print_matrix()
 }
 
 
-/*Matrix& Matrix::operator+(const Matrix& A)
+Matrix& Matrix::operator+(const Matrix& A)
 {
     Matrix* result = new Matrix(*this);
-    if (A.cols != Matrix.cols || A.rows != Matrix.rows)
-        return MATRIX_NULL;
+    if (A.cols != Matrix::cols || A.rows != Matrix::rows) {
+        result->matrix_null();
+        return;
+    };
 
-    struct Matrix C = matrix_allocate(A.cols, A.rows);
-    if (C.data == NULL)
-        return C;
+    if (result->data == NULL)
+        return *result;
 
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
-        C.data[idx] = A.data[idx] + B.data[idx];
+        result->data[idx] = Matrix::data[idx] + A.data[idx];
 
     return *result;
-}*/
+}
 
 
 int main()
