@@ -44,7 +44,7 @@ struct Matrix matrix_filling(const size_t cols, const size_t rows, const MatrixD
 
 void matrix_free(struct Matrix *A)
 {
-	free(A->data);
+	if(A->data != NULL) free(A->data);
 	*A = Matrix_NULL;
 }
 
@@ -168,21 +168,21 @@ struct Matrix matrix_exponential_part1(struct Matrix A, unsigned int level)
 
 struct Matrix matrix_exponential_part2(struct Matrix A, unsigned long int level)
 {
-	struct Matrix C, S;
+	struct Matrix C, C2;
 
 	if (A.rows != A.rows) return Matrix_NULL;
 
 	for (unsigned int count = 0; count <= level; count++) {
 		if (count == 0) {
-			S = matrix_allocation(A.rows, A.cols);
+			C2 = matrix_allocation(A.rows, A.cols);
 			continue;
 		}
 
 		C = matrix_exponential_part1(A, count);
-		matrix_sum1(S, C);
+		matrix_sum1(C2, C);
 		matrix_free(&C);
 	}
-	return S;
+	return C2;
 }
 
 
@@ -201,7 +201,7 @@ void matrix_print(const struct Matrix A)
 
 int main()
 {
-	struct Matrix A, B, C, S;
+	struct Matrix A, B, C, C2;
 
 
 	printf("\nFirst matrix\n");
@@ -249,7 +249,7 @@ int main()
 	
 	printf("Exponent of the first matrix\n");
 	matrix_exponential_part1(A, 2);
-	S = matrix_exponential_part2(A, 2);
-	matrix_print(S);
+	C2 = matrix_exponential_part2(A, 2);
+	matrix_print(C2);
 	return 0;
 }
