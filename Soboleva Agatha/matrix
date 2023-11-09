@@ -60,7 +60,7 @@ void matrix_set_zero(struct Matrix A)
 
 void matrix_set_one(const struct Matrix A)
 {
-    matrix_set_zero(&A);
+    matrix_set_zero(A);
     for (size_t id = 0; id < A.rows * A.cols; id += A.cols + 1)
         A.data[id] = 1.;
 }
@@ -270,7 +270,7 @@ struct Matrix matrix_exp(const struct Matrix A, const int k)
         matrix_add(exp, temp_more);
         matrix_destruction(&temp_more);
     }
-    matrix_destruction(&temp_more);     
+    matrix_destruction(&temp_more);
     matrix_destruction(&temp);
     return exp;
 }
