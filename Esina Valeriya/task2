@@ -47,23 +47,22 @@ void matrix_destruction(struct Matrix* A)
 {
     A->rows = 0;
     A->cols = 0;
-    free(A->data);
+    if (A->data != 0) free(A->data);
     A->data = NULL;
 }
 
 
 void matrix_set_zero(struct Matrix* A)
 {
-    if (A->data != NULL)
-        memset(A->data, 0, sizeof(MatrixItem) * A->rows * A->cols);
+    if (A->data != NULL) memset(A->data, 0, sizeof(MatrixItem) * A->rows * A->cols);
 }
 
 
-void matrix_set_one(struct Matrix* A)
+void matrix_set_one(const struct Matrix A)
 {
-    matrix_set_zero(A);
-    for (size_t id = 0; id < A->rows * A->cols; id += A->cols + 1)
-        A->data[id] = 1.;
+    matrix_set_zero(&A);
+    for (size_t id = 0; id < A.rows * A.cols; id += A.cols + 1)
+        A.data[id] = 1.;
 }
 
 
@@ -82,12 +81,12 @@ void matrix_print(const struct Matrix A, const char* text)
 
 
 // A += B
-int matrix_add(struct Matrix* A, const struct Matrix B)
+int matrix_add(const struct Matrix A, const struct Matrix B)
 {
-    if (A->cols != B.cols || A->rows != B.rows) return 1;
+    if (A.cols != B.cols || A.rows != B.rows) return 1;
 
-    for (size_t id = 0; id < A->cols * A->rows; ++id)
-        A->data[id] += B.data[id];
+    for (size_t id = 0; id < A.cols * A.rows; ++id)
+        A.data[id] += B.data[id];
     return 0;
 }
 
@@ -101,20 +100,20 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
     if (sum.data == NULL) return NULL_MATRIX;
 
     memcpy(sum.data, A.data, sizeof(MatrixItem) * A.cols * A.rows);
-    matrix_add(&sum, B);
+    matrix_add(sum, B);
 
     return sum;
 }
 
 
 // A -= B
-int matrix_sub(struct Matrix* A, const struct Matrix B)
+int matrix_sub(const struct Matrix A, const struct Matrix B)
 {
-    if (A->cols != B.cols || A->rows != B.rows) return 1;
+    if (A.cols != B.cols || A.rows != B.rows) return 1;
 
-    for (size_t id = 0; id < A->cols * A->rows; ++id)
-        A->data[id] -= B.data[id];
-    
+    for (size_t id = 0; id < A.cols * A.rows; ++id)
+        A.data[id] -= B.data[id];
+
     return 0;
 }
 
@@ -128,8 +127,8 @@ struct Matrix matrix_diff(const struct Matrix A, const struct Matrix B)
     if (diff.data == NULL) return NULL_MATRIX;
 
     memcpy(diff.data, A.data, sizeof(MatrixItem) * A.cols * A.rows);
-    matrix_sub(&diff, B);
-    
+    matrix_sub(diff, B);
+
     return diff;
 }
 
@@ -151,13 +150,13 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
             mult.data[rowA * mult.cols + colB] = sum;
         }
     }
-    
+
     return mult;
 }
 
 
 // A *= k
-struct Matrix matrix_multk(const struct Matrix A, const size_t k)
+struct Matrix matrix_multk(const struct Matrix A, const MatrixItem k)
 {
     struct Matrix multk;
     multk = matrix_allocation(A.rows, A.cols);
@@ -173,11 +172,12 @@ struct Matrix matrix_multk(const struct Matrix A, const size_t k)
 
 
 // A /= k
-struct Matrix matrix_divk(const struct Matrix A, const size_t k)
+struct Matrix matrix_divk(const struct Matrix A, const MatrixItem k)
 {
     struct Matrix divk;
     divk = matrix_allocation(A.rows, A.cols);
     if (divk.data == NULL) return NULL_MATRIX;
+    if (k == 0) return NULL_MATRIX;
 
     memcpy(divk.data, A.data, sizeof(MatrixItem) * A.cols * A.rows);
 
@@ -188,10 +188,11 @@ struct Matrix matrix_divk(const struct Matrix A, const size_t k)
 }
 
 
-int matrix_divk_for_exp(struct Matrix* A, const size_t k)
+int matrix_divk_for_exp(const struct Matrix A, const MatrixItem k)
 {
-    for (size_t id = 0; id < A->cols * A->rows; ++id) {
-        A->data[id] /= k;
+    if (k == 0) return NAN;
+    for (size_t id = 0; id < A.cols * A.rows; ++id) {
+        A.data[id] /= k;
     }
     return 0;
 }
@@ -212,31 +213,26 @@ struct Matrix matrix_transpose(const struct Matrix A)
 
 
 // det (A)
-MatrixItem matrix_determinant(struct Matrix A)
+MatrixItem matrix_determinant(const struct Matrix A)
 {
-    MatrixItem det;
-
     if (A.cols == 1 && A.rows == 1) {
-        det = A.data[0];
-        return det;
+        return A.data[0];
     }
-    else if(A.cols == 2 && A.rows == 2) {
-        det = A.data[0] * A.data[3] - A.data[1] * A.data[2];
-        return det;
+
+    if (A.cols == 2 && A.rows == 2) {
+        return A.data[0] * A.data[3] - A.data[1] * A.data[2];
     }
-    else if(A.cols == 3 && A.rows == 3) {
-        det =
-            A.data[0] * A.data[4] * A.data[8]
+
+    if (A.cols == 3 && A.rows == 3) {
+        return A.data[0] * A.data[4] * A.data[8]
             + A.data[1] * A.data[5] * A.data[6]
             + A.data[2] * A.data[7] * A.data[3]
             - A.data[2] * A.data[4] * A.data[6]
             - A.data[0] * A.data[5] * A.data[7]
             - A.data[1] * A.data[8] * A.data[3];
-        return det;
     }
-    else {
-        return NAN;
-    }
+
+    return NAN;
 }
 
 
@@ -248,7 +244,7 @@ struct Matrix matrix_exp(const struct Matrix A, const int k)
 
     struct Matrix exp = matrix_allocation(A.rows, A.cols);
     if (exp.data == NULL) return NULL_MATRIX;
-    matrix_set_one(&exp);
+    matrix_set_one(exp);
 
     struct Matrix temp = matrix_allocation(A.rows, A.cols);
     if (temp.data == 0) {
@@ -265,16 +261,16 @@ struct Matrix matrix_exp(const struct Matrix A, const int k)
         return NULL_MATRIX;
     };
 
-    matrix_set_one(&temp_more);
+    matrix_set_one(temp_more);
     int k0 = 1;
 
     for (int id = 1; id <= k; ++id) {
-        matrix_divk_for_exp(&temp, k0 * id);
+        matrix_divk_for_exp(temp, k0 * id);
         temp_more = matrix_mult(temp, A);
-        matrix_add(&exp, temp_more);
+        matrix_add(exp, temp_more);
+        matrix_destruction(&temp_more);
     }
     matrix_destruction(&temp);
-    matrix_destruction(&temp_more);
     return exp;
 }
 
@@ -305,7 +301,7 @@ int main()
     F = matrix_allocation(3, 3);
     G = matrix_allocation(3, 3);
     J = matrix_allocation(3, 3);
-    
+
     matrix_print(A, "Матрица A");
     matrix_print(B, "Матрица B");
 
