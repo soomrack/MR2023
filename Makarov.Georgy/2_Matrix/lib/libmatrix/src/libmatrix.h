@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <math.h>
 
 typedef double matrix_item;
 
@@ -20,21 +21,21 @@ enum MatrixType {
     ZEROS, ONES, RANDOM, IDENTITY
 };
 enum ErrorType {
-    MEMORY_ERROR, BAD_MATRIX_ERROR, COLS_ROWS_ERROR, DET_ERROR, EXP_LEVEl_ERROR
+    MEMORY_ERROR, BAD_MATRIX_ERROR, COLS_ROWS_ERROR, DET_ERROR, LEVEL_ERROR
 };
 
 
-void error_print(enum ErrorType error);
+void matrix_error(enum ErrorType error);
 
-struct Matrix allocate_memory(const size_t rows, const size_t cols);
+struct Matrix matrix_allocate(const size_t rows, const size_t cols);
 
-void fill_matrix(struct Matrix *M, enum MatrixType matrix_type);
+void matrix_fill(struct Matrix *M, enum MatrixType matrix_type);
 
-void matrix_print(struct Matrix *M);
+void matrix_print(const struct Matrix *M);
 
-struct Matrix matrix_create(size_t rows, size_t cols, enum MatrixType mat_type);
+struct Matrix matrix_create(const size_t rows, const size_t cols, enum MatrixType mat_type);
 
-void matrix_remove(struct Matrix *M);
+void matrix_free(struct Matrix *M);
 
 
 struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B);
@@ -49,6 +50,10 @@ struct Matrix matrix_transpose(const struct Matrix A);
 
 double matrix_det(const struct Matrix A);
 
-struct Matrix matrix_exp(const struct Matrix A, const int n);
+struct Matrix matrix_pow(const struct Matrix A, const unsigned int n);
+
+unsigned long long matrix_factorial(const unsigned int value);
+
+struct Matrix matrix_exp(const struct Matrix A, const unsigned int n);
 
 #endif //LIBMATRIX_H

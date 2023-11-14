@@ -2,36 +2,34 @@
 
 int main() {
     struct Matrix A = matrix_create(3, 3, RANDOM);
+    struct Matrix B = matrix_create(3, 3, IDENTITY);
+    struct Matrix C = matrix_create(3, 3, IDENTITY);
+    struct Matrix D = matrix_create(3, 3, IDENTITY);
 
-    A = matrix_multiply(A, 3);
     matrix_print(&A);
+
+    C = matrix_product(A, A);
+    C = matrix_multiply(C, 0.5);
+
+    D = matrix_product(A, A);
+    D = matrix_product(D, A);
+    D = matrix_multiply(D, 1. / 6);
+
+
+    B = matrix_sum(B, A);
+    B = matrix_sum(B, C);
+    B = matrix_sum(B, D);
+
 
     A = matrix_exp(A, 3);
     matrix_print(&A);
 
-    A = matrix_transpose(A);
-    matrix_print(&A);
+    matrix_print(&B);
 
-    struct Matrix B = matrix_create(3, 3, IDENTITY);
-
-    B = matrix_multiply(B, 500.);
-
-    A = matrix_subtract(A, B);
-    matrix_print(&A);
-
-    double det = matrix_det(A);
-
-    printf("Determinant of the matrix above is %f\n", det);
-
-    struct Matrix C = matrix_create(4, 4, ZEROS);
-
-    matrix_det(C);
-
-    matrix_print(&C);
-
-    matrix_remove(&A);
-    matrix_remove(&B);
-    matrix_remove(&C);
+    matrix_free(&A);
+    matrix_free(&B);
+    matrix_free(&C);
+    matrix_free(&D);
 
     return 0;
 }
