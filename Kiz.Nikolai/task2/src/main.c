@@ -3,8 +3,8 @@
 
 int main()
 {   
-    Matrix A  = init_matrix(3, 4);
-    Matrix B = init_matrix(4, 3);
+    Matrix A  = create_matrix(3, 4);
+    Matrix B = create_matrix(4, 3);
 
     double arr1[12] = {2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2};
     double arr2[12] = {3, 3, 3, 3, 3, 12, 3, 3, 3, 3, 3, 30};
@@ -14,13 +14,24 @@ int main()
 
 
     Matrix C = matrix_multiplication(&A, &B);
-    Matrix D = init_matrix(3, 3);
-    fill_matrix(&A, UNIT);
-    Matrix E = matrix_exponent(&D, 10);
+    Matrix D = create_matrix(3, 3);
+    fill_matrix(&D, UNIT);
 
-    print_matrix(&A);
-    print_matrix(&B);
-    print_matrix(&C);
+
+    Matrix E = matrix_exponent(&D, 15);
+
+    // print_matrix(&A);
+    // print_matrix(&B);
+    // print_matrix(&C);
+    // print_matrix(&D);
     print_matrix(&E);
+    print_matrix(&D);
+
+
+    delete_matrix(&A);
+    delete_matrix(&B);
+    delete_matrix(&C);
+    delete_matrix(&D);
+    delete_matrix(&E);
     return 0;
 }

@@ -54,6 +54,15 @@ void matrix_error()
 }
 
 
+void matrix_delete(struct Matrix* A)
+{
+    A->rows = 0;
+    A->cols = 0;
+    free(A->data);
+    A->data = NULL;
+}
+
+
 void matrix_fill(struct Matrix A, const MatrixItem values[])
 {
     for (size_t row = 0; row < A.rows; row++) {
@@ -90,22 +99,33 @@ void matrix_substraction(const struct Matrix A, const struct Matrix B, const str
 
 
 // A = B * C
-void matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matrix C)
+struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
     if (B.cols != C.rows || B.rows != C.cols || B.cols != A.cols || B.rows != A.rows)
     {
         matrix_error();
     }
+    struct Matrix Mult_1 = matrix_create(B.rows, B.cols);
+    struct Matrix Mult_2 = matrix_create(C.rows, C.cols);
+    struct Matrix Mult = matrix_create(A.rows, A.cols);
+    matrix_set_zero(Mult);
+    if (Mult_1.data == NULL || Mult_2.data == NULL) return MATRIX_NULL;
+    memcpy(Mult_1.data, B.data, sizeof(MatrixItem) * B.cols * B.rows);
+    memcpy(Mult_2.data, C.data, sizeof(MatrixItem) * C.cols * C.rows);
     MatrixItem data_old;
     for (size_t row = 0; row < B.rows; row++) {
         for (size_t col = 0; col < B.cols; col++) {
             data_old = 0;
             for (size_t idx = 0; idx < C.rows; idx++) {
-                data_old +=  B.data[idx * B.rows + col] * C.data[row * C.cols + idx];
+                data_old += Mult_1.data[idx * B.rows + col] * Mult_2.data[row * C.cols + idx];
             }
-            A.data[row * B.cols + col] = data_old;
+            Mult.data[row * B.cols + col] = data_old;
         }
     }
+    memcpy(A.data, Mult.data, sizeof(MatrixItem) * Mult.cols * Mult.rows);
+    matrix_delete(&Mult_1);
+    matrix_delete(&Mult_2);
+    matrix_delete(&Mult);
 }
 
 
@@ -117,15 +137,6 @@ void matrix_trans(struct Matrix A, struct Matrix T)
             T.data[col * A.rows + row] = A.data[row * A.cols + col];
         }
     }
-}
-
-
-void matrix_delete(struct Matrix* A)
-{
-    A->rows = 0;
-    A->cols = 0;
-    free(A->data);
-    A->data = NULL;
 }
 
 
@@ -201,17 +212,14 @@ struct Matrix matrix_exponent(struct Matrix A, unsigned int n)
     if (A.cols != A.rows) return MATRIX_NULL;
     if (A.cols == 0) return MATRIX_NULL;
     struct Matrix Exp_old = matrix_create(A.cols, A.cols);
-    if (Exp_old.data == NULL) return MATRIX_NULL;
     matrix_set_one(Exp_old);
     struct Matrix Exp = matrix_create(A.cols, A.cols);
-    if (Exp.data == NULL) return MATRIX_NULL;
     matrix_set_one(Exp);
     struct Matrix Exp_next = matrix_create(A.cols, A.cols);
-    if (Exp.data == NULL) return MATRIX_NULL;
     struct Matrix Exp_div = matrix_create(A.cols, A.cols);
-    if (Exp_div.data == NULL) return MATRIX_NULL;
-    
-        for (int idx = 1; idx < n; ++idx) {
+    if (Exp_old.data == NULL || Exp.data == NULL || Exp_div.data == NULL
+        ) return MATRIX_NULL;
+        for (unsigned int idx = 1; idx < n; ++idx) {
         matrix_mult(Exp_next, A, Exp_old);
         if (Exp_next.data == NULL) {
             matrix_delete(&Exp_old);
@@ -223,7 +231,6 @@ struct Matrix matrix_exponent(struct Matrix A, unsigned int n)
         matrix_delete(&Exp_next);
         matrix_delete(&Exp_div);
         matrix_add(Exp, Exp_old);
-
         }
         matrix_delete(&Exp_old);
         return Exp;
@@ -262,9 +269,6 @@ int main()
     struct Matrix A = matrix_create(3, 3);
     matrix_set_one(A);
 
-    struct Matrix AA = matrix_create(3, 3);
-    matrix_set_one(AA);
-
     struct Matrix B = matrix_create(3, 3);
     matrix_set_one(B);
 
@@ -277,7 +281,6 @@ int main()
     struct Matrix T = matrix_create(3, 3);
 
     matrix_fill(A, values_A);
-    matrix_fill(AA, values_A);
     matrix_fill(B, values_B);
     matrix_sum(C, A, B);
 

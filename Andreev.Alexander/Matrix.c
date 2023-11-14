@@ -1,45 +1,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 typedef struct Matrix {
-    unsigned int cols;
-    unsigned int rows;
+    size_t cols;
+    size_t rows;
     double* values;
-}Matrix;
+} Matrix;
 
-const Matrix EMPTY = { 0, 0, NULL };
+const Matrix MATRIX_NULL = { 0, 0, NULL };
 
-Matrix init_matrix(const unsigned int cols, const unsigned int rows) {  // создание новой матрицы с выделением памяти
+Matrix matrix_init(const size_t cols, const size_t rows) {
     Matrix matrix;
     matrix.cols = cols;
     matrix.rows = rows;
-    unsigned int n_values = matrix.cols * matrix.rows;
+    size_t n_values = matrix.cols * matrix.rows;
     matrix.values = malloc(n_values * sizeof(double));
+
+    if (matrix.values == NULL) {
+        printf("Failed to allocate memory for matrix\n");
+        return MATRIX_NULL;
+    }
+
     return matrix;
 }
 
-void set_matrix_values(Matrix* matrix) {  // заполнение матрицы рандомными числами
-    for (unsigned int index = 0; index < matrix->cols * matrix->rows; ++index) {
+void matrix_set_values(Matrix* matrix) {
+    if (matrix == NULL || matrix->values == NULL) {
+        printf("Matrix is not properly initialized\n");
+        return;
+    }
+
+    for (size_t index = 0; index < matrix->cols * matrix->rows; ++index) {
         matrix->values[index] = (double)rand();
     }
 }
 
-void error_size(char* operation_name, char* error) {  // выведение заданной ошибки
+void matrix_error_size(char* operation_name, char* error) {
     printf("%s is impossible. %s\n", operation_name, error);
 }
 
-int is_null(const Matrix matrix) {  // проверка: нулевая ли матрица
+int matrix_is_null(const Matrix matrix) {
     return matrix.cols == 0 && matrix.rows == 0 ? 1 : 0;
 }
 
-void print_matrix(const Matrix matrix) {  // вывести матрицу в консоль
-    if (is_null(matrix)) {
+void matrix_print(const Matrix matrix) {
+    if (matrix_is_null(matrix)) {
         printf("The matrix doesn't exist\n\n");
         return;
     }
-    for (unsigned int row = 0; row < matrix.rows; ++row) {
-        for (unsigned int col = 0; col < matrix.cols; ++col) {
+
+    for (size_t row = 0; row < matrix.rows; ++row) {
+        for (size_t col = 0; col < matrix.cols; ++col) {
             printf("%.2f ", matrix.values[row * matrix.cols + col]);
         }
         printf("\n");
@@ -47,248 +60,340 @@ void print_matrix(const Matrix matrix) {  // вывести матрицу в консоль
     printf("\n");
 }
 
-void free_matrix(Matrix* matrix) {  // очистить память
+void matrix_free(Matrix* matrix) {
     free(matrix->values);
 }
 
-
-
-Matrix add(const Matrix matrix1, const Matrix matrix2) {  // сумма матриц
+Matrix matrix_add(const Matrix matrix1, const Matrix matrix2) {
     if (matrix1.rows != matrix2.rows || matrix1.cols != matrix2.cols) {
-        error_size("Addition", "Matrixes should have equal sizes");
-        return EMPTY;
+        matrix_error_size("Addition", "Matrixes should have equal sizes");
+        return MATRIX_NULL;
     }
-    Matrix result = init_matrix(matrix1.cols, matrix1.rows);
-    unsigned int n_values = result.cols * result.rows;
-    for (unsigned int index = 0; index < n_values; ++index) {
+
+    Matrix result = matrix_init(matrix1.cols, matrix1.rows);
+
+    if (result.values == NULL) {
+        return MATRIX_NULL;
+    }
+
+    size_t n_values = result.cols * result.rows;
+
+    for (size_t index = 0; index < n_values; ++index) {
         result.values[index] = matrix1.values[index] + matrix2.values[index];
     }
+
     return result;
 }
 
-Matrix substruct(const Matrix matrix1, const Matrix matrix2) {  // разность матриц
+Matrix matrix_subtract(const Matrix matrix1, const Matrix matrix2) {
     if (matrix1.rows != matrix2.rows && matrix1.cols != matrix2.cols) {
-        error_size("Substruction", "Matrixes should have equal sizes");
-        return EMPTY;
+        matrix_error_size("Subtraction", "Matrixes should have equal sizes");
+        return MATRIX_NULL;
     }
-    Matrix result = init_matrix(matrix1.cols, matrix1.rows);
-    unsigned int n_values = result.cols * result.rows;
-    for (unsigned int index = 0; index < n_values; ++index) {
+
+    Matrix result = matrix_init(matrix1.cols, matrix1.rows);
+
+    if (result.values == NULL) {
+        return MATRIX_NULL;
+    }
+
+    size_t n_values = result.cols * result.rows;
+
+    for (size_t index = 0; index < n_values; ++index) {
         result.values[index] = matrix1.values[index] - matrix2.values[index];
     }
+
     return result;
 }
 
-Matrix multiply_by_double(const Matrix matrix, double number) {  // умножение матрицы на число
-    Matrix result = init_matrix(matrix.cols, matrix.rows);
-    unsigned int n_values = result.cols * result.rows;
-    for (unsigned int index = 0; index < n_values; ++index) {
+Matrix matrix_multiply_by_double(const Matrix matrix, double number) {
+    Matrix result = matrix_init(matrix.cols, matrix.rows);
+
+    if (result.values == NULL) {
+        return MATRIX_NULL;
+    }
+
+    size_t n_values = result.cols * result.rows;
+
+    for (size_t index = 0; index < n_values; ++index) {
         result.values[index] = matrix.values[index] * number;
     }
+
     return result;
 }
 
-Matrix multiply(const Matrix matrix1, const Matrix matrix2) {  // умножение матрицы на матрицу
-    if (matrix1.cols != matrix2.rows) {
-        error_size("Multiplication", "Matrixes should have certain sizes");
-        return EMPTY;
+Matrix matrix_multiply(const Matrix A, const Matrix B) {
+    if (A.cols != B.rows) {
+        matrix_error_size("Multiplication", "Matrix A cols should be equal to Matrix B rows");
+        return MATRIX_NULL;
     }
-    unsigned int n_cols = matrix2.cols;
-    unsigned int n_rows = matrix1.rows;
-    Matrix result = init_matrix(n_cols, n_rows);
-    for (unsigned int row = 0; row < n_rows; ++row) {
-        for (unsigned int col = 0; col < n_cols; ++col) {
-            double summa = 0.0;
-            for (unsigned int k = 0; k < matrix1.cols; ++k) {
-                summa +=
-                    matrix1.values[row * matrix1.cols + k] *
-                    matrix2.values[k * matrix2.cols + col];
+
+    Matrix C = matrix_init(B.cols, A.rows);
+
+    if (C.values == NULL) {
+        return MATRIX_NULL;
+    }
+
+    for (size_t rowA = 0; rowA < A.rows; ++rowA) {
+        for (size_t colsB = 0; colsB < B.cols; ++colsB) {
+            C.values[rowA * C.cols + colsB] = 0;
+            for (size_t idx = 0; idx < A.cols; ++idx) {
+                C.values[rowA * C.cols + colsB] += A.values[rowA * A.cols + idx] * B.values[idx * B.cols + colsB];
             }
-            result.values[row * n_cols + col] = summa;
         }
     }
-    return result;
+
+    return C;
 }
 
-double det(const Matrix matrix) {  // определитель матрицы
+double matrix_det(const Matrix matrix) {
     if (matrix.cols != matrix.rows) {
-        error_size("Getting determinant", "Matrix should be square");
-        return 0.;
+        matrix_error_size("Getting determinant", "Matrix should be square");
+        return 0.0;
     }
-    double result = 0;
-    unsigned int n = matrix.cols;
+
+    double result = 0.0;
+    size_t n = matrix.cols;
+
     if (n == 1) {
         result = matrix.values[0];
         return result;
     }
-    for (unsigned int row = 0; row < n; ++row) {
-        unsigned int col = 0;
-        Matrix submatrix = init_matrix(n - 1, n - 1);
-        unsigned int row_offset = 0;
-        unsigned int col_offset = 0;
-        for (unsigned int sub_row = 0; sub_row < n - 1; ++sub_row) {
-            for (unsigned int sub_col = 0; sub_col < n - 1; ++sub_col) {
-                if (sub_row == row) { row_offset = 1; }
-                if (sub_col == col) { col_offset = 1; }
+
+    for (size_t row = 0; row < n; ++row) {
+        size_t col = 0;
+        Matrix submatrix = matrix_init(n - 1, n - 1);
+
+        if (submatrix.values == NULL) {
+            matrix_free(&submatrix);
+            return 0.0;
+        }
+
+        size_t row_offset = 0;
+        size_t col_offset = 0;
+
+        for (size_t sub_row = 0; sub_row < n - 1; ++sub_row) {
+            for (size_t sub_col = 0; sub_col < n - 1; ++sub_col) {
+                if (sub_row == row) {
+                    row_offset = 1;
+                }
+                if (sub_col == col) {
+                    col_offset = 1;
+                }
+
                 submatrix.values[sub_row * (n - 1) + sub_col] =
                     matrix.values[(sub_row + row_offset) * n + (sub_col + col_offset)];
             }
         }
-        result += pow(-1, row + col) * matrix.values[row * n + col] * det(submatrix);
-        free_matrix(&submatrix);
+
+        result += pow(-1, row + col) * matrix.values[row * n + col] * matrix_det(submatrix);
+        matrix_free(&submatrix);
     }
+
     return result;
 }
 
-Matrix transpose(const Matrix matrix) {  // транспонированная матрица
-    Matrix result = init_matrix(matrix.rows, matrix.cols);
-    for (unsigned int row = 0; row < result.rows; ++row) {
-        for (unsigned int col = 0; col < result.cols; ++col) {
+Matrix matrix_transpose(const Matrix matrix) {
+    Matrix result = matrix_init(matrix.rows, matrix.cols);
+
+    if (result.values == NULL) {
+        return MATRIX_NULL;
+    }
+
+    for (size_t row = 0; row < result.rows; ++row) {
+        for (size_t col = 0; col < result.cols; ++col) {
             result.values[row * result.cols + col] = matrix.values[col * result.rows + row];
         }
     }
+
     return result;
 }
 
-Matrix identity(unsigned int dimention) {  // единичная матрица
-    Matrix result = init_matrix(dimention, dimention);
-    for (unsigned int row = 0; row < result.rows; ++row) {
-        for (unsigned int col = 0; col < result.cols; ++col) {
+Matrix matrix_identity(size_t dimension) {
+    Matrix result = matrix_init(dimension, dimension);
+
+    if (result.values == NULL) {
+        return MATRIX_NULL;
+    }
+
+    for (size_t row = 0; row < result.rows; ++row) {
+        for (size_t col = 0; col < result.cols; ++col) {
             result.values[row * result.cols + col] = (row == col) ? 1. : 0.;
         }
     }
+
     return result;
 }
 
-Matrix invertible(const Matrix matrix) {  // обратная матрица
+Matrix matrix_invertible(const Matrix matrix) {
     if (matrix.cols != matrix.rows) {
-        error_size("Getting invertible matrix", "Matrix should be square");
-        return EMPTY;
+        matrix_error_size("Getting invertible matrix", "Matrix should be square");
+        return MATRIX_NULL;
     }
-    Matrix transponent = transpose(matrix);
-    Matrix result = init_matrix(matrix.cols, matrix.rows);
-    for (unsigned int row = 0; row < transponent.rows; ++row) {
-        for (unsigned int col = 0; col < transponent.cols; ++col) {
-            Matrix submatrix = init_matrix(transponent.cols - 1, transponent.rows - 1);
-            unsigned int row_offset = 0;
-            unsigned int col_offset = 0;
-            for (unsigned int sub_row = 0; sub_row < submatrix.rows; ++sub_row) {
-                if (row == sub_row) { row_offset = 1; }
-                for (unsigned int sub_col = 0; sub_col < submatrix.cols; ++sub_col) {
-                    if (col == sub_col) { col_offset = 1; }
+
+    Matrix transponent = matrix_transpose(matrix);
+
+    if (transponent.values == NULL) {
+        return MATRIX_NULL;
+    }
+
+    Matrix result = matrix_init(matrix.cols, matrix.rows);
+
+    if (result.values == NULL) {
+        matrix_free(&transponent);
+        return MATRIX_NULL;
+    }
+
+    for (size_t row = 0; row < transponent.rows; ++row) {
+        for (size_t col = 0; col < transponent.cols; ++col) {
+            Matrix submatrix = matrix_init(transponent.cols - 1, transponent.rows - 1);
+
+            if (submatrix.values == NULL) {
+                matrix_free(&submatrix);
+                matrix_free(&transponent);
+                matrix_free(&result);
+                return MATRIX_NULL;
+            }
+
+            size_t row_offset = 0;
+            size_t col_offset = 0;
+
+            for (size_t sub_row = 0; sub_row < submatrix.rows; ++sub_row) {
+                if (row == sub_row) {
+                    row_offset = 1;
+                }
+                for (size_t sub_col = 0; sub_col < submatrix.cols; ++sub_col) {
+                    if (col == sub_col) {
+                        col_offset = 1;
+                    }
+
                     submatrix.values[sub_row * (transponent.cols - 1) + sub_col] =
                         transponent.values[(sub_row + row_offset) * transponent.cols + (sub_col + col_offset)];
                 }
             }
-            result.values[row * matrix.cols + col] = pow(-1, row + col) * det(submatrix);
-            free(submatrix.values);
+
+            result.values[row * matrix.cols + col] = pow(-1, row + col) * matrix_det(submatrix);
+            matrix_free(&submatrix);
         }
     }
-    free(transponent.values);
-    Matrix multiplied_result = multiply_by_double(result, 1 / det(result));
-    free(result.values);
+
+    matrix_free(&transponent);
+
+    Matrix multiplied_result = matrix_multiply_by_double(result, 1 / matrix_det(result));
+    matrix_free(&result);
+
     return multiplied_result;
 }
 
-Matrix copy(const Matrix matrix) {  // копирование матрицы
-    Matrix result = init_matrix(matrix.cols, matrix.rows);
-    for (unsigned int index = 0; index < matrix.cols * matrix.rows; ++index) {
-        result.values[index] = matrix.values[index];
+Matrix matrix_copy(const Matrix matrix) {
+    Matrix result = matrix_init(matrix.cols, matrix.rows);
+
+    if (result.values == NULL) {
+        return MATRIX_NULL;
     }
+
+    memcpy(result.values, matrix.values, matrix.cols * matrix.rows * sizeof(double));
+
     return result;
 }
 
-Matrix expo(const Matrix matrix, int accuracy) {  // экпонента
+Matrix matrix_exp(const Matrix matrix, int accuracy) {
     if (matrix.cols != matrix.rows) {
-        error_size("Exp", "Matrix should be square");
-        return EMPTY;
+        matrix_error_size("Exp", "Matrix should be square");
+        return MATRIX_NULL;
     }
+
     Matrix new_result, new_powered, multiplied;
-    Matrix result = identity(matrix.rows);
-    Matrix powered = matrix;
+    Matrix result = matrix_identity(matrix.rows);
+    Matrix powered = matrix_copy(matrix);
     int factorial = 1;
+
     for (int acc = 1; acc <= accuracy; ++acc) {
         factorial *= acc;
 
-        new_powered = multiply(powered, matrix);
-        powered = copy(new_powered);
-        free_matrix(&new_powered);
+        new_powered = matrix_multiply(powered, matrix);
+        matrix_free(&powered);
+        powered = matrix_copy(new_powered);
+        matrix_free(&new_powered);
 
-        multiplied = multiply_by_double(powered, 1. / factorial);
+        multiplied = matrix_multiply_by_double(powered, 1. / factorial);
 
-        new_result = add(result, multiplied);
-        result = copy(new_result);
-        free_matrix(&new_result);
-
-        free_matrix(&multiplied);
+        new_result = matrix_add(result, multiplied);
+        matrix_free(&result);
+        result = matrix_copy(new_result);
+        matrix_free(&new_result);
+        matrix_free(&multiplied);
     }
-    free_matrix(&powered);
+
+    matrix_free(&powered);
     return result;
 }
 
 int main() {
     Matrix m1, m2;
 
-    m1 = init_matrix(3, 3);
-    set_matrix_values(&m1);
+    m1 = matrix_init(3, 3);
+    matrix_set_values(&m1);
     printf("\nMatrix 1\n");
-    print_matrix(m1);
+    matrix_print(m1);
 
-    m2 = init_matrix(3, 3);
-    set_matrix_values(&m2);
+    m2 = matrix_init(3, 3);
+    matrix_set_values(&m2);
     printf("Matrix 2\n");
-    print_matrix(m2);
+    matrix_print(m2);
 
     Matrix addition;
-    addition = add(m1, m2);
+    addition = matrix_add(m1, m2);
     printf("\nMatrix addition\n");
-    print_matrix(addition);
-    free_matrix(&addition);
+    matrix_print(addition);
+    matrix_free(&addition);
 
-    Matrix substruction;
-    substruction = substruct(m1, m2);
-    printf("Matrix substruction\n");
-    print_matrix(substruction);
-    free_matrix(&substruction);
+    Matrix subtraction;
+    subtraction = matrix_subtract(m1, m2);
+    printf("Matrix subtraction\n");
+    matrix_print(subtraction);
+    matrix_free(&subtraction);
 
     double determinant;
-    determinant = det(m1);
+    determinant = matrix_det(m1);
     printf("Matrix 1 determinant\n");
     printf("%.2f\n\n", determinant);
-    determinant = det(m2);
+    determinant = matrix_det(m2);
     printf("Matrix 2 determinant\n");
     printf("%.2f\n\n", determinant);
 
     Matrix multiplication1;
-    multiplication1 = multiply_by_double(m1, 5.);
+    multiplication1 = matrix_multiply_by_double(m1, 5.);
     printf("Matrix 1 multiplication\n");
-    print_matrix(multiplication1);
-    free_matrix(&multiplication1);
+    matrix_print(multiplication1);
+    matrix_free(&multiplication1);
 
     Matrix multiplication2;
-    multiplication2 = multiply(m1, m2);
+    multiplication2 = matrix_multiply(m1, m2);
     printf("Matrix 1 and 2 multiplication\n");
-    print_matrix(multiplication2);
-    free_matrix(&multiplication2);
+    matrix_print(multiplication2);
+    matrix_free(&multiplication2);
 
     Matrix trans;
-    trans = transpose(m1);
+    trans = matrix_transpose(m1);
     printf("Matrix 1 transposed\n");
-    print_matrix(trans);
-    free_matrix(&trans);
+    matrix_print(trans);
+    matrix_free(&trans);
 
     Matrix invert;
-    invert = invertible(m1);
+    invert = matrix_invertible(m1);
     printf("Matrix 1 inverted\n");
-    print_matrix(invert);
-    free_matrix(&invert);
+    matrix_print(invert);
+    matrix_free(&invert);
 
-    Matrix exponenta;
-    exponenta = expo(m1, 3);
+    Matrix exponent;
+    exponent = matrix_exp(m1, 3);
     printf("Matrix 1 exponential\n");
-    print_matrix(exponenta);
-    free_matrix(&exponenta);
+    matrix_print(exponent);
+    matrix_free(&exponent);
 
-    free_matrix(&m1);
-    free_matrix(&m2);
+    matrix_free(&m1);
+    matrix_free(&m2);
+
+    return 0;
 }
