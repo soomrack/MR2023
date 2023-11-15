@@ -1,123 +1,98 @@
 #include <math.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <memory>
 #include <iostream>
 #include <algorithm>
-#include <string.h>
+#include <string>
 #include "matrix.hpp"
 
-#define INT_SWAP(a, b) {a ^= b; b ^= a; a ^= b;}
-#define ALL_SWAP(a, b) {size_t size = sizeof(a); while (size--) {INT_SWAP(((char*)&a)[size], ((char*)&b)[size]);}}
 
-using namespace std;
+class MatrixException : public std::exception {
+    private:
+    std::string message;
 
-
-#define MATRIX_DEBUG_FLAG 0
-static void print_debug(string mes)
-{
-    if (MATRIX_DEBUG_FLAG) {
-        cout << mes << endl;
+    public:
+    MatrixException(std::string msg) : message(msg) {}
+    std::string what () {
+        return message;
     }
-}
+};
 
-typedef struct {
-    string name;
-} Error;
+MatrixException OUT_OF_RANGE("OUT_OF_RANGE");
+MatrixException WRONG_CONDITIONS("WRONG_CONDITIONS");
+MatrixException NO_MEMORY_ALLOCATED("NO_MEMORY_ALLOCATED");
 
-Error OUT_OF_RANGE = {"OUT_OF_RANGE"};
-Error WRONG_CONDITIONS = {"WRONG_CONDITIONS"};
-Error BAD_ALLOC = {"BAD_ALLOC"};
-Error DOUBLE_FREE = {"DOUBLE_FREE"};
-Error NO_MEMORY_ALLOCATED= {"NO_MEMORY_ALLOCATED"};
 
-static void print_error(Error err, string mes = "")
+Matrix::Matrix() : rows{0}, cols{0}, items{nullptr} {}
+
+
+Matrix::Matrix(const size_t a, const size_t b) 
+    : rows{a}, cols{b}, items{nullptr}
 {
-    cerr << "[ERROR]: " << err.name << " " << mes << endl;
-}
-
-
-Matrix::Matrix() : rows{0}, cols{0}, items{} {}
-
-
-Matrix::Matrix(const size_t& a, const size_t& b) 
-    : rows{a}, cols{b}, items{}
-{
-    if (rows >= items.max_size() / cols) {
-        print_error(BAD_ALLOC, "Not enough memory!");
+    if (rows == 0 || cols == 0) {
+        rows = 0;
+        cols = 0;
         return;
     }
 
-    try {
-        items.resize(rows*cols);
-    } 
-    catch (std::exception const& e) {
-        print_error(BAD_ALLOC, e.what());
-        rows = 0; cols = 0;
-    }
-}
-
-
-Matrix& Matrix::operator=(std::initializer_list<MatrixItem> lst) 
-{
-    items = lst;
-    return *this;
+    items = new MatrixItem[rows * cols];
 }
 
 
 Matrix::Matrix(const Matrix& A)
+    : rows{A.rows}, cols{A.cols}, items{nullptr}
 {
-    rows = A.rows;
-    cols = A.cols;
+    if (A.items == nullptr) return;
 
-    try {
-        items = A.items;
-    } 
-    catch (std::exception const& e) {
-        print_error(BAD_ALLOC, e.what());
-        rows = 0; cols = 0;
-    }
+    items = new MatrixItem[rows * cols];
+
+    std::copy(A.begin(), A.end(), begin());
+}
+
+
+Matrix::Matrix(Matrix&& A) : rows{A.rows}, cols{A.cols}, items{A.items} {}
+
+
+Matrix& Matrix::operator=(std::initializer_list<MatrixItem> lst) 
+{
+    if (lst.size() != rows * cols) 
+        throw OUT_OF_RANGE;
+
+    std::copy(lst.begin(), lst.end(), begin());
+    
+    return *this;
 }
 
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
-    try {
-        items = A.items;
-        rows = A.rows;
-        cols = A.cols;
+    if (this == &A) return *this;
+    
+    if (items == nullptr) {
+        items = new MatrixItem[A.rows * A.cols];
     } 
-    catch (std::exception const& e) {
-        print_error(BAD_ALLOC, e.what());
+    else if (rows*cols != A.cols*A.rows) {
+        delete[] items;
+        items = new MatrixItem[A.rows * A.cols];
     }
 
+    rows = A.rows;
+    cols = A.cols;
+
+    std::copy(A.begin(), A.end(), begin());
+        
     return *this;
-}
-
-
-Matrix::Matrix(Matrix&& A)
-{
-    try {
-        items = move(A.items);
-        rows = A.rows;
-        cols = A.cols;
-    } 
-    catch (std::exception const& e) {
-        print_error(BAD_ALLOC, e.what());
-    }
 }
 
 
 Matrix& Matrix::operator=(Matrix&& A)
 {
-    try {
-        items = move(A.items);
-        rows = A.rows;
-        cols = A.cols;
-    } 
-    catch (std::exception const& e) {
-        print_error(BAD_ALLOC, e.what());
-    }
+    if (this == &A) return *this;
+    
+    if (items != nullptr)
+        delete[] items;
+
+    rows = A.rows;
+    cols = A.cols;
+    items = A.items;
 
     return *this;
 }
@@ -125,7 +100,7 @@ Matrix& Matrix::operator=(Matrix&& A)
 
 void Matrix::set_zero()
 {
-    fill(items.begin(), items.end(), 0);
+    std::fill(begin(), end(), 0);
 }
 
 
@@ -133,41 +108,44 @@ void Matrix::set_one()
 {
     set_zero();
 
-    for (size_t idx = 0; idx <cols; idx++)
+    for (size_t idx = 0; idx < cols; idx++)
         items[idx + idx * cols] = 1.0;
 }
 
 
-const MatrixItem& Matrix::operator()(const size_t& row, const size_t& col) const
+const MatrixItem& Matrix::operator[](const size_t row, const size_t col) const
 {
+    if (row >= rows || col >= cols)
+        throw WRONG_CONDITIONS;
+
     return items[row * cols + col];
 }
 
 
-MatrixItem& Matrix::operator()(const size_t& row, const size_t& col)
+MatrixItem& Matrix::operator[](const size_t row, const size_t col)
 {
+    if (row >= rows || col >= cols)
+        throw WRONG_CONDITIONS;
+    
     return items[row * cols + col];
 }
 
 
-const size_t& Matrix::Rows() const
+const size_t Matrix::get_rows() const
 {
     return rows;
 }
 
 
-const size_t& Matrix::Cols() const
+const size_t Matrix::get_cols() const
 {
     return cols;
 }
 
-
 Matrix& Matrix::operator+=(const Matrix& A)
 {
-    if ((rows != A.rows) || (cols != A.cols))  {
-        print_error(WRONG_CONDITIONS, "Sum error!");
-        return *this;
-    }
+    if ((rows != A.rows) || (cols != A.cols))
+        throw WRONG_CONDITIONS;
     
     for (size_t idx = 0; idx < (rows * cols); idx++) 
         items[idx] += A.items[idx];
@@ -177,53 +155,37 @@ Matrix& Matrix::operator+=(const Matrix& A)
 
 Matrix operator+(const Matrix& A, const Matrix& B)
 {
-    if ((B.rows != A.rows) || (B.cols != A.cols))  {
-        print_error(WRONG_CONDITIONS, "Sum error!");
-        return Matrix();
-    }
-    
-    Matrix Sum = A;
-    
-    if (Sum.items.size() == 0) {
-        print_error(BAD_ALLOC, "Sum error!");
-        return Matrix();
-    }
-
-    Sum += B;
-
-    print_debug("simple +");
-
-    return Sum;
+    Matrix sum = A;
+    sum += B;
+    return sum;
 }
 
-Matrix& operator+(Matrix&& A, const Matrix& B)
+Matrix operator+(Matrix&& A, const Matrix& B)
 {
-    A += B;
-    print_debug("opt1 +");
-    return A;
+    Matrix sum = A;
+    sum += B;
+    return sum;
 }
 
-Matrix& operator+(const Matrix& A, Matrix&& B)
+Matrix operator+(const Matrix& A, Matrix&& B)
 {
-    B += A;
-    print_debug("opt2 +");
-    return B;
+    Matrix sum = B;
+    sum += A;
+    return sum;
 }
 
-Matrix& operator+(Matrix&& A, Matrix&& B)
+Matrix operator+(Matrix&& A, Matrix&& B)
 {
-    A += B;
-    print_debug("opt3 +");
-    return A;
+    Matrix sum = A;
+    sum += B;
+    return sum;
 }
 
 
 Matrix& Matrix::operator-=(const Matrix& A)
 {
-    if ((rows != A.rows) || (cols != A.cols))  {
-        print_error(WRONG_CONDITIONS, "Sum error!");
-        return *this;
-    }
+    if ((rows != A.rows) || (cols != A.cols))  
+        throw WRONG_CONDITIONS;
     
     for (size_t idx = 0; idx < (rows * cols); idx++) 
         items[idx] -= A.items[idx];
@@ -233,87 +195,62 @@ Matrix& Matrix::operator-=(const Matrix& A)
 
 Matrix operator-(const Matrix& A, const Matrix& B)
 {
-    if ((B.rows != A.rows) || (B.cols != A.cols))  {
-        print_error(WRONG_CONDITIONS, "Sum error!");
-        return Matrix();
-    }
+    Matrix sub = A;
+    sub -= B;
+    return sub;
+}
+
+Matrix operator-(Matrix&& A, const Matrix& B)
+{
+    Matrix sub = A;
+    sub -= B;
+    return sub;
+}
+
+Matrix operator-(const Matrix& A, Matrix&& B)
+{
+    Matrix sub = B;
+    sub -= A;
+    return sub;
+}
+
+Matrix operator-(Matrix&& A, Matrix&& B)
+{
+    Matrix sub = A;
+    sub -= B;
+    return sub;
+}
+
+
+Matrix& Matrix::mult_to(Matrix& trg, const Matrix& A) const
+{
+    if (&trg == this || &trg == &A)
+        throw WRONG_CONDITIONS;
     
-    Matrix Sum = A;
-    
-    if (Sum.items.size() == 0) {
-        print_error(BAD_ALLOC, "Sum error!");
-        return Matrix();
-    }
+    if ((cols != A.rows) || (A.cols != trg.cols) || (rows != trg.rows))
+        throw WRONG_CONDITIONS;
 
-    Sum -= B;
-
-    print_debug("simple -");
-
-    return Sum;
-}
-
-Matrix& operator-(Matrix&& A, const Matrix& B)
-{
-    A -= B;
-    print_debug("opt1 -");
-    return A;
-}
-
-Matrix& operator-(const Matrix& A, Matrix&& B)
-{
-    B -= A;
-    print_debug("opt2 -");
-    return B;
-}
-
-Matrix& operator-(Matrix&& A, Matrix&& B)
-{
-    A -= B;
-    print_debug("opt3 -");
-    return A;
-}
-
-
-Matrix& matrix_mult_to(Matrix& Save, const Matrix& A, const Matrix& B)
-{
-    if ((A.cols != B.rows) || (B.cols != Save.cols) || (A.rows != Save.rows)) {
-        print_error(WRONG_CONDITIONS, "Mult error!");
-        return Save;
-    }
-
-    for (size_t num_row = 0; num_row < A.rows; num_row++) {
-        for (size_t num_col = 0; num_col < B.cols; num_col++) {
+    for (size_t num_row = 0; num_row < rows; num_row++) {
+        for (size_t num_col = 0; num_col < A.cols; num_col++) {
             MatrixItem sum = 0;
 
-            for (size_t num_sum = 0; num_sum < B.rows; num_sum++) {
-                sum += A.items[num_row * A.cols + num_sum] * B.items[num_sum * B.cols + num_col];
+            for (size_t num_sum = 0; num_sum < A.rows; num_sum++) {
+                sum += items[num_row * cols + num_sum] * A.items[num_sum * A.cols + num_col];
             }
 
-            Save.items[num_row * Save.cols + num_col] = sum;
+            trg.items[num_row * trg.cols + num_col] = sum;
         }
     }
 
-    return Save;
+    return trg;
 }
 
 
 Matrix Matrix::operator*(const Matrix& A) const
 {
-    if (cols != A.rows) {
-        print_error(WRONG_CONDITIONS);
-        return Matrix();
-    }
-    
-    Matrix Mult(rows, A.cols);
-
-    if (Mult.items.size() == 0) {
-        print_error(BAD_ALLOC, "Mult error!");
-        return Matrix();
-    }
-
-    matrix_mult_to(Mult, *this, A);
-
-    return Mult;
+    Matrix mult(rows, A.cols);
+    mult_to(mult, A);
+    return mult;
 }
 
 
@@ -335,49 +272,33 @@ Matrix& Matrix::operator*=(const MatrixItem& factor)
 
 Matrix Matrix::operator*(const MatrixItem& factor)
 {
-    Matrix Mult = *this;
-
-    if (Mult.items.size() == 0) {
-        print_error(BAD_ALLOC, "Mult error!");
-        return Mult;
-    }
-
-    Mult *= factor;
-
-    return Mult;
+    Matrix mult = *this;
+    mult *= factor;
+    return mult;
 }
 
 
 Matrix Matrix::T()
 {
-    Matrix Tran(cols, rows);
-
-    if (Tran.items.size() == 0) {
-        print_error(BAD_ALLOC, "Transpose error!");
-        return Matrix();
-    }
+    Matrix trn(cols, rows);
 
     for (size_t num_row = 0; num_row < cols; num_row++) 
         for (size_t num_col = 0; num_col < rows; num_col++) 
-            Tran.items[num_row * Tran.cols + num_col] = items[num_col * cols + num_row];
+            trn.items[num_row * trn.cols + num_col] = items[num_col * cols + num_row];
 
-    return Tran;
+    return trn;
 }
 
 
 double Matrix::det() const
 {
-    if (cols != rows) {
-        print_error(WRONG_CONDITIONS);
-        return 0;
-    }
+    if (cols != rows) 
+        throw WRONG_CONDITIONS;
+
+    if (items == nullptr)
+        throw WRONG_CONDITIONS;
 
     Matrix mat = *this;
-
-    if (mat.items.size() == 0) {
-        print_error(BAD_ALLOC, "Det error!");
-        return 0;
-    }
 
     double det = 1.0;
     int pivot = 0;
@@ -393,7 +314,7 @@ double Matrix::det() const
 
         if (pivot != num_col) {
             for (size_t idx = 0; idx < mat.rows; idx++) 
-                ALL_SWAP(mat.items[num_col * mat.cols + idx], mat.items[pivot * mat.cols + idx]);
+                std::swap(mat.items[num_col * mat.cols + idx], mat.items[pivot * mat.cols + idx]);
 
             det *= -1;
         }
@@ -417,54 +338,40 @@ double Matrix::det() const
 }
 
 
-MatrixItem Matrix::max() const
+Matrix Matrix::expm(const MatrixItem& accuracy) const
 {
-    MatrixItem max = 0;
-    MatrixItem num = 0;
+    if (cols != rows) 
+        throw WRONG_CONDITIONS;
 
-    for (size_t idx = 0; idx < (rows * cols); idx++) {
-        num = fabs(items[idx]);
-        if (num > max) max = num;
-    }
-
-    return max;
-}
-
-
-Matrix Matrix::expm(const double& accuracy) const
-{
-    if (cols != rows) {
-        print_error(WRONG_CONDITIONS, "Det error!");
-        return Matrix();
-    }
+    if (items == nullptr)
+        throw WRONG_CONDITIONS;
 
     Matrix sum(rows, cols);
     Matrix term(rows, cols);
     Matrix temp(rows, cols);
 
-    if (sum.items.size() == 0 || term.items.size() == 0 || temp.items.size() == 0) {
-        print_error(BAD_ALLOC, "Det error!");
-        return Matrix();
-    }
-
     term.set_one();
-    sum.set_zero();
-
-    sum += term;
+    sum.set_one();
 
     for(size_t count = 1; count < 200; count++) {
         term *= (1.0 / count);
-
-        matrix_mult_to(temp, term, *this);
-        term.items.swap(temp.items);
+        mult_to(temp, term);
+        std::swap(term.items, temp.items);
 
         sum += term;
 
-        if (term.max() < accuracy) break;
+        if (*std::max_element(term.begin(), term.end(), [](const MatrixItem& a, const MatrixItem& b) {return std::fabs(a) < std::fabs(b);}) < accuracy) 
+            return sum;
     }
 
     return sum;
 }
+
+
+MatrixItem* Matrix::begin() {return items;}
+MatrixItem* Matrix::end() {return items + rows * cols;}
+const MatrixItem* Matrix::begin() const {return items;}
+const MatrixItem* Matrix::end() const {return items + rows * cols;}
 
 
 bool Matrix::operator==(const Matrix& A) const
@@ -481,19 +388,22 @@ bool Matrix::operator==(const Matrix& A) const
 }
 
 
-ostream& operator<<(ostream& os, const Matrix& A)
+std::ostream& operator<<(std::ostream& os, const Matrix& A)
 {
-    for (size_t row = 0; row < A.Rows(); row++) {
-        for (size_t col = 0; col < A.Cols(); col++) {
-            os << A(row, col) << "\t";
+    for (size_t row = 0; row < A.get_rows(); row++) {
+        for (size_t col = 0; col < A.get_cols(); col++) {
+            os << A[row, col] << "\t";
         }
-        os << endl;
+        os << std::endl;
     }
 
-    os << endl;
+    os << std::endl;
 
     return os;
 }
 
 
-Matrix::~Matrix() {}
+Matrix::~Matrix() 
+{
+    delete[] items;
+}
