@@ -70,16 +70,16 @@ void Matrix::set(size_t row, size_t col, matrix_item item) {
 
 
 void Matrix::print() {
+    if (data == nullptr) throw MatrixException("Bad matrix error");
+
     std::cout.precision(2);
-    if (data != nullptr) {
-        for (size_t row = 0; row < rows; ++row) {
-            for (size_t col = 0; col < cols; ++col) {
-                std::cout << std::fixed << data[row * cols + col] << "\t";
-            }
-            std::cout << std::endl;
+    for (size_t row = 0; row < rows; ++row) {
+        for (size_t col = 0; col < cols; ++col) {
+            std::cout << std::fixed << data[row * cols + col] << "\t";
         }
         std::cout << std::endl;
-    } else throw MatrixException("Bad matrix error");
+    }
+    std::cout << std::endl;
 }
 
 
@@ -132,8 +132,8 @@ Matrix &Matrix::operator=(Matrix &&M) noexcept {
 
 
 Matrix Matrix::operator+(const Matrix &M) const {
-    if (rows != M.rows || cols != M.cols)
-        throw MatrixException("Wrong number of columns or rows");
+    if (data == nullptr) throw MatrixException("Bad matrix error");
+    if (rows != M.rows || cols != M.cols) throw MatrixException("Wrong number of columns or rows");
 
     Matrix sum = {rows, cols, UNFILLED};
     for (size_t idx = 0; idx < rows * cols; idx++)
@@ -143,8 +143,8 @@ Matrix Matrix::operator+(const Matrix &M) const {
 
 
 Matrix Matrix::operator-(const Matrix &M) const {
-    if (rows != M.rows || cols != M.cols)
-        throw MatrixException("Wrong number of columns or rows");
+    if (data == nullptr) throw MatrixException("Bad matrix error");
+    if (rows != M.rows || cols != M.cols) throw MatrixException("Wrong number of columns or rows");
 
     Matrix sub = {rows, cols, UNFILLED};
     for (size_t idx = 0; idx < rows * cols; idx++)
@@ -162,8 +162,8 @@ Matrix Matrix::operator*(double scalar) const {
 
 
 Matrix Matrix::operator*(const Matrix &M) const {
-    if (cols != M.rows)
-        throw MatrixException("Wrong number of columns or rows");
+    if (data == nullptr) throw MatrixException("Bad matrix error");
+    if (cols != M.rows) throw MatrixException("Wrong number of columns or rows");
 
     Matrix product = {rows, cols, ZEROS};
     for (size_t this_row = 0; this_row < rows; this_row++)
@@ -185,8 +185,9 @@ Matrix Matrix::T() {
 
 
 double Matrix::det() {
-    if (cols != rows)
-        throw MatrixException("Wrong number of columns or rows");
+    if (data == nullptr) throw MatrixException("Bad matrix error");
+    if (cols != rows) throw MatrixException("Wrong number of columns or rows");
+
     if (cols == 1)
         return (double) data[0];
     if (cols == 2)
@@ -211,8 +212,8 @@ unsigned long long Matrix::factorial(unsigned int value) {
 
 
 Matrix Matrix::exp(unsigned int n) const {
-    if (cols != rows) throw MatrixException("Wrong number of columns or rows");
     if (data == nullptr) throw MatrixException("Bad matrix error");
+    if (cols != rows) throw MatrixException("Wrong number of columns or rows");
 
     if (n >= 1) {
         Matrix exponent{rows, cols, IDENTITY};
