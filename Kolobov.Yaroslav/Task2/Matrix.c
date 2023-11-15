@@ -152,7 +152,13 @@ struct Matrix matrix_multiplication(const struct Matrix A, const struct Matrix B
         matrix_error(FALSE_ROWS_COLS);
         return MATRIX_NULL;
     }
-	for (int row = 0; row < C.rows; row++){
+
+    if (C.cols != B.cols || C.rows != B.rows){
+        matrix_error(FALSE_ROWS_COLS);
+        return MATRIX_NULL;
+    }
+	
+    for (int row = 0; row < C.rows; row++){
         for (int col = 0; col < C.cols; col++){
             for (int idx = 0; idx < A.cols; idx++){
                 C.data[row * C.cols + col] += A.data[row * A.cols + idx] * B.data[idx * B.cols + col];
@@ -229,15 +235,16 @@ int main()
     struct Matrix C;
     A = matrix_fill(2, 2, (double[]){1., 2., 3., 4.});
     B = matrix_fill(2, 2, (double[]){2., 1., 2., 3.});
-    C = matrix_create(2, 2);
+    C = matrix_fill(2, 2, (double[]){0., 0., 0., 0.});
+    // C = matrix_create(2, 2);
 
-    // matrix_multiplication(A, B, C);
+    matrix_multiplication(A, B, C);
     // double det = matrix_determinant(A);
 
     // matrix_print(A);
     // printf("Matrix determinant = %f\n", det);
     
-    matrix_transposition(A, C);
+    // matrix_transposition(A, C);
 
     // matrix_print(A);    
     // matrix_print(B);
