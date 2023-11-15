@@ -48,7 +48,7 @@ struct Matrix matrix_allocation(const size_t cols, const size_t rows)
     return A;
     }
 
-    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) {
+    if (rows >= SIZE_MAX / sizeof(MatrixData) / cols) {
         matrix_error(MEM_ALLOC_ERROR);
         return MATRIX_NULL; 
     }
@@ -56,7 +56,7 @@ struct Matrix matrix_allocation(const size_t cols, const size_t rows)
     struct Matrix A = {.cols = cols, .rows = rows, .data = NULL};
     A.data = malloc(A.cols * A.rows * sizeof(MatrixData));
     
-    if (M.data == NULL) {
+    if (A.data == NULL) {
         matrix_error(MEM_ALLOC_ERROR);
         return MATRIX_NULL;
     }
@@ -81,7 +81,7 @@ struct Matrix matrix_fill(const size_t cols, size_t rows, const MatrixData *data
 }
 
 
-int matrix_add(struct Matrix A, struct Matrix B) // Adding second matrix to first matrix
+struct Matrix matrix_add(struct Matrix A, struct Matrix B) // Adding second matrix to first matrix
 {
     if (A.cols != B.cols || A.rows != B.rows){
         matrix_error(FALSE_ROWS_COLS);
@@ -110,7 +110,7 @@ struct Matrix matrix_sum(struct Matrix A, struct Matrix B, struct Matrix C) // �
 }
 
 
-int matrix_substraction(struct Matrix A, struct Matrix B) // Substracting second matrix from first matrix
+struct Matrix matrix_substraction(struct Matrix A, struct Matrix B) // Substracting second matrix from first matrix
 {
     if (A.cols != B.cols || A.rows != B.rows){   
         matrix_error(FALSE_ROWS_COLS);
@@ -127,7 +127,7 @@ struct Matrix matrix_difference(struct Matrix A, struct Matrix B, struct Matrix 
 {
     if (A.cols != B.cols != C.cols || A.rows != B.rows != C.rows){
         matrix_error(FALSE_ROWS_COLS);
-        return MATRIX_NULL;;
+        return MATRIX_NULL;
     }
 
     for (int pos = 0; pos < A.cols * A.rows; ++pos){
@@ -138,17 +138,29 @@ struct Matrix matrix_difference(struct Matrix A, struct Matrix B, struct Matrix 
 }
 
 
-struct Matrix matrix_multiplication() // Multiplication of one matrix by another
+struct Matrix matrix_scalar_multiplication(const struct Matrix A, const double scalar)
 {
-
+	for (size_t idx = 0; idx < A.cols * A.rows; idx++) {
+		A.data[idx] *= scalar;
+	}
+	return A;    
 }
 
-
-struct Matrix matrix_product() // Сreating a matrix containing the product of the matrices
+struct Matrix matrix_multiplication(const struct Matrix A, const struct Matrix B, const struct Matrix C) // Multiplication of one matrix by another
 {
-
+    if (A.rows != B.cols){
+        matrix_error(FALSE_ROWS_COLS);
+        return MATRIX_NULL;
+    }
+	for (int row = 0; row < C.rows; row++){
+        for (int col = 0; col < C.cols; col++){
+            for (int idx = 0; idx < A.cols; idx++){
+                C.data[row * C.cols + col] += A.data[row * A.cols + idx] * B.data[idx * B.cols + col];
+                };
+        }
+    }
+    return C;
 }
-
 
 struct Matrix matrix_division() // Dividing one matrix by another
 {
@@ -156,21 +168,32 @@ struct Matrix matrix_division() // Dividing one matrix by another
 }
 
 
-struct Matrix matrix_quotient() // Сreating a matrix containing the quotient of the matrices
+double matrix_determinant(const struct Matrix A)
 {
+	if ((A.rows != A.rows) || (A.cols > 3) || (A.rows > 3)){
+        matrix_error(FALSE_MATRIX);
+        return 1;
+    }
 
+	if (A.cols == 2) return (A.data[0] * A.data[3] - A.data[1] * A.data[2]);
+
+	if (A.cols == 3) {
+		return (A.data[0] * A.data[4] * A.data[8]) + \
+			(A.data[1] * A.data[5] * A.data[6]) + \
+			(A.data[2] * A.data[3] * A.data[7]) - \
+			(A.data[2] * A.data[4] * A.data[6]) - \
+			(A.data[0] * A.data[5] * A.data[7]) - \
+			(A.data[1] * A.data[3] * A.data[8]);
+	}
 }
 
 
-struct Matrix matrix_determinant()
+struct Matrix matrix_transposition(const struct Matrix A, const struct Matrix C)
 {
-
-}
-
-
-struct Matrix matrix_transposition()
-{
-
+	for (size_t rows = 0; rows < A.rows; rows++)
+		for (size_t cols = 0; cols < A.cols; cols++)
+			C.data[rows * A.rows + cols] = A.data[cols * A.cols + rows];
+	return C;
 }
 
 
@@ -204,13 +227,21 @@ int main()
     struct Matrix A;
     struct Matrix B;
     struct Matrix C;
-    A = matrix_create(2, 2, (double[]){1., 2., 3., 4.});
-    B = matrix_create(2, 2, (double[]){1.5, 1., 2., 0.33});
-    C = matrix_create(2, 2, (double[]){0., 0., 0., 0.});
+    A = matrix_fill(2, 2, (double[]){1., 2., 3., 4.});
+    B = matrix_fill(2, 2, (double[]){2., 1., 2., 3.});
+    C = matrix_create(2, 2);
 
-    matrix_substraction(A, B);
+    // matrix_multiplication(A, B, C);
+    // double det = matrix_determinant(A);
 
-    matrix_print(A);
+    // matrix_print(A);
+    // printf("Matrix determinant = %f\n", det);
+    
+    matrix_transposition(A, C);
+
+    // matrix_print(A);    
+    // matrix_print(B);
+    matrix_print(C);
 
     matrix_free(&A);
     matrix_free(&B);
