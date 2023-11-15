@@ -16,6 +16,8 @@ private:
 
     Matrix& mult_to(Matrix& trg, const Matrix& A) const;
 
+    void set_null();
+
 public:
     Matrix();
     Matrix(const size_t a, const size_t b);
@@ -53,8 +55,6 @@ public:
     Matrix expm(const double& accuracy) const;
 
     bool operator==(const Matrix& A) const;
-
-    void del();
 
     MatrixItem max();
 

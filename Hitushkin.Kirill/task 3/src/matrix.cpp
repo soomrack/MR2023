@@ -51,11 +51,11 @@ Matrix::Matrix(const Matrix& A)
 // TODO Надо удалить в A items
 Matrix::Matrix(Matrix&& A) : rows{A.rows}, cols{A.cols}, items{A.items} 
 {
-    A.del();
+    A.set_null();
 }
 
 
-void Matrix::del()
+void Matrix::set_null()
 {
     items = nullptr;
     rows = 0;
@@ -115,7 +115,7 @@ Matrix& Matrix::operator=(Matrix&& A)
     items = A.items;
 
     // TODO delete A
-    A.del();
+    A.set_null();
 
     return *this;
 }
