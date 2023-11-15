@@ -256,7 +256,7 @@ int main()
 	det(A);
 	printf("%4.2f \n", det(A));
 	
-	printf("Exponent of the first matrix\n");
+	printf("\nExponent of the first matrix\n");
 	sum_for_matrix_exp(A, 2);
 	C3 = matrix_exp(A, 2);
 	matrix_print(C3);
