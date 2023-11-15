@@ -39,8 +39,6 @@ Matrix::Matrix(const unsigned int n) {
         rows = n;
         cols = n;
         data = new matrix_item[n * n];
-        if (data == nullptr)
-            throw MatrixException("Memory allocation error");
     } else throw MatrixException("Memory allocation error");
 }
 
@@ -50,8 +48,6 @@ Matrix::Matrix(size_t rows_amount, size_t cols_amount, MatrixType matrix_type) {
         throw MatrixException("Memory allocation error");
     if (rows_amount != 0 || cols_amount != 0) {
         data = new matrix_item[rows_amount * cols_amount];
-        if (data == nullptr)
-            throw MatrixException("Memory allocation error");
         rows = rows_amount;
         cols = cols_amount;
         fill(matrix_type);
@@ -92,8 +88,6 @@ Matrix::Matrix(const Matrix &M) {
         rows = M.rows;
         cols = M.cols;
         data = new matrix_item[rows * cols];
-        if (data == nullptr)
-            throw MatrixException("Memory allocation error");
         std::copy(M.data, M.data + rows * cols, data);
     } else throw MatrixException("Memory allocation error");
 }
@@ -117,8 +111,6 @@ Matrix &Matrix::operator=(const Matrix &M) {
         rows = M.rows;
         cols = M.cols;
         data = new matrix_item[rows * cols];
-        if (data == nullptr)
-            throw MatrixException("Memory allocation error");
         std::copy(M.data, M.data + rows * cols, data);
     }
     return *this;
@@ -144,9 +136,8 @@ Matrix Matrix::operator+(const Matrix &M) const {
         throw MatrixException("Wrong number of columns or rows");
 
     Matrix sum = {rows, cols, UNFILLED};
-    if (sum.data != nullptr)
-        for (size_t idx = 0; idx < rows * cols; idx++)
-            sum.data[idx] = this->data[idx] + M.data[idx];
+    for (size_t idx = 0; idx < rows * cols; idx++)
+        sum.data[idx] = this->data[idx] + M.data[idx];
     return sum;
 }
 
@@ -156,18 +147,16 @@ Matrix Matrix::operator-(const Matrix &M) const {
         throw MatrixException("Wrong number of columns or rows");
 
     Matrix sub = {rows, cols, UNFILLED};
-    if (sub.data != nullptr)
-        for (size_t idx = 0; idx < rows * cols; idx++)
-            sub.data[idx] = this->data[idx] - M.data[idx];
+    for (size_t idx = 0; idx < rows * cols; idx++)
+        sub.data[idx] = this->data[idx] - M.data[idx];
     return sub;
 }
 
 
 Matrix Matrix::operator*(double scalar) const {
     Matrix product = {rows, cols, UNFILLED};
-    if (product.data != nullptr)
-        for (size_t idx = 0; idx < rows * cols; idx++)
-            product.data[idx] = data[idx] * scalar;
+    for (size_t idx = 0; idx < rows * cols; idx++)
+        product.data[idx] = data[idx] * scalar;
     return product;
 }
 
@@ -177,22 +166,20 @@ Matrix Matrix::operator*(const Matrix &M) const {
         throw MatrixException("Wrong number of columns or rows");
 
     Matrix product = {rows, cols, ZEROS};
-    if (product.data != nullptr)
-        for (size_t this_row = 0; this_row < rows; this_row++)
-            for (size_t M_col = 0; M_col < M.cols; M_col++)
-                for (size_t idx = 0; idx < cols; idx++)
-                    product.data[this_row * cols + M_col] +=
-                            data[this_row * cols + idx] * M.data[idx * M.cols + M_col];
+    for (size_t this_row = 0; this_row < rows; this_row++)
+        for (size_t M_col = 0; M_col < M.cols; M_col++)
+            for (size_t idx = 0; idx < cols; idx++)
+                product.data[this_row * cols + M_col] +=
+                        data[this_row * cols + idx] * M.data[idx * M.cols + M_col];
     return product;
 }
 
 
 Matrix Matrix::T() {
     Matrix transposed = {cols, rows, UNFILLED};
-    if (transposed.data != nullptr)
-        for (size_t row = 0; row < rows; row++)
-            for (size_t col = 0; col < cols; col++)
-                transposed.data[row * rows + col] = data[col * cols + row];
+    for (size_t row = 0; row < rows; row++)
+        for (size_t col = 0; col < cols; col++)
+            transposed.data[row * rows + col] = data[col * cols + row];
     return transposed;
 }
 
