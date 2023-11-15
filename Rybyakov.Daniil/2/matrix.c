@@ -141,7 +141,7 @@ Matrix matrix_multiply(const Matrix A, const Matrix B)
 }
 
 
-Matrix matrix_det(const Matrix matrix) 
+MatrixItem matrix_det(const Matrix matrix) 
 {
     if (matrix.cols != matrix.rows) {
         matrix_errorofsize("Getting determinant", "Matrix should be square");
@@ -227,9 +227,8 @@ Matrix matrix_expo(const Matrix matrix, size_t accuracy)
 
     Matrix result_help, pow_help, multiplied;
     Matrix result = matrix_one(matrix.rows);
-    if (result.data == NULL) return MATRIX_ZERO;
     Matrix pow = matrix_one(matrix.rows);
-    if (pow.data == NULL) return MATRIX_ZERO;
+    if (result.data == NULL || pow.data == NULL) return MATRIX_ZERO;
     int factorial = 1;
 
     for (size_t acc = 1; acc <= accuracy; ++acc) {
@@ -237,37 +236,39 @@ Matrix matrix_expo(const Matrix matrix, size_t accuracy)
 
         pow_help = matrix_multiply(pow, matrix);
         if (pow_help.data == NULL) {
-            matrix_memory_clear(&pow_help);
-            break
+            return MATRIX_ZERO;
+            break;
         }
         matrix_memory_clear(&pow);
         pow = matrix_copy(pow_help);
         if (pow.data == NULL) {
-            matrix_memory_clear(&pow);
-            break
+            return MATRIX_ZERO;
+            break;
         }
 
         matrix_memory_clear(&pow_help);
 
         multiplied = matrix_multiply_on_number(pow, 1. / factorial);
         if (multiplied.data == NULL) {
-            matrix_memory_clear(&multiplied);
-            break
+            return MATRIX_ZERO;
+            break;
         }
         result_help = matrix_sum(result, multiplied);
         if (result_help.data == NULL) {
-            matrix_memory_clear(&result_help);
-            break
+            return MATRIX_ZERO;
+            break;
         }
         result = matrix_copy(result_help);
         if (result.data == NULL) {
-            matrix_memory_clear(&result);
-            break
+            return MATRIX_ZERO;
+            break;
         }
-
-        matrix_memory_clear(&result_help);
-        matrix_memory_clear(&multiplied);
     }
+    matrix_memory_clear(&pow_help);
+    matrix_memory_clear(&pow);
+    matrix_memory_clear(&multiplied);
+    matrix_memory_clear(&result_help);
+    matrix_memory_clear(&result);
     matrix_memory_clear(&pow);
     return result;
 }
