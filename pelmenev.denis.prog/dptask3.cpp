@@ -28,6 +28,7 @@ public:
     Matrix& operator+(const Matrix& A);
     Matrix& operator-(const Matrix& A);
     Matrix& operator*(const Matrix& B);
+    Matrix& operator*(const double& coeff);
 public:
     void fill(std::vector <MatrixItem> values);
     void free();
@@ -216,6 +217,19 @@ Matrix& Matrix::operator*(const Matrix& B)
         for (size_t colB = 0; colB < B.cols; ++colB)
             for (size_t colA = 0; colA < cols; ++colA)
                 result->data[result->cols * rowA + colB] += data[colA + rowA * cols] * B.data[B.cols * colA + colB];
+    
+    return *result;
+}
+
+
+Matrix& Matrix::operator*(const double& coeff)
+{
+    if (data == nullptr) return;
+
+    Matrix *result = new Matrix(*this);
+
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        result->data[idx] = data[idx] * coeff;
     
     return *result;
 }
