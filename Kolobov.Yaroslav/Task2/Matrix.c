@@ -15,6 +15,30 @@ struct Matrix{
 
 
 const struct Matrix MATRIX_NULL = {.cols = 0, .rows = 0, .data = NULL}; 
+enum ErrorType { MEM_ALLOC_ERROR, FALSE_MATRIX, FALSE_ROWS_COLS, EMPTY_MATRIX };
+
+
+void matrix_error(enum ErrorType error)
+{
+    switch (error)
+    {
+        case MEM_ALLOC_ERROR:
+            printf("memory wasn't allocated\n");
+            break;
+        case FALSE_MATRIX:
+            printf("matrix input is incorrect or difficult to calculate\n");
+            break;
+        case FALSE_ROWS_COLS:
+            printf("the number of rows or columns in the matrices is incorrect\n");
+            break;
+        case EMPTY_MATRIX:
+            printf("Matrix are empty\n");
+            break;
+        default:
+            printf("undeclared error\n");
+            break;
+    }
+}
 
 
 struct Matrix matrix_allocation(const size_t cols, const size_t rows)
@@ -24,15 +48,33 @@ struct Matrix matrix_allocation(const size_t cols, const size_t rows)
     return A;
     }
 
+    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) {
+        matrix_error(MEM_ALLOC_ERROR);
+        return MATRIX_NULL; 
+    }
+
     struct Matrix A = {.cols = cols, .rows = rows, .data = NULL};
     A.data = malloc(A.cols * A.rows * sizeof(MatrixData));
+    
+    if (M.data == NULL) {
+        matrix_error(MEM_ALLOC_ERROR);
+        return MATRIX_NULL;
+    }
+    
+    return A;
+}
+
+struct Matrix matrix_create(const size_t cols, const size_t rows)
+{
+    struct Matrix A = matrix_allocation(cols, rows);
     return A;
 }
 
 
-struct Matrix matrix_create(const size_t cols, size_t rows, const MatrixData *data)
+
+struct Matrix matrix_fill(const size_t cols, size_t rows, const MatrixData *data)
 {
-    struct Matrix A = matrix_allocation(cols, rows);
+    struct Matrix A = matrix_create(cols, rows);
     
     memcpy(A.data, data, rows * cols * sizeof(MatrixData));
     return A;
@@ -41,8 +83,11 @@ struct Matrix matrix_create(const size_t cols, size_t rows, const MatrixData *da
 
 int matrix_add(struct Matrix A, struct Matrix B) // Adding second matrix to first matrix
 {
-    if (A.cols != B.cols || A.rows != B.rows) return 1;
-    
+    if (A.cols != B.cols || A.rows != B.rows){
+        matrix_error(FALSE_ROWS_COLS);
+        return MATRIX_NULL;
+    }
+
     for (int pos = 0; pos != A.rows * A.cols; ++pos){
         A.data[pos]+=B.data[pos];
     }
@@ -52,8 +97,9 @@ int matrix_add(struct Matrix A, struct Matrix B) // Adding second matrix to firs
 
 struct Matrix matrix_sum(struct Matrix A, struct Matrix B, struct Matrix C) // Сreating a matrix containing the sum of the matrices
 {
-    if (A.cols != B.cols != C.cols || A.rows != B.rows != C.rows){ // Как сделать ошибку
-        printf("Different matrix size\n");
+    if (A.cols != B.cols != C.cols || A.rows != B.rows != C.rows){ 
+        matrix_error(FALSE_ROWS_COLS);
+        return MATRIX_NULL; 
     }
 
     for (int pos = 0; pos < A.cols * A.rows; ++pos){
@@ -66,7 +112,10 @@ struct Matrix matrix_sum(struct Matrix A, struct Matrix B, struct Matrix C) // �
 
 int matrix_substraction(struct Matrix A, struct Matrix B) // Substracting second matrix from first matrix
 {
-    if (A.cols != B.cols || A.rows != B.rows) return 1;   
+    if (A.cols != B.cols || A.rows != B.rows){   
+        matrix_error(FALSE_ROWS_COLS);
+        return MATRIX_NULL;
+    }
 
     for (int pos = 0; pos < A.cols * B.cols; ++pos){
         A.data[pos]-=B.data[pos];
@@ -76,8 +125,9 @@ int matrix_substraction(struct Matrix A, struct Matrix B) // Substracting second
 
 struct Matrix matrix_difference(struct Matrix A, struct Matrix B, struct Matrix C) // Сreating a matrix containing the difference of the matrices
 {
-    if (A.cols != B.cols != C.cols || A.rows != B.rows != C.rows){ // Как сделать ошибку
-        printf("Different matrix size\n");
+    if (A.cols != B.cols != C.cols || A.rows != B.rows != C.rows){
+        matrix_error(FALSE_ROWS_COLS);
+        return MATRIX_NULL;;
     }
 
     for (int pos = 0; pos < A.cols * A.rows; ++pos){
