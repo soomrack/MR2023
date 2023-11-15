@@ -14,6 +14,8 @@ private:
     const MatrixItem* begin() const;
     const MatrixItem* end() const;
 
+    Matrix& mult_to(Matrix& trg, const Matrix& A) const;
+
 public:
     Matrix();
     Matrix(const size_t a, const size_t b);
@@ -32,13 +34,12 @@ public:
     MatrixItem& operator[](const size_t row, const size_t col);
     const MatrixItem& operator[](const size_t row, const size_t col) const;
 
-    const size_t get_rows() const;
-    const size_t get_cols() const;
+    size_t get_rows() const;
+    size_t get_cols() const;
 
     Matrix& operator+=(const Matrix& A);
     Matrix& operator-=(const Matrix& A);
 
-    Matrix& mult_to(Matrix& trg, const Matrix& A) const;
     Matrix operator*(const Matrix& A) const;
     Matrix& operator*=(const Matrix& A);
 
@@ -53,17 +54,17 @@ public:
 
     bool operator==(const Matrix& A) const;
 
+    void del();
+
+    MatrixItem max();
+
     ~Matrix();
 };
 
 Matrix operator+(const Matrix& A, const Matrix& B);
-Matrix operator+(Matrix&& A, const Matrix& B);
 Matrix operator+(const Matrix& A, Matrix&& B);
-Matrix operator+(Matrix&& A, Matrix&& B);
 
 Matrix operator-(const Matrix& A, const Matrix& B);
-Matrix operator-(Matrix&& A, const Matrix& B);
 Matrix operator-(const Matrix& A, Matrix&& B);
-Matrix operator-(Matrix&& A, Matrix&& B);
 
 std::ostream& operator<<(std::ostream& os, const Matrix& A);

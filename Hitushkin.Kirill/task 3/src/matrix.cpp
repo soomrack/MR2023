@@ -2,23 +2,21 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include <cstring>
 #include "matrix.hpp"
 
-
+// TODO Заменить char*
 class MatrixException : public std::exception {
-    private:
-    std::string message;
+private:
+    const char* message;
 
-    public:
-    MatrixException(std::string msg) : message(msg) {}
-    std::string what () {
-        return message;
-    }
+public:
+    MatrixException(std::string msg) : message(msg.c_str()) {}
+    const char* what () { return message; }
 };
-
-MatrixException OUT_OF_RANGE("OUT_OF_RANGE");
-MatrixException WRONG_CONDITIONS("WRONG_CONDITIONS");
-MatrixException NO_MEMORY_ALLOCATED("NO_MEMORY_ALLOCATED");
+MatrixException OUT_OF_RANGE("out_of_range");
+MatrixException WRONG_CONDITIONS("wrong_conditions");
+MatrixException NO_MEMORY_ALLOCATED("no_memory_allocated");
 
 
 Matrix::Matrix() : rows{0}, cols{0}, items{nullptr} {}
@@ -26,12 +24,13 @@ Matrix::Matrix() : rows{0}, cols{0}, items{nullptr} {}
 
 Matrix::Matrix(const size_t a, const size_t b) 
     : rows{a}, cols{b}, items{nullptr}
-{
-    if (rows == 0 || cols == 0) {
-        rows = 0;
-        cols = 0;
+{   
+    // TODO except если не ноль
+    if (rows == 0 && cols == 0)
         return;
-    }
+
+    if (rows == 0 || cols == 0)
+        throw WRONG_CONDITIONS;
 
     items = new MatrixItem[rows * cols];
 }
@@ -44,11 +43,24 @@ Matrix::Matrix(const Matrix& A)
 
     items = new MatrixItem[rows * cols];
 
-    std::copy(A.begin(), A.end(), begin());
+    // TODO заменить на memcpy
+    // std::copy(A.begin(), A.end(), begin());
+    memcpy(begin(), A.begin(), rows * cols * sizeof(MatrixItem));
+}
+
+// TODO Надо удалить в A items
+Matrix::Matrix(Matrix&& A) : rows{A.rows}, cols{A.cols}, items{A.items} 
+{
+    A.del();
 }
 
 
-Matrix::Matrix(Matrix&& A) : rows{A.rows}, cols{A.cols}, items{A.items} {}
+void Matrix::del()
+{
+    items = nullptr;
+    rows = 0;
+    cols = 0;
+}
 
 
 Matrix& Matrix::operator=(std::initializer_list<MatrixItem> lst) 
@@ -66,27 +78,35 @@ Matrix& Matrix::operator=(const Matrix& A)
 {
     if (this == &A) return *this;
     
+    // TODO в отдельные if construction
+
     if (items == nullptr) {
         items = new MatrixItem[A.rows * A.cols];
-    } 
-    else if (rows*cols != A.cols*A.rows) {
-        delete[] items;
-        items = new MatrixItem[A.rows * A.cols];
+        rows = A.rows;
+        cols = A.cols;
+        memcpy(begin(), A.begin(), rows * cols * sizeof(MatrixItem));
+        return *this;
     }
+
+    if (rows*cols == A.cols*A.rows) {
+        memcpy(begin(), A.begin(), rows * cols * sizeof(MatrixItem));
+        return *this;
+    }
+
+    delete[] items;
+    items = new MatrixItem[A.rows * A.cols];
 
     rows = A.rows;
     cols = A.cols;
 
-    std::copy(A.begin(), A.end(), begin());
+    memcpy(begin(), A.begin(), rows * cols * sizeof(MatrixItem));
         
     return *this;
 }
 
 
 Matrix& Matrix::operator=(Matrix&& A)
-{
-    if (this == &A) return *this;
-    
+{  
     if (items != nullptr)
         delete[] items;
 
@@ -94,13 +114,18 @@ Matrix& Matrix::operator=(Matrix&& A)
     cols = A.cols;
     items = A.items;
 
+    // TODO delete A
+    A.del();
+
     return *this;
 }
 
 
 void Matrix::set_zero()
 {
-    std::fill(begin(), end(), 0);
+    // TODO mem
+    // std::fill(begin(), end(), 0);
+    memset(items, 0, sizeof(MatrixItem) * cols * rows);
 }
 
 
@@ -116,7 +141,7 @@ void Matrix::set_one()
 const MatrixItem& Matrix::operator[](const size_t row, const size_t col) const
 {
     if (row >= rows || col >= cols)
-        throw WRONG_CONDITIONS;
+        throw OUT_OF_RANGE;
 
     return items[row * cols + col];
 }
@@ -125,19 +150,19 @@ const MatrixItem& Matrix::operator[](const size_t row, const size_t col) const
 MatrixItem& Matrix::operator[](const size_t row, const size_t col)
 {
     if (row >= rows || col >= cols)
-        throw WRONG_CONDITIONS;
+        throw OUT_OF_RANGE;
     
     return items[row * cols + col];
 }
 
 
-const size_t Matrix::get_rows() const
+size_t Matrix::get_rows() const
 {
     return rows;
 }
 
 
-const size_t Matrix::get_cols() const
+size_t Matrix::get_cols() const
 {
     return cols;
 }
@@ -160,24 +185,10 @@ Matrix operator+(const Matrix& A, const Matrix& B)
     return sum;
 }
 
-Matrix operator+(Matrix&& A, const Matrix& B)
-{
-    Matrix sum = A;
-    sum += B;
-    return sum;
-}
-
 Matrix operator+(const Matrix& A, Matrix&& B)
 {
     Matrix sum = B;
     sum += A;
-    return sum;
-}
-
-Matrix operator+(Matrix&& A, Matrix&& B)
-{
-    Matrix sum = A;
-    sum += B;
     return sum;
 }
 
@@ -200,13 +211,6 @@ Matrix operator-(const Matrix& A, const Matrix& B)
     return sub;
 }
 
-Matrix operator-(Matrix&& A, const Matrix& B)
-{
-    Matrix sub = A;
-    sub -= B;
-    return sub;
-}
-
 Matrix operator-(const Matrix& A, Matrix&& B)
 {
     Matrix sub = B;
@@ -214,22 +218,9 @@ Matrix operator-(const Matrix& A, Matrix&& B)
     return sub;
 }
 
-Matrix operator-(Matrix&& A, Matrix&& B)
-{
-    Matrix sub = A;
-    sub -= B;
-    return sub;
-}
-
 
 Matrix& Matrix::mult_to(Matrix& trg, const Matrix& A) const
 {
-    if (&trg == this || &trg == &A)
-        throw WRONG_CONDITIONS;
-    
-    if ((cols != A.rows) || (A.cols != trg.cols) || (rows != trg.rows))
-        throw WRONG_CONDITIONS;
-
     for (size_t num_row = 0; num_row < rows; num_row++) {
         for (size_t num_col = 0; num_col < A.cols; num_col++) {
             MatrixItem sum = 0;
@@ -247,7 +238,10 @@ Matrix& Matrix::mult_to(Matrix& trg, const Matrix& A) const
 
 
 Matrix Matrix::operator*(const Matrix& A) const
-{
+{  
+    if (cols != A.rows)
+        throw WRONG_CONDITIONS;
+    
     Matrix mult(rows, A.cols);
     mult_to(mult, A);
     return mult;
@@ -360,11 +354,26 @@ Matrix Matrix::expm(const MatrixItem& accuracy) const
 
         sum += term;
 
-        if (*std::max_element(term.begin(), term.end(), [](const MatrixItem& a, const MatrixItem& b) {return std::fabs(a) < std::fabs(b);}) < accuracy) 
+        // TODO вернуть свою функцию
+        if (term.max() < accuracy) 
             return sum;
     }
 
     return sum;
+}
+
+
+MatrixItem Matrix::max()
+{
+    MatrixItem max = 0;
+    MatrixItem num = 0;
+
+    for (size_t idx = 0; idx < (rows * cols); idx++) {
+        num = std::fabs(items[idx]);
+        if (num > max) max = num;
+    }
+
+    return max;
 }
 
 
@@ -376,7 +385,7 @@ const MatrixItem* Matrix::end() const {return items + rows * cols;}
 
 bool Matrix::operator==(const Matrix& A) const
 {
-    if ((cols != cols) || (rows != rows)) 
+    if ((cols != A.cols) || (rows != A.rows)) 
         return false;
     
     for (size_t idx = 0; idx < (rows * cols); idx++) {
@@ -405,5 +414,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix& A)
 
 Matrix::~Matrix() 
 {
-    delete[] items;
+    if (items != nullptr) {
+        delete[] items;
+    }
 }
