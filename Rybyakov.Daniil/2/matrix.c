@@ -236,13 +236,13 @@ Matrix matrix_expo(const Matrix matrix, size_t accuracy)
 
         pow_help = matrix_multiply(pow, matrix);
         if (pow_help.data == NULL) {
-            return MATRIX_ZERO;
+            result = MATRIX_ZERO;
             break;
         }
         matrix_memory_clear(&pow);
         pow = matrix_copy(pow_help);
         if (pow.data == NULL) {
-            return MATRIX_ZERO;
+            result = MATRIX_ZERO;
             break;
         }
 
@@ -250,17 +250,17 @@ Matrix matrix_expo(const Matrix matrix, size_t accuracy)
 
         multiplied = matrix_multiply_on_number(pow, 1. / factorial);
         if (multiplied.data == NULL) {
-            return MATRIX_ZERO;
+            result = MATRIX_ZERO;
             break;
         }
         result_help = matrix_sum(result, multiplied);
         if (result_help.data == NULL) {
-            return MATRIX_ZERO;
+            result = MATRIX_ZERO;
             break;
         }
         result = matrix_copy(result_help);
         if (result.data == NULL) {
-            return MATRIX_ZERO;
+            result = MATRIX_ZERO;
             break;
         }
     }
