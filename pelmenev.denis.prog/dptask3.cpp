@@ -57,6 +57,13 @@ void Matrix::free()
 }
 
 
+Matrix::Matrix() {
+    rows = 0;
+    cols = 0;
+    data = nullptr;
+}
+
+
 Matrix::Matrix(const size_t cols, const size_t rows)
     : cols(cols), rows(rows)
 {
@@ -77,6 +84,11 @@ Matrix::Matrix(const size_t cols, const size_t rows)
         free();
         return;
     };
+}
+
+
+Matrix::~Matrix() {
+    free();
 }
 
 
@@ -173,8 +185,7 @@ Matrix& Matrix::operator+(const Matrix& A)
         return *result;
     };
 
-    if (result->data == nullptr)
-        return *result;
+    if (result->data == nullptr) return *result;
 
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
         result->data[idx] += A.data[idx]; 
@@ -191,8 +202,7 @@ Matrix& Matrix::operator-(const Matrix& A)
         return *result;
     };
 
-    if (result->data == nullptr)
-        return *result;
+    if (result->data == nullptr) return *result;
 
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
         result->data[idx] -= A.data[idx]; 
