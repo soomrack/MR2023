@@ -36,7 +36,6 @@ public:
     const size_t get_cols() const;
 
     Matrix& operator+=(const Matrix& A);
-
     Matrix& operator-=(const Matrix& A);
 
     Matrix& mult_to(Matrix& trg, const Matrix& A) const;
@@ -49,8 +48,6 @@ public:
     Matrix T();
 
     double det() const;
-
-    MatrixItem max() const;
 
     Matrix expm(const double& accuracy) const;
 
