@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 #include <stdint.h>
 #include <math.h>
 #include <vector>
@@ -42,6 +42,14 @@ public:
     int det_if_zero();
     void det_prep(size_t diag, double *coeff);
     double determinant();
+};
+
+
+class MatrixException: public std::exception {
+public:
+    std::string msg;
+public:
+    MatrixException(std::string msg);
 };
 
 
@@ -310,7 +318,7 @@ Matrix Matrix::exponent(const Matrix A, const int degree)
     result.set_zero();
 
     Matrix B(A.cols, A.rows);
-    B = result;
+    B = A;
 
     for (size_t diag = 0; diag < result.rows; ++diag)
         result.data[diag * result.cols + diag] += 1;
