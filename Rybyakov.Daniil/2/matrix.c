@@ -29,9 +29,7 @@ Matrix matrix_memory(const size_t cols, const size_t rows) {
 
     if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) return MATRIX_ZERO;
 
-    size_t n_data = matrix.cols * matrix.rows;
-
-    matrix.data = malloc(n_data * sizeof(MatrixItem));
+    matrix.data = malloc(matrix.cols * matrix.rows * sizeof(MatrixItem));
 
     if (matrix.data == NULL) {
         return MATRIX_ZERO;
@@ -62,13 +60,13 @@ void matrix_print(const Matrix matrix)
 }
 
 
-void errorofsize(char* operation_name, char* error) 
+void matrix_errorofsize(char* operation_name, char* error) 
 {
     printf("%s is impossible. %s\n", operation_name, error);
 }
 
 
-void memory_clear(Matrix* matrix) 
+void matrix_memory_clear(Matrix* matrix) 
 {
     free(matrix->data);
 }
@@ -77,7 +75,7 @@ void memory_clear(Matrix* matrix)
 Matrix matrix_sum(const Matrix A, const Matrix B) 
 {
     if (A.rows != B.rows || A.cols != B.cols) {
-        errorofsize("Addition", "Matrixes should have equal sizes");
+        matrix_errorofsize("Addition", "Matrixes should have equal sizes");
         return MATRIX_ZERO;
     }
 
@@ -91,33 +89,29 @@ Matrix matrix_sum(const Matrix A, const Matrix B)
 }
 
 
-Matrix subtruct_matrices(const Matrix A, const Matrix B) 
+Matrix matrix_subtract(const Matrix A, const Matrix B) 
 {
     if (A.rows != B.rows && A.cols != B.cols) {
-        errorofsize("Subtruction", "Matrixes should have equal sizes");
+        matrix_errorofsize("Subtruction", "Matrixes should have equal sizes");
         return MATRIX_ZERO;
     }
 
     Matrix result = matrix_memory(A.cols, A.rows);
-    size_t n_data = result.cols * result.rows;
-
     if (result.data == NULL) return MATRIX_ZERO;
-
-    for (size_t index = 0; index < n_data; ++index) {
+    
+    for (size_t index = 0; index < result.cols * result.rows; ++index) {
         result.data[index] = A.data[index] - B.data[index];
     }
     return result;
 }
 
 
-Matrix multiply_on_number(const Matrix matrix, MatrixItem number) 
+Matrix matrix_multiply_on_number(const Matrix matrix, MatrixItem number) 
 {
     Matrix result = matrix_memory(matrix.cols, matrix.rows);
-    size_t n_data = result.cols * result.rows;
-
     if (result.data == NULL) return MATRIX_ZERO;
 
-    for (size_t index = 0; index < n_data; ++index) {
+    for (size_t index = 0; index < result.cols * result.rows; ++index) {
         result.data[index] = matrix.data[index] * number;
     }
     return result;
@@ -127,36 +121,31 @@ Matrix multiply_on_number(const Matrix matrix, MatrixItem number)
 Matrix matrix_multiply(const Matrix A, const Matrix B) 
 {
     if (A.cols != B.rows) {
-        errorofsize("Multiplication", "Matrixes should have certain sizes");
+        matrix_errorofsize("Multiplication", "Matrixes should have certain sizes");
         return MATRIX_ZERO;
     }
 
-    size_t n_cols = B.cols;
-    size_t n_rows = A.rows;
-    Matrix result = matrix_memory(n_cols, n_rows);
-
+    Matrix result = matrix_memory(B.cols, A.rows);
     if (result.data == NULL) return MATRIX_ZERO;
 
-    for (size_t rowA = 0; rowA < n_rows; ++rowA) {
-        for (size_t colB = 0; colB < n_cols; ++colB) {
+    for (size_t rowA = 0; rowA < A.rows; ++rowA) {
+        for (size_t colB = 0; colB < B.cols; ++colB) {
             double summa = 0.0;
             for (size_t k = 0; k < A.cols; ++k) {
-                summa +=
-                    A.data[rowA * A.cols + k] *
-                    B.data[k * B.cols + colB];
+                summa += A.data[rowA * A.cols + k] * B.data[k * B.cols + colB];
             }
-            result.data[rowA * n_cols + colB] = summa;
+            result.data[rowA * B.cols + colB] = summa;
         }
     }
     return result;
 }
 
 
-MatrixItem matrix_det(const Matrix matrix) 
+Matrix matrix_det(const Matrix matrix) 
 {
     if (matrix.cols != matrix.rows) {
-        errorofsize("Getting determinant", "Matrix should be square");
-        return 0.;
+        matrix_errorofsize("Getting determinant", "Matrix should be square");
+        return NAN;
     }
 
     MatrixItem result = 0;
@@ -170,6 +159,7 @@ MatrixItem matrix_det(const Matrix matrix)
     for (size_t row = 0; row < n; ++row) {
         size_t col = 0;
         Matrix submatrix = matrix_memory(n - 1, n - 1);
+        if (submatrix.data == NULL) return MATRIX_ZERO;
         size_t row_offset = 0;
         size_t col_offset = 0;
 
@@ -183,16 +173,15 @@ MatrixItem matrix_det(const Matrix matrix)
             }
         }
         result += pow(-1, row + col) * matrix.data[row * n + col] * matrix_det(submatrix);
-        memory_clear(&submatrix);
+        matrix_memory_clear(&submatrix);
     }
     return result;
 }
 
 
-Matrix transpose(const Matrix matrix) 
+Matrix matrix_transpose(const Matrix matrix) 
 {
     Matrix result = matrix_memory(matrix.rows, matrix.cols);
-
     if (result.data == NULL) return MATRIX_ZERO;
 
     for (size_t row = 0; row < result.rows; ++row) {
@@ -204,10 +193,9 @@ Matrix transpose(const Matrix matrix)
 }
 
 
-Matrix unit(size_t dimention) 
+Matrix matrix_one(size_t dimention) 
 {
     Matrix result = matrix_memory(dimention, dimention);
-
     if (result.data == NULL) return MATRIX_ZERO;
 
     for (size_t row = 0; row < result.rows; ++row) {
@@ -223,6 +211,7 @@ Matrix matrix_copy(const Matrix matrix)
 {
     Matrix result = matrix_memory(matrix.cols, matrix.rows);
     if (result.data == NULL) return MATRIX_ZERO;
+
     memcpy(result.data, matrix.data, matrix.rows * matrix.cols * sizeof(MatrixItem));
     
     return result;
@@ -232,14 +221,14 @@ Matrix matrix_copy(const Matrix matrix)
 Matrix matrix_expo(const Matrix matrix, size_t accuracy)
 {
     if (matrix.cols != matrix.rows) {
-        errorofsize("Exp", "Matrix should be square");
+        matrix_errorofsize("Exp", "Matrix should be square");
         return MATRIX_ZERO;
     }
 
     Matrix result_help, pow_help, multiplied;
-    Matrix result = unit(matrix.rows);
-    Matrix pow = unit(matrix.rows);
+    Matrix result = matrix_one(matrix.rows);
     if (result.data == NULL) return MATRIX_ZERO;
+    Matrix pow = matrix_one(matrix.rows);
     if (pow.data == NULL) return MATRIX_ZERO;
     int factorial = 1;
 
@@ -247,23 +236,39 @@ Matrix matrix_expo(const Matrix matrix, size_t accuracy)
         factorial *= acc;
 
         pow_help = matrix_multiply(pow, matrix);
-        if (pow_help.data == NULL) return MATRIX_ZERO;
+        if (pow_help.data == NULL) {
+            matrix_memory_clear(&pow_help);
+            break
+        }
+        matrix_memory_clear(&pow);
         pow = matrix_copy(pow_help);
-        if (pow.data == NULL) return MATRIX_ZERO;
+        if (pow.data == NULL) {
+            matrix_memory_clear(&pow);
+            break
+        }
 
-        memory_clear(&pow_help);
+        matrix_memory_clear(&pow_help);
 
-        multiplied = multiply_on_number(pow, 1. / factorial);
-        if (multiplied.data == NULL) return MATRIX_ZERO;
+        multiplied = matrix_multiply_on_number(pow, 1. / factorial);
+        if (multiplied.data == NULL) {
+            matrix_memory_clear(&multiplied);
+            break
+        }
         result_help = matrix_sum(result, multiplied);
-        if (result_help.data == NULL) return MATRIX_ZERO;
+        if (result_help.data == NULL) {
+            matrix_memory_clear(&result_help);
+            break
+        }
         result = matrix_copy(result_help);
-        if (result.data == NULL) return MATRIX_ZERO;
+        if (result.data == NULL) {
+            matrix_memory_clear(&result);
+            break
+        }
 
-        memory_clear(&result_help);
-        memory_clear(&multiplied);
+        matrix_memory_clear(&result_help);
+        matrix_memory_clear(&multiplied);
     }
-    memory_clear(&pow);
+    matrix_memory_clear(&pow);
     return result;
 }
 
@@ -285,19 +290,19 @@ int main()
     Matrix addition;
     addition = matrix_sum(mat1, mat2);
     matrix_print(addition);
-    memory_clear(&addition);
+    matrix_memory_clear(&addition);
 
     printf("     Sub\n");
     Matrix subtruction;
-    subtruction = subtruct_matrices(mat1, mat2);
+    subtruction = matrix_subtract(mat1, mat2);
     matrix_print(subtruction);
-    memory_clear(&subtruction);
+    matrix_memory_clear(&subtruction);
 
     printf("     Multiply\n");
     Matrix multiplication_matrices;
     multiplication_matrices = matrix_multiply(mat1, mat2);
     matrix_print(multiplication_matrices);
-    memory_clear(&multiplication_matrices);
+    matrix_memory_clear(&multiplication_matrices);
 
     MatrixItem determinant;
     printf("     Det 1\n");
@@ -310,21 +315,21 @@ int main()
 
     printf("     Transp 1\n");
     Matrix transpose1;
-    transpose1 = transpose(mat1);
+    transpose1 = matrix_transpose(mat1);
     matrix_print(transpose1);
-    memory_clear(&transpose1);
+    matrix_memory_clear(&transpose1);
 
     printf("     Transp 2\n");
     Matrix transpose2;
-    transpose2 = transpose(mat2);
+    transpose2 = matrix_transpose(mat2);
     matrix_print(transpose2);
-    memory_clear(&transpose2);
+    matrix_memory_clear(&transpose2);
 
     printf("     e\n");
     Matrix exponenta;
     exponenta = matrix_expo(mat1, 3);
     matrix_print(exponenta);
-    memory_clear(&exponenta);
-    memory_clear(&mat1);
-    memory_clear(&mat2);
+    matrix_memory_clear(&exponenta);
+    matrix_memory_clear(&mat1);
+    matrix_memory_clear(&mat2);
 }
