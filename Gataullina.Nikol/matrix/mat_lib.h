@@ -26,15 +26,17 @@ void matrix_error_message()
 
 Matrix matrix_allocation(const size_t rows, const size_t cols)
 {
-    Matrix mem = {rows, cols, NULL};
-    mem.data = (double *)malloc(rows * cols * sizeof(double));
-    if (mem.data == NULL)
-    {
-        mem.rows = 0;
-        mem.cols = 0;
+    if (rows >= SIZE_MAX / sizeof(double) / cols) { // rows * cols < MAX_SIZE / sizeof(double)
+        return MATRIX_NULL; 
+    }
+    Matrix matrix = {rows, cols, NULL};
+    matrix.data = (double *)malloc(rows * cols * sizeof(double));
+    if (matrix.data == NULL){
+        matrix.rows = 0;
+        matrix.cols = 0;
         matrix_error_message();
     }
-    return mem;
+    return matrix;
 }
 
 
@@ -51,23 +53,26 @@ Matrix matrix_create(const size_t rows, const size_t cols, const double *data)
 
 void matrix_free( Matrix *A)
 {
+    if(A->data != NULL || A->cols != 0 || A->rows != 0){
+    A->cols = 0;
+    A->rows = 0;
     free(A->data);
-    *A = MATRIX_NULL;
+    A->data = NULL;
+    }
 }
 
 
 // Создание матрицы заполненной нулями
-void matrix_zero(Matrix *matrix)
+void matrix_zero(const Matrix matrix)
 {
-    for (unsigned int idx = 0; idx < matrix->rows * matrix->cols; idx++)
-        matrix->data[idx] = 0.0;
+    memset (matrix->data, 0, matrix->rows * matrix->cols * sizeof(double));
 }
 
 
-void martix_identity(Matrix *matrix) // Создание единичной матрицы
+// Создание единичной матрицы
+void matrix_identity(const Matrix matrix)
 {
-    if (matrix->rows != matrix->cols)
-    {
+    if (matrix->rows != matrix->cols){
         matrix_error_message();
         return;
     }
@@ -80,10 +85,8 @@ void martix_identity(Matrix *matrix) // Создание единичной ма
 void matrix_print(const char *function_name, const Matrix A)
 { // Блок вывода
     printf("\n%s\n", function_name);
-    for (unsigned int row = 0; row < A.rows; row++)
-    {
-        for (unsigned int col = 0; col < A.cols; col++)
-        {
+    for (unsigned int row = 0; row < A.rows; row++){
+        for (unsigned int col = 0; col < A.cols; col++){
             printf("%lf ", A.data[row * A.cols + col]);
         }
         printf("\n"); 
@@ -93,14 +96,12 @@ void matrix_print(const char *function_name, const Matrix A)
 
 Matrix matrix_addition(const Matrix *A, const Matrix *B)
 {
-    if (A->rows != B->rows || A->cols != B->cols)
-    {
+    if (A->rows != B->rows || A->cols != B->cols){
         matrix_error_message();
         return MATRIX_NULL;
     }
     Matrix sum = matrix_allocation(A->rows, A->cols);
-    for (unsigned int index = 0; index < A->rows * A->cols; index++)
-    {
+    for (unsigned int index = 0; index < A->rows * A->cols; index++){
         sum.data[index] = A->data[index] + B->data[index];
     }
     return sum;
@@ -109,14 +110,12 @@ Matrix matrix_addition(const Matrix *A, const Matrix *B)
 
 Matrix matrix_substract(Matrix *A, Matrix *B)
 {
-    if (A->rows != B->rows || A->cols != B->cols)
-    {
+    if (A->rows != B->rows || A->cols != B->cols){
         matrix_error_message();
         return MATRIX_NULL;
     }
     Matrix sub = matrix_allocation(A->rows, A->cols);
-    for (unsigned int index = 0; index < A->rows * A->cols; index++)
-    {
+    for (unsigned int index = 0; index < A->rows * A->cols; index++){
         sub.data[index] = A->data[index] - B->data[index];
     }
     return sub;
@@ -124,19 +123,15 @@ Matrix matrix_substract(Matrix *A, Matrix *B)
 
 Matrix matrix_multiplication(const Matrix *A, const Matrix *B)
 {
-    if (A->cols != B->rows)
-    {
+    if (A->cols != B->rows){
         matrix_error_message();
         return MATRIX_NULL;
     }
     Matrix multy = matrix_allocation(A->rows, B->cols);
-    for (unsigned int row = 0; row < multy.rows; row++)
-    {
-        for (unsigned int col = 0; col < multy.cols; col++)
-        {
+    for (size_t row = 0; row < multy.rows; row++){
+        for (size_t col = 0; col < multy.cols; col++){
             double sum = 0;
-            for (unsigned int k = 0; k < A->cols; k++)
-            {
+            for (unsigned int k = 0; k < A->cols; k++){
                 sum += A->data[row * A->cols + k] * B->data[k * B->cols + col];
             }
             multy.data[row * multy.cols + col] = sum;
@@ -148,16 +143,13 @@ Matrix matrix_multiplication(const Matrix *A, const Matrix *B)
 
 Matrix matrix_minor(const Matrix *matrix, const unsigned int minor_row, const unsigned int minor_col)
 {
-    if (matrix->rows == 0 || matrix->cols == 0)
-    {
+    if (matrix->rows == 0 || matrix->cols == 0 || matrix->data == NULL){
         return MATRIX_NULL;
     }
     Matrix minor = matrix_allocation(matrix->rows - 1, matrix->cols - 1);
     unsigned int minor_index = 0;
-    for (unsigned int row = 0; row < matrix->rows; row++)
-    {
-        for (unsigned int col = 0; col < matrix->cols; col++)
-        {
+    for (unsigned int row = 0; row < matrix->rows; row++){
+        for (unsigned int col = 0; col < matrix->cols; col++){
             if (row == minor_row || col == minor_col)
                 continue;
             minor.data[minor_index++] = matrix->data[row * matrix->cols + col];
@@ -170,22 +162,23 @@ Matrix matrix_minor(const Matrix *matrix, const unsigned int minor_row, const un
 // Определитель с рекурсивным вызовом
 double matrix_determinant(const Matrix *matrix) 
 { 
-    if (matrix->rows != matrix->cols)
-    {
+    if (matrix->rows != matrix->cols){
         matrix_error_message();
-        return 0;
+        return NAN;
     }
     double det = 0;
     int k = 1;
     if (matrix->rows == 0)
-        return 0;
+        return NAN;
     if (matrix->rows == 1)
         return matrix->data[0];
     if (matrix->rows == 2)
         return (matrix->data[0] * matrix->data[3] - matrix->data[2] * matrix->data[1]);
-    for (unsigned int idx = 0; idx < matrix->rows; idx++)
-    {
+    for (unsigned int idx = 0; idx < matrix->rows; idx++){
         Matrix temp = matrix_minor(matrix, 0, idx);
+        if (temp.data == NULL) {
+            return NAN;
+        }
         det += k * matrix->data[idx] * matrix_determinant(&temp);
         k = -k;
         matrix_free(&temp);
@@ -197,10 +190,8 @@ double matrix_determinant(const Matrix *matrix)
 Matrix matrix_transposition(const Matrix *A)
 {
     Matrix trans = matrix_allocation(A->cols, A->rows);
-    for (unsigned int row = 0; row < trans.rows; row++)
-    {
-        for (unsigned int col = 0; col < trans.cols; col++)
-        {
+    for (unsigned int row = 0; row < trans.rows; row++){
+        for (unsigned int col = 0; col < trans.cols; col++){
             trans.data[row * trans.cols + col] = A->data[col * trans.rows + row];
         }
     }
@@ -212,21 +203,21 @@ Matrix matrix_transposition(const Matrix *A)
 Matrix matrix_reverse(const Matrix *A)
 {
     double det = matrix_determinant(A);
-    if (A->rows != A->cols)
-    {
+    if (A->rows != A->cols){
         matrix_error_message();
         return MATRIX_NULL;
     }
-    if (fabs(det) < EPS)
-    {
+    if (fabs(det) < EPS){
         matrix_error_message();
         return MATRIX_NULL;
     }
     Matrix reverse = matrix_allocation(A->rows, A->cols);
+        if (reverse.data == NULL) {
+            return NAN;
+        }
     Matrix temp;
     int k = 1;
-    for (unsigned int row = 0; row < reverse.rows; row++)
-    {
+    for (unsigned int row = 0; row < reverse.rows; row++){
         for (unsigned int col = 0; col < reverse.cols; col++)
         {
             temp = matrix_minor(A, row, col);
@@ -242,20 +233,25 @@ Matrix matrix_reverse(const Matrix *A)
 
 Matrix matrix_exponent(const Matrix *matrix, const unsigned int n)
 {
-    if (matrix->rows != matrix->cols)
-    {
+    if (matrix->rows != matrix->cols){
         matrix_error_message();
         return MATRIX_NULL; // Если матрица не квадратная, возвращаем пустую матрицу
     }
     Matrix ex = matrix_allocation(matrix->rows, matrix->cols);
-    martix_identity(&ex);
+        if (ex.data == NULL) {
+            return NAN;
+        }
+    matrix_identity(&ex);
     Matrix temp = matrix_allocation(matrix->rows, matrix->cols);
-    martix_identity(&temp);
+        if (temp.data == NULL) {
+            return NAN;
+        }
+    matrix_identity(&temp);
     double fact = 1.0;
-    for (unsigned int i = 1; i < n; i++)
-    {
+    for (unsigned int i = 1; i < n; i++){
         fact *= i;
         temp = matrix_multiplication(&temp, matrix);
     }
+    matrix_free(&temp);
     return ex;
 }
