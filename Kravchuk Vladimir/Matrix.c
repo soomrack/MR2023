@@ -14,7 +14,7 @@ struct Matrix {
 };
 
 
-const struct Matrix Matrix_NULL = { .cols = 0, .rows = 0,.data = NULL };
+const struct Matrix MATRIX_NULL = { .cols = 0, .rows = 0,.data = NULL }; 
 
 
 struct Matrix matrix_allocation(const size_t cols, const size_t rows)
@@ -23,11 +23,11 @@ struct Matrix matrix_allocation(const size_t cols, const size_t rows)
 		struct Matrix A = { .cols = cols, .rows = rows, .data = NULL };
 		return A;
 	}
-	if (rows >= SIZE_MAX / sizeof(MatrixData) / cols) return Matrix_NULL;
+	if (rows >= SIZE_MAX / sizeof(MatrixData) / cols) return MATRIX_NULL;
 
 	struct Matrix A = { .cols = cols, .rows = rows, .data = NULL };
 	A.data = (MatrixData*)malloc(A.cols * A.rows * sizeof(MatrixData));
-	if (A.data == NULL) return Matrix_NULL;
+	if (A.data == NULL) return MATRIX_NULL;
 	return A;
 }
 
@@ -45,11 +45,11 @@ struct Matrix matrix_filling(const size_t cols, const size_t rows, const MatrixD
 void matrix_free(struct Matrix *A)
 {
 	if(A->data != NULL) free(A->data);
-	*A = Matrix_NULL;
+	*A = MATRIX_NULL;
 }
 
 
-int matrix_sum1(const struct Matrix A, const struct Matrix B)
+int matrix_sum_output_A(const struct Matrix A, const struct Matrix B)
 {
 	if (A.rows != B.rows || A.cols != B.cols) return 1;
 
@@ -60,20 +60,20 @@ int matrix_sum1(const struct Matrix A, const struct Matrix B)
 }
 
 
-struct Matrix matrix_sum2(const struct Matrix A, const struct Matrix B)
+struct Matrix matrix_sum_output_C(const struct Matrix A, const struct Matrix B) 
 {
-	if (A.rows != B.rows || A.cols != B.cols) return Matrix_NULL;
+	if (A.rows != B.rows || A.cols != B.cols) return MATRIX_NULL;
 
 	struct Matrix C = matrix_allocation(A.rows, A.cols);
-	if (C.data == NULL) return Matrix_NULL;
+	if (C.data == NULL) return MATRIX_NULL;
 
 	memcpy(C.data, A.data, C.cols * C.rows * sizeof(MatrixData));
-	matrix_sum1(C, B);
+	matrix_sum_output_A(C, B);
 	return C;
 }
 
 
-int matrix_subtraction1(const struct Matrix A, const struct Matrix B)
+int matrix_subtraction_output_A(const struct Matrix A, const struct Matrix B)
 {
 	if (A.rows != B.rows || A.cols != B.cols) return 1;
 
@@ -84,15 +84,15 @@ int matrix_subtraction1(const struct Matrix A, const struct Matrix B)
 }
 
 
-struct Matrix matrix_subtraction2(const struct Matrix A, const struct Matrix B)
+struct Matrix matrix_subtraction_output_C(const struct Matrix A, const struct Matrix B)
 {
-	if (A.rows != B.rows || A.cols != B.cols) return Matrix_NULL;
+	if (A.rows != B.rows || A.cols != B.cols) return MATRIX_NULL;
 
 	struct Matrix C = matrix_allocation(A.rows, A.cols);
-	if (C.data == NULL) return Matrix_NULL;
+	if (C.data == NULL) return MATRIX_NULL;
 	
 	memcpy(C.data, A.data, C.cols * C.rows * sizeof(MatrixData));
-	matrix_subtraction1(C, B);
+	matrix_subtraction_output_A(C, B);
 	return C;
 }
 
@@ -100,6 +100,7 @@ struct Matrix matrix_subtraction2(const struct Matrix A, const struct Matrix B)
 struct Matrix matrix_mult_scalar(const struct Matrix A, const double scalar)
 {
 	struct Matrix C = matrix_allocation(A.rows, A.cols);
+	if (C.data == NULL) return MATRIX_NULL;
 
 	for (size_t idx = 0; idx < A.cols * A.rows; idx++) {
 		C.data[idx] = scalar *A.data[idx];
@@ -110,15 +111,18 @@ struct Matrix matrix_mult_scalar(const struct Matrix A, const double scalar)
 
 struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 {
-	if (A.rows != B.rows ) return Matrix_NULL;
+	if (A.rows != B.rows ) return MATRIX_NULL;
 
 	struct Matrix C = matrix_allocation(A.rows, B.cols);
-	if (C.data == NULL) return C;
+	if (C.data == NULL) return MATRIX_NULL;
 
-	for (size_t rowA = 0; rowA < A.rows; rowA++) 
-		for (size_t colB = 0; colB < B.cols; colB++) 
-			for (size_t idx = 0; idx < A.cols; idx++) 
+	for (size_t rowA = 0; rowA < A.rows; rowA++)
+		for (size_t colB = 0; colB < B.cols; colB++) {
+			C.data[rowA * B.cols + colB] = 0;
+
+			for (size_t idx = 0; idx < A.cols; idx++)
 				C.data[rowA * B.cols + colB] += A.data[rowA * A.cols + idx] * B.data[idx * B.cols + colB];
+		}
 	return C;
 }
 
@@ -126,6 +130,7 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 struct Matrix transposition(const struct Matrix A)
 {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 	struct Matrix C = matrix_allocation(A.cols, A.rows);
+	if (C.data == NULL) return MATRIX_NULL;
 
 	for (size_t rows = 0; rows < A.rows; rows++)
 		for (size_t cols = 0; cols < A.cols; cols++)
@@ -136,7 +141,7 @@ struct Matrix transposition(const struct Matrix A)
 
 double det(const struct Matrix A)
 {
-	if ((A.rows != A.rows) || (A.cols > 3) || (A.rows > 3)) return 1;
+	if ((A.rows != A.rows) || (A.cols > 3) || (A.rows > 3)) return NAN;
 
 	if (A.cols == 2) return (A.data[0] * A.data[3] - A.data[1] * A.data[2]);
 
@@ -148,12 +153,13 @@ double det(const struct Matrix A)
 			(A.data[0] * A.data[5] * A.data[7]) - \
 			(A.data[1] * A.data[3] * A.data[8]);
 	}
+	return NAN;
 }
 
 
-struct Matrix matrix_exponential_part1(struct Matrix A, unsigned int level)
+struct Matrix sum_for_matrix_exp(struct Matrix A, unsigned int level)
 {
-	struct Matrix C;
+	struct Matrix C, C2;
 	unsigned int n = 1;
 
 	for (unsigned int counter = 1; counter <= level; counter++) n *= counter;
@@ -162,27 +168,32 @@ struct Matrix matrix_exponential_part1(struct Matrix A, unsigned int level)
 		if (counter == 1) C = matrix_mult(A, A);
 		else matrix_mult(C, A);
 	}
-	return matrix_mult_scalar(C, 1 / (double)n);
+
+	C2 = matrix_mult_scalar(C, 1 / (double)n);
+	matrix_free(&C);
+	return C2;
 }
 
 
-struct Matrix matrix_exponential_part2(struct Matrix A, unsigned long int level)
+struct Matrix matrix_exp(struct Matrix A, unsigned long int level)
 {
-	struct Matrix C, C2;
+	struct Matrix C, C3;
 
-	if (A.rows != A.rows) return Matrix_NULL;
+	if (A.rows != A.rows) return MATRIX_NULL;
 
 	for (unsigned int count = 0; count <= level; count++) {
 		if (count == 0) {
-			C2 = matrix_allocation(A.rows, A.cols);
+			C3 = matrix_allocation(A.rows, A.cols);
+			if (C3.data == NULL) return MATRIX_NULL;
+			memcpy(C3.data, A.data, C3.cols * C3.rows * sizeof(MatrixData));
 			continue;
 		}
 
-		C = matrix_exponential_part1(A, count);
-		matrix_sum1(C2, C);
+		C = sum_for_matrix_exp(A, count);
+		matrix_sum_output_A(C3, C);
 		matrix_free(&C);
 	}
-	return C2;
+	return C3;
 }
 
 
@@ -201,11 +212,10 @@ void matrix_print(const struct Matrix A)
 
 int main()
 {
-	struct Matrix A, B, C, C2;
-
+	struct Matrix A, B, C, C2, C3;
 
 	printf("\nFirst matrix\n");
-	A = matrix_filling(2, 2, (double[]) { 1., 1., 1., 1. });
+	A = matrix_filling(2, 2, (double[]) { 2., 4., 2., 4. });
 	matrix_filling(A.cols, A.rows, &A);
 	matrix_print(A);
 
@@ -215,20 +225,19 @@ int main()
 	matrix_print(B);
 
 	printf("Sum1 of matrices\n");
-	matrix_sum1(A, B);
+	matrix_sum_output_A(A, B);
 	matrix_print(A);
 
 	printf("Sum2 of matrices\n");
-	matrix_sum2(A, B);
-	C = matrix_sum2(A, B);
+	C = matrix_sum_output_C(A, B);
 	matrix_print(C);
 
 	printf("Sub1 of matrices\n");
-	matrix_subtraction1(A, B);
+	matrix_subtraction_output_A(A, B);
 	matrix_print(A);
 
 	printf("Sub2 of matrices\n");
-	C = matrix_subtraction2(A, B);
+	C = matrix_subtraction_output_C(A, B);
 	matrix_print(C);
 
 	printf("Multiplying the first matrix by a scalar\n");
@@ -248,8 +257,14 @@ int main()
 	printf("%4.2f \n", det(A));
 	
 	printf("Exponent of the first matrix\n");
-	matrix_exponential_part1(A, 2);
-	C2 = matrix_exponential_part2(A, 2);
-	matrix_print(C2);
+	sum_for_matrix_exp(A, 2);
+	C3 = matrix_exp(A, 2);
+	matrix_print(C3);
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&C);
+	matrix_free(&C3);
+
 	return 0;
 }
