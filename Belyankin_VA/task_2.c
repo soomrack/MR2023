@@ -99,14 +99,13 @@ void matrix_substraction(const struct Matrix A, const struct Matrix B, const str
 
 
 // A = B * C
-struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matrix C)
+void matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
-    if (B.cols != C.rows || B.rows != A.rows)
+    if (B.cols != C.rows || B.rows != A.rows || A.rows != C.cols)
     {
         matrix_error();
     }
     struct Matrix Mult = matrix_create(A.rows, A.cols);
-    matrix_set_zero(Mult);
     MatrixItem data_old;
     for (size_t row = 0; row < B.rows; row++) {
         for (size_t col = 0; col < B.cols; col++) {
