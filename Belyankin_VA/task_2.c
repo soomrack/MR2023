@@ -101,30 +101,23 @@ void matrix_substraction(const struct Matrix A, const struct Matrix B, const str
 // A = B * C
 struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
-    if (B.cols != C.rows || B.rows != C.cols || B.cols != A.cols || B.rows != A.rows)
+    if (B.cols != C.rows || B.rows != A.rows)
     {
         matrix_error();
     }
-    struct Matrix Mult_1 = matrix_create(B.rows, B.cols);
-    struct Matrix Mult_2 = matrix_create(C.rows, C.cols);
     struct Matrix Mult = matrix_create(A.rows, A.cols);
     matrix_set_zero(Mult);
-    if (Mult_1.data == NULL || Mult_2.data == NULL) return MATRIX_NULL;
-    memcpy(Mult_1.data, B.data, sizeof(MatrixItem) * B.cols * B.rows);
-    memcpy(Mult_2.data, C.data, sizeof(MatrixItem) * C.cols * C.rows);
     MatrixItem data_old;
     for (size_t row = 0; row < B.rows; row++) {
         for (size_t col = 0; col < B.cols; col++) {
             data_old = 0;
             for (size_t idx = 0; idx < C.rows; idx++) {
-                data_old += Mult_1.data[idx * B.rows + col] * Mult_2.data[row * C.cols + idx];
+                data_old += B.data[idx * B.rows + col] * C.data[row * C.cols + idx];
             }
             Mult.data[row * B.cols + col] = data_old;
         }
     }
     memcpy(A.data, Mult.data, sizeof(MatrixItem) * Mult.cols * Mult.rows);
-    matrix_delete(&Mult_1);
-    matrix_delete(&Mult_2);
     matrix_delete(&Mult);
 }
 
@@ -163,10 +156,10 @@ double matrix_determinant(const struct Matrix A) {
     }
     double det = 0;
     int k = 1;
-    if (A.rows == 0) return 0;
+    if (A.rows == 0) return NAN;
     if (A.rows == 1) return A.data[0];
     if (A.rows == 2) return (A.data[0] * A.data[3] - A.data[2] * A.data[1]);
-    for (unsigned int idx = 0; idx < A.rows; idx++) {
+    for (size_t idx = 0; idx < A.rows; idx++) {
         struct Matrix temp = Minor(A, 0, idx);
         det += k * A.data[idx] * matrix_determinant(temp);
         k = -k;
@@ -195,7 +188,7 @@ int matrix_add(struct Matrix A, struct Matrix B)
 
 
 
-struct Matrix matrix_div(struct Matrix A, unsigned int n) {
+struct Matrix matrix_div(const struct Matrix A, const double n) {
     struct Matrix Div = matrix_create(A.cols, A.cols);
     if (Div.data == NULL) return MATRIX_NULL;
     for (size_t rowA = 0; rowA < A.rows; ++rowA) {
@@ -224,14 +217,21 @@ struct Matrix matrix_exponent(struct Matrix A, unsigned int n)
         if (Exp_next.data == NULL) {
             matrix_delete(&Exp_old);
             matrix_delete(&Exp);
+            matrix_delete(&Exp_div);
             return MATRIX_NULL;
         }
         Exp_div = matrix_div(Exp_next, idx);
+        if (Exp_div.data == NULL) {
+            matrix_delete(&Exp_old);
+            matrix_delete(&Exp);
+            matrix_delete(&Exp_next);
+            return MATRIX_NULL;
+        }
         memcpy(Exp_old.data, Exp_div.data, sizeof(MatrixItem) * Exp_old.cols * Exp_old.rows);
-        matrix_delete(&Exp_next);
         matrix_delete(&Exp_div);
         matrix_add(Exp, Exp_old);
         }
+        matrix_delete(&Exp_next);
         matrix_delete(&Exp_old);
         return Exp;
     }
