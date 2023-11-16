@@ -42,7 +42,7 @@ void matrix_delete(struct Matrix* A)
 {
     A->rows = 0;
     A->cols = 0;
-    free(A->data);
+    if (A->data != 0) free(A->data);
     A->data = NULL;
 }
 
