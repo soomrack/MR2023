@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <math.h>
 
 struct Matrix {
     unsigned int rows;
@@ -11,15 +12,23 @@ struct Matrix {
 
 
 const struct Matrix MATRIX_NULL = { .rows = 0, .cols = 0, .data = NULL };
-struct Matrix matrix_create(const unsigned int rows, const unsigned int cols)
+
+struct Matrix matrix_allocate(const unsigned int cols, const unsigned int rows)
 {
-    struct Matrix A = {
-        .rows = rows,
-        .cols = cols,
-        .data = NULL, };
-    A.data = (double*)malloc(sizeof(double) * A.cols * A.rows);
-    if (A.data == NULL) return MATRIX_NULL;
-    return A;    
+	if (cols == 0 || rows == 0) {
+		struct Matrix A = { .rows = rows, .cols = cols, .data = NULL };
+		return A;
+	};
+
+	if (rows >= SIZE_MAX / sizeof(double) / cols)
+		return MATRIX_NULL;
+
+	struct Matrix A = { .rows = rows, .cols = cols, .data = NULL };
+	A.data = (double*)malloc(A.cols * A.rows * sizeof(double));
+	if (A.data == NULL) {
+		return MATRIX_NULL;
+	}
+	return A;
 }
 
 void matrix_set_zero(struct Matrix A)
@@ -40,19 +49,28 @@ void matrix_error()
 	printf("Error: different number of columns or rows\n");
 }
 
-void matrix_fill(struct Matrix A, const double values[])
+int matrix_fill(struct Matrix A, const double* values)
 {
-	if (A.data == NULL) {
-		matrix_error;
-		return;
-	}
-	else memcpy(A.data, values, A.rows * A.cols * sizeof(double));
+	for (unsigned int idx = 0; idx < A.cols * A.rows; ++idx)
+		A.data[idx] = values[idx];
+	return 0;
 }
 
+
+void matrix_delete(struct Matrix* A)
+{
+	A->rows = 0;
+	A->cols = 0;
+	free(A->data);
+	A->data = NULL;
+}
+
+
+// C = A + B
 void matrix_sum(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
     if (A.cols != B.cols || A.rows != B.rows) {
-        matrix_error;
+        matrix_error();
 		return;
     }
     for (unsigned int idx = 0; idx < A.cols * A.rows; ++idx)
@@ -61,18 +79,12 @@ void matrix_sum(const struct Matrix A, const struct Matrix B, const struct Matri
     }
 }
 
-void matrix_delete(struct Matrix *A)
-{
-    A->rows = 0;
-    A->cols = 0;
-    free(A->data);
-    A->data = NULL;
-}
 
+// C = A - B
 void matrix_sub(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
 	if (A.cols != B.cols || A.rows != B.rows) {
-		matrix_error;
+		matrix_error();
 		return;
 	}
 	for (unsigned int idx = 0; idx < A.cols * A.rows; ++idx)
@@ -81,26 +93,101 @@ void matrix_sub(const struct Matrix A, const struct Matrix B, const struct Matri
 	}
 }
 
-void matrix_multip(const struct Matrix A, const struct Matrix B, const struct Matrix C)
-{
-	if (A.cols != B.cols || A.rows != B.rows) {
-		matrix_error;
-		return;
-	}
-	for (unsigned int idx = 0; idx < A.cols * A.rows; ++idx)
-	{
-		C.data[idx] = A.data[idx] * B.data[idx];
-	}
-}
 
-void matrix_trans(struct Matrix A, struct Matrix T)
+// MULT = A * B
+struct Matrix matrix_multip(struct Matrix A, struct Matrix B)
 {
-	for (unsigned int row = 0; row < A.rows; row++) {
-		for (unsigned int col = 0; col < A.cols; col++) {
-			T.data[col * A.rows + row] = A.data[row * A.cols + col];
+	if (A.cols != B.rows) return MATRIX_NULL;
+
+	struct Matrix mult = matrix_allocate(A.rows, B.cols);
+	if (mult.data == NULL) return MATRIX_NULL;
+
+	for (unsigned int rowA = 0; rowA < A.rows; ++rowA) {
+		for (unsigned int colB = 0; colB < B.cols; ++colB) {
+			double sum = 0;
+			for (unsigned int idx = 0; idx < A.cols; ++idx) {
+				sum += A.data[rowA * A.cols + idx] * B.data[idx * B.cols + colB];
+			}
+			mult.data[rowA * mult.cols + colB] = sum;
 		}
 	}
+	return mult;
 }
+
+
+// T = A ^ T
+struct Matrix matrix_trans(struct Matrix A)
+{
+	struct Matrix tpose = matrix_allocate(A.rows, A.cols);
+	if (tpose.data == NULL) return tpose;
+
+	for (unsigned int row = 0; row < tpose.rows; row++) {
+		for (unsigned int col = 0; col < tpose.cols; col++) {
+			tpose.data[col * tpose.cols + row] = A.data[row * A.cols + col];
+		}
+	}
+	return tpose;
+}
+
+
+
+// A /= k
+void matrix_div_k(struct Matrix A, const double k)
+{
+	for (unsigned int idx = 0; idx < A.cols * A.rows; ++idx) {
+		A.data[idx] /= k;
+	}
+	return;
+}
+
+
+// A += B
+int matrix_add(struct Matrix A, struct Matrix B)
+{
+	if (A.cols != B.cols || A.rows != B.rows) return 1;
+
+	for (unsigned int idx = 0; idx < A.cols * A.rows; ++idx)
+		A.data[idx] += B.data[idx];
+	return 0;
+}
+
+
+// EXP = e^A
+struct Matrix matrix_exp(struct Matrix A)
+{
+	if (A.cols != A.rows) return MATRIX_NULL;
+	if (A.cols == 0) return MATRIX_NULL;
+
+	struct Matrix exp = matrix_allocate(A.rows, A.cols);
+	if (exp.data == NULL) return MATRIX_NULL;
+	matrix_set_one(exp);
+
+	struct Matrix term_prev = matrix_allocate(A.rows, A.cols);
+	if (term_prev.data == 0) {
+		matrix_delete(&exp);
+		return MATRIX_NULL;
+	};
+	matrix_set_one(term_prev);
+
+	struct Matrix term_next;
+
+	for (int idx = 1; idx < 100; ++idx) {
+
+		term_next = matrix_multip(A, term_prev);
+		if (term_next.data == NULL) {
+			matrix_delete(&term_prev);
+			matrix_delete(&exp);
+			return MATRIX_NULL;
+		}
+		matrix_div_k(term_next, idx);
+		memcpy(term_prev.data, term_next.data, sizeof(double) * term_prev.rows * term_prev.cols);
+		matrix_delete(&term_next);
+		matrix_add(exp, term_prev);
+	}
+	matrix_delete(&term_prev);
+	return exp;
+}
+
 
 void matrix_print(const struct Matrix A, const char* text)
 {
@@ -122,20 +209,18 @@ void matrix_print(const struct Matrix A, const char* text)
 int main()
 {
 	double values_A[] =
-	{ 1., 2., 3.,
-	  4., 5., 6.,
-	  7., 8., 9.
+	{ 1., 2., 1.,
+	  2., 2., 0.,
+	  3., 0., 3.
 	};
 
-	struct Matrix A = matrix_create(3, 3);
+	struct Matrix A = matrix_allocate(3, 3);
 	matrix_set_one(A);
-	struct Matrix B = matrix_create(3, 3);
+	struct Matrix B = matrix_allocate(3, 3);
 	matrix_set_one(B);
-	struct Matrix C = matrix_create(3, 3);
-	struct Matrix D = matrix_create(3, 3);
-	struct Matrix P = matrix_create(3, 3);
-	struct Matrix T = matrix_create(3, 3);
-
+	struct Matrix C = matrix_allocate(3, 3);
+	struct Matrix D = matrix_allocate(3, 3);
+	
 	matrix_fill(A, values_A);
 	matrix_fill(B, values_A);
 
@@ -143,23 +228,30 @@ int main()
 
 	matrix_sub(A, B, D);
 
-	matrix_multip(A, B, P);
+	matrix_multip(A, B);
 
-	matrix_trans(A, T);
+	matrix_exp(A);
+
+	struct Matrix MULT = matrix_multip(A, B);
+	struct Matrix EXP = matrix_trans(matrix_exp(A));
+	struct Matrix T = matrix_trans(A);
+
 
 	matrix_print(A, "Matrix A");
 	matrix_print(B, "Matrix B");
-	matrix_print(C, "C = A + B");
-	matrix_print(D, "D = A - B");
-	matrix_print(P, "P = A * B");
-	matrix_print(T, "T = A^T");
+	matrix_print(C, "SUM: A + B");
+	matrix_print(D, "SUB: A - B");
+	matrix_print(MULT, "MULT: A * B");
+	matrix_print(T, "TRANS: A^T");
+	matrix_print(EXP, "EXP: A ^ e");
 
 	matrix_delete(&A);
 	matrix_delete(&B);
 	matrix_delete(&C);
 	matrix_delete(&D);
-	matrix_delete(&P);
+	matrix_delete(&MULT);
 	matrix_delete(&T);
+	matrix_delete(&EXP);
 
 	return(0);
 }
