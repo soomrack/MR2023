@@ -81,7 +81,6 @@ void matrix_fill(struct Matrix *M, enum MatrixType matrix_type) {
 void matrix_print(const struct Matrix M) {
     if (M.data == NULL) matrix_error(BAD_MATRIX_ERROR);
 
-    printf("\n");
     for (size_t idx = 1; idx <= M.cols * M.rows; ++idx) {
         printf("%.2f \t", M.data[idx - 1]);
         if (idx % M.cols == 0 && idx >= M.cols) printf("\n");
@@ -91,8 +90,21 @@ void matrix_print(const struct Matrix M) {
 
 
 struct Matrix matrix_create(const size_t rows, const size_t cols, enum MatrixType mat_type) {
+    if (rows == 0 && cols == 0) return MATRIX_NULL;
+
     struct Matrix M = matrix_allocate(rows, cols);
-    if (M.data != NULL) matrix_fill(&M, mat_type);
+
+    if (M.data == NULL) return MATRIX_NULL;
+
+    if (rows == 0 || cols == 0) {
+        M.rows = rows;
+        M.cols = cols;
+        M.data = NULL;
+        return M;
+    }
+
+    matrix_fill(&M, mat_type);
+
     return M;
 }
 
@@ -264,9 +276,9 @@ struct Matrix matrix_exp(const struct Matrix A, const unsigned int n) {
     }
 
     struct Matrix exponent = matrix_create(A.rows, A.cols, IDENTITY);
-    struct Matrix pow = matrix_create(A.rows, A.cols, IDENTITY);
+    struct Matrix summand = matrix_create(A.rows, A.cols, IDENTITY);
     struct Matrix temp = matrix_allocate(A.rows, A.cols);
-    if (exponent.data == NULL && pow.data == NULL && temp.data == NULL) return MATRIX_NULL;
+    if (exponent.data == NULL && summand.data == NULL && temp.data == NULL) return MATRIX_NULL;
 
     if (n == 0) return exponent;
 
@@ -276,23 +288,23 @@ struct Matrix matrix_exp(const struct Matrix A, const unsigned int n) {
     }
 
     for (unsigned int idx = 1; idx <= n; idx++) {
-        temp = matrix_product(pow, A);
+        temp = matrix_product(summand, A);
         if (temp.data == NULL) return MATRIX_NULL;
-        matrix_copy(temp, pow);
+        matrix_copy(temp, summand);
         matrix_free(&temp);
 
-        temp = matrix_multiply(pow, 1. / idx);
+        temp = matrix_multiply(summand, 1. / idx);
         if (temp.data == NULL) return MATRIX_NULL;
-        matrix_copy(temp, pow);
+        matrix_copy(temp, summand);
         matrix_free(&temp);
 
-        temp = matrix_sum(exponent, pow);
+        temp = matrix_sum(exponent, summand);
         if (temp.data == NULL) return MATRIX_NULL;
         matrix_copy(temp, exponent);
         matrix_free(&temp);
     }
 
-    matrix_free(&pow);
+    matrix_free(&summand);
 
     return exponent;
 }
