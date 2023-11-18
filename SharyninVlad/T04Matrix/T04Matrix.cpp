@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <cstring>
 
 typedef double MatrixItem;
 enum MatrixType { ZERO, ONES, RANDOM, I };
@@ -10,30 +12,49 @@ private:
     MatrixItem* data;
 
 public:
-    Matrix();     
+    Matrix();
     Matrix(const size_t n);
     Matrix(const size_t row, const size_t col);
+    Matrix(const Matrix& M); 
+    Matrix(Matrix&& M);
     ~Matrix();
 
 public:
-    Matrix& operator = (const Matrix& M);
-    Matrix& operator += (const Matrix& M);
-    Matrix& operator -= (const Matrix& M);
-    Matrix& operator *= (const double k);
-    Matrix& operator *= (const Matrix& M);
-
-    Matrix& operator + (const Matrix& M);
-    Matrix& operator - (const Matrix& M);
-    Matrix& operator * (const Matrix& M);
-    Matrix& operator * (const double k);
+    Matrix& operator= (const Matrix& M);
+    Matrix& operator+= (const Matrix& M);
+    Matrix& operator-= (const Matrix& M);
+    Matrix& operator*= (const double k);
+    Matrix& operator*= (const Matrix& M);
 
 public:
     void print();
-    void fill(enum MatrixType mat_type);
+    void set(enum MatrixType mat_type);
     void transposition(const Matrix& M);
     double determinant(void);
     void exp(const unsigned int level);
 };
+
+
+Matrix operator+(const Matrix& M, const Matrix& K);
+Matrix operator-(const Matrix& M, const Matrix& K);
+Matrix operator*(const Matrix& M, const Matrix& K);
+Matrix operator*(const double k, const Matrix& M);
+Matrix operator*(const Matrix& M, const double k);
+
+
+class Matrix_Exception : public std::exception
+{
+private:
+    std::string message;
+public:
+    Matrix_Exception(std::string message) : message{ message } {}
+    std::string get_message() const { return message; }
+};
+
+Matrix_Exception INCORRECT_INPUT_MATRIX("Incorrect input matrix\n");
+Matrix_Exception INCORRECT_DIMENTION_OF_MATRIX("The matrix has an incorrect dimension\n");
+Matrix_Exception NULL_MATRIX("Your matrix is empty\n");
+Matrix_Exception OTHER_ERROR("An unfamiliar error\n");
 
 
 Matrix::Matrix() {
@@ -59,14 +80,41 @@ Matrix::Matrix(const size_t row, const size_t col) {
 }
 
 
+Matrix::Matrix(const Matrix& M) {
+    rows = M.rows;
+    cols = M.cols;
+
+    delete[] data;
+    data = new MatrixItem[rows * cols];
+
+    for (unsigned int idx = 0; idx < rows * cols; idx++) {
+        data[idx] = M.data[idx];
+    }
+}
+
+
+Matrix::Matrix(Matrix&& M) {
+    rows = M.rows;
+    cols = M.cols;
+    data = M.data;
+
+    M.rows = 0;
+    M.cols = 0;
+    M.data = nullptr;
+}
+
+
 Matrix::~Matrix() {
     rows = 0;
     cols = 0;
+    delete[] data;
 }
 
 
 void Matrix::print()
 {
+    if (data == nullptr) throw NULL_MATRIX;
+
     std::cout <<  "\n";
     for (size_t r = 0; r < rows; r++) {
         std::cout << "[";
@@ -81,13 +129,12 @@ void Matrix::print()
 }
 
 
-void Matrix::fill(enum MatrixType mat_type)
+void Matrix::set(enum MatrixType mat_type)
 {
     switch (mat_type)
     {
     case (ZERO):
-        for (size_t idx = 0; idx < cols * rows; idx++)
-            data[idx] = 0.0;
+        memset(data, 0, cols * rows * sizeof(MatrixItem));        
         break;
 
     case (ONES):
@@ -101,14 +148,9 @@ void Matrix::fill(enum MatrixType mat_type)
         break;
 
     case (I):
-        for (size_t row = 0; row < rows; row++)
-            for (size_t col = 0; col < cols; col++)
-            {
-                if (col == row)
-                    data[row * cols + col] = 1;
-                else
-                    data[row * cols + col] = 0;
-            }
+        this->set(ZERO);
+        for (size_t row_col = 0; row_col < rows; row_col++) 
+            data[row_col * cols + row_col] = 1;
         break;
     }   
 }
@@ -116,6 +158,8 @@ void Matrix::fill(enum MatrixType mat_type)
 
 void Matrix::transposition(const Matrix& M)
 {
+    if (data == nullptr) throw NULL_MATRIX;
+
     for (size_t row = 0; row < M.rows; row++)
         for (size_t col = 0; col < M.cols; col++)
             data[row * M.rows + col] = M.data[col * M.cols + row];
@@ -136,44 +180,46 @@ double Matrix::determinant(void)
             (data[0] * data[5] * data[7]) - \
             (data[1] * data[3] * data[8]);
     }
+
+    else throw INCORRECT_INPUT_MATRIX;
 }
 
 
 void Matrix::exp(const unsigned int level) {
-    Matrix R(rows, cols);
-    R.fill(I);
+    if (data == nullptr) throw NULL_MATRIX;
 
-    double n = 1;
+    Matrix R(rows, cols);
+    R.set(I);
+
+    double n = 1.0;
     Matrix temp = R;
     for (unsigned int idx = 1; idx < level; idx++) {
         temp *= *this;
         n /= (idx);
-        R += (temp * n); //почему то tmp = R
+        R += (temp * n); 
     }
-
     *this = R;
 }
 
 
-Matrix& Matrix::operator = (const Matrix& M) {
-    if (this != &M) {
-        if (data != nullptr)
-            delete[] data;
+Matrix& Matrix::operator= (const Matrix& M) {
+    if (this == &M) return *this;    
+    if (data != nullptr) delete data;
 
-        rows = M.rows;
-        cols = M.cols;
+    rows = M.rows;
+    cols = M.cols;
 
-        this->data = new double[rows * cols];
-        for (size_t idx = 0; idx < rows * cols; idx++) {
-            data[idx] = M.data[idx];
-        }
-    }
+    this->data = new MatrixItem[rows * cols];
+    memcpy(data, M.data, cols * rows * sizeof(MatrixItem));
 
     return *this;
 }
 
 
-Matrix& Matrix::operator += (const Matrix& M) {
+Matrix& Matrix::operator+= (const Matrix& M) { 
+    if ((rows != M.rows) or (cols != M.cols)) 
+        throw INCORRECT_DIMENTION_OF_MATRIX;
+
     for (size_t idx = 0; idx < rows * cols; idx++) {
         data[idx] += M.data[idx];
     }
@@ -181,7 +227,10 @@ Matrix& Matrix::operator += (const Matrix& M) {
 }
 
 
-Matrix& Matrix::operator -= (const Matrix& M) {
+Matrix& Matrix::operator-= (const Matrix& M) {
+    if ((rows != M.rows) or (cols != M.cols))
+        throw INCORRECT_DIMENTION_OF_MATRIX;
+
     for (size_t idx = 0; idx < rows * cols; idx++) {
         data[idx] -= M.data[idx];
     }
@@ -189,7 +238,9 @@ Matrix& Matrix::operator -= (const Matrix& M) {
 }
 
 
-Matrix& Matrix::operator *= (const double k) {
+Matrix& Matrix::operator*= (const double k) {
+    if (data == nullptr) throw NULL_MATRIX;
+
     for (size_t idx = 0; idx < rows * cols; idx++) {
         data[idx] *= k;
     }
@@ -197,79 +248,169 @@ Matrix& Matrix::operator *= (const double k) {
 }
 
 
-Matrix& Matrix::operator *= (const Matrix& M) {
+Matrix& Matrix::operator*= (const Matrix& M) {
+    if (cols != M.rows)
+        throw INCORRECT_DIMENTION_OF_MATRIX;
+
     Matrix R(rows, M.cols);
-    R.fill(ZERO);
+    R.set(ZERO);
     for (size_t row = 0; row < R.rows; row++)
         for (size_t col = 0; col < R.cols; col++)
             for (size_t idx = 0; idx < M.rows; idx++)
-                R.data[row * R.cols + col] += data[row * cols + idx] * M.data[idx * M.cols + col];            
-    return R;
-}
-
-
-Matrix& Matrix::operator + (const Matrix& M) {
-    for (size_t idx = 0; idx < rows * cols; idx++) {
-        data[idx] += M.data[idx];
-    }
+                R.data[row * R.cols + col] += data[row * cols + idx] * M.data[idx * M.cols + col]; 
+    
+    cols = R.cols;
+    rows = R.rows;
+    data = R.data;
+    R.data = nullptr;
     return *this;
 }
 
 
-Matrix& Matrix::operator - (const Matrix& M) {
-    for (size_t idx = 0; idx < rows * cols; idx++) {
-        data[idx] -= M.data[idx];
-    }
-    return *this;
+Matrix operator+(const Matrix& M, const Matrix& K) {
+    Matrix rez = M;
+    rez += K;
+    return rez;
 }
 
 
-Matrix& Matrix::operator * (const Matrix& M) {
-    Matrix R(rows, M.cols);
-    R.fill(ZERO);
-
-    for (size_t row = 0; row < rows; row++)
-        for (size_t col = 0; col < M.cols; col++)
-            for (size_t idx = 0; idx < cols; idx++)
-                R.data[row * cols + col] += data[row * cols + idx] * M.data[idx * M.cols + col];
-    return R;
+Matrix operator-(const Matrix& M, const Matrix& K) {
+    Matrix rez = M;
+    rez -= K;
+    return rez;
 }
 
 
-Matrix& Matrix::operator * (const double k) {
-    for (size_t idx = 0; idx < rows * cols; idx++) {
-        data[idx] *= k;
-    }
-    return *this;
+Matrix operator*(const Matrix& M, const Matrix& K) {
+    Matrix rez = M;
+    rez *= K;
+    return rez;
 }
+
+
+Matrix operator*(const double k, const Matrix& M) {
+    Matrix rez = M;
+    rez *= k;
+    return rez;
+}
+
+
+Matrix operator*(const Matrix& M, const double k) {
+    return k * M;
+}
+
 
 
 int main(void)
 {
-    Matrix A(3), B(3, 3), C(3);
-    A.fill(I);
-    A.print();
+    try {
+        unsigned int choise, run = 1;
+        Matrix A(3), B(3, 3), C(4);
 
-    B.fill(RANDOM);
-    B.print();
+        while (run)
+        {
+            std::cout << "\n"
+                "0 - exit\n"
+                "1 - set\n"
+                "2 - print A, B, C\n"
+                "3 - C = A\n"
+                "4 - C += A\n"
+                "5 - C -= A\n"
+                "6 - C *= 2.0\n"
+                "7 - C *= B\n"
+                "8 - C = A + B\n"
+                "9 - C = A - B\n"
+                "10 - C = A * 2\n"
+                "11 - C = A * B\n"
+                "12 - A.print()\n"
+                "13 - B.print()\n"
+                "14 - C.transposition(A)\n"
+                "15 - C.determinant()\n"
+                "16 - C.exp(20)\n"
+                << std::endl;
 
-    C.fill(I);
-    //C.print();
+            std::cout << "choise: " << std::endl;
+            std::cin >> choise;
 
-    //C.transposition(A);
-    //std::cout << C.determinant() << std::endl;
-    C.exp(20);
-    //C = A;
-    //C += A;
-    //C -= A;
-    //C *= 2.0;
-    //C *= B;
-    // 
-    //C = A + B;
-    //C = A - B;
-    //C = A * 2;
-    //C = A * B;
-
-    C.print();
-    return 0;
+            switch (choise)
+            {
+            case 0:
+                run = 0;
+                break;
+            case 1:
+                A.set(RANDOM);
+                B.set(RANDOM);
+                C.set(I);
+                break;
+            case 2:
+                A.print();
+                B.print();
+                C.print();
+                break;
+            case 3:
+                C = A;
+                C.print();
+                break;
+            case 4:
+                C += A;
+                C.print();
+                break;
+            case 5:
+                C -= A;
+                C.print();
+                break;
+            case 6:
+                C *= 2.0;
+                C.print();
+                break;
+            case 7:
+                C *= B;
+                C.print();
+                break;
+            case 8:
+                C = A + B;
+                C.print();
+                break;
+            case 9:
+                C = A - B;
+                C.print();
+                break;
+            case 10:
+                C = A * 2;
+                C.print();
+                break;
+            case 11:
+                C = A * B;
+                C.print();
+                break;
+            case 12:
+                A.print();
+                break;
+            case 13:
+                B.print();
+                break;
+            case 14:
+                C.transposition(A);
+                C.print();
+                break;
+            case 15:
+                std::cout << C.determinant() << std::endl;
+                break;
+            case 16:
+                C.exp(20);
+                C.print();
+                break;
+            case 17:
+                break;
+            default:
+                printf("wrong choise\n");
+                break;
+            }
+        }
+        return 0;
+    }
+    catch (const Matrix_Exception& exception)
+    {
+        std::cout << exception.get_message() << std::endl;
+    }
 }
