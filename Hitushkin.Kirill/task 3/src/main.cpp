@@ -3,10 +3,10 @@
 #include "matrix.hpp"
 
 
-void test(string name, bool success)
+void test(std::string name, bool success)
 {
-    cout << name << " test: ";
-    cout << ((success) ? "SUCCESS\n" : "FAIL\n");
+    std::cout << name << " test: ";
+    std::cout << ((success) ? "SUCCESS\n" : "FAIL\n");
 }
 
 int main()
@@ -20,14 +20,12 @@ int main()
     Matrix C(2, 2);
     C = {5, 8, 9, 1};
     
-    A(2, 1) = 12;
-
+    A[2, 1] = 12;
     
     Matrix S = C + B;
     Matrix ans_S(2, 2);
     ans_S = {7.5, 11, 13, 6};
     test("Sum", S == ans_S);
-    
     
     Matrix M(2, 2);
     M.set_zero();

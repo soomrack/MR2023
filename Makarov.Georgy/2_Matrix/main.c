@@ -6,7 +6,7 @@ int main() {
     struct Matrix C = matrix_create(3, 3, IDENTITY);
     struct Matrix D = matrix_create(3, 3, IDENTITY);
 
-    matrix_print(&A);
+    matrix_print(A);
 
     C = matrix_product(A, A);
     C = matrix_multiply(C, 0.5);
@@ -22,9 +22,9 @@ int main() {
 
 
     A = matrix_exp(A, 3);
-    matrix_print(&A);
+    matrix_print(A);
 
-    matrix_print(&B);
+    matrix_print(B);
 
     matrix_free(&A);
     matrix_free(&B);
