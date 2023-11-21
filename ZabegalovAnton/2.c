@@ -103,7 +103,7 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 }
 
 
-// A - B = C
+// C = A - B
 struct Matrix matrix_difference(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) return MATRIX_NULL;
@@ -198,21 +198,24 @@ struct Matrix matrix_degree(const struct Matrix A, const size_t degree)
     struct Matrix C = matrix_allocate(A.rows, A.cols);
     if (C.data == NULL) return C;
     struct Matrix B = matrix_allocate(A.rows, A.cols);
-    if (C.data == NULL) return B;
+    if (C.data == NULL){
+        matrix_free(&C); 
+        return B;
+    }
 
-    memcpy(B.data, A.data, C.cols * C.rows * sizeof(MatrixItem));
+    memcpy(B.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
 
     for(int i = 1; i < degree; i++){
         C = matrix_multiply(B, A);
         memcpy(B.data, C.data, B.cols * B.rows * sizeof(MatrixItem));
+        matrix_free(&C);
     }
 
-    matrix_free(&C);
-    return B;
+    return B; 
 }
 
 
-unsigned long int factorial(const size_t x)
+long double factorial(const size_t x)
 {
     unsigned long int f = 1;
     for(int i = 2; i <= x; i++){
@@ -222,35 +225,54 @@ unsigned long int factorial(const size_t x)
 }
 
 
+struct Matrix matrix_unit(const struct Matrix A)
+{
+    struct Matrix E = matrix_allocate(A.rows, A.cols);
+    if (E.data == NULL) return E;
+
+    for (int idx = 0; idx < A.rows * A.cols; idx++){
+        E.data[idx] = 0;
+    }
+    for(int idx = 0; idx < A.rows; idx++){
+        E.data[idx + idx * A.cols] = 1.;
+    }
+
+    return E;
+}
+
+
 struct Matrix matrix_exponent(const struct Matrix A)
 {
     if(A.rows != A.cols) return MATRIX_NULL;
 
     struct Matrix E = matrix_allocate(A.rows, A.cols);
     if (E.data == NULL) return E;
+
     struct Matrix e = matrix_allocate(A.rows, A.cols);
-    if (e.data == NULL) return e;
-
-    for (int idx = 0; idx < A.rows * A.cols; idx++){
-        E.data[idx] = 0;
-    }
-
-    for(int idx = 0; idx < A.rows; idx++){
-        E.data[idx + idx * A.cols] = 1.;
+    if (e.data == NULL){
+        matrix_free(&E);
+        return e;
     }
 
     struct Matrix AA = matrix_allocate(A.rows, A.cols);
-    if (AA.data == NULL) return AA;
-    int f;
+    if (AA.data == NULL){
+        matrix_free(&E);
+        matrix_free(&e);
+        return AA;
+    }
 
+    long double f;
+    E = matrix_unit(A);
     e = matrix_sum(A, E);
+
     for(int n = 2; n <= 20; n++){
         AA = matrix_degree(A, n);
         f = factorial(n);
         matrix_scalar(AA, (double)1/f);
         matrix_add(e, AA);
+        matrix_free(&AA);
     }
-    matrix_free(&AA);
+
     matrix_free(&E);
     return e;
 }
@@ -267,7 +289,7 @@ int main()
     matrix_print(A);
     matrix_print(B);
 
-    /*C = matrix_degree(A, 2);
+    /*C = matrix_degree(A, 3);
     matrix_print(C);
 
     C = matrix_multiply(A, A);
