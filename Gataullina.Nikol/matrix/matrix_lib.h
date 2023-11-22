@@ -242,6 +242,7 @@ Matrix matrix_copy(const Matrix matrix)
 
 Matrix sum_for_exp(const size_t accuracy, const Matrix *A)
 {
+    matrix_free(&E);
     Matrix E = matrix_allocation(A->rows, A->cols);
     if(E.data == NULL){
         return MATRIX_NULL;
@@ -256,12 +257,14 @@ Matrix sum_for_exp(const size_t accuracy, const Matrix *A)
         return *A;
     }
     
- //   Matrix E = matrix_allocation(A.rows, A.cols);
     if(accuracy > 2){
         E = matrix_copy(*A);
         for(size_t id = 2; id < accuracy; ++id){
              Matrix buf = matrix_copy(E);
+
+            matrix_free(&E);
             E = matrix_multiplication(&buf, A);
+
             for(size_t idx = 0; idx < E.rows * E.cols; ++idx){
                 E.data[idx] /= (id);
             }
@@ -279,7 +282,7 @@ Matrix matrix_exponent(const Matrix *A, const size_t accuracy)
         return MATRIX_NULL;
     }
 
-     Matrix E = matrix_allocation(A->rows, A->cols);
+    Matrix E = matrix_allocation(A->rows, A->cols);
     
      if(E.data == NULL){
         return MATRIX_NULL;
