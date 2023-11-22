@@ -175,9 +175,82 @@ double det(const struct Matrix A)
 }
 
 
+struct Matrix matrix_ident(size_t rows, size_t cols)
+{
+    struct Matrix M = matrix_allocate(rows, cols);
+    if (M.data == NULL) {
+        return MATRIX_NULL;
+    }
+    for (size_t idx = 0; idx < rows * cols; idx++) {
+        if (idx % (rows + 1) == 0) {
+            M.data[idx] = 1.;
+        }
+        else {
+            M.data[idx] = 0;
+        }
+    }
+    return M;
+}
+
+
+struct Matrix sum_for_exp(const size_t deg_acc, const struct Matrix A)
+{
+    struct Matrix E = matrix_allocate(A.rows, A.cols);
+    if (E.data == NULL) {
+        return MATRIX_NULL;
+    }
+    if (deg_acc == 1) {
+        struct Matrix E = matrix_ident(A.cols, A.rows);
+        return E;
+    }
+
+    if (deg_acc == 2) {
+        return A;
+    }
+
+    if (deg_acc > 2) {
+        E = A;
+        for (size_t id = 2; id < deg_acc; ++id) {
+            struct Matrix buf = E;
+            E = matrix_multiply(buf, A);
+            for (size_t idx = 0; idx < E.rows * E.cols; ++idx) {
+                E.data[idx] /= (id);
+            }
+            matrix_free(&buf);
+        }
+    }
+    return E;
+}
+
+
+struct Matrix matrix_exp(struct Matrix* A, const size_t accuracy)
+{
+    if (A->cols != A->rows) {
+        matrix_error_message();
+        return MATRIX_NULL;
+    }
+
+    struct Matrix E = matrix_allocate(A->rows, A->cols);
+    if (E.data == NULL) {
+        return MATRIX_NULL;
+    }
+
+    struct Matrix matrix_transfer;
+
+    for (size_t deg_acc = 1; deg_acc <= accuracy; ++deg_acc) {
+        matrix_transfer = sum_for_exp(deg_acc, *A);
+        struct Matrix buf1 = E;
+        E = matrix_sum(buf1, matrix_transfer);
+        matrix_free(&buf1);
+        matrix_free(&matrix_transfer);
+    }
+        return E;
+}
+
+
 int main()
 {
-    struct Matrix A, B, C, T;
+    struct Matrix A, B, C, T, E;
 
 
     printf(" First matrix\n");
@@ -225,9 +298,15 @@ int main()
     printf("%4.2f \n", det(A));
 
 
+    printf("\nExponent of the first matrix\n");
+    E = matrix_exp(&A, 2);
+    matrix_print(E);
+
+
     matrix_free(&A);
     matrix_free(&B);
     matrix_free(&C);
+    matrix_free(&E);
 
 
     return 0;
