@@ -46,7 +46,7 @@ struct Matrix matrix_create(const size_t rows, const size_t cols, const MatrixIt
 
 struct Matrix matrix_make_ident(size_t rows, size_t cols)
 {
-    struct Matrix I = matrix_init(rows, cols);
+    struct Matrix I = matrix_create(rows, cols);
     if (I.data == NULL) {
         return MATRIX_NULL;
     }
