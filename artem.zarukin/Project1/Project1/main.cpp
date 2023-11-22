@@ -3,7 +3,7 @@
 
 const int BOBWAGE = 200000;
 const int ALICEWAGE = 200000;
-const float DEPOSITINTEREST = 0.009342;
+    // Объявляем начальные условия
 const int MORTGAGEINTEREST = 0.07;
 const int BOBINITIALCAPITAL = 1000000;
 const int ALICEINITIALCAPITAL = 1000000;
