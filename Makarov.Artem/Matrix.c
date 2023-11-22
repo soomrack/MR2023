@@ -26,7 +26,6 @@ struct Matrix matrix_allocate(const size_t rows, const size_t cols)
     }
     if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) return MATRIX_NULL;
 
-
     struct Matrix A = { .cols = cols, .rows = rows, .data = NULL };
     A.data = (MatrixItem*)malloc(A.cols * A.rows * sizeof(MatrixItem));
     if (A.data == NULL) return MATRIX_NULL;
@@ -92,7 +91,6 @@ int matrix_subtraction(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) return 1;
 
-
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx) {
         A.data[idx] -= B.data[idx];
     }
@@ -104,10 +102,8 @@ struct Matrix matrix_difference(const struct Matrix A, const struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) return MATRIX_NULL;
 
-
     struct Matrix C = matrix_allocate(A.rows, A.cols);
     if (C.data == NULL) return MATRIX_NULL;
-
 
     memcpy(C.data, A.data, C.cols * C.rows * sizeof(MatrixItem));
     matrix_subtraction(C, B);
@@ -119,7 +115,6 @@ struct Matrix matrix_scalar(const struct Matrix A, const double x)
 {
     struct Matrix C = matrix_allocate(A.rows, A.cols);
     if (C.data == NULL) return MATRIX_NULL;
-
 
     for (size_t idx = 0; idx < A.cols * A.rows; idx++) {
         C.data[idx] = x * A.data[idx];
@@ -150,7 +145,6 @@ struct Matrix transpose(const struct Matrix A)
 {
     struct Matrix T = matrix_allocate(A.cols, A.rows);
     if (T.data == NULL) return MATRIX_NULL;
-
 
     for (size_t rows = 0; rows < A.rows; rows++) {
         for (size_t cols = 0; cols < A.cols; cols++) {
