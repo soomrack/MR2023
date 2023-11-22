@@ -254,15 +254,7 @@ struct Matrix matrix_exp(struct Matrix A, unsigned long int n)
     return E;
 }
 
-
   
-
-
-}
-
-  
-
- 
 
 
 void matrix_print(const struct Matrix A)
