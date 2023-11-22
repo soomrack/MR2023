@@ -16,7 +16,7 @@ private:
     size_t cols;
     MatrixItem* data;
 public:
-    Matrix();
+    Matrix() : rows(0), cols(0), data(nullptr) {};
     Matrix(const size_t cols, const size_t rows);
     Matrix(Matrix& A);
     Matrix(Matrix&& A);
@@ -67,14 +67,8 @@ void Matrix::free()
 }
 
 
-Matrix::Matrix() : rows(0), cols(0) 
-{
-    data = nullptr;
-}
-
-
 Matrix::Matrix(const size_t cols, const size_t rows)
-    : cols(cols), rows(rows)
+    : cols(cols), rows(rows), data(nullptr)
 {
     if (cols == 0 || rows == 0) {
         data = nullptr;
