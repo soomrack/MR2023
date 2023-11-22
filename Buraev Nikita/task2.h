@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-// Функция для вывода сообщения об ошибке и выхода из программы
-void errorExit(const char *errorMessage) {
+// Функция для вывода сообщения об ошибке и возврата NaN
+double errorMsg(const char *errorMessage) {
     fprintf(stderr, "%s\n", errorMessage);
-    exit(1);
+    return NAN;
 }
 
 // Структура для представления матрицы
@@ -24,7 +24,7 @@ Matrix createMatrix(size_t rows, size_t cols) {
     // Выделяем память для указателей на строки и данных матрицы одним блоком
     A.data = (double **)malloc(rows * sizeof(double *) + rows * cols * sizeof(double));
     if (!A.data) {
-        errorExit("Ошибка выделения памяти для матрицы.");
+        return errorMsg("Ошибка выделения памяти для матрицы.");
     }
 
     // Устанавливаем указатели на строки
@@ -44,7 +44,7 @@ void freeMatrix(Matrix A) {
 // Сложение матриц
 Matrix sum(Matrix A, Matrix B) {
     if (A.rows != B.rows || A.cols != B.cols) {
-        errorExit("Невозможно сложить матрицы разных размеров.");
+        return errorMsg("Невозможно сложить матрицы разных размеров.");
     }
 
     Matrix result = createMatrix(A.rows, A.cols);
@@ -61,7 +61,7 @@ Matrix sum(Matrix A, Matrix B) {
 // Вычитание матриц
 Matrix sub(Matrix A, Matrix B) {
     if (A.rows != B.rows || A.cols != B.cols) {
-        errorExit("Невозможно вычесть матрицы разных размеров.");
+        return errorMsg("Невозможно вычесть матрицы разных размеров.");
     }
 
     Matrix result = createMatrix(A.rows, A.cols);
@@ -78,7 +78,7 @@ Matrix sub(Matrix A, Matrix B) {
 // Умножение матриц
 Matrix mult(Matrix A, Matrix B) {
     if (A.cols != B.rows) {
-        errorExit("Невозможно умножить матрицы с данными размерами.");
+        return errorMsg("Невозможно умножить матрицы с данными размерами.");
     }
 
     Matrix result = createMatrix(A.rows, B.cols);
@@ -111,8 +111,7 @@ Matrix tr(Matrix A) {
 // Вычисление детерминанта
 double detLU(Matrix A) {
     if (A.rows != A.cols) {
-        fprintf(stderr, "Детерминант можно вычислить только для квадратных матриц.\n");
-        exit(1);
+        return errorMsg("Детерминант можно вычислить только для квадратных матриц.");
     }
 
     size_t n = A.rows;
@@ -127,6 +126,9 @@ double detLU(Matrix A) {
     }
 
     for (size_t k = 0; k < n - 1; k++) {
+        if (copy.data[k][k] == 0.0) {
+            return errorMsg("Найдено деление на ноль при вычислении детерминанта.");
+        }
         for (size_t i = k + 1; i < n; i++) {
             double factor = copy.data[i][k] / copy.data[k][k];
             for (size_t j = k; j < n; j++) {
@@ -145,7 +147,7 @@ double detLU(Matrix A) {
     return det;
 }
 
-/* Проверка на нулевую матрицу
+// Проверка на нулевую матрицу
 int isZeroMatrix(Matrix A) {
     for (size_t row = 0; row < A.rows; row++) {
         for (size_t col = 0; col < A.cols; col++) {
@@ -156,7 +158,6 @@ int isZeroMatrix(Matrix A) {
     }
     return 1; // Нулевая матрица
 }
-*/
 
 // Умножение матрицы на скаляр
 Matrix multScalar(Matrix A, double scalar) {
@@ -169,114 +170,32 @@ Matrix multScalar(Matrix A, double scalar) {
     return result;
 }
 
-// Функция для вычисления экспоненты матрицы методом Паде
-Matrix expmPade(Matrix A, int order) {
+// Функция для вычисления экспоненты матрицы методом Тейлора
+Matrix matrix_exponent(const Matrix A, const double accuracy) {
     if (A.rows != A.cols) {
         errorExit("Матрица должна быть квадратной для вычисления экспоненты.");
     }
 
     size_t n = A.rows;
-    Matrix X = createMatrix(n, n);
-    Matrix Y = createMatrix(n, n);
-    Matrix D = createMatrix(n, n);
-    Matrix N = createMatrix(n, n);
-    Matrix temp = createMatrix(n, n);
+    Matrix C = createMatrix(n, n);
+    Matrix B = createMatrix(n, n);
+    copyMatrix(B, A);
 
-    int j, k;
-    for (j = 1; j <= order; j++) {
-        k = 2 * j - 1;
-        A = mult(A, A);
-        D = mult(A, D);
-        N = mult(A, N);
-        temp = mult(A, temp);
-        D = sum(D, temp);
-        temp = mult(A, temp);
-        N = sum(N, temp);
+    int degree = (int)(ceil(1.0 / accuracy));
+
+    for (int trm = 2; trm <= degree; ++trm) {
+        addMultMatrix(B, A);
+        multMatrixByScalar(B, 1.0 / trm);
+        addMatrix(C, B);
     }
 
-    for (j = 1; j <= order; j++) {
-        k = 2 * j - 1;
-        A = mult(A, A);
-        X = sum(X, multScalar(A, 1.0 / (k * k) / D));
-        Y = sum(Y, multScalar(A, 1.0 / (k * k) / N));
+    addMatrix(C, A);
+
+    for (size_t diag = 0; diag < C.rows; ++diag) {
+        C.data[diag][diag] += 1;
     }
 
-    Matrix result = sub(X, Y);
+    freeMatrix(B);
 
-    freeMatrix(X);
-    freeMatrix(Y);
-    freeMatrix(D);
-    freeMatrix(N);
-    freeMatrix(temp);
-
-    return result;
-}
-
-/* Экспоненциальная функция для матрицы
-Matrix expm(Matrix A) {
-    size_t n = A.rows;
-    Matrix result = createMatrix(n, n);
-
-    for (size_t row = 0; row < n; row++) {
-        for (size_t col = 0; col < n; col++) {
-            result.data[row][col] = (row == col) ? 1.0 : 0.0;
-        }
-    }
-
-    Matrix term = createMatrix(n, n);
-    Matrix tmp = createMatrix(n, n);
-
-    double factorial = 1.0;
-    size_t k = 0;
-
-    for (size_t row = 0; row < n; row++) {
-        for (size_t col = 0; col < n; col++) {
-            term.data[row][col] = A.data[row][col];
-        }
-    }
-
-    while (1) {
-        tmp = createMatrix(n, n);
-        for (size_t row = 0; row < n; row++) {
-            for (size_t col = 0; col < n; col++) {
-                tmp.data[row][col] = 0;
-                for (size_t l = 0; l < n; l++) {
-                    tmp.data[row][col] += term.data[row][l] * A.data[l][col];
-                }
-            }
-        }
-
-        for (size_t row = 1; row <= k; row++) {
-            tmp = mult(tmp, A);
-        }
-
-        for (size_t row = 1; row <= k; row++) {
-            factorial *= row;
-        }
-
-        double termFactor = 1.0 / factorial;
-        tmp = multScalar(tmp, termFactor);
-
-        tmp = sum(result, tmp);
-        freeMatrix(result);
-        result = tmp;
-
-        if (isZeroMatrix(tmp)) {
-            break;
-        }
-
-        k++;
-        factorial = 1.0;
-    }
-
-    freeMatrix(term);
-    freeMatrix(tmp);
-
-    return result;
-}
-*/
-
-int main() {
-    // Ваш код
-    return 0;
+    return C;
 }
