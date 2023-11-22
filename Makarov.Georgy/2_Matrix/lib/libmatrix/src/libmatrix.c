@@ -278,7 +278,12 @@ struct Matrix matrix_exp(const struct Matrix A, const unsigned int n) {
     struct Matrix exponent = matrix_create(A.rows, A.cols, IDENTITY);
     struct Matrix summand = matrix_create(A.rows, A.cols, IDENTITY);
     struct Matrix temp = matrix_allocate(A.rows, A.cols);
-    if (exponent.data == NULL && summand.data == NULL && temp.data == NULL) return MATRIX_NULL;
+    if (exponent.data == NULL || summand.data == NULL || temp.data == NULL) {
+        matrix_free(&exponent);
+        matrix_free(&summand);
+        matrix_free(&temp);
+        return MATRIX_NULL;
+    }
 
     if (n == 0) return exponent;
 
@@ -289,17 +294,32 @@ struct Matrix matrix_exp(const struct Matrix A, const unsigned int n) {
 
     for (unsigned int idx = 1; idx <= n; idx++) {
         temp = matrix_product(summand, A);
-        if (temp.data == NULL) return MATRIX_NULL;
+        if (temp.data == NULL) {
+            matrix_free(&exponent);
+            matrix_free(&summand);
+            matrix_free(&temp);
+            return MATRIX_NULL;
+        }
         matrix_copy(temp, summand);
         matrix_free(&temp);
 
         temp = matrix_multiply(summand, 1. / idx);
-        if (temp.data == NULL) return MATRIX_NULL;
+        if (temp.data == NULL) {
+            matrix_free(&exponent);
+            matrix_free(&summand);
+            matrix_free(&temp);
+            return MATRIX_NULL;
+        }
         matrix_copy(temp, summand);
         matrix_free(&temp);
 
         temp = matrix_sum(exponent, summand);
-        if (temp.data == NULL) return MATRIX_NULL;
+        if (temp.data == NULL) {
+            matrix_free(&exponent);
+            matrix_free(&summand);
+            matrix_free(&temp);
+            return MATRIX_NULL;
+        }
         matrix_copy(temp, exponent);
         matrix_free(&temp);
     }
