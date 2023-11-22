@@ -44,11 +44,29 @@ struct Matrix matrix_create(const size_t rows, const size_t cols, const MatrixIt
 }
 
 
+struct Matrix matrix_make_ident(size_t rows, size_t cols)
+{
+    struct Matrix I = matrix_init(rows, cols);
+    if (I.data == NULL) {
+        return MATRIX_NULL;
+    }
+    for (size_t idx = 0; idx < rows * cols; idx++) {
+        if (idx % (rows + 1) == 0) {
+            I.data[idx] = 1.;
+        }
+        else {
+            I.data[idx] = 0;
+        }
+    }
+    return I;
+}
+
 void matrix_free(struct Matrix* A)
 {
     free(A->data);
     *A = MATRIX_NULL;
 }
+
 
 // A += B
 int matrix_add(const struct Matrix A, const struct Matrix B)
@@ -86,6 +104,7 @@ int matrix_subtraction(const struct Matrix A, const struct Matrix B)
     return 0;
 }
 
+
 // C = A - B 
 struct Matrix matrix_diff(const struct Matrix A, const struct Matrix B)
 {
@@ -105,6 +124,7 @@ struct Matrix matrix_diff(const struct Matrix A, const struct Matrix B)
     return C;
 }
 
+
 // coeff * A
 struct Matrix matrix_mult_scalar(const struct Matrix A, const double scalar)
 {
@@ -116,7 +136,6 @@ struct Matrix matrix_mult_scalar(const struct Matrix A, const double scalar)
     }
     return C;
 }
-
 
 
 // C = A * B
@@ -138,14 +157,18 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 }
 
 
-struct Matrix transposition(const struct Matrix A)
+
+
+struct Matrix matrix_transp(const struct Matrix A)
 {
     struct Matrix C = matrix_allocate(A.cols, A.rows);
-    if (C.data == NULL) return MATRIX_NULL;
+    if (C.data == NULL)
+        return C;
 
-    for (size_t rows = 0; rows < A.rows; rows++)
-        for (size_t cols = 0; cols < A.cols; cols++)
-            C.data[rows * A.rows + cols] = A.data[cols * A.cols + rows];
+    for (size_t row = 0; row < A.rows; ++row)
+        for (size_t col = 0; col < A.cols; ++col)
+            C.data[row * A.cols + col] = A.data[row + col * A.cols];
+
     return C;
 }
 
@@ -170,44 +193,76 @@ double det(const struct Matrix A)
 }
 
 
-struct Matrix sum_for_matrix_exp(struct Matrix A, unsigned int level)
-{
-    struct Matrix C, C2, C2N;
-    double n = 1.0;
 
-    if (level == 1) return A;
+    struct Matrix sum_for_e(const size_t deg_acc, const struct Matrix A)
+    {
+        struct Matrix E = matrix_(A.rows, A.cols);
 
-    for (unsigned int counter = 1; counter <= level; counter++) n *= counter;
+        if (E.data == NULL) {
+            return MATRIX_NULL;
+        }
 
-    C = matrix_mult(A, A);
+        if (deg_acc == 1) {
+            struct Matrix E = matrix_make_ident(A.cols, A.rows);
+            return E;
+        }
 
-    for (unsigned int counter = 2; counter <= level; counter++) {
-        C2 = matrix_mult(C, A);
-        matrix_free(&C);
+        if (deg_acc == 2) {
+            return A;
+        }
+
+        if (deg_acc > 2) {
+            E = A;
+            for (size_t id = 2; id < deg_acc; ++id) {
+                struct Matrix buf = E;
+                E = matrix_mult(buf, A);
+                for (size_t idx = 0; idx < E.rows * E.cols; ++idx) {
+                    E.data[idx] /= (id);
+                }
+                matrix_free(&buf);
+            }
+        }
+        return E;
     }
+   
 
-    C2 = matrix_mult_scalar(C2, 1 / (double)n);
-    return C2;
-}
+
+
 
 // C = e ^ (A)
-struct Matrix matrix_exp(struct Matrix A, unsigned long int level)
+struct Matrix matrix_exp(struct Matrix A, unsigned long int n)
 {
-    struct Matrix C, C3;
-
-    if (A.rows != A.cols) return MATRIX_NULL;
-
-    C3 = matrix_allocate(A.rows, A.cols);
-    if (C3.data == NULL) return MATRIX_NULL;
-    memcpy(C3.data, A.data, C3.cols * C3.rows * sizeof(MatrixItem));
-
-    for (unsigned int count = 1; count <= level; count++) {
-        C = sum_for_matrix_exp(A, count);
-        matrix_add(C3, C);
-        matrix_free(&C);
+    if (A.data == NULL) {
+        return MATRIX_NULL;
     }
-    return C3;
+
+    if (A.rows != A.cols) {
+        return MATRIX_NULL;
+    }
+    struct Matrix matrix_transfer;
+
+    for (size_t deg_acc = 1; deg_acc <= accuracy; ++deg_acc) {
+        matrix_transfer = sum_for_e(deg_acc, *A);
+        struct Matrix buf1 = E;
+        E = matrix_sum(buf1, matrix_transfer);
+        matrix_free(&buf1);
+        matrix_free(&matrix_transwfer);
+    }
+
+
+
+    return E;
 }
+
+
+  
+
+
+}
+
+  
+
+ 
 
 
 void matrix_print(const struct Matrix A)
@@ -265,7 +320,7 @@ int main()
     matrix_print(C);
 
     printf("Transposed first matrix\n");
-    C = transposition(A);
+    C = transp(A);
     matrix_print(C);
 
     printf("Determinant of the first matrix\n");
