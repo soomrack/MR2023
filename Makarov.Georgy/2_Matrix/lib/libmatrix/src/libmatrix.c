@@ -288,7 +288,16 @@ struct Matrix matrix_exp(const struct Matrix A, const unsigned int n) {
     if (n == 0) return exponent;
 
     if (n == 1) {
-        exponent = matrix_sum(exponent, A);
+        temp = matrix_sum(exponent, A);
+        if (temp.data == NULL) {
+            matrix_free(&exponent);
+            matrix_free(&summand);
+            matrix_free(&temp);
+            return MATRIX_NULL;
+        }
+        matrix_copy(temp, exponent);
+        matrix_free(&summand);
+        matrix_free(&temp);
         return exponent;
     }
 
