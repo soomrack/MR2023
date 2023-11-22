@@ -9,8 +9,8 @@ double payment_bob(double mortgage, int year, int flat, int start_capital)
 	int n = year * 12; // Mounth count while credit
 	float r = mortgage / 12; // Mounth rate
 	double count = pow((1 + r), (float)n);
-	double platezh = S * ((r * count) / (count - 1)); // Sum of annually payment during mortgage
-	return platezh;
+	double payment = S * ((r * count) / (count - 1)); // Sum of annually payment during mortgage
+	return payment;
 };
 
 double flat_bob(double flat, int year )
