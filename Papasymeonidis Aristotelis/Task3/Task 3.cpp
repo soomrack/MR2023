@@ -36,29 +36,10 @@ class Matrix_Calculator
             std::cout << "Error! Check your actions!" << std::endl;
         }
 
-        Matrix_Calculator matrix_init(const size_t rows, const size_t cols) //p
-        {
-            if (rows == 0 || cols == 0) {
-            throw"The matrix is not initialized";
-            }
-            // rows * cols < MAX_SIZE / sizeof(MatrixItem)
-            if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) throw"The matrix is not initialized";  
-
-            Matrix_Calculator A = { cols, rows, nullptr};
-            A.data = new double[A.cols * A.rows * sizeof(double)];
-
-            if (A.data == nullptr) {
-                throw"The matrix is not initialized";
-                matrix_error_message();
-            }
-
-            return A;
-        }
-
         Matrix_Calculator sum_for_e(const size_t deg_acc, const Matrix_Calculator& A) //p
         {
         // matrix_print(A);
-        Matrix_Calculator E = matrix_init(A.rows, A.cols);
+        Matrix_Calculator E{A.rows, A.cols};
 
         if (E.data == nullptr) {
         throw"Initialisation error";
@@ -95,18 +76,19 @@ class Matrix_Calculator
 
         Matrix_Calculator();
         Matrix_Calculator(size_t cols, size_t rows, MatrixItem* data);
+        Matrix_Calculator(size_t cols, size_t rows);
         ~Matrix_Calculator();
 
         void matrix_create(const size_t rows, const size_t cols, const double* values) //public
         {
-        Matrix_Calculator A = matrix_init(rows, cols);
+        Matrix_Calculator A = Matrix_Calculator(rows, cols);
         if (data == nullptr) Matrix_Calculator();
         memcpy(A.data, values, rows * cols * sizeof(double));
         }
 
         Matrix_Calculator matrix_make_ident(size_t rows, size_t cols) //public
         {
-        Matrix_Calculator I = matrix_init(rows, cols);
+        Matrix_Calculator I = Matrix_Calculator(rows, cols);
         if (I.data == nullptr) {
             throw"The matrix is not initialized";
         }
@@ -124,7 +106,7 @@ class Matrix_Calculator
         Matrix_Calculator matrix_sum(const Matrix_Calculator& A, const Matrix_Calculator& B) //public
         {
         if (A.cols != B.cols || A.rows != B.rows) throw"The matrices do not match in size";
-        Matrix_Calculator C = matrix_init(A.cols, A.rows);
+        Matrix_Calculator C = Matrix_Calculator(A.cols, A.rows);
         for (size_t idx = 0; idx < C.cols * C.rows; ++idx) {
             C.data[idx] = A.data[idx] + B.data[idx];
         }
@@ -155,7 +137,7 @@ class Matrix_Calculator
         }
 
         Matrix_Calculator matrix_clone(const Matrix_Calculator& A){
-        Matrix_Calculator C = matrix_init(A.cols, A.rows);
+        Matrix_Calculator C = Matrix_Calculator(A.cols, A.rows);
         for(size_t idx = 0; idx < A.cols * A.rows; ++idx){
             C.data[idx] = A.data[idx];
         }
@@ -165,7 +147,7 @@ class Matrix_Calculator
         Matrix_Calculator matrix_mult(const Matrix_Calculator& A) //public
         {
             if (A.cols != rows) throw"Size mismatch for multiplication";
-            Matrix_Calculator C = matrix_init(A.cols, rows);
+            Matrix_Calculator C = Matrix_Calculator(A.cols, rows);
 
             if (C.data == nullptr) {
                 throw"The matrix is not initialized";
@@ -185,7 +167,7 @@ class Matrix_Calculator
 
         Matrix_Calculator matrix_transp()
         {
-            Matrix_Calculator C = matrix_init(rows, cols);
+            Matrix_Calculator C = Matrix_Calculator(rows, cols);
 
             if (C.data == nullptr) {
                 throw"Initialization error";
@@ -230,7 +212,7 @@ class Matrix_Calculator
             throw"Error! The matrix is not square!";
         }
 
-        Matrix_Calculator E = matrix_init(A.rows, A.cols);
+        Matrix_Calculator E = Matrix_Calculator(A.rows, A.cols);
 
         if (E.data == nullptr) {
             throw"The matrix is empty";
@@ -258,7 +240,7 @@ Matrix_Calculator::Matrix_Calculator()
 {
     cols = 0;
     rows = 0;
-    data = nullptr ;
+    data = nullptr;
 }
 
 Matrix_Calculator::Matrix_Calculator(size_t cols, size_t rows, MatrixItem* data)
@@ -268,13 +250,31 @@ Matrix_Calculator::Matrix_Calculator(size_t cols, size_t rows, MatrixItem* data)
     data = data;
 }
 
+Matrix_Calculator::Matrix_Calculator(const size_t rows, const size_t cols) //p
+{
+    if (rows == 0 || cols == 0) {
+    throw"The matrix is not initialized";
+    }
+    // rows * cols < MAX_SIZE / sizeof(MatrixItem)
+    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) throw"The matrix is not initialized";  
+
+    Matrix_Calculator A = { cols, rows, nullptr};
+    A.data = new double[A.cols * A.rows * sizeof(double)];
+
+    if (A.data == nullptr) {
+        throw"The matrix is not initialized";
+        matrix_error_message();
+    }
+    
+}
+
 Matrix_Calculator::~Matrix_Calculator()
 {
     if (data != nullptr || cols != 0 || rows != 0) {
 
         cols = 0;
         rows = 0;
-        delete[]data;
+        delete[] data;
         data = nullptr;
     }
 }
@@ -287,6 +287,8 @@ Matrix_Calculator A, B, C, E, N;
 
    try
    {
+
+
 
     //error_message();
 
