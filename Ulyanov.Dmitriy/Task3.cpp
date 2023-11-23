@@ -16,11 +16,12 @@ private:
     size_t rows;
     MatrixItem* data;
 public:
-    Matrix() : cols(0), rows(0), data(nullptr) {};  
-    Matrix(const size_t rows, const size_t cols);  
-	Matrix(const size_t cols, const size_t rows, const MatrixItem* values);  
-	Matrix(Matrix& A);  
-	Matrix(Matrix&& A) noexcept;  
+    Matrix() : cols(0), rows(0), data(nullptr) {};  // создаёт нулевую матрицу
+    Matrix(const size_t rows, const size_t cols);  // создаёт матрицу без данных
+	Matrix(const size_t cols, const size_t rows, const MatrixItem* values);  //->
+        // -> создаёт матрицу с данными
+	Matrix(const Matrix& A);  // копирует информацию из А в текущую
+	Matrix(Matrix&& A) noexcept;  // копирует информацию из А в текущую и обнуляет А
 	~Matrix();
 public:
     Matrix& operator=(Matrix& A);    
@@ -30,18 +31,14 @@ public:
     Matrix& operator-=(const Matrix& A);
     Matrix& operator-(const Matrix& A) const;
     Matrix& operator*=(const Matrix& A);
-    Matrix& operator*(const Matrix& A) const;
+    Matrix& operator*(const Matrix& A);
     Matrix& operator/(const MatrixItem k) const;
+    Matrix& operator*(const MatrixItem k) const;
 public:
     void set_zero();
     void set_one();
     void print(const Matrix& A);
     Matrix& trans();
-private:
-    MatrixItem det1x1(Matrix& A);  
-    MatrixItem det2x2(Matrix& A);
-    MatrixItem det3x3(Matrix& A);
-public:
     MatrixItem det(Matrix& A);
     Matrix& exp(Matrix& A);
 };
@@ -55,32 +52,35 @@ public:
 };
 
 
+// вместо allocate
 Matrix::Matrix(const size_t rows, const size_t cols)
     : cols(cols), rows(rows)
 {
     if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) 
-        throw Matrix_Exception("");
+        throw Matrix_Exception("Matrix: Size Error");
 
     data = new MatrixItem[rows * cols];
 }
 
 
+// matrix_create
 Matrix::Matrix(const size_t cols, const size_t rows, const MatrixItem *values)
     : cols(cols), rows(rows)
 {
     if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) 
-        throw Matrix_Exception("");
+        throw Matrix_Exception("Matrix: Size Error");
 
     data = new MatrixItem[rows * cols];
     std::memcpy(data, values, rows * cols * sizeof(MatrixItem));
 }
 
 
-Matrix::Matrix(Matrix& A)
+Matrix::Matrix(const Matrix& A)
 {
     rows = A.rows;
     cols = A.cols;
-    data = A.data;
+    data = new MatrixItem[rows, cols];
+    std::memcpy(data, A.data, sizeof(MatrixItem));
 }
 
 
@@ -88,7 +88,8 @@ Matrix::Matrix(Matrix&& A) noexcept
 {
     rows = A.rows;
     cols = A.cols;
-    data = A.data;
+    data = new MatrixItem[rows, cols];
+    std::memcpy(data, A.data, sizeof(MatrixItem));
     A.rows = 0;
     A.cols = 0;
     A.data = nullptr;
@@ -151,8 +152,7 @@ Matrix& Matrix::operator=(Matrix&& A) noexcept
 };
 
 
-Matrix& Matrix::operator+=(const Matrix& A) 
-{
+Matrix& Matrix::operator+=(const Matrix& A) {
     if (A.cols != cols || A.rows != rows) 
         throw Matrix_Exception("Operator+=: Incorrect sizes");
 
@@ -162,14 +162,13 @@ Matrix& Matrix::operator+=(const Matrix& A)
     return *this;
 }
 
-
+// проблема в том,что в функции создаётся матрица, которая при завершении
+// удаляется, поэтому матрицу С надо как-то сохранить
 Matrix& Matrix::operator+(const Matrix& A) const {
     if (A.cols != cols || A.rows != rows) 
         throw Matrix_Exception("Operator+: Incorrect sizes");
 
-    Matrix *C = new Matrix(rows, cols);
-
-    std::memcpy(C->data, A.data, C->cols * C->rows * sizeof(MatrixItem));
+    Matrix *C = new Matrix(A);
     *C += A;
     return *C;
 }
@@ -186,14 +185,11 @@ Matrix& Matrix::operator-=(const Matrix& A)
 }
 
 
-Matrix& Matrix::operator-(const Matrix& A) const 
-{
+Matrix& Matrix::operator-(const Matrix& A) const {
     if (A.cols != cols || A.rows != rows) 
         throw Matrix_Exception("Operator-: Incorrect sizes");
 
-    Matrix *C = new Matrix(rows, cols);
-
-    memcpy(C->data, A.data, C->cols * C->rows * sizeof(MatrixItem));
+    Matrix *C = new Matrix(A);
     *C -= A;
 
     return *C;
@@ -214,68 +210,50 @@ Matrix& Matrix::trans()
 
 
 //C = A * B
-Matrix& Matrix::operator*=(const Matrix& A) {
-    if (A.cols != cols || A.rows != rows) throw (10);
+Matrix& Matrix::operator*(const Matrix& A)
+{
+    if (A.cols != rows) 
+        throw Matrix_Exception("Operator*: Multiplication Error");
 
-    Matrix C(rows, A.cols);
+    Matrix *C = new Matrix[rows, A.cols];
  
-    for (size_t colC = 0; colC < C.cols; ++colC) {
+    for (size_t col = 0; col < cols; ++col) {
         for (size_t rowA = 0; rowA < A.rows; ++rowA) {
-            C.data[rowA * C.cols + colC] = 0;
+            C->data[rowA * cols + col] = 0;
             for (size_t idx = 0; idx < A.cols; ++idx) {
-                C.data[rowA * C.cols + colC] += A.data[rowA * A.cols + idx] * C.data[idx * C.cols + colC];
+                C->data[rowA * cols + col] += A.data[rowA * A.cols + idx] * data[idx * cols + col];
             }
         }
     };
-    *this = C;
-    return *this;
+    return *C;
 }
 
-Matrix& Matrix::operator*(const Matrix& A) const 
+Matrix& Matrix::operator*=(const Matrix& A) 
 {
-    Matrix B(cols, rows);
-    B *= A;
+    Matrix *B = new Matrix[rows, cols];
+    *B = *B * A;
     
-    return B;
+    return *B;
 }
 
 
 Matrix& Matrix::operator/(const MatrixItem k) const
 {
-    Matrix C(this->rows, this->cols);
+    Matrix *C = new Matrix[rows, cols];
 
     for (size_t idx = 0; idx < cols * rows; ++idx)
-        C.data[idx] = this->data[idx] / k;
-    return C;
+        C->data[idx] = data[idx] / k;
+    return *C;
 }
 
 
-// det(A), A[1][1]
-MatrixItem Matrix::det1x1(Matrix& A) 
+Matrix& Matrix::operator*(const MatrixItem k) const
 {
-    if (A.rows != A.cols) throw (10);
-    return A.data[0];
-}
+    Matrix* C = new Matrix[rows, cols];
 
-
-// det(A), A[2][2]
-MatrixItem Matrix::det2x2(Matrix& A) 
-{
-    if (A.rows != A.cols) throw (10);
-    return (A.data[0] * A.data[3] - A.data[2] * A.data[1]);
-}
-
-
-// det(A), A[3][3]
-MatrixItem Matrix::det3x3(Matrix& A)
-{
-    if (A.rows != A.cols) throw (10);
-    return (+ A.data[0] * A.data[4] * A.data[8]
-            + A.data[1] * A.data[5] * A.data[6]
-            + A.data[3] * A.data[7] * A.data[2]
-            - A.data[2] * A.data[4] * A.data[6]
-            - A.data[1] * A.data[3] * A.data[8]
-            - A.data[5] * A.data[7] * A.data[0]);
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        C->data[idx] = data[idx] * k;
+    return *C;
 }
 
 
@@ -285,13 +263,18 @@ MatrixItem Matrix::det(Matrix& A)
         throw Matrix_Exception("det: Not square");
 
     if (A.rows == 1) {
-        return det1x1(A);
+        return A.data[0];
     };
     if (A.rows == 2) {
-        return det2x2(A);
+        return (A.data[0] * A.data[3] - A.data[2] * A.data[1]);
     };
     if (A.rows == 3) {
-        return det3x3(A);
+        return (+A.data[0] * A.data[4] * A.data[8]
+            + A.data[1] * A.data[5] * A.data[6]
+            + A.data[3] * A.data[7] * A.data[2]
+            - A.data[2] * A.data[4] * A.data[6]
+            - A.data[1] * A.data[3] * A.data[8]
+            - A.data[5] * A.data[7] * A.data[0]);
     }
     else throw Matrix_Exception("det: Matrix size too large");
 }
@@ -303,24 +286,21 @@ Matrix& Matrix::exp(Matrix& A)
     if (A.cols != A.rows) 
         throw Matrix_Exception("exp: Not square");
     if (A.cols == 0) 
-        throw Matrix_Exception("exp: Matrix not created");
+        throw Matrix_Exception("exp: ");
 
-    Matrix exp (A.rows, A.cols);
-    exp.set_one();
+    Matrix *exp = new Matrix(A.rows, A.cols);
+    exp->set_one();
 
-    Matrix term_prev (A.rows, A.cols);  // член a_n
-    term_prev.set_one();
-
-    Matrix term_next;  // член a_n+1 
+    Matrix term (A.rows, A.cols);  // член a_n
+    term.set_one();
 
     for (int idx = 1; idx < 100; ++idx) {
 
-        term_next = term_prev * A / idx;
-        exp += term_next;
+        term = term * A / idx;
+        *exp += term;
 
     }
-    delete[] &term_prev;
-    return exp;
+    return *exp;
 }
 
 //#endif
