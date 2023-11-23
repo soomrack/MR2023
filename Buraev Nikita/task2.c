@@ -169,22 +169,61 @@ Matrix multScalar(Matrix A, double scalar) {
     return result;
 }
 
+// Функция для копирования матрицы
+void copyMatrix(Matrix destination, const Matrix source) {
+    for (size_t row = 0; row < source.rows; row++) {
+        for (size_t col = 0; col < source.cols; col++) {
+            destination.data[row][col] = source.data[row][col];
+        }
+    }
+}
+
+// Функция для прибавления к матрице произведения двух матриц
+void addMultMatrix(Matrix A, const Matrix B) {
+    Matrix result = createMatrix(A.rows, A.cols);
+
+    if (result.data == NULL) {
+        freeMatrix(result);
+        return;
+    }
+
+    for (size_t row = 0; row < A.rows; row++) {
+        for (size_t col = 0; col < A.cols; col++) {
+            double sum = 0.0;
+            for (size_t k = 0; k < A.cols; k++) {
+                sum += A.data[row][k] * B.data[k][col];
+            }
+            result.data[row][col] = sum;
+        }
+    }
+
+    copyMatrix(A, result);
+    freeMatrix(result);
+}
+
 // Функция для вычисления экспоненты матрицы методом Тейлора
 Matrix matrix_exponent(const Matrix A, const double accuracy) {
     if (A.rows != A.cols) {
-        errorExit("Матрица должна быть квадратной для вычисления экспоненты.");
+        errorMsg("Матрица должна быть квадратной для вычисления экспоненты.");
+        return createMatrix(0, 0); // Возвращаем нулевую матрицу
     }
 
     size_t n = A.rows;
     Matrix C = createMatrix(n, n);
     Matrix B = createMatrix(n, n);
+
+    if (C.data == NULL || B.data == NULL) {
+        freeMatrix(C);
+        freeMatrix(B);
+        return createMatrix(0, 0); // Возвращаем нулевую матрицу
+    }
+
     copyMatrix(B, A);
 
     int degree = (int)(ceil(1.0 / accuracy));
 
     for (int trm = 2; trm <= degree; ++trm) {
-        addMultMatrix(B, A);
-        multMatrixByScalar(B, 1.0 / trm);
+        addMatrix(B, multScalar(A, 1.0 / trm));
         addMatrix(C, B);
     }
 
