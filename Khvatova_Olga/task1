@@ -1,8 +1,62 @@
 #include <stdio.h>  
 #include <math.h> 
 
+typedef long long int Rub;
+
+
+struct Person {
+    Rub capital;
+    Rub salary;
+};
+
+struct Person Bob;  // buy house
+struct Person Alice;
+
+
+void bob_salary(int year, int month)
+{
+    if (month == 1) Bob.salary *= 1.10;    
+
+    if (month != 6)  // June -- no salary, days off.
+        Bob.capital += Bob.salary;
+}
+
+
+void simulation()
+{
+    int month = 11;
+    int year = 2023;
+    
+    while( !(month == 9 & year == 2053) ) {
+        bob_salary(year, month);
+        bob_food(year, month);
+        bob_mortgage_payment();
+        bob_house(year, month);
+
+        alice_salary();
+        alice_food();
+
+        month++;
+        if (month == 13) {
+            month = 1;
+            year++;
+        }
+    }
+}
+
+
+
+
 int main()
 {
+    bob_init();
+    alice_init();
+
+    simulation();
+
+    print();
+
+    
     int start = 1000000; //Начальный капитал
     float kvar = 20000000; //Стоимость квартиры вначале
     float vklad = 11; // % по вкладу
@@ -34,7 +88,11 @@ int main()
     for (int i = 1; i <= year; i++) { // Счетчик лет        
         for (int j = 1; j <= months; j++) { // Счетчик месяцев в каждом годе
             ost_Alice = zp_Alice - (rent + rashod_Alice); // Элис оплатила расходы
-            schet_Alice = schet_Alice + ost_Alice; // Счет Элис пополнился остатком зарплаты
+
+            if ( j != 6 ) {  // June -- no salary
+                schet_Alice = schet_Alice + ost_Alice; // Счет Элис пополнился остатком зарплаты
+            }
+            
             schet_Alice = schet_Alice * (1 + (vklad / 100) / 12); // Начисляем в конце месяца проценты по вкладу
         }
         zp_Alice = zp_Alice * (1 + (inf / 100)); // ЗП увеличилась на инфляцию
