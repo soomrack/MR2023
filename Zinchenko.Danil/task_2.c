@@ -5,9 +5,6 @@
 #include <math.h>
 
 
-const int n = 2;
-
-
 typedef double MatrixItem;
 struct Matrix
 {
