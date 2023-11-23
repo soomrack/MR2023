@@ -2,10 +2,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-// Функция для вывода сообщения об ошибке и возврата NaN
+// Функция для вывода сообщения об ошибке
 double errorMsg(const char *errorMessage) {
     fprintf(stderr, "%s\n", errorMessage);
-    return NAN;
 }
 
 // Структура для представления матрицы
