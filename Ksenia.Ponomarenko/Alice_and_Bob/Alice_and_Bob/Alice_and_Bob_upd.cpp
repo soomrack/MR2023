@@ -3,13 +3,12 @@
 #include <string.h>
 
 typedef long long int Money;
-typedef long long int bob_food;
 
 
 const double inflation_pp = 7;
 
 
-struct Person
+ typedef struct Person
 {
 	Money bank_account;
 	Money salary;
@@ -21,11 +20,11 @@ struct Person
 	short int duration;
 	double bank_account_pp;
 	char name[6];
-};
+} Person;
 
 
-struct Person alice;
-struct Person bob;
+ Person alice;
+ Person bob;
 
 
 void bob_init()
@@ -134,16 +133,16 @@ void bob_flat_bills()
 
 void simulation(int month, int year)
 {
-
+	int temp_year = year;
+	int temp_month = month;
 	bob.bank_account = 0;
 	monthly_mortgage_pay_bob(7.0);
 
-	while (!(year == 2053 && month == 9)) {
+	while (!(year == (temp_year + 30) && month == temp_month)) {
 		alice_salary(year, month);
 		alice_flat_bills();
 		alice_expenditure();
 		alice_deposite_income();
-
 
 		bob_salary(year, month);
 		bob_flat_bills();
@@ -162,7 +161,7 @@ void simulation(int month, int year)
 };
 
 
-void print_person(const struct Person person)
+void print_person(const Person person)
 {
 	printf("%s:\n", person.name);
 	printf("  bank_account = %lld rub\n", (Money)(person.bank_account / 100));
