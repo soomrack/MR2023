@@ -244,7 +244,7 @@ void matrix_add_mult(Matrix A, const Matrix B)
 Matrix matrix_exponent(const Matrix A, const double accuracy) 
 {
     if (A.rows != A.cols) {
-        matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
+        return matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
         return MATRIX_NULL;
     }
 
