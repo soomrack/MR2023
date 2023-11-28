@@ -29,7 +29,6 @@ public:
     Matrix(Matrix&& matrix);
     ~Matrix();
 
-
     void matrix_print();
     void matrix_fill(int max_value);
 
@@ -50,8 +49,7 @@ public:
 };
 
 Matrix::~Matrix() {
-    if (value != nullptr)
-        delete[] value;
+    if (value != nullptr) delete[] value;
 }
 
 
@@ -65,9 +63,9 @@ Matrix::Matrix() {
 Matrix::Matrix(unsigned int col, unsigned int row) {
     cols = col;
     rows = row;
-    unsigned int n_value = cols * rows;
     value = new double[cols * rows];
-    for (unsigned int idx = 0; idx < n_value; ++idx) {
+
+    for (unsigned int idx = 0; idx < cols * rows; ++idx) {
         value[idx] = 0.0;
     }
 }
@@ -111,6 +109,7 @@ Matrix::Matrix(unsigned int col) {
     cols = col;
     rows = col;
     value = new double[cols * rows];
+
     for (unsigned int row = 0; row < rows; row++) {
         for (unsigned int col = 0; col < cols; col++) {
             value[row * cols + col] = (row == col) ? 1.0 : 0.0;
@@ -123,6 +122,7 @@ Matrix::Matrix(unsigned int col) {
 Matrix Matrix::operator+ (const Matrix& matrix) const {
     if (rows != matrix.rows) throw SIZEERROR;
     Matrix result(matrix);
+
     for (unsigned int idx = 0; idx < matrix.cols * matrix.rows; idx++) {
         result.value[idx] += value[idx];
     }
@@ -133,6 +133,7 @@ Matrix Matrix::operator+ (const Matrix& matrix) const {
 Matrix Matrix::operator- (const Matrix& matrix) const {
     if (rows != matrix.rows) throw SIZEERROR;
     Matrix result(matrix);
+
     for (unsigned int idx = 0; idx < matrix.cols * matrix.rows; idx++) {
         result.value[idx] -= value[idx];
     }
@@ -143,6 +144,7 @@ Matrix Matrix::operator- (const Matrix& matrix) const {
 Matrix Matrix::operator* (const Matrix& matrix) const {
     if (rows != matrix.rows) throw SIZEERROR;
     Matrix result(matrix);
+
     for (unsigned int row = 0; row < result.rows; row++) {
         for (unsigned int col = 0; col < result.cols; col++) {
             result.value[row * result.rows + col] = 0.00;
@@ -157,6 +159,7 @@ Matrix Matrix::operator* (const Matrix& matrix) const {
 
 Matrix Matrix::operator* (const double coefficient) const {
     Matrix result(cols, rows);
+
     for (unsigned int idx = 0; idx < rows * cols; idx++) {
         result.value[idx] = value[idx] * coefficient;
     }
@@ -194,14 +197,18 @@ Matrix Matrix::operator= (Matrix&& matrix) {
 Matrix Matrix::operator^(int number) const {
     if (cols != rows) throw NOTSQUARE;
     Matrix result(*this);
+
     if (number == 0) {
         Matrix matrix(cols);
         return matrix;
     }
+
     if (number == 1) {
         return result;
     }
+
     const Matrix& start(result);
+
     for (unsigned int idx = 0; idx < number; idx++) {
         result = result * start;
     }
@@ -212,6 +219,7 @@ Matrix Matrix::operator^(int number) const {
 Matrix Matrix::operator/(const double number) const {
     if (number == 0) throw DIVISIONERROR;
     Matrix result(cols, rows);
+
     for (unsigned int idx = 0; idx < rows * cols; ++idx) {
         result.value[idx] = value[idx] / number;
     }
@@ -224,6 +232,7 @@ Matrix Matrix::exp(const Matrix& A, const unsigned int accuracy = 30) {
     Matrix result(A.cols);
     Matrix temp(A.cols);
     double factorial = 1.0;
+
     for (int step = 1; step < accuracy; step++) {
         factorial *= step;
         temp = temp * A;
@@ -253,6 +262,7 @@ Matrix Matrix::matrix_minor(Matrix& A, unsigned int row, unsigned int col) {
 
 Matrix Matrix::matrix_transp() {
     Matrix result = { cols, rows };
+
     for (unsigned int row = 0; row < result.rows; row++) {
         for (unsigned int col = 0; col < result.cols; col++) {
             result.value[row * result.cols + col] = value[col * result.cols + row];
