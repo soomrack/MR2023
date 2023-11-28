@@ -19,9 +19,9 @@ Matrix create_matrix(int rows, int cols) {
     A.rows = rows;
     A.cols = cols;
     
-    A.data = (double **)malloc(rows * sizeof(double *));
-    for (size_t row = 1; row < rows; row++) {
-        A.data[row] = (double *)malloc(cols * sizeof(double)); //память расписать большим блоком
+    A.data = (double **)malloc(rows * sizeof(double *) + rows * cols * sizeof(double));
+    if (!A.data) {
+        return errorMsg("Ошибка выделения памяти для матрицы.");
     }
     
     return A;
