@@ -3,7 +3,7 @@
 #include <math.h>
 
 // Функция для вывода сообщения об ошибке
-double errorMsg(const char *errorMessage) {
+void errorMsg(const char *errorMessage) {
     fprintf(stderr, "%s\n", errorMessage);
 }
 
