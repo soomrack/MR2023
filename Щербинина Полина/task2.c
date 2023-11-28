@@ -3,7 +3,7 @@
 #include <math.h>
 
 // Функция для вывода сообщения об ошибке
-void errorMsg(const char *errorMessage) {
+void matrix_errormsg(const char *errorMessage) {
     fprintf(stderr, "%s\n", errorMessage);
 }
 
@@ -23,7 +23,7 @@ Matrix create_matrix(int rows, int cols) {
     
     A.data = (double **)malloc(rows * sizeof(double *) + rows * cols * sizeof(double));
     if (!A.data) {
-        return errorMsg("Ошибка выделения памяти матрицы.");
+        return matrix_errormsg("Ошибка выделения памяти матрицы.");
         return MATRIX_NULL;
     }
     
