@@ -3,7 +3,7 @@
 #include <math.h>
 
 // Функция для вывода сообщения об ошибке
-double errorMsg(const char *errorMessage) {
+void errorMsg(const char *errorMessage) {
     fprintf(stderr, "%s\n", errorMessage);
 }
 
@@ -13,6 +13,8 @@ typedef struct {
     size_t cols;
     double **data;
 } Matrix;
+
+const struct Matrix MATRIX_NULL = {.cols = 0, .rows = 0, .data = NULL};
 
 // Создать матрицу
 Matrix createMatrix(size_t rows, size_t cols) {
@@ -36,9 +38,19 @@ Matrix createMatrix(size_t rows, size_t cols) {
 }
 
 // Освободить память, выделенную для матрицы
-void freeMatrix(Matrix A) {
+void freeMatrix(Matrix A)
+{
+    if(A.data != NULL || A.cols != 0 || A.rows != 0){
+
+    A.cols = 0;
+    A.rows = 0;
     free(A.data);
+    A.data = NULL;
+
+    }
+
 }
+
 
 // Сложение матриц
 Matrix sum(Matrix A, Matrix B) {
@@ -110,6 +122,7 @@ Matrix tr(Matrix A) {
 // Вычисление детерминанта
 double detLU(Matrix A) {
     if (A.rows != A.cols) {
+        return NAN;
         return errorMsg("Детерминант можно вычислить только для квадратных матриц.");
     }
 
@@ -126,6 +139,7 @@ double detLU(Matrix A) {
 
     for (size_t k = 0; k < n - 1; k++) {
         if (copy.data[k][k] == 0.0) {
+            return NAN;
             return errorMsg("Найдено деление на ноль при вычислении детерминанта.");
         }
         for (size_t i = k + 1; i < n; i++) {
