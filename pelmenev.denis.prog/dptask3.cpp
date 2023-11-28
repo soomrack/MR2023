@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string>
 #include <stdint.h>
-#include <math.h>
 #include <vector>
 
 
@@ -17,7 +16,7 @@ private:
     size_t cols;
     MatrixItem* data;
 public:
-    Matrix();
+    Matrix() : rows(0), cols(0), data(nullptr) {};
     Matrix(const size_t cols, const size_t rows);
     Matrix(Matrix& A);
     Matrix(Matrix&& A);
@@ -26,57 +25,52 @@ public:
     Matrix& operator=(const Matrix& A);
     Matrix& operator=(const Matrix&& A);
     Matrix& operator+(const Matrix& A);
+    Matrix& operator+=(const Matrix& A); //Matrix&& A
     Matrix& operator-(const Matrix& A);
+    Matrix& operator-=(const Matrix& A);
     Matrix& operator*(const Matrix& B);
+    Matrix& operator*=(const Matrix& B);
     Matrix& operator*(const double& coeff);
+    Matrix& operator*=(const double& coeff);
 public:
     void fill(std::vector <MatrixItem> values);
     void free();
     void print();
     void set_zero();
-    void scalar(const double koeff);
-    void transp(const Matrix A);
-    void mult_on(const Matrix B);
-    void add_matr(const Matrix B);
-    Matrix exponent(const Matrix A, const int degree);
+    Matrix transp();
+    Matrix exponent(const Matrix A, const unsigned int degree = 10);
+    double determinant();
+private:
     int det_if_zero();
     void det_prep(size_t diag, double *coeff);
-    double determinant();
 };
 
 
 class MatrixException: public std::exception {
-public:
+private:
     std::string msg;
 public:
-    MatrixException(std::string msg);
+    Matrix_Exception(std::string msg) : msg{ msg } {}
+    std::string get_message() const { return msg; }
 };
+
+MatrixException INCORRECT_SIZE_OF_MATRIX("The matrix has an incorrect size\n");
+MatrixException NULL_MATRIX("Your matrix is empty\n");
 
 
 void Matrix::free()
 {
     cols = 0;
     rows = 0;
-
-    if (data == nullptr) return;
-
     delete[] data;
     data = nullptr;
 }
 
 
-Matrix::Matrix() {
-    rows = 0;
-    cols = 0;
-    data = nullptr;
-}
-
-
 Matrix::Matrix(const size_t cols, const size_t rows)
-    : cols(cols), rows(rows)
+    : cols(cols), rows(rows), data(nullptr)
 {
     if (cols == 0 || rows == 0) {
-        delete[] data;
         data = nullptr;
         return;
     };
@@ -87,11 +81,6 @@ Matrix::Matrix(const size_t cols, const size_t rows)
     };
 
     data = new MatrixItem[cols * rows];
-
-    if (data == nullptr) {
-        free();
-        return;
-    };
 }
 
 
@@ -102,27 +91,33 @@ Matrix::~Matrix() {
 
 void Matrix::set_zero()
 {
+    if (data == nullptr) throw NULL_MATRIX;
+
     memset(data, 0, cols * rows * sizeof(MatrixItem));
 }
 
 
 void Matrix::fill(std::vector <MatrixItem> values)
 {
-    if (data == nullptr) return;
+    if (data == nullptr) throw NULL_MATRIX;
 
-    if (values.size() > rows * cols - 1)
-        for (size_t idx = 0; idx < cols* rows; ++idx)
+    if (values.size() > rows * cols)
+        for (size_t idx = 0; idx < cols * rows; ++idx)
             data[idx] = values[idx];
     else {
-        set_zero();
-        for (size_t idx = 0; idx < values.size(); ++idx)
+        for (auto idx = values.begin(); idx != values.end(); ++idx)
             data[idx] = values[idx];
+        if (values.size() < cols * rows)
+            for (auto idx = values.end(); idx < cols * rows - 1; ++idx)
+                data[idx] = 0.0;
     };
 }
 
 
 void Matrix::print()
 {
+    if (data == nullptr) throw NULL_MATRIX;
+
     std::cout << "_____________________________________________" << std::endl;
 
     for (size_t idx = 1; idx <= cols * rows; ++idx) {
@@ -136,14 +131,15 @@ void Matrix::print()
 Matrix::Matrix(Matrix& A)
 {
     if (A.data == nullptr) {
-        free();
+        cols = 0;
+        rows = 0;
+        data = nullptr;
         return;
     };
 
-    if (!(A.cols == cols && A.rows == rows)) {
-        free();
-        Matrix(A.cols, A.rows);
-    };
+    cols = A.cols;
+    rows = A.rows;
+    data = new MatrixItem[cols * rows];
 
     memcpy(data, A.data, A.cols * A.rows * sizeof(MatrixItem));
 }
@@ -151,99 +147,121 @@ Matrix::Matrix(Matrix& A)
 
 Matrix::Matrix(Matrix&& A)
 {
-    if (A.data == nullptr) {
-        free();
-        return;
-    };
-
-    if (!(A.cols == cols && A.rows == rows)) {
-        free();
-        Matrix(A.cols, A.rows);
-    };
-
+    cols = A.cols;
+    rows = A.rows;
     data = A.data;
+    A.cols = 0;
+    A.rows = 0;
+    A.data = nullptr;
 }
 
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
-    Matrix* result = new Matrix(*this);
+    if (this == &A) return *this;
 
-    memcpy(result->data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+    cols = A.cols;
+    rows = A.rows;
 
-    return *result;
+    delete[] data;
+    data = new MatrixItem[cols * rows];
+    memcpy(data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+    return *this;
 }
 
 
 Matrix& Matrix::operator=(const Matrix&& A)
 {
-    Matrix* result = new Matrix(*this);
+    if (this == &A) return *this;
+    
+    cols = A.cols;
+    rows = A.rows;
+    delete[] data;
+    data = A.data;
 
-    result->data = A.data;
+    A.cols = 0;
+    A.rows = 0;
+    A.data = nullptr;
 
-    return *result;
+    return *this;
 }
 
 
 Matrix& Matrix::operator+(const Matrix& A)
 {
+    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
+
     Matrix* result = new Matrix(*this);
-    if (A.cols != cols || A.rows != rows) {
-        result->free();
-        return *result;
-    };
 
-    if (result->data == nullptr) return *result;
-
-    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
-        result->data[idx] += A.data[idx]; 
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        result->data[idx] += A.data[idx];
 
     return *result;
+}
+
+
+Matrix& Matrix::operator+=(const Matrix& A)
+{
+    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
+
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        data[idx] += A.data[idx];
+    
+    return *this;
 }
 
 
 Matrix& Matrix::operator-(const Matrix& A)
 {
+    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
+
     Matrix* result = new Matrix(*this);
-    if (A.cols != cols || A.rows != rows) {
-        result->free();
-        return *result;
-    };
 
-    if (result->data == nullptr) return *result;
-
-    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
-        result->data[idx] -= A.data[idx]; 
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        result->data[idx] -= A.data[idx];
 
     return *result;
+}
+
+
+Matrix& Matrix::operator-=(const Matrix& A)
+{
+    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
+
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        data[idx] -= A.data[idx];
+
+    return *this;
 }
 
 
 Matrix& Matrix::operator*(const Matrix& B)
 {
-    Matrix* result = new Matrix(*this);
-    if (result->data == nullptr) return *result;
+    if (cols != B.rows) throw INCORRECT_SIZE_OF_MATRIX;
 
-    if (cols != B.rows) {
-        result->free();
-        return *result;
-    };
-    
-    result->set_zero();
+    Matrix* result = new Matrix(*this);
 
     for (size_t rowA = 0; rowA < rows; ++rowA)
-        for (size_t colB = 0; colB < B.cols; ++colB)
+        for (size_t colB = 0; colB < B.cols; ++colB) {
+            result->data[result->cols * rowA + colB] = 0.0;
             for (size_t colA = 0; colA < cols; ++colA)
                 result->data[result->cols * rowA + colB] += data[colA + rowA * cols] * B.data[B.cols * colA + colB];
+        };
     
     return *result;
 }
 
 
+Matrix& Matrix::operator*=(const Matrix& B)
+{
+    *this = *this * B;
+
+    return *this;
+}
+
+
 Matrix& Matrix::operator*(const double& coeff)
 {
-    if (data == nullptr) return;
-
     Matrix *result = new Matrix(*this);
 
     for (size_t idx = 0; idx < cols * rows; ++idx)
@@ -253,85 +271,47 @@ Matrix& Matrix::operator*(const double& coeff)
 }
 
 
-void Matrix::mult_on(const Matrix B)
+Matrix& Matrix::operator*=(const double& coeff)
 {
-    Matrix C(cols, rows);
-    C = Matrix * B;
-
-    if (C.data == nullptr) return;
-    
-    free();
-    Matrix(C.cols, C.rows);
-    data = C.data;
-
-    return;
-}
-
-
-void Matrix::add_matr(const Matrix B)
-{
-    if (cols != B.cols || rows != B.rows) return;
-
-    if (data == nullptr || B.data == nullptr) return;
-
-    for (size_t idx = 0; idx < B.cols * B.rows; ++idx)
-        data[idx] = data[idx] + B.data[idx];
-}
-
-
-void Matrix::scalar(const double coeff)
-{
-    if (data == nullptr) return;
-
     for (size_t idx = 0; idx < cols * rows; ++idx)
         data[idx] = data[idx] * coeff;
+    
+    return *this;
 }
 
 
-void Matrix::transp(const Matrix A)
+Matrix Matrix::transp()
 {
-    if (A.data == nullptr) return;
+    Matrix result = Matrix(*this);
 
-    if (!(cols == A.rows && rows == A.cols)) {
-        free();
-        Matrix(A.rows, A.cols);
-    };
-
-    for (size_t row = 0; row < A.rows; ++row)
-        for (size_t col = 0; col < A.cols; ++col)
-            data[row * A.cols + col] = A.data[row + col * A.cols];
+    for (size_t row = 0; row < rows; ++row)
+        for (size_t col = 0; col < cols; ++col)
+            result.data[row * cols + col] = data[row + col * cols];
+    
+    return result;
 }
 
 
-Matrix Matrix::exponent(const Matrix A, const int degree)
+Matrix Matrix::exponent(const Matrix A, const unsigned int degree = 10)
 {
-    Matrix result;
-
-    if (A.cols != A.rows) {
-        result.free();
-        return result;
-    };
-
-    result(A.cols, A.rows);
-    if (result.data == nullptr) return result;
+    if (A.cols != A.rows) throw INCORRECT_SIZE_OF_MATRIX;
+    
+    Matrix result = Matrix(A.cols, A.rows);
 
     result.set_zero();
 
-    Matrix B(A.cols, A.rows);
-    B = A;
+    Matrix B = Matrix(A);
 
     for (size_t diag = 0; diag < result.rows; ++diag)
         result.data[diag * result.cols + diag] += 1;
     
-    result.add_matr(A);
+    result += A;
 
     for (int trm = 2; trm <= degree; ++trm) {
-       B.mult_on(A);
-       B.scalar(1.0 / trm);
-       result.add_matr(B);
+       B *= A;
+       B *= 1.0 / trm;
+       result += B;
     };
-    
-    B.free();
 
     return result;
 }
@@ -395,13 +375,11 @@ void Matrix::det_prep(size_t diag, double *coeff)
 
 double Matrix::determinant()
 {
-    if (cols != rows)
-        return NAN;
+    if (cols != rows) throw INCORRECT_SIZE_OF_MATRIX;
     
-    Matrix C(cols, rows);
-    if (C.data == nullptr)
-        return NAN;
-    memcpy(C.data, data, cols * rows * sizeof(MatrixItem));
+    Matrix C = Matrix(cols, rows);
+    if (C.data == nullptr) throw NULL_MATRIX;
+    C = *this;
 
     if (cols == 1) {
         C.free();

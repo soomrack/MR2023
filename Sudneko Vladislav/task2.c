@@ -1,43 +1,62 @@
-#include <stdio.h>
+﻿#include <stdio.h>  
 #include <stdlib.h>
 #include <time.h>
 
 
+#define MATRIX_MUST_BE_SQUARE "\nMatrix must be square!\n\n"
+#define SHAPE_ERROR "\nError: The number of columns of matrix A must be equal to the number of rows of matrix B.\n\n"
+
+
+// int -> size_t for all variables storing unsigned information
+
+
 typedef struct {
-    unsigned int rows;
-    unsigned int cols;
+    size_t rows;
+    size_t cols;
     double** values;
     double* data;
 } Matrix;
 
-void matrix_memory(Matrix* matrix)
+
+size_t matrix_memory(Matrix* matrix)
 {
     matrix->data = (double*)malloc(matrix->rows * matrix->cols * sizeof(double) + matrix->rows * sizeof(double*));
+    
+
+    // Added memory allocation check
+    if (matrix->data == NULL)
+        return 1;
+    
     matrix->values = matrix->data + matrix->rows * matrix->cols;
-    for (int row = 0; row < matrix->rows; row++)
+    for (size_t row = 0; row < matrix->rows; row++)
         matrix->values[row] = matrix->data + row * matrix->cols;
+    
+    return 0;
 }
+
 
 void delete_from_memory(Matrix* matrix)
 {
     free(matrix->data);
 }
 
-void copy_matrix(Matrix* from, Matrix* to) {
-    for (int rows = 0; rows < from->rows; rows++)
+
+void copy_matrix(Matrix* source, Matrix* destination) {
+    for (size_t rows = 0; rows < source->rows; rows++)
     {
-        for (int cols = 0; cols < from->cols; cols++)
+        for (size_t cols = 0; cols < source->cols; cols++)
         {
-            to->values[rows][cols] = from->values[rows][cols];
+            destination->values[rows][cols] = source->values[rows][cols];
         }
     }
 }
 
+
 void output(Matrix* matrix)
 {
-    for (int rows = 0; rows < matrix->rows; rows++)
+    for (size_t rows = 0; rows < matrix->rows; rows++)
     {
-        for (int cols = 0; cols < matrix->cols; cols++)
+        for (size_t cols = 0; cols < matrix->cols; cols++)
         {
             printf("%lf ", matrix->values[rows][cols]);
         }
@@ -46,26 +65,29 @@ void output(Matrix* matrix)
     printf("\n");
 }
 
-void null_array(Matrix* matrix)
+
+Matrix zero_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
 
-    for (int rows = 0; rows < matrix->rows; rows++)
+    for (size_t rows = 0; rows < matrix->rows; rows++)
     {
-        for (int cols = 0; cols < matrix->cols; cols++)
+        for (size_t cols = 0; cols < matrix->cols; cols++)
         {
             matrix->values[rows][cols] = 0;
         }
     }
+    return *matrix;
 }
 
-void identity_matrix(Matrix* matrix)
+
+Matrix identity_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
 
-    for (int rows = 0; rows < matrix->rows; rows++)
+    for (size_t rows = 0; rows < matrix->rows; rows++)
     {
-        for (int cols = 0; cols < matrix->cols; cols++)
+        for (size_t cols = 0; cols < matrix->cols; cols++)
         {
             if (rows == cols)
             {
@@ -77,179 +99,185 @@ void identity_matrix(Matrix* matrix)
             }
         }
     }
+    return *matrix;
 }
 
 
-void random_matrix(Matrix* matrix)
+Matrix* random_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
 
-    for (int rows = 0; rows < matrix->rows; rows++)
+    for (size_t rows = 0; rows < matrix->rows; rows++)
     {
-        for (int cols = 0; cols < matrix->cols; cols++)
+        for (size_t cols = 0; cols < matrix->cols; cols++)
         {
             matrix->values[rows][cols] = rand() % 10;
         }
     }
+    return matrix;
 }
 
-void multiply_by_scalar(Matrix* matrix, double scalar, int verbose)
-{
-    if (verbose)
-        printf("MULTIPLICATION BY SCALAR:\n");
 
-    for (int rows = 0; rows < matrix->rows; rows++)
+Matrix multiply_by_scalar(Matrix* matrix, double scalar)
+{
+    for (size_t rows = 0; rows < matrix->rows; rows++)
     {
-        for (int cols = 0; cols < matrix->cols; cols++)
+        for (size_t cols = 0; cols < matrix->cols; cols++)
         {
             matrix->values[rows][cols] *= scalar;
         }
     }
-    if (verbose)
-        output(matrix);
+
+    return *matrix;
 }
 
-void add(Matrix* A, Matrix* B, Matrix* result, int verbose)
-{
-    if (verbose)
-        printf("SUM:\n");
 
-    Matrix add_matrix = { 2, 2, NULL, NULL };
+Matrix add(Matrix* A, Matrix* B)
+{
+    Matrix add_matrix = { A->rows, A->cols, NULL, NULL };
     matrix_memory(&add_matrix);
 
-    for (int rows = 0; rows < add_matrix.rows; rows++)
+    for (size_t rows = 0; rows < add_matrix.rows; rows++)
     {
-        for (int cols = 0; cols < add_matrix.cols; cols++)
+        for (size_t cols = 0; cols < add_matrix.cols; cols++)
         {
             add_matrix.values[rows][cols] = A->values[rows][cols] + B->values[rows][cols];
         }
     }
 
-    copy_matrix(&add_matrix, result);
-
-    if (verbose)
-        output(&add_matrix);
-    delete_from_memory(&add_matrix);
+    return add_matrix;
 }
 
-void subtract(Matrix A, Matrix B, int verbose)
-{
-    if (verbose)
-        printf("DIFFERENCE:\n");
 
-    Matrix subtract_matrix = { 2, 2, NULL, NULL };
+Matrix subtract(Matrix* A, Matrix* B)
+{
+    Matrix subtract_matrix = { A->rows, A->cols, NULL, NULL };
     matrix_memory(&subtract_matrix);
 
-    for (int rows = 0; rows < subtract_matrix.rows; rows++)
+    for (size_t rows = 0; rows < subtract_matrix.rows; rows++)
     {
-        for (int cols = 0; cols < subtract_matrix.cols; cols++)
+        for (size_t cols = 0; cols < subtract_matrix.cols; cols++)
         {
-            subtract_matrix.values[rows][cols] = A.values[rows][cols] - B.values[rows][cols];
+            subtract_matrix.values[rows][cols] = A->values[rows][cols] - B->values[rows][cols];
         }
     }
-    if (verbose)
-        output(&subtract_matrix);
-    delete_from_memory(&subtract_matrix);
+
+    return subtract_matrix;
 }
 
-void multiply(Matrix* A, Matrix* B, Matrix* result, int verbose)
+
+Matrix multiply(Matrix* A, Matrix* B)
 {
     if (A->cols != B->rows) {
-        printf("Error: The number of columns of matrix A must be equal to the number of rows of matrix B.\n");
+        printf(SHAPE_ERROR);
         return;
     }
 
-    if (verbose)
-        printf("PRODUCT:\n");
-
     Matrix multiply_matrix = { A->rows, B->cols, NULL, NULL };
-    null_array(&multiply_matrix);
+    multiply_matrix = zero_matrix(&multiply_matrix);
 
-    for (int rows = 0; rows < multiply_matrix.rows; rows++)
+    for (size_t rows = 0; rows < multiply_matrix.rows; rows++)
     {
-        for (int cols = 0; cols < multiply_matrix.cols; cols++)
+        for (size_t cols = 0; cols < multiply_matrix.cols; cols++)
         {
-            for (int k = 0; k < A->cols; k++)
+            for (size_t k = 0; k < A->cols; k++)
             {
                 multiply_matrix.values[rows][cols] += A->values[rows][k] * B->values[k][cols];
             }
         }
     }
-    if (verbose)
-        output(&multiply_matrix);
 
-    copy_matrix(&multiply_matrix, result);
-
-    delete_from_memory(&multiply_matrix);
+    return multiply_matrix;
 }
 
 
-void transpose(Matrix* A, Matrix* result, int verbose)
+Matrix transpose(Matrix* A)
 {
-    if (verbose)
-        printf("TRANSPOSITION:\n");
+    Matrix transpose_matrix = { A->rows, A->cols, NULL, NULL };
+    transpose_matrix = zero_matrix(&transpose_matrix);
 
-    result->rows = A->cols;
-    result->cols = A->rows;
-
-    matrix_memory(result);
-
-    for (int rows = 0; rows < result->rows; rows++)
+    for (size_t rows = 0; rows < transpose_matrix.rows; rows++)
     {
-        for (int cols = 0; cols < result->cols; cols++)
+        for (size_t cols = 0; cols < transpose_matrix.cols; cols++)
         {
-            result->values[rows][cols] = A->values[cols][rows];
+            transpose_matrix.values[rows][cols] = A->values[cols][rows];
         }
     }
 
-    if (verbose)
-        output(result);
-
-    delete_from_memory(result);
+    return transpose_matrix;
 }
 
-void expose(Matrix* A, Matrix* result, int verbose)
+
+double determinant(Matrix* A)
 {
 
     if (A->cols != A->rows) {
-        printf("Error: Matrix A must be square in order to expose it\n");
+        printf(MATRIX_MUST_BE_SQUARE);
+        return 1;
+    }
+
+    Matrix triangular_matrix = { A->rows, A->cols, NULL, NULL };
+    zero_matrix(&triangular_matrix);
+    copy_matrix(A, &triangular_matrix);
+
+    for (size_t current_row = 0; current_row < A->rows; current_row++) {
+        for (size_t next_row = current_row + 1; next_row < A->rows; next_row++) {
+            if (triangular_matrix.values[current_row][current_row] == 0) {
+                triangular_matrix.values[current_row][current_row] = 1.0e-18;
+            }
+
+            double current_row_scaler = triangular_matrix.values[next_row][current_row] / triangular_matrix.values[current_row][current_row];
+
+            for (size_t column = 0; column < A->rows; column++) {
+                triangular_matrix.values[next_row][column] = triangular_matrix.values[next_row][column] - current_row_scaler * triangular_matrix.values[current_row][column];
+            }
+        }
+    }
+
+
+    double det = 1.0;
+    for (size_t i = 0; i < A->rows; i++) {
+        det *= triangular_matrix.values[i][i];
+    }
+    delete_from_memory(&triangular_matrix);
+
+    return det;
+}
+
+
+Matrix exponent(Matrix* A)
+{
+    if (A->cols != A->rows) {
+        printf(MATRIX_MUST_BE_SQUARE);
         return;
     }
 
-    if (verbose)
-        printf("EXPONENT:\n");
 
     Matrix exp_matrix = { A->rows, A->cols, NULL, NULL };
 
     Matrix current_element = { A->rows, A->cols, NULL, NULL };
 
-    identity_matrix(&exp_matrix);
-    identity_matrix(&current_element);
+    exp_matrix = identity_matrix(&exp_matrix);
+    current_element = identity_matrix(&current_element);
 
+    size_t number_of_terms_in_exponential_expansion = 50;
 
-
-    int number_of_terms_in_exponential_expansion = 50;
-
-    for (int i = 1; i < number_of_terms_in_exponential_expansion; i++) {
-        multiply(&current_element, A, &current_element, 0);
-        multiply_by_scalar(&current_element, 1.0 / i, 0);
-        add(&exp_matrix, &current_element, &exp_matrix, 0);
+    for (size_t term = 1; term < number_of_terms_in_exponential_expansion; term++) {
+        current_element = multiply(&current_element, A, &current_element, 0);
+        current_element = multiply_by_scalar(&current_element, 1.0 / term, 0);
+        exp_matrix = add(&exp_matrix, &current_element, &exp_matrix, 0);
     }
-    
-    result->rows = exp_matrix.rows;
-    result->cols = exp_matrix.cols;
 
-    if (verbose)
-        output(&exp_matrix);
-
-    delete_from_memory(&exp_matrix);
+    return exp_matrix;
 }
+
 
 void function_testing()
 {
-    Matrix A = { 2, 2, NULL, NULL };
-    Matrix B = { 2, 2, NULL, NULL };
-    Matrix C = { 2, 2, NULL, NULL };
+    Matrix A = { 3, 3, NULL, NULL };
+    Matrix B = { 3, 3, NULL, NULL };
+    Matrix C = { 3, 3, NULL, NULL };
+    double det = 0.0;
     random_matrix(&A);
     random_matrix(&B);
     random_matrix(&C);
@@ -259,17 +287,40 @@ void function_testing()
     output(&B);
 
     printf("Operations:\n");
-    add(&A, &B, &C, 1);
-    subtract(A, B, 1);
-    multiply(&A, &B, &C, 1);
-    transpose(&A, &C, 1);
-    expose(&A, &C, 1);
+
+    C = add(&A, &B);
+    printf("\nSUM:\n");
+    output(&C);
+
+    C = subtract(&A, &B);
+    printf("\nDIFFERENCE:\n");
+    output(&C);
+
+    C = multiply(&A, &B);
+    printf("\nPRODUCT:\n");
+    output(&C);
+
+    C = transpose(&A);
+    printf("\nTRANSPOSITION:\n");
+    output(&C);
+
+    det = determinant(&A);
+    printf("\nDETERMINANT:\n");
+    printf("%lf\n\n", det);
+
+    C = exponent(&A);
+    printf("\nEXPONENT:\n");
+    output(&C);
+
+    
     delete_from_memory(&A);
     delete_from_memory(&B);
+    delete_from_memory(&C);
 }
 
-int main()
+
+void main()
 {
-    srand(time(NULL));
+    srand(3);
     function_testing();
 }
