@@ -165,7 +165,7 @@ double det(Matrix A) {
         return A.data[0][0] * A.data[1][1] - A.data[0][1] * A.data[1][0];
     }
     
-    return determinant;
+    return det;
 }
 
 // Функция для вычисления экспоненты матрицы (простой метод для квадратных матриц)
