@@ -2,12 +2,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-// Функция для вывода сообщения об ошибке
 void matrix_errormsg(const char *errorMessage) {
     fprintf(stderr, "%s\n", errorMessage);
 }
 
-// Структура для представления матрицы
 typedef struct {
     size_t rows;
     size_t cols;
@@ -16,7 +14,6 @@ typedef struct {
 
 const struct Matrix MATRIX_NULL = {.cols = 0, .rows = 0, .data = NULL};
 
-// Создать матрицу
 Matrix matrix_create(size_t rows, size_t cols) {
     Matrix A;
     A.rows = rows;
@@ -38,7 +35,6 @@ Matrix matrix_create(size_t rows, size_t cols) {
     return A;
 }
 
-// Освободить память, выделенную для матрицы
 void matrix_free(Matrix A)
 {
     if(A.data != NULL || A.cols != 0 || A.rows != 0){
@@ -53,7 +49,6 @@ void matrix_free(Matrix A)
 }
 
 
-// Сложение матриц
 Matrix matrix_sum(Matrix A, Matrix B) 
 {
     if (A.rows != B.rows || A.cols != B.cols) {
@@ -76,7 +71,6 @@ Matrix matrix_sum(Matrix A, Matrix B)
     return result;
 }
 
-// Вычитание матриц
 Matrix matrix_sub(Matrix A, Matrix B) 
 {
     if (A.rows != B.rows || A.cols != B.cols) {
@@ -99,7 +93,6 @@ Matrix matrix_sub(Matrix A, Matrix B)
     return result;
 }
 
-// Умножение матриц
 Matrix matrix_mult(Matrix A, Matrix B) 
 {
     if (A.cols != B.rows) {
@@ -125,7 +118,6 @@ Matrix matrix_mult(Matrix A, Matrix B)
     return result;
 }
 
-// Транспонирование матрицы
 Matrix matrix_tr(Matrix A) 
 {
     Matrix result = matrix_create(A.cols, A.rows);
@@ -160,7 +152,6 @@ double matrix_det_lu(Matrix A)
     size_t n = A.rows;
     double det = 1.0;
 
-    // Создаем копию матрицы, чтобы не изменять исходную
     Matrix copy = matrix_create(n, n);
     for (size_t row = 0; row < n; row++) {
         for (size_t col = 0; col < n; col++) {
@@ -185,26 +176,23 @@ double matrix_det_lu(Matrix A)
         det *= copy.data[i][i];
     }
 
-    // Освобождаем память для копии матрицы
     matrix_free(copy);
 
     return det;
 }
 
-// Проверка на нулевую матрицу
 int matrix_is_zero(Matrix A) 
 {
     for (size_t row = 0; row < A.rows; row++) {
         for (size_t col = 0; col < A.cols; col++) {
             if (A.data[row][col] != 0.0) {
-                return 0; // Не нулевая матрица
+                return 0;
             }
         }
     }
-    return 1; // Нулевая матрица
+    return 1;
 }
 
-// Умножение матрицы на скаляр
 Matrix matrix_mult_scalar(Matrix A, double scalar) {
     Matrix result = matrix_create(A.rows, A.cols);
         
@@ -221,7 +209,6 @@ Matrix matrix_mult_scalar(Matrix A, double scalar) {
     return result;
 }
 
-// Функция для копирования матрицы
 void matrix_copy(Matrix destination, const Matrix source) 
 {
     for (size_t row = 0; row < source.rows; row++) {
@@ -231,7 +218,6 @@ void matrix_copy(Matrix destination, const Matrix source)
     }
 }
 
-// Функция для прибавления к матрице произведения двух матриц
 void matrix_add_mult(Matrix A, const Matrix B) 
 {
     Matrix result = matrix_create(A.rows, A.cols);
@@ -255,12 +241,11 @@ void matrix_add_mult(Matrix A, const Matrix B)
     matrix_free(result);
 }
 
-// Функция для вычисления экспоненты матрицы методом Тейлора
 Matrix matrix_exponent(const Matrix A, const double accuracy) 
 {
     if (A.rows != A.cols) {
         matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
-        return matrix_create(0, 0); // Возвращаем нулевую матрицу
+        return matrix_create(0, 0);
     }
 
     size_t n = A.rows;
@@ -270,7 +255,7 @@ Matrix matrix_exponent(const Matrix A, const double accuracy)
     if (C.data == NULL || B.data == NULL) {
         matrix_free(C);
         matrix_free(B);
-        return matrix_create(0, 0); // Возвращаем нулевую матрицу
+        return matrix_create(0, 0);
     }
 
     matrix_copy(B, A);
