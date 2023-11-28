@@ -23,7 +23,7 @@ Matrix create_matrix(int rows, int cols) {
     
     A.data = (double **)malloc(rows * sizeof(double *) + rows * cols * sizeof(double));
     if (!A.data) {
-        return errorMsg("Ошибка выделения памяти для матрицы.");
+        return errorMsg("Ошибка выделения памяти матрицы.");
         return MATRIX_NULL;
     }
     
@@ -60,15 +60,15 @@ Matrix sum(Matrix A, Matrix B)
     if (A.rows != B.rows || A.cols != B.cols) {
         return matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
         return MATRIX_NULL;
-    } // функция нулл матрикс
-
+    } 
+    
+    // функция проверки создания матриц
     if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
         return matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
  
     Matrix result = create_matrix(A.rows, B.cols);
-    // проверять существование тут
     for (int row = 0; row < A.rows; row++) {
         for (int col = 0; col < B.cols; col++) {
             result.data[row][col] = A.data[row][col] + B.data[row][col];
@@ -81,7 +81,7 @@ Matrix sum(Matrix A, Matrix B)
 // Функция для вычитания двух матриц
 Matrix sub(Matrix A, Matrix B) {
     if (A.rows != B.rows || A.cols != B.cols) {
-        printf("Ошибка: Размеры матриц не совпадают\n");
+        return matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
         return MATRIX_NULL;
     }
 
@@ -104,7 +104,7 @@ Matrix sub(Matrix A, Matrix B) {
 // Функция для умножения двух матриц
 Matrix mult(Matrix A, Matrix B) {
     if (A.cols != B.rows) {
-        printf("Ошибка: Невозможно умножить матрицы\n");
+        return matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
         return MATRIX_NULL;
     }
 
@@ -148,7 +148,7 @@ Matrix tr(Matrix A) {
 // Функция для вычисления детерминанта матрицы (простой метод для квадратных матриц)
 double det(Matrix A) {
     if (A.rows != A.cols) {
-        printf("Ошибка: Матрица не является квадратной\n");
+        return matrix_errormsg("Ошибка: Матрица не является квадратной\n");
         return NAN;
     }
     
@@ -172,7 +172,7 @@ double det(Matrix A) {
 Matrix matrix_exponent(const Matrix A, const double accuracy) 
 {
     if (A.rows != A.cols) {
-        matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
+        return matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
         return MATRIX_NULL;
     }
 
@@ -191,8 +191,8 @@ Matrix matrix_exponent(const Matrix A, const double accuracy)
     int degree = (int)(ceil(1.0 / accuracy));
 
     for (int trm = 2; trm <= degree; ++trm) {
-        addMatrix(B, matrix_mult_scalar(A, 1.0 / trm));
-        addMatrix(C, B);
+        add_matrix(B, matrix_mult_scalar(A, 1.0 / trm));
+        add_matrix(C, B);
     }
 
     matrix_sum(C, A);
