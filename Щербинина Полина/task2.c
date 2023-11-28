@@ -13,6 +13,8 @@ typedef struct {
     double **data;
 } Matrix; 
 
+const struct Matrix MATRIX_NULL = {.cols = 0, .rows = 0, .data = NULL};
+
 // Функция для создания матрицы
 Matrix create_matrix(int rows, int cols) {
     Matrix A;
@@ -22,17 +24,24 @@ Matrix create_matrix(int rows, int cols) {
     A.data = (double **)malloc(rows * sizeof(double *) + rows * cols * sizeof(double));
     if (!A.data) {
         return errorMsg("Ошибка выделения памяти для матрицы.");
+        return MATRIX_NULL;
     }
     
     return A;
 }
 
 // Функция для освобождения памяти, выделенной под матрицу
-void free_matrix(Matrix A) {
-    for (int row = 0; row < A.rows; row++) {
-        free(A.data[row]);
-    }
+void free_matrix(Matrix A)
+{
+    if(A.data != NULL || A.cols != 0 || A.rows != 0){
+
+    A.cols = 0;
+    A.rows = 0;
     free(A.data);
+    A.data = NULL;
+
+    }
+
 }
 
 // Функция для вывода матрицы на экран
@@ -46,15 +55,16 @@ void print_matrix(Matrix A) {
 }
 
 // Функция для сложения двух матриц
-Matrix sum(Matrix A, Matrix B) {
+Matrix sum(Matrix A, Matrix B) 
+{
     if (A.rows != B.rows || A.cols != B.cols) {
-        printf("Ошибка: Размеры матриц не совпадают\n");
-        return NAN;
+        return matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
+        return MATRIX_NULL;
     } // функция нулл матрикс
-    
-    int matrix_is_null(int **matrix, int rows, int cols) {
-    if (matrix == NULL) {
-        return 0; // Матрица не существует
+
+    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
+        return matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
     }
  
     Matrix result = create_matrix(A.rows, B.cols);
@@ -72,7 +82,12 @@ Matrix sum(Matrix A, Matrix B) {
 Matrix sub(Matrix A, Matrix B) {
     if (A.rows != B.rows || A.cols != B.cols) {
         printf("Ошибка: Размеры матриц не совпадают\n");
-        return NAN;
+        return MATRIX_NULL;
+    }
+
+    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
+        return matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
     }
     
     Matrix result = create_matrix(A.rows, A.cols);
@@ -90,7 +105,12 @@ Matrix sub(Matrix A, Matrix B) {
 Matrix mult(Matrix A, Matrix B) {
     if (A.cols != B.rows) {
         printf("Ошибка: Невозможно умножить матрицы\n");
-        return NAN;
+        return MATRIX_NULL;
+    }
+
+    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
+        return matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
     }
     
     Matrix result = create_matrix(A.rows, B.cols);
@@ -109,6 +129,11 @@ Matrix mult(Matrix A, Matrix B) {
 
 // Функция для транспонирования матрицы
 Matrix tr(Matrix A) {
+    if(A.rows == 0 || A.cols == 0){
+        return matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+    
     Matrix result = create_matrix(A.cols, A.rows);
     
     for (int row = 0; row < A.rows; row++) {
@@ -127,6 +152,11 @@ double det(Matrix A) {
         return NAN;
     }
     
+    if(A.rows == 0 || A.cols == 0){
+        return matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+    
     if (A.rows == 1) {
         return A.data[0][0];
     }
@@ -135,61 +165,43 @@ double det(Matrix A) {
         return A.data[0][0] * A.data[1][1] - A.data[0][1] * A.data[1][0];
     }
     
-    double determinant = 0;
-    for (int col = 0; col < A.cols; col++) {
-        Matrix submat = create_matrix(A.rows - 1, A.cols - 1);
-        for (int row = 1; row < A.rows; row++) {
-            for (int k = 0; k < A.cols; k++) {
-                if (k < col) {
-                    submat.data[row - 1][k] = A.data[row][k];
-                } else if (k > col) {
-                    submat.data[row - 1][k - 1] = A.data[row][k];
-                }
-            }
-        }
-        determinant += A.data[0][col] * det(submat) * (col % 2 == 0 ? 1 : -1);
-        free_matrix(submat);
-    }
-    
     return determinant;
 }
 
 // Функция для вычисления экспоненты матрицы (простой метод для квадратных матриц)
-Matrix A_exp(Matrix A, int n) {
+Matrix matrix_exponent(const Matrix A, const double accuracy) 
+{
     if (A.rows != A.cols) {
-        printf("Ошибка: Матрица не является квадратной\n");
-        return NAN;
+        matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
+        return MATRIX_NULL;
     }
-    
-    Matrix result = create_matrix(A.rows, A.cols);
-    Matrix temp = create_matrix(A.rows, A.cols);
-    
-    for (int row = 0; row < A.rows; row++) {
-        for (int col = 0; col < A.cols; col++) {             
-            if (row == col) {
-                result.data[row][col] = 1;
-                temp.data[row][col] = A.data[row][col];
-            } else {
-                result.data[row][col] = 0;
-                temp.data[row][col] = 0;
-            }
-        }
+
+    size_t n = A.rows;
+    Matrix C = matrix_create(n, n);
+    Matrix B = matrix_create(n, n);
+
+    if (C.data == NULL || B.data == NULL) {
+        matrix_free(C);
+        matrix_free(B);
+        return MATRIX_NULL;
     }
-    
-   for (int k = 1; k <= n; k++) {
-        for (int row = 0; row < A.rows; row++) {
-            for (int col = 0; col < A.cols; col++) {
-                for (int p = 0; p < A.cols; p++) {
-                    temp->data[row][col] += (A.data[row][p] * result->data[p][col]);
-                }
-            }
-        }
-        Matrix temp2 = result;
-        result = temp;
-        temp = temp2;
+
+    matrix_copy(B, A);
+
+    int degree = (int)(ceil(1.0 / accuracy));
+
+    for (int trm = 2; trm <= degree; ++trm) {
+        addMatrix(B, matrix_mult_scalar(A, 1.0 / trm));
+        addMatrix(C, B);
     }
-    
-    free_matrix(temp);
-    
-    return result;
+
+    matrix_sum(C, A);
+
+    for (size_t diag = 0; diag < C.rows; ++diag) {
+        C.data[diag][diag] += 1;
+    }
+
+    matrix_free(B);
+
+    return C;
 }
