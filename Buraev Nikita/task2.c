@@ -54,7 +54,8 @@ void matrix_free(Matrix A)
 
 
 // Сложение матриц
-Matrix matrix_sum(Matrix A, Matrix B) {
+Matrix matrix_sum(Matrix A, Matrix B) 
+{
     if (A.rows != B.rows || A.cols != B.cols) {
         return matrix_errormsg("Невозможно сложить матрицы разных размеров.");
     }
@@ -76,7 +77,8 @@ Matrix matrix_sum(Matrix A, Matrix B) {
 }
 
 // Вычитание матриц
-Matrix matrix_sub(Matrix A, Matrix B) {
+Matrix matrix_sub(Matrix A, Matrix B) 
+{
     if (A.rows != B.rows || A.cols != B.cols) {
         return matrix_errormsg("Невозможно вычесть матрицы разных размеров.");
     }
@@ -98,7 +100,8 @@ Matrix matrix_sub(Matrix A, Matrix B) {
 }
 
 // Умножение матриц
-Matrix matrix_mult(Matrix A, Matrix B) {
+Matrix matrix_mult(Matrix A, Matrix B) 
+{
     if (A.cols != B.rows) {
         return matrix_errormsg("Невозможно умножить матрицы с данными размерами.");
     }
@@ -123,7 +126,8 @@ Matrix matrix_mult(Matrix A, Matrix B) {
 }
 
 // Транспонирование матрицы
-Matrix matrix_tr(Matrix A) {
+Matrix matrix_tr(Matrix A) 
+{
     Matrix result = matrix_create(A.cols, A.rows);
     
     if(A.rows == 0 || A.cols == 0){
@@ -141,7 +145,8 @@ Matrix matrix_tr(Matrix A) {
 }
 
 // Вычисление детерминанта
-double matrix_det_lu(Matrix A) {
+double matrix_det_lu(Matrix A) 
+{
     if (A.rows != A.cols) {
         return NAN;
         return matrix_errormsg("Детерминант можно вычислить только для квадратных матриц.");
@@ -187,7 +192,8 @@ double matrix_det_lu(Matrix A) {
 }
 
 // Проверка на нулевую матрицу
-int matrix_is_zero(Matrix A) {
+int matrix_is_zero(Matrix A) 
+{
     for (size_t row = 0; row < A.rows; row++) {
         for (size_t col = 0; col < A.cols; col++) {
             if (A.data[row][col] != 0.0) {
@@ -216,7 +222,8 @@ Matrix matrix_mult_scalar(Matrix A, double scalar) {
 }
 
 // Функция для копирования матрицы
-void matrix_copy(Matrix destination, const Matrix source) {
+void matrix_copy(Matrix destination, const Matrix source) 
+{
     for (size_t row = 0; row < source.rows; row++) {
         for (size_t col = 0; col < source.cols; col++) {
             destination.data[row][col] = source.data[row][col];
@@ -225,7 +232,8 @@ void matrix_copy(Matrix destination, const Matrix source) {
 }
 
 // Функция для прибавления к матрице произведения двух матриц
-void matrix_add_mult(Matrix A, const Matrix B) {
+void matrix_add_mult(Matrix A, const Matrix B) 
+{
     Matrix result = matrix_create(A.rows, A.cols);
     
     if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
@@ -248,7 +256,8 @@ void matrix_add_mult(Matrix A, const Matrix B) {
 }
 
 // Функция для вычисления экспоненты матрицы методом Тейлора
-Matrix matrix_exponent(const Matrix A, const double accuracy) {
+Matrix matrix_exponent(const Matrix A, const double accuracy) 
+{
     if (A.rows != A.cols) {
         matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
         return matrix_create(0, 0); // Возвращаем нулевую матрицу
