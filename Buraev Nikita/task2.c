@@ -245,7 +245,7 @@ Matrix matrix_exponent(const Matrix A, const double accuracy)
 {
     if (A.rows != A.cols) {
         matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
-        return matrix_create(0, 0);
+        return MATRIX_NULL;
     }
 
     size_t n = A.rows;
@@ -255,7 +255,7 @@ Matrix matrix_exponent(const Matrix A, const double accuracy)
     if (C.data == NULL || B.data == NULL) {
         matrix_free(C);
         matrix_free(B);
-        return matrix_create(0, 0);
+        return MATRIX_NULL;
     }
 
     matrix_copy(B, A);
