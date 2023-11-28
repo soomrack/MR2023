@@ -2,12 +2,16 @@
 #include <stdlib.h>
 #include <math.h>
 
+// Функция для вывода сообщения об ошибке
+double errorMsg(const char *errorMessage) {
+    fprintf(stderr, "%s\n", errorMessage);
+}
+
 typedef struct {
     int rows;
     int cols;
     double **data;
 } Matrix; 
-
 
 // Функция для создания матрицы
 Matrix create_matrix(int rows, int cols) {
