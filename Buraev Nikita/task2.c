@@ -263,8 +263,8 @@ Matrix matrix_exponent(const Matrix A, const double accuracy)
     int degree = (int)(ceil(1.0 / accuracy));
 
     for (int trm = 2; trm <= degree; ++trm) {
-        addMatrix(B, matrix_mult_scalar(A, 1.0 / trm));
-        addMatrix(C, B);
+        matrix_sum(B, matrix_mult_scalar(A, 1.0 / trm));
+        matrix_sum(C, B);
     }
 
     matrix_sum(C, A);
