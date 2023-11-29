@@ -96,14 +96,10 @@ struct Matrix matrix_diff(const struct Matrix A, const struct Matrix B)
     struct Matrix C = matrix_allocate(A.rows, A.cols);
     if (C.data == NULL) return C;
 
-    struct Matrix B = matrix_allocate(A.rows, A.cols);
-    if (C.data == NULL) {
-        matrix_free(&C);
-        return B;
-    }
 
-    memcpy(C.data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+    memcpy(C.data, A.data, C.cols * C.rows * sizeof(MatrixItem));
     matrix_subtraction(C, B);
+
     return C;
 }
 
