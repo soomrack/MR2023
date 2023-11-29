@@ -57,10 +57,12 @@ struct Matrix matrix_allocation(const size_t cols, const size_t rows)
     }
 
     struct Matrix A = {.cols = cols, .rows = rows, .data = NULL};
+    
     A.data = malloc(A.cols * A.rows * sizeof(MatrixData));
     
     if (A.data == NULL) {
         matrix_error(MEM_ALLOC_ERROR);
+        matrix_free(&A);
         return MATRIX_NULL;
     }
     
@@ -91,6 +93,7 @@ struct Matrix matrix_fill(const size_t cols, size_t rows, const MatrixData *data
     
     if (A.data == NULL) {
         matrix_error(EMPTY_MATRIX);
+        matrix_free(&A);
         return MATRIX_NULL;
     }
 
@@ -135,8 +138,10 @@ struct Matrix matrix_sum(struct Matrix A, struct Matrix B)
 
     if (C.data == NULL) { 
         matrix_error(EMPTY_MATRIX);
+        matrix_free(&C);
         return MATRIX_NULL;
     }
+
     for (size_t pos = 0; pos < A.cols * A.rows; ++pos) {
         C.data[pos] = A.data[pos] + B.data[pos]; 
     }
@@ -166,6 +171,12 @@ struct Matrix matrix_difference(struct Matrix A, struct Matrix B)
 
     C = matrix_create(A.cols, A.rows);
 
+    if (C.data == NULL) { 
+        matrix_error(EMPTY_MATRIX);
+        matrix_free(&C);
+        return MATRIX_NULL;
+    }
+
     if (A.cols != B.cols || A.rows != B.rows) {
         matrix_error(FALSE_ROWS_COLS);
         return MATRIX_NULL;
@@ -189,12 +200,18 @@ struct Matrix matrix_scalar_multiplication(const struct Matrix A, const double s
 }
 
 
-// A = A * B
+// C = A * B
 struct Matrix matrix_multiplication(const struct Matrix A, const struct Matrix B) 
 {
     struct Matrix C;
 
     C = matrix_create(B.cols, B.rows);
+
+    if (C.data == NULL) { 
+        matrix_error(EMPTY_MATRIX);
+        matrix_free(&C);
+        return MATRIX_NULL;
+    }
     
     if (A.rows != B.cols) {
         matrix_error(FALSE_ROWS_COLS);
@@ -205,8 +222,6 @@ struct Matrix matrix_multiplication(const struct Matrix A, const struct Matrix B
         matrix_error(FALSE_ROWS_COLS);
         return MATRIX_NULL;
     }
-
-    if (C.data == NULL) matrix_error(EMPTY_MATRIX);
 	
     for (size_t row = 0; row < C.rows; row++) {
         for (size_t col = 0; col < C.cols; col++) {
@@ -253,6 +268,7 @@ struct Matrix matrix_transposition(const struct Matrix A)
 
     if (C.cols != A.rows || C.rows != A.cols) { 
         matrix_error(FALSE_MATRIX);
+        matrix_free(&C);
         return MATRIX_NULL;
     }
 
@@ -269,6 +285,7 @@ struct Matrix matrix_E(const struct Matrix A)
     E = matrix_create(A.cols, A.rows);
     if (E.data == NULL) { 
         matrix_error(EMPTY_MATRIX);
+        matrix_free(&E);
         return MATRIX_NULL;
     }
 
@@ -281,21 +298,19 @@ struct Matrix matrix_E(const struct Matrix A)
 
 struct Matrix matrix_exp(const struct Matrix A, const int order)
 {
-    struct Matrix A_EXP;
-    struct Matrix Assist;
-    struct Matrix Buf;
+    struct Matrix A_exp;
+    struct Matrix assist;
+    struct Matrix buf;
 
-    Assist = matrix_E(A);
-    A_EXP = matrix_E(A);
-    Buf = matrix_E(A);
+    assist = matrix_E(A);
+    A_exp = matrix_E(A);
+    buf = matrix_E(A);
 
-    if (A.cols != A_EXP.cols || A.rows != A_EXP.rows || A.cols != Assist.cols || A.rows != Assist.rows || A.cols != Buf.cols || A.rows != Buf.rows) {
-        matrix_error(FALSE_MATRIX);
-        return MATRIX_NULL;
-    }
-
-    if (A_EXP.data == NULL || Assist.data == NULL || Buf.data == NULL) {
+    if (A_exp.data == NULL || assist.data == NULL || buf.data == NULL) {
         matrix_error(EMPTY_MATRIX);
+        matrix_free(&A_exp);
+        matrix_free(&assist);
+        matrix_free(&buf);
         return MATRIX_NULL;
     } 
     
@@ -304,21 +319,25 @@ struct Matrix matrix_exp(const struct Matrix A, const int order)
     for (int counter = 1; counter <= order; ++counter) {
         n *= (double)counter;
 
-        Buf = matrix_multiplication(A, Assist);
+        buf = matrix_multiplication(A, assist);
 
-        if (Buf.data == NULL) return MATRIX_NULL;
+        if (buf.data == NULL) {
+            matrix_error(EMPTY_MATRIX); 
+            matrix_free(&buf);
+            return MATRIX_NULL;
+        }
 
-        Assist = Buf;
+        assist = buf;
 
-        matrix_free(&Buf);
-        matrix_scalar_multiplication(Assist, 1 / n);
-        matrix_add(A_EXP, Assist);
+        matrix_free(&buf);
+        matrix_scalar_multiplication(assist, 1 / n);
+        matrix_add(A_exp, assist);
     }
 
-    matrix_free(&Assist);
-    matrix_free(&Buf);
+    matrix_free(&assist);
+    matrix_free(&buf);
 
-    return(A_EXP);
+    return(A_exp);
 }   
 
 
