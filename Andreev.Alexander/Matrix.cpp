@@ -1,18 +1,26 @@
 ﻿#include <iostream>
 #include <string>
 #include <cstring>
-#include <memory> // Для использования std::unique_ptr
-#include <vector> // Для использования std::vector
-#include <random> // Для использования генератора случайных чисел
+#include <vector>
+#include <random>
 
 typedef double MatrixItem;
 enum MatrixType { ZERO, ONES, RANDOM, I };
+
+class Matrix_Exception : public std::exception {
+private:
+    std::string message;
+
+public:
+    Matrix_Exception(std::string message) : message{ message } {}
+    const char* what() const noexcept override { return message.c_str(); }
+};
 
 class Matrix {
 private:
     size_t rows;
     size_t cols;
-    std::unique_ptr<MatrixItem[]> data; // Используем std::unique_ptr вместо сырых указателей
+    MatrixItem* data;
 
 public:
     Matrix();
@@ -29,6 +37,12 @@ public:
     Matrix& operator*= (const double k);
     Matrix& operator*= (const Matrix& M);
 
+    Matrix operator+(const Matrix& K) const;
+    Matrix operator-(const Matrix& K) const;
+    Matrix operator*(const Matrix& K) const;
+    Matrix operator*(const double k) const;
+    friend Matrix operator*(const double k, const Matrix& M);
+
 public:
     void print();
     void set(MatrixType mat_type);
@@ -37,45 +51,186 @@ public:
     void exp(unsigned int level);
 };
 
-Matrix operator+(const Matrix& M, const Matrix& K);
-Matrix operator-(const Matrix& M, const Matrix& K);
-Matrix operator*(const Matrix& M, const Matrix& K);
 Matrix operator*(const double k, const Matrix& M);
-Matrix operator*(const Matrix& M, const double k);
-
-class Matrix_Exception : public std::exception {
-private:
-    std::string message;
-
-public:
-    Matrix_Exception(std::string message) : message{ message } {}
-    std::string get_message() const { return message; }
-};
-
-Matrix_Exception INCORRECT_INPUT_MATRIX("Incorrect input matrix\n");
-Matrix_Exception INCORRECT_DIMENSION_OF_MATRIX("The matrix has an incorrect dimension\n");
-Matrix_Exception NULL_MATRIX("Your matrix is empty\n");
-Matrix_Exception OTHER_ERROR("An unfamiliar error\n");
 
 Matrix::Matrix() : rows(0), cols(0), data(nullptr) {}
 
-Matrix::Matrix(const size_t n) : rows(n), cols(n), data(new MatrixItem[n * n]) {}
+Matrix::Matrix(const size_t n) : rows(n), cols(n) {
+    if (n == 0) {
+        throw Matrix_Exception("Incorrect input matrix: size cannot be zero");
+    }
 
-Matrix::Matrix(const size_t row, const size_t col) : rows(row), cols(col), data(new MatrixItem[row * col]) {}
+    // Проверка на переполнение
+    if (SIZE_MAX / rows < cols) {
+        throw Matrix_Exception("Incorrect input matrix: multiplication of rows and cols causes overflow");
+    }
 
-Matrix::Matrix(const Matrix& M) : rows(M.rows), cols(M.cols), data(new MatrixItem[M.rows * M.cols]) {
-    std::copy(M.data.get(), M.data.get() + rows * cols, data.get());
+    data = new MatrixItem[rows * cols]{};
 }
 
-Matrix::Matrix(Matrix&& M) noexcept : rows(M.rows), cols(M.cols), data(std::move(M.data)) {
+Matrix::Matrix(const size_t row, const size_t col) : rows(row), cols(col) {
+    if (row == 0 || col == 0) {
+        throw Matrix_Exception("Incorrect input matrix: size cannot be zero");
+    }
+
+    // Проверка на переполнение
+    if (SIZE_MAX / rows < cols) {
+        throw Matrix_Exception("Incorrect input matrix: multiplication of rows and cols causes overflow");
+    }
+
+    data = new MatrixItem[rows * cols]{};
+}
+
+Matrix::Matrix(const Matrix& M) : rows(M.rows), cols(M.cols) {
+    if (M.data) {
+        // Проверка на переполнение
+        if (SIZE_MAX / rows < cols) {
+            throw Matrix_Exception("Incorrect input matrix: multiplication of rows and cols causes overflow");
+        }
+
+        data = new MatrixItem[rows * cols]{};
+        std::copy(M.data, M.data + rows * cols, data);
+    }
+    else {
+        throw Matrix_Exception("Incorrect input matrix: source matrix is empty");
+    }
+}
+
+Matrix::Matrix(Matrix&& M) noexcept : rows(M.rows), cols(M.cols), data(M.data) {
     M.rows = 0;
     M.cols = 0;
+    M.data = nullptr;
 }
 
-Matrix::~Matrix() = default;
+Matrix::~Matrix() {
+    delete[] data;
+    data = nullptr;
+}
+
+Matrix& Matrix::operator= (const Matrix& M) {
+    if (this == &M) return *this;
+
+    if (M.rows == 0 || M.cols == 0) {
+        throw Matrix_Exception("Incorrect input matrix: source matrix is empty");
+    }
+
+    // Проверка на переполнение
+    if (SIZE_MAX / M.rows < M.cols) {
+        throw Matrix_Exception("Incorrect input matrix: multiplication of rows and cols causes overflow");
+    }
+
+    rows = M.rows;
+    cols = M.cols;
+    delete[] data;
+    data = new MatrixItem[rows * cols]{};
+    std::copy(M.data, M.data + rows * cols, data);
+    return *this;
+}
+
+Matrix& Matrix::operator+= (const Matrix& M) {
+    if ((rows != M.rows) or (cols != M.cols))
+        throw Matrix_Exception("The matrix has an incorrect dimension");
+
+    if (data && M.data) {
+        for (size_t idx = 0; idx < rows * cols; idx++) {
+            data[idx] += M.data[idx];
+        }
+    }
+    else {
+        throw Matrix_Exception("Your matrix is empty");
+    }
+
+    return *this;
+}
+
+Matrix& Matrix::operator-= (const Matrix& M) {
+    if ((rows != M.rows) or (cols != M.cols))
+        throw Matrix_Exception("The matrix has an incorrect dimension");
+
+    if (data && M.data) {
+        for (size_t idx = 0; idx < rows * cols; idx++) {
+            data[idx] -= M.data[idx];
+        }
+    }
+    else {
+        throw Matrix_Exception("Your matrix is empty");
+    }
+
+    return *this;
+}
+
+Matrix& Matrix::operator*= (const double k) {
+    if (data) {
+        for (size_t idx = 0; idx < rows * cols; idx++) {
+            data[idx] *= k;
+        }
+    }
+    else {
+        throw Matrix_Exception("Your matrix is empty");
+    }
+
+    return *this;
+}
+
+Matrix& Matrix::operator*= (const Matrix& M) {
+    if (cols != M.rows)
+        throw Matrix_Exception("The matrix has an incorrect dimension");
+
+    Matrix R(rows, M.cols);
+    R.set(ZERO);
+
+    if (data && M.data) {
+        for (size_t row = 0; row < R.rows; row++)
+            for (size_t col = 0; col < R.cols; col++)
+                for (size_t idx = 0; idx < M.rows; idx++)
+                    R.data[row * R.cols + col] += data[row * cols + idx] * M.data[idx * M.cols + col];
+
+        cols = R.cols;
+        rows = R.rows;
+        delete[] data;
+        data = new MatrixItem[rows * cols];
+        std::copy(R.data, R.data + rows * cols, data);
+        delete[] R.data;
+    }
+    else {
+        throw Matrix_Exception("Your matrix or the source matrix is empty");
+    }
+
+    return *this;
+}
+
+Matrix Matrix::operator+(const Matrix& K) const {
+    Matrix result = *this;
+    result += K;
+    return result;
+}
+
+Matrix Matrix::operator-(const Matrix& K) const {
+    Matrix result = *this;
+    result -= K;
+    return result;
+}
+
+Matrix Matrix::operator*(const Matrix& K) const {
+    Matrix result = *this;
+    result *= K;
+    return result;
+}
+
+Matrix Matrix::operator*(const double k) const {
+    Matrix result = *this;
+    result *= k;
+    return result;
+}
+
+Matrix operator*(const double k, const Matrix& M) {
+    Matrix result = M;
+    result *= k;
+    return result;
+}
 
 void Matrix::print() {
-    if (!data) throw NULL_MATRIX;
+    if (!data) throw Matrix_Exception("Your matrix is empty");
 
     std::cout << "\n";
     for (size_t r = 0; r < rows; r++) {
@@ -91,13 +246,15 @@ void Matrix::print() {
 }
 
 void Matrix::set(MatrixType mat_type) {
+    if (!data) throw Matrix_Exception("Your matrix is empty");
+
     switch (mat_type) {
     case (ZERO):
-        std::fill(data.get(), data.get() + cols * rows, 0.0); // Используем std::fill вместо memset
+        std::fill(data, data + cols * rows, 0.0);
         break;
 
     case (ONES):
-        std::fill(data.get(), data.get() + cols * rows, 1.0);
+        std::fill(data, data + cols * rows, 1.0);
         break;
 
     case (RANDOM): {
@@ -119,7 +276,7 @@ void Matrix::set(MatrixType mat_type) {
 }
 
 void Matrix::transposition(const Matrix& M) {
-    if (!data) throw NULL_MATRIX;
+    if (!data) throw Matrix_Exception("Your matrix is empty");
 
     for (size_t row = 0; row < M.rows; row++)
         for (size_t col = 0; col < M.cols; col++)
@@ -128,23 +285,33 @@ void Matrix::transposition(const Matrix& M) {
 
 double Matrix::determinant() {
     if (cols == 2) {
-        return data[0] * data[3] - data[1] * data[2];
+        if (data) {
+            return data[0] * data[3] - data[1] * data[2];
+        }
+        else {
+            throw Matrix_Exception("Your matrix is empty");
+        }
     }
 
     if (cols == 3) {
-        return (data[0] * data[4] * data[8]) +
-            (data[1] * data[5] * data[6]) +
-            (data[2] * data[3] * data[7]) -
-            (data[2] * data[4] * data[6]) -
-            (data[0] * data[5] * data[7]) -
-            (data[1] * data[3] * data[8]);
+        if (data) {
+            return (data[0] * data[4] * data[8]) +
+                (data[1] * data[5] * data[6]) +
+                (data[2] * data[3] * data[7]) -
+                (data[2] * data[4] * data[6]) -
+                (data[0] * data[5] * data[7]) -
+                (data[1] * data[3] * data[8]);
+        }
+        else {
+            throw Matrix_Exception("Your matrix is empty");
+        }
     }
 
-    throw INCORRECT_INPUT_MATRIX;
+    throw Matrix_Exception("Incorrect input matrix");
 }
 
 void Matrix::exp(unsigned int level) {
-    if (!data) throw NULL_MATRIX;
+    if (!data) throw Matrix_Exception("Your matrix is empty");
 
     Matrix R(rows, cols);
     R.set(I);
@@ -159,92 +326,9 @@ void Matrix::exp(unsigned int level) {
     *this = R;
 }
 
-Matrix& Matrix::operator= (const Matrix& M) {
-    if (this == &M) return *this;
-    rows = M.rows;
-    cols = M.cols;
-    data = std::make_unique<MatrixItem[]>(rows * cols); // Используем std::make_unique вместо new
-    std::copy(M.data.get(), M.data.get() + rows * cols, data.get());
-    return *this;
-}
-
-Matrix& Matrix::operator+= (const Matrix& M) {
-    if ((rows != M.rows) or (cols != M.cols))
-        throw INCORRECT_DIMENSION_OF_MATRIX;
-
-    for (size_t idx = 0; idx < rows * cols; idx++) {
-        data[idx] += M.data[idx];
-    }
-    return *this;
-}
-
-Matrix& Matrix::operator-= (const Matrix& M) {
-    if ((rows != M.rows) or (cols != M.cols))
-        throw INCORRECT_DIMENSION_OF_MATRIX;
-
-    for (size_t idx = 0; idx < rows * cols; idx++) {
-        data[idx] -= M.data[idx];
-    }
-    return *this;
-}
-
-Matrix& Matrix::operator*= (const double k) {
-    if (!data) throw NULL_MATRIX;
-
-    for (size_t idx = 0; idx < rows * cols; idx++) {
-        data[idx] *= k;
-    }
-    return *this;
-}
-
-Matrix& Matrix::operator*= (const Matrix& M) {
-    if (cols != M.rows)
-        throw INCORRECT_DIMENSION_OF_MATRIX;
-
-    Matrix R(rows, M.cols);
-    R.set(ZERO);
-    for (size_t row = 0; row < R.rows; row++)
-        for (size_t col = 0; col < R.cols; col++)
-            for (size_t idx = 0; idx < M.rows; idx++)
-                R.data[row * R.cols + col] += data[row * cols + idx] * M.data[idx * M.cols + col];
-
-    cols = R.cols;
-    rows = R.rows;
-    data = std::move(R.data); // Используем std::move для эффективного перемещения данных
-    return *this;
-}
-
-Matrix operator+(const Matrix& M, const Matrix& K) {
-    Matrix rez = M;
-    rez += K;
-    return rez;
-}
-
-Matrix operator-(const Matrix& M, const Matrix& K) {
-    Matrix rez = M;
-    rez -= K;
-    return rez;
-}
-
-Matrix operator*(const Matrix& M, const Matrix& K) {
-    Matrix rez = M;
-    rez *= K;
-    return rez;
-}
-
-Matrix operator*(const double k, const Matrix& M) {
-    Matrix rez = M;
-    rez *= k;
-    return rez;
-}
-
-Matrix operator*(const Matrix& M, const double k) {
-    return k * M;
-}
-
 int main(void) {
     try {
-        unsigned int choise, run = 1;
+        unsigned int choice, run = 1;
         Matrix A(3), B(3, 3), C(4);
 
         while (run) {
@@ -268,10 +352,10 @@ int main(void) {
                 "16 - C.exp(20)\n"
                 << std::endl;
 
-            std::cout << "choise: " << std::endl;
-            std::cin >> choise;
+            std::cout << "choice: " << std::endl;
+            std::cin >> choice;
 
-            switch (choise) {
+            switch (choice) {
             case 0:
                 run = 0;
                 break;
@@ -348,6 +432,6 @@ int main(void) {
         return 0;
     }
     catch (const Matrix_Exception& exception) {
-        std::cout << exception.get_message() << std::endl;
+        std::cout << exception.what() << std::endl;
     }
 }

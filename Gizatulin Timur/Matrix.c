@@ -179,13 +179,21 @@ struct Matrix sum_for_matrix_exp(struct Matrix A, unsigned int level)
     double n = 1.0;
 
     struct Matrix SUM = matrix_allocate(A.rows, A.cols);
-    if (SUM.data == NULL) return MATRIX_NULL;
+    if (SUM.data == NULL) {
+        matrix_free(&SUM);
+        return MATRIX_NULL;
+    } 
 
     memcpy(SUM.data, A.data, SUM.cols * SUM.rows * sizeof(MatrixItem));
 
     for (unsigned int counter = 2; counter <= level; counter++) {
         C = matrix_mult(SUM, A);
-        if (C.data == NULL) return MATRIX_NULL;
+        if (C.data == NULL) {
+            matrix_free(&C);
+            matrix_free(&SUM);
+            matrix_free(&S);
+            return MATRIX_NULL;
+        }
         memcpy(SUM.data, C.data, SUM.cols * SUM.rows * sizeof(MatrixItem));
         matrix_free(&C);
     }
@@ -227,7 +235,11 @@ struct Matrix matrix_exp(struct Matrix A, unsigned long int level)
 
     for (unsigned int count = 2; count <= level; count++) {
         C = sum_for_matrix_exp(A, count);
-        if (C.data == NULL) return MATRIX_NULL;
+        if (C.data == NULL) {
+            matrix_free(&C);
+            matrix_free(&SUMEXP);
+            return MATRIX_NULL;
+        } 
         matrix_add(SUMEXP, C);
         matrix_free(&C);
     }
@@ -237,7 +249,7 @@ struct Matrix matrix_exp(struct Matrix A, unsigned long int level)
 }
 
 
-
+f
 void matrix_print(const struct Matrix A)
 {
     for (size_t row = 0; row < A.rows; ++row) {
