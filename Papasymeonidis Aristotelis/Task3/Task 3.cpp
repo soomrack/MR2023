@@ -5,6 +5,14 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstring>
+
+
+typedef double MatrixItem;
+enum MatrixType { ZERO, ONES, RANDOM, I };
+
+//DO NOT USE!
+//NE UTILISER PAS!
 
 typedef double MatrixItem;
 
@@ -28,7 +36,6 @@ private:
     size_t cols;
     size_t rows;
     MatrixItem *data;
-    Matrix sum_for_e(const size_t deg_acc, const Matrix &A);
 
 public:
     Matrix();
@@ -36,16 +43,35 @@ public:
     // Matrix(size_t cols, size_t rows, MatrixItem *data);
     Matrix(const size_t rows, const size_t cols);
     Matrix(const Matrix &A);
+    Matrix(Matrix&& A);
     ~Matrix();
+
+public:
+    Matrix& operator= (const Matrix& M);
+    Matrix& operator+= (const Matrix& M);
+    Matrix& operator-= (const Matrix& M);
+    Matrix& operator*= (const double k);
+    Matrix& operator*= (const Matrix& M);
+
+public:
     void print();
-    Matrix make_ident(size_t rows, size_t cols);
-    Matrix sum(const Matrix &A, const Matrix &B);
+    Matrix& make_ident(size_t rows, size_t cols);
+    Matrix& sum(const Matrix &A, const Matrix &B);
     void add(const Matrix &B);
-    Matrix mult(const Matrix &A);
-    Matrix transp();
+    Matrix& mult(const Matrix &A);
+    Matrix& transp();
     double matrix_det();
-    Matrix exp(Matrix &A, const size_t accuracy);
+    Matrix& exp(Matrix &A, const size_t accuracy);
+
+private:
+Matrix sum_for_e(const size_t deg_acc, const Matrix &A);
 };
+
+Matrix& operator+(const Matrix& M, const Matrix& K);
+Matrix& operator-(const Matrix& M, const Matrix& K);
+Matrix& operator*(const Matrix& M, const Matrix& K);
+Matrix& operator*(const double k, const Matrix& M);
+Matrix& operator*(const Matrix& M, const double k);
 
 Matrix::Matrix()
 {
@@ -54,24 +80,24 @@ Matrix::Matrix()
     data = nullptr;
 }
 
-Matrix::Matrix(const size_t rows, const size_t cols) 
+Matrix::Matrix(const size_t rows, const size_t cols)
 {
     if (rows == 0 || cols == 0)
     {
-        throw "The matrix is not initialized";
+        throw MatrixException("The matrix is not initialized");
     }
     // rows * cols < MAX_SIZE / sizeof(MatrixItem)
     if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols)
-        throw "The matrix is not initialized";
+        throw MatrixException("The matrix is not initialized");
 
     this->cols = cols;
     this->rows = rows;
-    this->data = nullptr;
-    this->data = new double[cols * rows * sizeof(MatrixItem)];
+    data = nullptr;
+    data = new double[cols * rows * sizeof(MatrixItem)];
 
     if (this->data == nullptr)
     {
-        throw "The matrix is not initialized";
+        throw MatrixException("The matrix is not initialized");
     }
 
 }
@@ -83,11 +109,29 @@ Matrix::Matrix(const size_t rows, const size_t cols, const double *values)
     this->data = nullptr;
     this->data = new double[cols * rows * sizeof(MatrixItem)];
     memcpy(this->data, values, rows * cols * sizeof(double));
+}
 
-    if (this->data == nullptr)
-    {
-        throw "The matrix is not initialized";
-    }
+Matrix::Matrix(Matrix &&A){
+    rows = A.rows;
+    cols = A.cols;
+    data = A.data;
+
+    A.rows = 0;
+    A.cols = 0;
+    A.data = nullptr;
+}
+
+Matrix& Matrix::operator= (const Matrix& M) {
+    if (this == &M) return *this;    
+    if (data != nullptr) delete data;
+
+    rows = M.rows;
+    cols = M.cols;
+
+    this->data = new MatrixItem[rows * cols];
+    memcpy(data, M.data, cols * rows * sizeof(MatrixItem));
+
+    return *this;
 }
 
 Matrix::~Matrix()
@@ -98,62 +142,61 @@ Matrix::~Matrix()
     data = nullptr;
 }
 
-Matrix Matrix::sum(const Matrix &A, const Matrix &B)
+Matrix& Matrix::sum(const Matrix &A, const Matrix &B)
 {
     if (A.cols != B.cols || A.rows != B.rows)
-        throw "The matrices do not match in size";
-    Matrix C = Matrix(A.cols, A.rows);
-    for (size_t idx = 0; idx < C.cols * C.rows; ++idx)
+        throw MatrixException("The matrices do not match in size");
+    Matrix *C = new Matrix(A.cols, A.rows);
+    for (size_t idx = 0; idx < C->cols * C->rows; ++idx)
     {
-        C.data[idx] = A.data[idx] + B.data[idx];
+        C->data[idx] = A.data[idx] + B.data[idx];
     }
-    return C;
+    return *C;
 }
 
-Matrix Matrix::exp(Matrix &A, const size_t accuracy)
+Matrix& Matrix::exp(Matrix &A, const size_t accuracy)
 {
+    if (data == nullptr) throw ERRONEOUS_MESSAGE;
     if (A.cols != A.rows)
     {
-        throw "Error! The matrix is not square!";
+        throw MatrixException("Error! The matrix is not square!");
     }
 
-    Matrix E = Matrix(A.rows, A.cols);
+    Matrix *E = new Matrix(A.rows, A.cols);
 
-    if (E.data == nullptr)
+    if (E->data == nullptr)
     {
-        throw "The matrix is empty";
+        throw MatrixException("The matrix is empty");
     }
     Matrix matrix_transfer;
 
     for (size_t deg_acc = 1; deg_acc <= accuracy; ++deg_acc)
     {
         A.print();
-        matrix_transfer = A.sum_for_e(deg_acc, A);
-        Matrix buf1 = E;
-        E = sum(buf1, matrix_transfer);
+        E += A.sum_for_e(deg_acc, A);
     }
-    return E;
+    return *E;
 }
 
-Matrix Matrix::make_ident(size_t rows, size_t cols)
+Matrix& Matrix::make_ident(size_t rows, size_t cols)
 {
-    Matrix I = Matrix(rows, cols);
-    if (I.data == nullptr)
+    Matrix *I = new Matrix(rows, cols);
+    if (I->data == nullptr)
     {
-        throw "The matrix is not initialized";
+        throw MatrixException("The matrix is not initialized");
     }
     for (size_t idx = 0; idx < rows * cols; idx++)
     {
         if (idx % (rows + 1) == 0)
         {
-            I.data[idx] = 1.;
+            I->data[idx] = 1.;
         }
         else
         {
-            I.data[idx] = 0;
+            I->data[idx] = 0;
         }
     }
-    return I;
+    return *I;
 }
 
 void Matrix::add(const Matrix &B) // public
@@ -166,13 +209,13 @@ void Matrix::add(const Matrix &B) // public
     }
 }
 
-Matrix Matrix::mult(const Matrix &A)
+Matrix& Matrix::mult(const Matrix &A)
 {
     if (A.cols != rows)
         throw "Size mismatch for multiplication";
-    Matrix C = Matrix(A.cols, rows);
+    Matrix *C = new Matrix(A.cols, rows);
 
-    if (C.data == nullptr)
+    if (C->data == nullptr)
     {
         throw "The matrix is not initialized";
     }
@@ -181,15 +224,15 @@ Matrix Matrix::mult(const Matrix &A)
     {
         for (size_t colsB = 0; colsB < cols; ++colsB)
         {
-            C.data[rowA * (A.cols) + colsB] = 0;
+            C->data[rowA * (A.cols) + colsB] = 0;
             for (size_t idx = 0; idx < A.cols; ++idx)
             {
-                C.data[rowA * (A.cols) + colsB] += (A.data[(rowA * A.cols) + idx]) * (data[(idx * cols) + colsB]);
+                C->data[rowA * (A.cols) + colsB] += (A.data[(rowA * A.cols) + idx]) * (data[(idx * cols) + colsB]);
             }
         }
     }
 
-    return C;
+    return *C;
 }
 
 double Matrix::matrix_det()
@@ -244,9 +287,9 @@ void Matrix::print()
 
 Matrix::Matrix(const Matrix &A)
 {
-    this->cols = A.cols;
-    this->rows = A.rows;
-    this->data = new double[cols * rows * sizeof(MatrixItem)];
+    cols = A.cols;
+    rows = A.rows;
+    data = new double[cols * rows * sizeof(MatrixItem)];
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
     {
         data[idx] = A.data[idx];
@@ -283,11 +326,11 @@ Matrix Matrix::sum_for_e(const size_t deg_acc, const Matrix &A) // p
     return E;
 }
 
-Matrix Matrix::transp()
+Matrix& Matrix::transp()
 {
-    Matrix C = Matrix(rows, cols);
+    Matrix *C = new Matrix(rows, cols);
 
-    if (C.data == nullptr)
+    if (C->data == nullptr)
     {
         throw "Initialization error";
     }
@@ -296,11 +339,107 @@ Matrix Matrix::transp()
     {
         for (size_t colsA = 0; colsA < cols; ++colsA)
         {
-            C.data[(rows)*colsA + rowA] = data[colsA + rowA * cols];
+            C->data[(rows)*colsA + rowA] = data[colsA + rowA * cols];
         }
     }
-    return C;
+    return *C;
 }
+
+Matrix& Matrix::operator= (const Matrix& M) {
+    if (this == &M) return *this;    
+    if (data != nullptr) delete data;
+
+    rows = M.rows;
+    cols = M.cols;
+
+    this->data = new MatrixItem[rows * cols];
+    memcpy(data, M.data, cols * rows * sizeof(MatrixItem));
+
+    return *this;
+}
+
+
+Matrix& Matrix::operator+= (const Matrix& M) { 
+    if ((rows != M.rows) || (cols != M.cols)) 
+        throw ERRONEOUS_MESSAGE;
+
+    for (size_t idx = 0; idx < rows * cols; idx++) {
+        data[idx] += M.data[idx];
+    }
+    return *this;
+}
+
+
+Matrix& Matrix::operator-= (const Matrix& M) {
+    if ((rows != M.rows) || (cols != M.cols))
+        throw WRONG_CONDITIONS;
+
+    for (size_t idx = 0; idx < rows * cols; idx++) {
+        data[idx] -= M.data[idx];
+    }
+    return *this;
+}
+
+
+Matrix& Matrix::operator*= (const double k) {
+    if (data == nullptr) throw ERRONEOUS_MESSAGE;
+
+    for (size_t idx = 0; idx < rows * cols; idx++) {
+        data[idx] *= k;
+    }
+    return *this;
+}
+
+
+Matrix& Matrix::operator*= (const Matrix& M) {
+    if (cols != M.rows)
+        throw NO_MEMORY_ALLOCATED;
+
+    Matrix R(rows, M.cols);
+    for (size_t row = 0; row < R.rows; row++)
+        for (size_t col = 0; col < R.cols; col++)
+            for (size_t idx = 0; idx < M.rows; idx++)
+                R.data[row * R.cols + col] += data[row * cols + idx] * M.data[idx * M.cols + col]; 
+    
+    cols = R.cols;
+    rows = R.rows;
+    data = R.data;
+    R.data = nullptr;
+    return *this;
+}
+
+Matrix operator+(const Matrix& M, const Matrix& K) {
+    Matrix rez = M;
+    rez += K;
+    return rez;
+}
+
+
+Matrix operator-(const Matrix& M, const Matrix& K) {
+    Matrix rez = M;
+    rez -= K;
+    return rez;
+}
+
+
+Matrix operator*(const Matrix& M, const Matrix& K) {
+    Matrix rez = M;
+    rez *= K;
+    return rez;
+}
+
+
+Matrix operator*(const double k, const Matrix& M) {
+    Matrix rez = M;
+    rez *= k;
+    return rez;
+}
+
+
+Matrix operator*(const Matrix& M, const double k) {
+    return k * M;
+}
+
 
 int main()
 {
