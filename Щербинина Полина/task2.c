@@ -16,7 +16,7 @@ typedef struct {
 const struct Matrix MATRIX_NULL = {.cols = 0, .rows = 0, .data = NULL};
 
 // Функция для создания матрицы
-Matrix create_matrix(int rows, int cols) {
+Matrix matrix_create(int rows, int cols) {
     Matrix A;
     A.rows = rows;
     A.cols = cols;
@@ -31,21 +31,18 @@ Matrix create_matrix(int rows, int cols) {
 }
 
 // Функция для освобождения памяти, выделенной под матрицу
-void free_matrix(Matrix A)
+void matrix_free(Matrix A)
 {
-    if(A.data != NULL || A.cols != 0 || A.rows != 0){
 
     A.cols = 0;
     A.rows = 0;
     free(A.data);
     A.data = NULL;
 
-    }
-
 }
 
 // Функция для вывода матрицы на экран
-void print_matrix(Matrix A) {
+void matrix_print(Matrix A) {
     for (int row = 0; row < A.rows; row++) {
         for (int col = 0; col < A.cols; col++) {
             printf("%lf\t", A.data[row][col]);
@@ -55,20 +52,26 @@ void print_matrix(Matrix A) {
 }
 
 // Функция для сложения двух матриц
-Matrix sum(Matrix A, Matrix B) 
+Matrix matrix_sum(Matrix A, Matrix B) 
 {
     if (A.rows != B.rows || A.cols != B.cols) {
         matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
         return MATRIX_NULL;
     } 
     
-    // функция проверки создания матриц
+    // проверкa создания матриц
     if(A.data == NULL || B.data == NULL){
         matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
  
-    Matrix result = create_matrix(A.rows, B.cols);
+    Matrix result = matrix_create(A.rows, B.cols);
+
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+    
     for (int row = 0; row < A.rows; row++) {
         for (int col = 0; col < B.cols; col++) {
             result.data[row][col] = A.data[row][col] + B.data[row][col];
@@ -79,7 +82,7 @@ Matrix sum(Matrix A, Matrix B)
 }
 
 // Функция для вычитания двух матриц
-Matrix sub(Matrix A, Matrix B) {
+Matrix matrix_sub(Matrix A, Matrix B) {
     if (A.rows != B.rows || A.cols != B.cols) {
         matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
         return MATRIX_NULL;
@@ -90,7 +93,12 @@ Matrix sub(Matrix A, Matrix B) {
         return MATRIX_NULL;
     }
     
-    Matrix result = create_matrix(A.rows, A.cols);
+    Matrix result = matrix_create(A.rows, A.cols);
+    
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
     
     for (int row = 0; row < A.rows; row++) {
         for (int col = 0; col < B.cols; col++) {
@@ -102,7 +110,7 @@ Matrix sub(Matrix A, Matrix B) {
 }
 
 // Функция для умножения двух матриц
-Matrix mult(Matrix A, Matrix B) {
+Matrix matrix_mult(Matrix A, Matrix B) {
     if (A.cols != B.rows) {
         matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
         return MATRIX_NULL;
@@ -113,7 +121,12 @@ Matrix mult(Matrix A, Matrix B) {
         return MATRIX_NULL;
     }
     
-    Matrix result = create_matrix(A.rows, B.cols);
+    Matrix result = matrix_create(A.rows, B.cols);
+    
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
     
     for (int row = 0; row < A.rows; row++) {
         for (int col = 0; col < B.cols; col++) {
@@ -128,13 +141,18 @@ Matrix mult(Matrix A, Matrix B) {
 }
 
 // Функция для транспонирования матрицы
-Matrix tr(Matrix A) {
+Matrix matrix_tr(Matrix A) {
     if(A.data == NULL){
         matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
     
-    Matrix result = create_matrix(A.cols, A.rows);
+    Matrix result = matrix_create(A.cols, A.rows);
+    
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
     
     for (int row = 0; row < A.rows; row++) {
         for (int col = 0; col < A.cols; col++) {
@@ -146,7 +164,7 @@ Matrix tr(Matrix A) {
 }
 
 // Функция для вычисления детерминанта матрицы (простой метод для квадратных матриц)
-double det(Matrix A) {
+double matrix_det(Matrix A) {
     if (A.rows != A.cols) {
         matrix_errormsg("Ошибка: Матрица не является квадратной\n");
         return NAN;
@@ -154,7 +172,7 @@ double det(Matrix A) {
     
     if(A.data == NULL){
         matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
+        return NAN;
     }
     
     if (A.rows == 1) {
@@ -171,7 +189,65 @@ double det(Matrix A) {
                A.data[0][2] * (A.data[1][0] * A.data[2][1] - A.data[1][1] * A.data[2][0]);
     }
 
-    return det;
+    return NAN;
+}
+
+Matrix matrix_mult_scalar(Matrix A, double scalar) {
+    Matrix result = matrix_create(A.rows, A.cols);
+    
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+        
+    if(A.rows == 0 || A.cols == 0){
+        return matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+    
+    for (size_t row = 0; row < A.rows; row++) {
+        for (size_t col = 0; col < A.cols; col++) {
+            result.data[row][col] = A.data[row][col] * scalar;
+        }
+    }
+    return result;
+}
+
+void matrix_copy(Matrix destination, const Matrix source) 
+{
+    for (size_t row = 0; row < source.rows; row++) {
+        for (size_t col = 0; col < source.cols; col++) {
+            destination.data[row][col] = source.data[row][col];
+        }
+    }
+}
+
+void matrix_add_mult(Matrix A, const Matrix B) 
+{
+    Matrix result = matrix_create(A.rows, A.cols);
+    
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+    
+    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
+        return matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+
+    for (size_t row = 0; row < A.rows; row++) {
+        for (size_t col = 0; col < A.cols; col++) {
+            double matrix_sum = 0.0;
+            for (size_t k = 0; k < A.cols; k++) {
+                matrix_sum += A.data[row][k] * B.data[k][col];
+            }
+            result.data[row][col] = matrix_sum;
+        }
+    }
+
+    matrix_copy(A, result);
+    matrix_free(result);
 }
 
 // Функция для вычисления экспоненты матрицы (простой метод для квадратных матриц)
@@ -194,11 +270,9 @@ Matrix matrix_exponent(const Matrix A, const double accuracy)
 
     matrix_copy(B, A);
 
-    int degree = (int)(ceil(1.0 / accuracy));
-
-    for (int trm = 2; trm <= degree; ++trm) {
-        add_matrix(B, matrix_mult_scalar(A, 1.0 / trm));
-        add_matrix(C, B);
+    for (size_t trm = 2; trm <= accuracy; ++trm) {
+        matrix_sum(B, matrix_mult_scalar(A, 1.0 / trm));
+        matrix_sum(C, B);
     }
 
     matrix_sum(C, A);

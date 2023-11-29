@@ -36,7 +36,7 @@ public:
     Matrix& operator^(const int number) const;
     Matrix& operator/(const double number) const;
     Matrix& exp(const size_t accuracy);
-    Matrix& matrix_minor(Matrix& mat1);
+    Matrix& matrix_minor(Matrix& matrix1);
     Matrix& matrix_transp();
     double& matrix_det(Matrix matrix);
 
@@ -74,8 +74,10 @@ Matrix::Matrix(const Matrix& matrix) {
 
 
 Matrix::Matrix(Matrix&& matrix) {
-    cols = 0;
-    rows = 0;
+    cols = matrix.cols;
+    rows = matrix.rows;
+    matrix.cols = 0;
+    matrix.rows = 0;
     value = matrix.value;
     matrix.value = nullptr;
 }
@@ -127,9 +129,10 @@ double Matrix_one(size_t col, size_t row)
 }
 
 
-Matrix Matrix::operator+ (const Matrix& matrix) const {
+Matrix &Matrix::operator+ (const Matrix& matrix) const {
 
     if (rows != matrix.rows) throw ("Make matrix square\n");
+    if (cols != matrix.cols) throw ("Make matrix square\n");
     Matrix result(matrix);
     value = new double[cols * rows] {};
     for (size_t idx = 0; idx < matrix.cols * matrix.rows; idx++) {
@@ -139,8 +142,9 @@ Matrix Matrix::operator+ (const Matrix& matrix) const {
 }
 
 
-Matrix Matrix::operator- (const Matrix& matrix) const {
+Matrix &Matrix::operator- (const Matrix& matrix) const {
     if (rows != matrix.rows) throw ("Make matrix square\n");
+    if (cols != matrix.cols) throw ("Make matrix square\n");
     Matrix result(matrix);
 
     for (size_t idx = 0; idx < matrix.cols * matrix.rows; idx++) {
@@ -150,8 +154,9 @@ Matrix Matrix::operator- (const Matrix& matrix) const {
 }
 
 
-Matrix Matrix::operator* (const Matrix& matrix) const {
+Matrix &Matrix::operator* (const Matrix& matrix) const {
     if (rows != matrix.rows) throw ("Make matrix square\n");
+    if (cols != matrix.cols) throw ("Make matrix square\n");
     Matrix result(matrix);
 
     for (size_t row = 0; row < result.rows; row++) {
@@ -166,7 +171,7 @@ Matrix Matrix::operator* (const Matrix& matrix) const {
 }
 
 
-Matrix Matrix::operator* (const double coefficient) const {
+Matrix &Matrix::operator* (const double coefficient) const {
     Matrix result(cols, rows);
 
     for (size_t idx = 0; idx < rows * cols; idx++) {
@@ -177,7 +182,7 @@ Matrix Matrix::operator* (const double coefficient) const {
 
 
 
-Matrix Matrix::operator= (Matrix& matrix) {
+Matrix &Matrix::operator= (Matrix& matrix) {
     if (this == &matrix) {
         return *this;
     }
@@ -194,7 +199,7 @@ Matrix Matrix::operator= (Matrix& matrix) {
 }
 
 
-Matrix Matrix::operator= (Matrix&& matrix) {
+Matrix &Matrix::operator= (Matrix&& matrix) {
     rows = 0;
     cols = 0;
     delete[]value;
@@ -204,7 +209,7 @@ Matrix Matrix::operator= (Matrix&& matrix) {
 }
 
 
-Matrix Matrix::operator^(size_t number) const {
+Matrix &Matrix::operator^ (size_t number) const {
     if (cols != rows) throw ("Make matrix square\n");
     Matrix result(*this);
 
@@ -226,7 +231,7 @@ Matrix Matrix::operator^(size_t number) const {
 }
 
 
-Matrix Matrix::operator/(const double number) const {
+Matrix &Matrix::operator/(const double number) const {
     if (number == 0) throw ("Can't divide by zero\n");
     Matrix result(cols, rows);
 
@@ -237,7 +242,7 @@ Matrix Matrix::operator/(const double number) const {
 }
 
 
-Matrix Matrix::exp(const size_t accuracy = 30) {
+Matrix &Matrix::exp(const size_t accuracy = 30) {
     if (A.rows != A.cols) throw ("Make matrix square\n");
     
     double result = Matrix_one(A.cols, A.rows);
@@ -252,7 +257,7 @@ Matrix Matrix::exp(const size_t accuracy = 30) {
 
 
 
-Matrix Matrix::matrix_minor(Matrix& A) {
+Matrix &Matrix::matrix_minor(Matrix& A) {
    
 
     Matrix result = Matrix(A.rows, A.cols);
@@ -266,7 +271,7 @@ Matrix Matrix::matrix_minor(Matrix& A) {
     return result;
 }
 
-Matrix Matrix::matrix_transp() {
+Matrix &Matrix::matrix_transp() {
     Matrix result = { cols, rows };
 
     for (size_t row = 0; row < result.rows; row++) {
@@ -281,23 +286,23 @@ Matrix Matrix::matrix_transp() {
 
 
 int main() {
-    Matrix mat1(3, 3);
-    mat1.matrix_fill_random();
-    mat1.matrix_print();
-    Matrix mat2(3, 3);
-    mat2.matrix_fill_random();
-    mat2.matrix_print();
-    Matrix sum = mat1 + mat2;
+    Matrix matrix1(3, 3);
+    matrix1.matrix_fill_random();
+    matrix1.matrix_print();
+    Matrix matrix2(3, 3);
+    matrix2.matrix_fill_random();
+    matrix2.matrix_print();
+    Matrix sum = matrix1 + matrix2;
     sum.matrix_print();
-    Matrix sub = mat1 - mat2;
+    Matrix sub = matrix1 - matrix2;
     sub.matrix_print();
-    Matrix mult = mat1 * mat2;
+    Matrix mult = matrix1 * matrix2;
     mult.matrix_print();
-    Matrix mult_number = mat1 * 2;
+    Matrix mult_number = matrix1 * 2;
     mult_number.matrix_print();
-    Matrix pow = mat1 ^ 2;
+    Matrix pow = matrix1 ^ 2;
     pow.matrix_print();
-    Matrix exp = Matrix::exp(mat1);
+    Matrix exp = Matrix::exp(matrix1);
     exp.matrix_print();
     return 0;
 }  
