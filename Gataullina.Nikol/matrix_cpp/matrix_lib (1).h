@@ -20,6 +20,7 @@ Matrix_Exception MULTIPLYERROR("Error: first matrix cols not equal to the second
 Matrix_Exception ZERODIVISION("Error: divide by zero\n");
 Matrix_Exception MEM_ERROR("Error: memory is not allocated\n");
 Matrix_Exception EMPTY_MATRIX("Error: Function can't return an empty matrix\n");
+Matrix_Exception SIZE_ERROR ("Error: Function can't return an empty matrix\n");
 
 
 class Matrix {
@@ -88,8 +89,8 @@ Matrix::Matrix(const Matrix &matrix) {
 
 Matrix::Matrix(size_t num_row, size_t num_col) 
 {
-    if (rows >= SIZE_MAX / sizeof(double) / cols) { 
-        return nullptr; 
+    if (num_row >= SIZE_MAX / sizeof(double) / num_col) { 
+        throw SIZE_ERROR; 
     }
     rows = num_row;
     cols = num_col;
