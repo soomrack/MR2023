@@ -191,6 +191,7 @@ struct Matrix sum_for_matrix_exp(struct Matrix A, unsigned int level)
         if (C.data == NULL) {
             matrix_free(&C);
             matrix_free(&SUM);
+            matrix_free(&S);
             return MATRIX_NULL;
         }
         memcpy(SUM.data, C.data, SUM.cols * SUM.rows * sizeof(MatrixItem));
