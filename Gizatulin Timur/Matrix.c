@@ -227,8 +227,8 @@ struct Matrix matrix_exp(struct Matrix A, unsigned long int level)
 
     for (unsigned int count = 2; count <= level; count++) {
         C = sum_for_matrix_exp(A, count);
-        matrix_add(SUMEXP, C);
         if (C.data == NULL) return MATRIX_NULL;
+        matrix_add(SUMEXP, C);
         matrix_free(&C);
     }
     
