@@ -34,9 +34,9 @@ public:
     Matrix();
     Matrix(const size_t rows, const size_t cols, const double *values);
     // Matrix(size_t cols, size_t rows, MatrixItem *data);
-    Matrix(size_t cols, size_t rows);
+    Matrix(const size_t rows, const size_t cols);
+    Matrix(const Matrix &A);
     ~Matrix();
-    Matrix clone(const Matrix &A);
     void print();
     Matrix make_ident(size_t rows, size_t cols);
     Matrix sum(const Matrix &A, const Matrix &B);
@@ -45,7 +45,6 @@ public:
     Matrix transp();
     double matrix_det();
     Matrix exp(Matrix &A, const size_t accuracy);
-    int me_function(int size);
 };
 
 Matrix::Matrix()
@@ -55,14 +54,7 @@ Matrix::Matrix()
     data = nullptr;
 }
 
-// Matrix::Matrix(size_t cols, size_t rows, MatrixItem *data)
-// {
-//     this->cols = cols;
-//     this->rows = rows;
-//     this->data = data;
-// }
-
-Matrix::Matrix(const size_t rows, const size_t cols, const double *values) 
+Matrix::Matrix(const size_t rows, const size_t cols) 
 {
     if (rows == 0 || cols == 0)
     {
@@ -81,17 +73,22 @@ Matrix::Matrix(const size_t rows, const size_t cols, const double *values)
     {
         throw "The matrix is not initialized";
     }
-    memcpy(this->data, values, rows * cols * sizeof(double));
+
 }
 
-// Matrix::Matrix(const size_t rows, const size_t cols, const double *values)
-// {
-//     Matrix A = Matrix(rows, cols);
-//     if (A.data == nullptr){
-//        A = Matrix();
-//     }
+Matrix::Matrix(const size_t rows, const size_t cols, const double *values)
+{
+    this->cols = cols;
+    this->rows = rows;
+    this->data = nullptr;
+    this->data = new double[cols * rows * sizeof(MatrixItem)];
+    memcpy(this->data, values, rows * cols * sizeof(double));
 
-// }
+    if (this->data == nullptr)
+    {
+        throw "The matrix is not initialized";
+    }
+}
 
 Matrix::~Matrix()
 {
@@ -245,14 +242,15 @@ void Matrix::print()
     }
 }
 
-Matrix Matrix::clone(const Matrix &A)
+Matrix::Matrix(const Matrix &A)
 {
-    Matrix C = Matrix(A.cols, A.rows);
+    this->cols = A.cols;
+    this->rows = A.rows;
+    this->data = new double[cols * rows * sizeof(MatrixItem)];
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
     {
-        C.data[idx] = A.data[idx];
+        data[idx] = A.data[idx];
     }
-    return C;
 }
 
 Matrix Matrix::sum_for_e(const size_t deg_acc, const Matrix &A) // p
@@ -271,7 +269,7 @@ Matrix Matrix::sum_for_e(const size_t deg_acc, const Matrix &A) // p
     Matrix E{A.rows, A.cols};
     if (deg_acc > 2)
     {
-        E = clone(A); // цикл for для ( функция копиии матрицчы)
+        E = Matrix(A); // цикл for для ( функция копиии матрицчы)
         for (size_t id = 2; id < deg_acc; ++id)
         {
             Matrix buf = E;
