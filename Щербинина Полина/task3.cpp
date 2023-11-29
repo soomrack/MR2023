@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "matrix.hpp"
+
 template <typename Type>
 Matrix<Type>::Matrix(std::initializer_list<std::initializer_list<Type>> matrix)
     : rows(matrix.size()), cols(rows > 0 ? matrix.begin()->size() : 0)
