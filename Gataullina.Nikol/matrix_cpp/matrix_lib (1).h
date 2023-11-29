@@ -86,8 +86,11 @@ Matrix::Matrix(const Matrix &matrix) {
 }
 
 
-Matrix::Matrix(size_t num_row, size_t num_col)
+Matrix::Matrix(size_t num_row, size_t num_col) 
 {
+    if (rows >= SIZE_MAX / sizeof(double) / cols) { 
+        return nullptr; 
+    }
     rows = num_row;
     cols = num_col;
     data = new double[rows * cols];
@@ -99,8 +102,6 @@ Matrix::Matrix(size_t num_row, size_t num_col, double *array)
     rows = num_row;
     cols = num_col;
     data = new double[rows * cols];
-    if (!data)
-        throw MEM_ERROR;
     memcpy(data, array, rows * cols * sizeof(double));
 }
 
@@ -197,10 +198,10 @@ Matrix& Matrix::minor(const unsigned int minor_row, const unsigned int minor_col
         for (unsigned int col = 0; col < cols; col++){
             if (row == minor_row || col == minor_col)
                 continue;
-            minor.data[minor_index++] = data[row * cols + col];
+            minor->data[minor_index++] = data[row * cols + col];
         }
     }
-    return minor;
+    return *minor;
 }
 
 
@@ -263,8 +264,13 @@ Matrix &Matrix::operator=(const Matrix &A)
 {
     if (this == &A)
         return *this;
-    if (rows * cols == A.rows * A.cols)
-        memcpy(A);
+
+    if (rows * cols == A.rows * A.cols){
+         rows = A.rows;
+         cols = A.cols;
+         memcpy(data, A.data, rows * cols * sizeof(double));
+         return *this;
+    }
     delete[] data;                                
     rows = A.rows;
     cols = A.cols;
@@ -289,41 +295,41 @@ Matrix& Matrix::operator=(Matrix &&A) noexcept
 
 Matrix& Matrix::operator+(const Matrix &B)
 {
-    Matrix add(*this);
-    add += B;
-    return add;
+    Matrix *add = new Matrix(*this);
+    *add += B;
+    return *add;
 }
 
 
 Matrix& Matrix::operator-(const Matrix &B)
 {
-    Matrix sub(*this);
-    sub -= B;
-    return sub;
+    Matrix *sub = new Matrix(*this);
+    *sub -= B;
+    return *sub;
 }
 
 
 Matrix& Matrix::operator*(const double k)
 {
-    Matrix multiply(*this);
-    multiply *= k;
-    return multiply;
+    Matrix *multiply = new Matrix(*this);
+    *multiply *= k;
+    return *multiply;
 }
 
 
 Matrix& Matrix::operator*(const Matrix &B)
 {
-    Matrix multiply(*this);
-    multiply *= B;
-    return multiply;
+    Matrix *multiply = new Matrix(*this);
+    *multiply *= B;
+    return *multiply;
 }
 
 
 Matrix& Matrix::operator/(const double k)
 {
-    Matrix multiply(*this);
-    multiply /= k;
-    return multiply;
+    Matrix *multiply = new Matrix(*this);
+    *multiply /= k;
+    return *multiply;
 }
 
 
@@ -349,29 +355,29 @@ double Matrix::determinant(const Matrix *matrix) // Из-за рекурсии �
 }
 
 
-Matrix Matrix::reverse(const Matrix *matrix) // Из-за рекурсии принимает снова себя
+Matrix& Matrix::reverse(const Matrix *matrix) // Из-за рекурсии принимает снова себя
 { 
     double d = determinant(matrix);
     if (matrix->rows != matrix->cols)
         throw NOTSQUARE;
     if (fabs(d) < EPS)
         throw ZERODIVISION;
-    Matrix reverse(matrix->rows, matrix->cols);
+    Matrix *reverse = new Matrix(matrix->rows, matrix->cols);
     int k = 1;
     for (unsigned int row = 0; row < reverse.rows; row++){
         for (unsigned int col = 0; col < reverse.cols; col++){
             Matrix temp = minor(row, col);
-            reverse.data[row * matrix->cols + col] = k * determinant(&temp);
+            reverse->data[row * matrix->cols + col] = k * determinant(&temp);
             k = -k;
         }
     }
-    reverse.transpose();
-    reverse /= d;
-    return reverse;
+    reverse->transpose();
+    *reverse /= d;
+    return *reverse;
 }
 
 
-Matrix Matrix::sum_for_exp(const size_t accuracy)
+Matrix& Matrix::sum_for_exp(const size_t accuracy)
 {
     Matrix E = Matrix(rows, cols);
     if(accuracy == 0){
@@ -391,7 +397,7 @@ Matrix Matrix::sum_for_exp(const size_t accuracy)
 }
 
 
-Matrix Matrix::exponent(const size_t accuracy = 30)
+Matrix& Matrix::exponent(const size_t accuracy = 30)
 {
     if(cols != rows){
         throw NOTSQUARE;
@@ -400,11 +406,11 @@ Matrix Matrix::exponent(const size_t accuracy = 30)
     Matrix sum = Matrix(rows, cols);
     sum.set_identity();
 
-    Matrix exp = sum;
+    Matrix *exp = new Matrix(sum);
     for(size_t deg_acc = 1; deg_acc <= accuracy ; ++deg_acc){
         sum = sum * (*this) / deg_acc;
-        exp += sum;
+        *exp += sum;
     }
 
-    return exp;
+    return *exp;
 }
