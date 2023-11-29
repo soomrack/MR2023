@@ -324,6 +324,8 @@ struct Matrix matrix_exp(const struct Matrix A, const int order)
         if (buf.data == NULL) {
             matrix_error(EMPTY_MATRIX); 
             matrix_free(&buf);
+            matrix_free(&A_exp);
+            matrix_free(&assist);
             return MATRIX_NULL;
         }
 
