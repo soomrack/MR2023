@@ -8,8 +8,11 @@ int main() {
 
     matrix_print(A);
 
+    C = matrix_product(A, A);
     D = matrix_multiply(D, 0.1);
     C = matrix_multiply(C, 0.1);
+    D = matrix_product(A, A);
+    D = matrix_product(D, A);
 
 
    

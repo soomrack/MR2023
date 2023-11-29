@@ -197,6 +197,148 @@ struct Matrix matrix_multiply(const struct Matrix A, const double scalar) {
     return B;
 }
 
+struct Matrix matrix_product(const struct Matrix A, const struct Matrix B) {
+    if (A.data == NULL || B.data == NULL) {
+        matrix_error(incorrect_matrix_err);
+        return MATRIX_NULL;
+    }
+
+    if (A.cols != B.rows) {
+        matrix_error(col_row_err);
+        return MATRIX_NULL;
+    }
+
+    struct Matrix C = matrix_create(A.rows, A.cols, ZEROS);
+
+    if (C.data == NULL) return MATRIX_NULL;
+
+    for (size_t row_A = 0; row_A < A.rows; row_A++)
+        for (size_t col_B = 0; col_B < B.cols; col_B++)
+            for (size_t idx = 0; idx < A.cols; idx++)
+                C.data[row_A * A.cols + col_B] += A.data[row_A * A.cols + idx] * B.data[idx * B.cols + col_B];
+
+    return C;
+}
+
+
+struct Matrix matrix_transpose(const struct Matrix A) {
+    if (A.data == NULL) {
+        matrix_error(incorrect_matrix_err);
+        return MATRIX_NULL;
+    }
+
+    struct Matrix B = matrix_allocate(A.cols, A.rows);
+
+    if (B.data == NULL) return MATRIX_NULL;
+
+    for (size_t row = 0; row < A.rows; row++)
+        for (size_t col = 0; col < A.cols; col++) B.data[col * A.rows + row] = A.data[row * A.cols + col];
+
+    return B;
+}
+
+
+double matrix_det(const struct Matrix A) {
+    if (A.data == NULL) {
+        matrix_error(incorrect_matrix_err);
+        return NAN;
+    }
+
+    if (A.cols != A.rows) {
+        matrix_error(col_row_err);
+        return NAN;
+    }
+
+    if (A.cols == 1)
+        return (double) A.data[0];
+    if (A.cols == 2)
+        return (double) (A.data[0] * A.data[3] - A.data[1] * A.data[2]);
+    if (A.cols == 3)
+        return (double) (A.data[0] * A.data[4] * A.data[8]) + \
+                       (A.data[1] * A.data[5] * A.data[6]) + \
+                       (A.data[2] * A.data[3] * A.data[7]) - \
+                       (A.data[2] * A.data[4] * A.data[6]) - \
+                       (A.data[0] * A.data[5] * A.data[7]) - \
+                       (A.data[1] * A.data[3] * A.data[8]);
+
+    matrix_error(det_err);
+    return NAN;
+}
+
+
+struct Matrix matrix_exp(const struct Matrix A, const unsigned int n) {
+    if (A.data == NULL) {
+        matrix_error(incorrect_matrix_err);
+        return MATRIX_NULL;
+    }
+
+    if (A.rows != A.cols) {
+        matrix_error(col_row_err);
+        return MATRIX_NULL;
+    }
+
+    struct Matrix exponent = matrix_create(A.rows, A.cols, IDEN);
+    struct Matrix summand = matrix_create(A.rows, A.cols, IDEN);
+    struct Matrix temp = matrix_allocate(A.rows, A.cols);
+    if (exponent.data == NULL || summand.data == NULL || temp.data == NULL) {
+        matrix_free(&exponent);
+        matrix_free(&summand);
+        matrix_free(&temp);
+        return MATRIX_NULL;
+    }
+
+    if (n == 0) return exponent;
+
+    if (n == 1) {
+        temp = matrix_sum(exponent, A);
+        if (temp.data == NULL) {
+            matrix_free(&exponent);
+            matrix_free(&summand);
+            matrix_free(&temp);
+            return MATRIX_NULL;
+        }
+        matrix_copy(temp, exponent);
+        matrix_free(&summand);
+        matrix_free(&temp);
+        return exponent;
+    }
+
+    for (unsigned int idx = 1; idx <= n; idx++) {
+        temp = matrix_product(summand, A);
+        if (temp.data == NULL) {
+            matrix_free(&exponent);
+            matrix_free(&summand);
+            matrix_free(&temp);
+            return MATRIX_NULL;
+        }
+        matrix_copy(temp, summand);
+        matrix_free(&temp);
+
+        temp = matrix_multiply(summand, 1. / idx);
+        if (temp.data == NULL) {
+            matrix_free(&exponent);
+            matrix_free(&summand);
+            matrix_free(&temp);
+            return MATRIX_NULL;
+        }
+        matrix_copy(temp, summand);
+        matrix_free(&temp);
+
+        temp = matrix_sum(exponent, summand);
+        if (temp.data == NULL) {
+            matrix_free(&exponent);
+            matrix_free(&summand);
+            matrix_free(&temp);
+            return MATRIX_NULL;
+        }
+        matrix_copy(temp, exponent);
+        matrix_free(&temp);
+    }
+
+    matrix_free(&summand);
+
+    return exponent;
+}
 
 
 
