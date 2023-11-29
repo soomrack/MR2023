@@ -23,7 +23,7 @@ Matrix create_matrix(int rows, int cols) {
     
     A.data = (double **)malloc(rows * sizeof(double *) + rows * cols * sizeof(double));
     if (!A.data) {
-        return matrix_errormsg("Ошибка выделения памяти матрицы.");
+        matrix_errormsg("Ошибка выделения памяти матрицы.");
         return MATRIX_NULL;
     }
     
@@ -58,13 +58,13 @@ void print_matrix(Matrix A) {
 Matrix sum(Matrix A, Matrix B) 
 {
     if (A.rows != B.rows || A.cols != B.cols) {
-        return matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
+        matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
         return MATRIX_NULL;
     } 
     
     // функция проверки создания матриц
-    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
+    if(A.data == NULL || B.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
  
@@ -81,12 +81,12 @@ Matrix sum(Matrix A, Matrix B)
 // Функция для вычитания двух матриц
 Matrix sub(Matrix A, Matrix B) {
     if (A.rows != B.rows || A.cols != B.cols) {
-        return matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
+        matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
         return MATRIX_NULL;
     }
 
-    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
+    if(A.data == NULL || B.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
     
@@ -104,12 +104,12 @@ Matrix sub(Matrix A, Matrix B) {
 // Функция для умножения двух матриц
 Matrix mult(Matrix A, Matrix B) {
     if (A.cols != B.rows) {
-        return matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
+        matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
         return MATRIX_NULL;
     }
 
-    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
+    if(A.data == NULL || B.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
     
@@ -129,8 +129,8 @@ Matrix mult(Matrix A, Matrix B) {
 
 // Функция для транспонирования матрицы
 Matrix tr(Matrix A) {
-    if(A.rows == 0 || A.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
+    if(A.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
     
@@ -148,12 +148,12 @@ Matrix tr(Matrix A) {
 // Функция для вычисления детерминанта матрицы (простой метод для квадратных матриц)
 double det(Matrix A) {
     if (A.rows != A.cols) {
-        return matrix_errormsg("Ошибка: Матрица не является квадратной\n");
+        matrix_errormsg("Ошибка: Матрица не является квадратной\n");
         return NAN;
     }
     
-    if(A.rows == 0 || A.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
+    if(A.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
     
@@ -164,7 +164,13 @@ double det(Matrix A) {
     if (A.rows == 2) {
         return A.data[0][0] * A.data[1][1] - A.data[0][1] * A.data[1][0];
     }
-    
+
+     if (A.rows == 3) {
+        return A.data[0][0] * (A.data[1][1] * A.data[2][2] - A.data[1][2] * A.data[2][1]) -
+               A.data[0][1] * (A.data[1][0] * A.data[2][2] - A.data[1][2] * A.data[2][0]) +
+               A.data[0][2] * (A.data[1][0] * A.data[2][1] - A.data[1][1] * A.data[2][0]);
+    }
+
     return det;
 }
 
@@ -172,7 +178,7 @@ double det(Matrix A) {
 Matrix matrix_exponent(const Matrix A, const double accuracy) 
 {
     if (A.rows != A.cols) {
-        return matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
+        matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
         return MATRIX_NULL;
     }
 
