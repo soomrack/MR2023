@@ -91,6 +91,7 @@ struct Matrix matrix_fill(const size_t cols, size_t rows, const MatrixData *data
     
     if (A.data == NULL) {
         matrix_error(EMPTY_MATRIX);
+        return MATRIX_NULL;
     }
 
     memcpy(A.data, data, rows * cols * sizeof(MatrixData));
@@ -132,8 +133,10 @@ struct Matrix matrix_sum(struct Matrix A, struct Matrix B)
     }
     C = matrix_create(A.cols, A.rows);
 
-    if (C.data == NULL) matrix_error(EMPTY_MATRIX);
-
+    if (C.data == NULL) { 
+        matrix_error(EMPTY_MATRIX);
+        return MATRIX_NULL;
+    }
     for (size_t pos = 0; pos < A.cols * A.rows; ++pos) {
         C.data[pos] = A.data[pos] + B.data[pos]; 
     }
@@ -186,7 +189,7 @@ struct Matrix matrix_scalar_multiplication(const struct Matrix A, const double s
 }
 
 
-// C = A * B
+// A = A * B
 struct Matrix matrix_multiplication(const struct Matrix A, const struct Matrix B) 
 {
     struct Matrix C;
@@ -221,6 +224,7 @@ double matrix_determinant(const struct Matrix A)
 {
 	if (A.cols != A.rows) {
         matrix_error(FALSE_ROWS_COLS);
+        return 1;
     }
 
     if (A.cols == 1) return A.data[0];
@@ -247,10 +251,13 @@ struct Matrix matrix_transposition(const struct Matrix A)
 
     C = matrix_create(A.cols, A.rows);
 
-    if (C.cols != A.rows || C.rows != A.cols) matrix_error(FALSE_MATRIX);
+    if (C.cols != A.rows || C.rows != A.cols) { 
+        matrix_error(FALSE_MATRIX);
+        return MATRIX_NULL;
+    }
 
 	for (size_t rows = 0; rows < A.rows; rows++)
-		for (size_t cols = 0; cols < A.cols; cols++)
+	    for (size_t cols = 0; cols < A.cols; cols++)
 			C.data[rows * A.rows + cols] = A.data[cols * A.cols + rows];
 	return C;
 }
@@ -260,7 +267,10 @@ struct Matrix matrix_E(const struct Matrix A)
 {
     struct Matrix E;
     E = matrix_create(A.cols, A.rows);
-    if (E.data == NULL) matrix_error(EMPTY_MATRIX);
+    if (E.data == NULL) { 
+        matrix_error(EMPTY_MATRIX);
+        return MATRIX_NULL;
+    }
 
     for (size_t idx = 0; idx < A.rows * A.cols; idx++) E.data[idx] = 0;
     for (size_t idx = 0; idx < A.rows; idx++) E.data[idx + idx * A.cols] = 1.;
@@ -272,27 +282,41 @@ struct Matrix matrix_E(const struct Matrix A)
 struct Matrix matrix_exp(const struct Matrix A, const int order)
 {
     struct Matrix A_EXP;
-    struct Matrix C;
-    struct Matrix D;
+    struct Matrix Assist;
+    struct Matrix Buf;
 
-    D = zero_matrix(A.cols, A.rows);
-    C = matrix_E(A);
+    Assist = matrix_E(A);
     A_EXP = matrix_E(A);
+    Buf = matrix_E(A);
 
-    if (A.cols != A_EXP.cols || A.rows != A_EXP.rows) matrix_error(FALSE_MATRIX);
-    if (A_EXP.data == NULL) matrix_error(EMPTY_MATRIX);
+    if (A.cols != A_EXP.cols || A.rows != A_EXP.rows || A.cols != Assist.cols || A.rows != Assist.rows || A.cols != Buf.cols || A.rows != Buf.rows) {
+        matrix_error(FALSE_MATRIX);
+        return MATRIX_NULL;
+    }
+
+    if (A_EXP.data == NULL || Assist.data == NULL || Buf.data == NULL) {
+        matrix_error(EMPTY_MATRIX);
+        return MATRIX_NULL;
+    } 
     
     double n = 1.;
 
     for (int counter = 1; counter <= order; ++counter) {
         n *= (double)counter;
-        C = matrix_multiplication(A, C);
-        D = matrix_scalar_multiplication(C, 1 / n);
-        matrix_add(A_EXP, D);
+
+        Buf = matrix_multiplication(A, Assist);
+
+        if (Buf.data == NULL) return MATRIX_NULL;
+
+        Assist = Buf;
+
+        matrix_free(&Buf);
+        matrix_scalar_multiplication(Assist, 1 / n);
+        matrix_add(A_EXP, Assist);
     }
 
-    matrix_free(&D);
-    matrix_free(&C);
+    matrix_free(&Assist);
+    matrix_free(&Buf);
 
     return(A_EXP);
 }   
@@ -319,24 +343,24 @@ int main()
     // matrix_print(A);
 
     // printf("Second matrix\n");
-    B = matrix_fill(2, 2, (double[]) { 1., 0., 0., 1. });
+    // B = matrix_fill(2, 2, (double[]) { 1., 0., 0., 1. });
     // matrix_print(B);
 
     // printf("Sum1 of matrices\n");
     // matrix_add(A, B);
     // matrix_print(A);
 
-    printf("Sum2 of matrices\n");
-    C = matrix_sum(A, B);
-    matrix_print(C);
+    // printf("Sum2 of matrices\n");
+    // C = matrix_sum(A, B);
+    // matrix_print(C);
 
-    // printf("Sub1 of matrices\n");
-    // matrix_substraction(A, B);
-    // matrix_print(A);
+    // // printf("Sub1 of matrices\n");
+    // // matrix_substraction(A, B);
+    // // matrix_print(A);
 
-    printf("Sub2 of matrices\n");
-    C = matrix_difference(A, B);
-    matrix_print(C);
+    // printf("Sub2 of matrices\n");
+    // C = matrix_difference(A, B);
+    // matrix_print(C);
 
     // printf("Multiplying the first matrix by a scalar\n");
     // C = matrix_scalar_multiplication(A, 2);
@@ -356,7 +380,7 @@ int main()
     
     printf("\nExponent of the first matrix\n");
     
-    EXP = matrix_exp(A, 20);
+    EXP = matrix_exp(A, 2);
     matrix_print(EXP);
 
     matrix_free(&A);
