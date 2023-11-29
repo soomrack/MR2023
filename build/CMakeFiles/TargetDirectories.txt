@@ -1,0 +1,14 @@
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/CMakeFiles/matrix.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/CMakeFiles/edit_cache.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/CMakeFiles/rebuild_cache.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/CMakeFiles/list_install_components.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/CMakeFiles/install.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/CMakeFiles/install/local.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/CMakeFiles/install/strip.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/example/CMakeFiles/example.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/example/CMakeFiles/edit_cache.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/example/CMakeFiles/rebuild_cache.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/example/CMakeFiles/list_install_components.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/example/CMakeFiles/install.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/example/CMakeFiles/install/local.dir
+/home/yaaaniks/VSCode/domashka_proga/MR2023/build/example/CMakeFiles/install/strip.dir

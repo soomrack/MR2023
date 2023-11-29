@@ -1,0 +1,1 @@
+/usr/bin/gcc-12 -g CMakeFiles/example.dir/example.c.o -o ../build/example  ../libmatrix.a 

@@ -1,29 +1,31 @@
 #include "matrix.h"
 
 int main() {
-    Matrix A = createMatrix(2, 3);
-    Matrix B = createMatrix(3, 2);
+    Matrix_Instance matrix1 = create_matrix(2, 2, Zero_Matrix);
+    Matrix_Instance matrix2 = create_matrix(2, 2, Identity_Matrix);
 
-    // fillMatrixRandom(A);
-    fillMatrixValues(&A, 2.0);
-    fillMatrixValues(&B, 2.0);
+    matrix1.pData[0][0] = 1.0;
+    matrix1.pData[0][1] = 2.0;
+    matrix1.pData[1][0] = 3.0;
+    matrix1.pData[1][1] = 4.0;
 
-    double sum = matrixSum(&A);
-    printf("Сумма элементов матрицы A %f\n", sum);
-    Matrix C = multiplyMatrix(&A, &B);
+    matrix2.pData[0][0] = 5.0;
+    matrix2.pData[0][1] = 6.0;
+    matrix2.pData[1][0] = 7.0;
+    matrix2.pData[1][1] = 8.0;
 
-    printf("Матрица A:\n");
-    printMatrix(&A);
+    Matrix_Instance result = sum_matrix(matrix1, matrix2);
 
-    printf("Матрица B:\n");
-    printMatrix(&B);
+    for (size_t i = 0; i < result.numRows; ++i) {
+        for (size_t j = 0; j < result.numCols; ++j) {
+            printf("%.2f ", result.pData[i][j]);
+        }
+        printf("\n");
+    }
 
-    printf("Результат умножения A и B:\n");
-    printMatrix(&C);
-
-    freeMatrix(&A);
-    freeMatrix(&B);
-    freeMatrix(&C);
+    free_matrix(matrix1);
+    free_matrix(matrix2);
+    free_matrix(result);
 
     return 0;
 }
