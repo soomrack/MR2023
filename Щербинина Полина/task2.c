@@ -271,8 +271,8 @@ Matrix matrix_exponent(const Matrix A, const double accuracy)
     matrix_copy(B, A);
 
     for (int trm = 2; trm <= accuracy; ++trm) {
-        add_matrix(B, matrix_mult_scalar(A, 1.0 / trm));
-        add_matrix(C, B);
+        matrix_sum(B, matrix_mult_scalar(A, 1.0 / trm));
+        matrix_sum(C, B);
     }
 
     matrix_sum(C, A);
