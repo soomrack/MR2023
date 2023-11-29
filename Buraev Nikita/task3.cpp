@@ -270,7 +270,10 @@ Type &Matrix<Type>::element(std::size_t i, std::size_t j)
 {
     if (i >= rows || j >= cols)
     {
-        throw std::out_of_range("Matrix index out of bounds!");
+        throw std::out_of_range("Matrix index out of bounds! "
+                                "Index (" + std::to_string(i) + ", " + std::to_string(j) + ")"
+                                " exceeds matrix dimensions (" + std::to_string(rows) + ", " + std::to_string(cols) + ")"
+                                " in file " + std::string(__FILE__) + " at line " + std::to_string(__LINE__));
     }
     return elements[i][j];
 }
@@ -285,7 +288,10 @@ Type &Matrix<Type>::element(std::size_t i)
 
     if (i >= cols)
     {
-        throw std::out_of_range("Matrix index out of bounds!");
+        throw std::out_of_range("Matrix index out of bounds! "
+                                "Index (" + std::to_string(i) + ")"
+                                " exceeds matrix dimensions (" + std::to_string(rows) + ", " + std::to_string(cols) + ")"
+                                " in file " + std::string(__FILE__) + " at line " + std::to_string(__LINE__));
     }
 
     if (rows == 0 && cols == 0)
@@ -301,7 +307,10 @@ Type &Matrix<Type>::element(std::size_t i, std::size_t j) const
 {
     if (i >= rows || j >= cols)
     {
-        throw std::out_of_range("Matrix index out of bounds!");
+        throw std::out_of_range("Matrix index out of bounds! "
+                                "Index (" + std::to_string(i) + ", " + std::to_string(j) + ")"
+                                " exceeds matrix dimensions (" + std::to_string(rows) + ", " + std::to_string(cols) + ")"
+                                " in file " + std::string(__FILE__) + " at line " + std::to_string(__LINE__));
     }
     return elements[i][j];
 }
@@ -316,7 +325,10 @@ Type &Matrix<Type>::element(std::size_t i) const
 
     if (i >= cols)
     {
-        throw std::out_of_range("Matrix index out of bounds!");
+        throw std::out_of_range("Matrix index out of bounds! "
+                                "Index (" + std::to_string(i) + ")"
+                                " exceeds matrix dimensions (" + std::to_string(rows) + ", " + std::to_string(cols) + ")"
+                                " in file " + std::string(__FILE__) + " at line " + std::to_string(__LINE__));
     }
 
     if (rows == 0 && cols == 0)
