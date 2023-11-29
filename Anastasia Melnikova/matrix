@@ -160,17 +160,17 @@ struct Matrix matrix_multiply(const struct Matrix A, const struct Matrix B)
 }
 
 
-struct Matrix matrix_transpose( struct Matrix *A)
+struct Matrix matrix_transpose(const struct Matrix *A)
 {
-    struct Matrix C = matrix_allocate(A.rows, A.cols);
+    struct Matrix C = matrix_allocate(A->rows, A->cols);
 
     if (C.data == NULL) {
         return MATRIX_NULL;
     }
 
-    for (size_t rowA = 0; rowA < A.rows; ++rowA) {
-        for (size_t colsA = 0; colsA < A.cols; ++colsA) {
-            C.data[(A.rows) * colsA + rowA] = A.data[colsA + rowA * A.cols];
+    for (size_t rowA = 0; rowA < A->rows; ++rowA) {
+        for (size_t colsA = 0; colsA < A->cols; ++colsA) {
+            C.data[(A->rows) * colsA + rowA] = A->data[colsA + rowA * A->cols];
         }
     }
     return C;
