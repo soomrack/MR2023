@@ -5,9 +5,6 @@
 #include <math.h>
 
 
-const int n = 2;
-
-
 typedef double MatrixItem;
 struct Matrix
 {
@@ -64,31 +61,33 @@ void matrix_fill(struct Matrix A, const MatrixItem values[])
     memcpy(A.data, values, A.rows * A.cols * sizeof(MatrixItem));
 }
 
-
+// A = B + C
 void matrix_sum(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
     if (B.cols != C.cols || B.rows != C.rows) {
         matrix_error();
         return;
     }
+    if (A.data == NULL) return MATRIX_NULL;
     for (size_t idx = 0; idx < B.cols * B.rows; ++idx) {
             A.data[idx] = B.data[idx] + C.data[idx];
     }
 }
 
-
+// A = B - C
 void matrix_substraction(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
     if (B.cols != C.cols || B.rows != C.rows) {
         matrix_error();
         return;
     }
+    if (A.data == NULL) return MATRIX_NULL;
     for (size_t idx = 0; idx < B.cols * B.rows; ++idx) {
             A.data[idx] = B.data[idx] - C.data[idx];
     }
 }
 
-
+// MULT = A * B
 struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B) {
     if (A.cols != B.rows) {
         matrix_error();
@@ -127,41 +126,33 @@ void matrix_delete(struct Matrix* A)
     A->data = NULL;
 }
 
-
-struct Matrix Minor(const struct Matrix A, const size_t row, const size_t col)
+//determinant of matrix A
+MatrixItem matrix_determinant(const struct Matrix A) 
 {
-    struct Matrix Minor = matrix_create(A.rows - 1, A.cols - 1);
-    unsigned int shiftrow = 0;
-    unsigned int shiftcol = 0;
-    for (unsigned int rows = 0; rows < A.rows - 1; rows++) {
-        if (rows == row) shiftrow = 1;
-        shiftcol = 0;
-        for (unsigned int cols = 0; cols < A.rows - 1; cols++) {
-            if (cols == col) shiftcol = 1;
-            Minor.data[rows * (A.rows - 1) + cols] = A.data[(rows + shiftrow) * A.rows + (cols + shiftcol)];
-        }
-    }
-    return Minor;
-}
+    MatrixItem det;
 
+    if (A.cols == 1 && A.rows == 1) {
+        det = A.data[0];
+        return det;
+    }
 
-double matrix_determinant(const struct Matrix A) {
-    if (A.rows != A.cols) {
-        matrix_error();
-        return;
+    if (A.cols == 2 && A.rows == 2) {
+        det = A.data[0] * A.data[3] - A.data[1] * A.data[2];
+        return det;
     }
-    double det = 0;
-    int k = 1;
-    if (A.rows == 0) return 0;
-    if (A.rows == 1) return A.data[0];
-    if (A.rows == 2) return (A.data[0] * A.data[3] - A.data[2] * A.data[1]);
-    for (unsigned int idx = 0; idx < A.rows; idx++) {
-        struct Matrix temp = Minor(A, 0, idx);
-        det += k * A.data[idx] * matrix_determinant(temp);
-        k = -k;
-        matrix_delete(&temp);
+
+    if (A.cols == 3 && A.rows == 3) {
+        det =
+            A.data[0] * A.data[4] * A.data[8]
+            + A.data[1] * A.data[5] * A.data[6]
+            + A.data[2] * A.data[7] * A.data[3]
+            - A.data[2] * A.data[4] * A.data[6]
+            - A.data[0] * A.data[5] * A.data[7]
+            - A.data[1] * A.data[8] * A.data[3];
+        return det;
     }
-    return det;
+
+    return NAN;
 }
 
 
@@ -171,7 +162,7 @@ void determinant_print(struct Matrix A, const char* text)
     printf("%f\n", matrix_determinant(A));
 }
 
-
+//A += B
 int matrix_add(struct Matrix A, struct Matrix B)
 {
     if (A.cols != B.cols || A.rows != B.rows) return 1;
@@ -181,7 +172,7 @@ int matrix_add(struct Matrix A, struct Matrix B)
     return 0;
 }
 
-
+// A *= k
 void matrix_mult_k(struct Matrix A, const MatrixItem k)
 {
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx) {
@@ -190,7 +181,7 @@ void matrix_mult_k(struct Matrix A, const MatrixItem k)
     return;
 }
 
-
+// A /= k
 void matrix_div_k(struct Matrix A, const MatrixItem k)
 {
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx) {
@@ -199,7 +190,7 @@ void matrix_div_k(struct Matrix A, const MatrixItem k)
     return;
 }
 
-
+// Exp = e^A
 struct Matrix matrix_exponent(struct Matrix A)
 {
     if (A.cols != A.rows) return MATRIX_NULL;
@@ -248,70 +239,4 @@ void matrix_print(const struct Matrix A, const char* text)
         printf("]\n");
     }
     printf("\n");
-}
-
-
-int main()
-{
-    MatrixItem values_A[] =
-    { 1., 8., 3.,
-      4., 5., 6.,
-      7., 8., 9.
-    };
-
-    MatrixItem values_B[] =
-    { 1., 2., 3.,
-      1., 2., 3.,
-      1., 2., 3.
-    };
-
-    struct Matrix A = matrix_create(3, 3);
-    matrix_set_one(A);
-
-    struct Matrix B = matrix_create(3, 3);
-    matrix_set_one(B);
-
-    struct Matrix E = matrix_create(3, 3);
-    matrix_set_one(E);
-
-    struct Matrix C = matrix_create(3, 3);
-
-    struct Matrix D = matrix_create(3, 3);
-
-    struct Matrix T = matrix_create(3, 3);
-
-    matrix_fill(A, values_A);
-    matrix_fill(B, values_B);
-    matrix_sum(C, A, B);
-
-    matrix_substraction(D, A, B);
-
-    matrix_mult(A, B);
-    struct Matrix Mult = matrix_mult(A, B);
-
-    matrix_trans(A, T);
-
-    matrix_determinant(A);
-
-    struct Matrix Exp = matrix_exponent(A);
-
-    matrix_print(A, "Matrix A");
-    matrix_print(B, "Matrix B");
-    matrix_print(C, "C = A + B");
-    matrix_print(D, "D = A - B");
-    matrix_print(matrix_mult(A, B), "P = A * B");
-    matrix_print(T, "T = A^T");
-    matrix_print(E, "Matrix E");
-    determinant_print(A, "detA = ");
-    matrix_print(matrix_exponent(A), "Matrix Exp^A=");
-
-    matrix_delete(&A);
-    matrix_delete(&B);
-    matrix_delete(&C);
-    matrix_delete(&D);
-    matrix_delete(&P);
-    matrix_delete(&T);
-    matrix_delete(&E);
-
-    return 0;
 }

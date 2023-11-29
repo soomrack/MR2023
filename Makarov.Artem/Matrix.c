@@ -29,6 +29,7 @@ struct Matrix matrix_allocate(const size_t rows, const size_t cols)
     struct Matrix A = { .cols = cols, .rows = rows, .data = NULL };
     A.data = (MatrixItem*)malloc(A.cols * A.rows * sizeof(MatrixItem));
     if (A.data == NULL) return MATRIX_NULL;
+
     return A;
 }
 
@@ -39,6 +40,7 @@ struct Matrix matrix_create(const size_t rows, const size_t cols, const MatrixIt
     if (A.data == NULL) return A;
 
     memcpy(A.data, data, rows * cols * sizeof(MatrixItem));
+
     return A;
 }
 
@@ -46,7 +48,7 @@ struct Matrix matrix_create(const size_t rows, const size_t cols, const MatrixIt
 void matrix_free(struct Matrix* A)
 {
     if (A->data != NULL) free(A->data);
-    *A = MATRIX_NULL;
+    A->data = NULL;
 }
 
 
@@ -83,6 +85,7 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 
     memcpy(C.data, A.data, C.cols * C.rows * sizeof(MatrixItem));
     matrix_add(C, B);
+
     return C;
 }
 
@@ -107,6 +110,7 @@ struct Matrix matrix_difference(const struct Matrix A, const struct Matrix B)
 
     memcpy(C.data, A.data, C.cols * C.rows * sizeof(MatrixItem));
     matrix_subtraction(C, B);
+
     return C;
 }
 
@@ -175,82 +179,64 @@ double det(const struct Matrix A)
 }
 
 
-struct Matrix matrix_ident(size_t rows, size_t cols)
+struct Matrix sum_for_exp(struct Matrix A, unsigned int accuracy)
 {
-    struct Matrix M = matrix_allocate(rows, cols);
-    if (M.data == NULL) {
-        return MATRIX_NULL;
+    struct Matrix Ñ, Ñ2;
+    double n = 1.0;
+
+    struct Matrix SUM = matrix_allocate(A.rows, A.cols);
+    if (SUM.data == NULL) return MATRIX_NULL;
+
+    memcpy(SUM.data, A.data, SUM.cols * SUM.rows * sizeof(MatrixItem));
+
+    for (unsigned int count = 2; count <= accuracy; count++) {
+        Ñ = matrix_multiply(SUM, A);
+        memcpy(SUM.data, Ñ.data, SUM.cols * SUM.rows * sizeof(MatrixItem));
+        matrix_free(&Ñ);
     }
-    for (size_t idx = 0; idx < rows * cols; idx++) {
-        if (idx % (rows + 1) == 0) {
-            M.data[idx] = 1.;
-        }
-        else {
-            M.data[idx] = 0;
-        }
-    }
-    return M;
+
+    for (unsigned int count = 1; count <= accuracy; count++) n *= count;
+
+    Ñ2 = matrix_scalar(SUM, 1 / n);
+    matrix_free(&SUM);
+
+    return Ñ2;
 }
 
 
-struct Matrix sum_for_exp(const size_t deg_acc, const struct Matrix A)
+struct Matrix matrix_E(const struct Matrix A)
 {
-    struct Matrix E = matrix_allocate(A.rows, A.cols);
-    if (E.data == NULL) {
-        return MATRIX_NULL;
-    }
-    if (deg_acc == 1) {
-        struct Matrix E = matrix_ident(A.cols, A.rows);
-        return E;
-    }
+    struct Matrix E = matrix_allocate(A.cols, A.rows);
+    if (E.data == NULL) return MATRIX_NULL;
 
-    if (deg_acc == 2) {
-        return A;
-    }
+    for (int idx = 0; idx < A.rows * A.cols; idx++) E.data[idx] = 0;
+    for (int idx = 0; idx < A.rows; idx++) E.data[idx + idx * A.cols] = 1;
 
-    if (deg_acc > 2) {
-        E = A;
-        for (size_t id = 2; id < deg_acc; ++id) {
-            struct Matrix buf = E;
-            E = matrix_multiply(buf, A);
-            for (size_t idx = 0; idx < E.rows * E.cols; ++idx) {
-                E.data[idx] /= (id);
-            }
-            matrix_free(&buf);
-        }
-    }
     return E;
 }
 
 
-struct Matrix matrix_exp(struct Matrix* A, const size_t accuracy)
+struct Matrix matrix_exp(struct Matrix A, unsigned long int accuracy)
 {
-    if (A->cols != A->rows) {
-        matrix_error_message();
-        return MATRIX_NULL;
-    }
+    struct Matrix C, Sum_exp;
 
-    struct Matrix E = matrix_allocate(A->rows, A->cols);
-    if (E.data == NULL) {
-        return MATRIX_NULL;
-    }
+    if (A.rows != A.cols) return MATRIX_NULL;
 
-    struct Matrix matrix_transfer;
+    Sum_exp = matrix_E(A);
+    matrix_add(Sum_exp, A);
 
-    for (size_t deg_acc = 1; deg_acc <= accuracy; ++deg_acc) {
-        matrix_transfer = sum_for_exp(deg_acc, *A);
-        struct Matrix buf1 = E;
-        E = matrix_sum(buf1, matrix_transfer);
-        matrix_free(&buf1);
-        matrix_free(&matrix_transfer);
+    for (unsigned int count = 2; count <= accuracy; count++) {
+        C = sum_for_exp(A, count);
+        matrix_add(Sum_exp, C);
+        matrix_free(&C);
     }
-        return E;
+    return Sum_exp;
 }
 
 
 int main()
 {
-    struct Matrix A, B, C, T, E;
+    struct Matrix A, B, C, Sum_exp;
 
 
     printf(" First matrix\n");
@@ -299,14 +285,14 @@ int main()
 
 
     printf("\nExponent of the first matrix\n");
-    E = matrix_exp(&A, 2);
-    matrix_print(E);
+    Sum_exp = matrix_exp(A, 2);
+    matrix_print(Sum_exp);
 
 
     matrix_free(&A);
     matrix_free(&B);
     matrix_free(&C);
-    matrix_free(&E);
+    matrix_free(&Sum_exp);
 
 
     return 0;
