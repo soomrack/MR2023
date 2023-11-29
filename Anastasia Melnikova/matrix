@@ -160,7 +160,7 @@ struct Matrix matrix_multiply(const struct Matrix A, const struct Matrix B)
 }
 
 
-struct Matrix matrix_transpose(const struct Matrix A)
+struct Matrix matrix_transpose( struct Matrix *A)
 {
     struct Matrix C = matrix_allocate(A.rows, A.cols);
 
