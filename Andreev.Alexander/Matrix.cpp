@@ -41,12 +41,11 @@ public:
     Matrix operator-(const Matrix& K) const;
     Matrix operator*(const Matrix& K) const;
     Matrix operator*(const double k) const;
-    friend Matrix operator*(const double k, const Matrix& M);
 
 public:
     void print();
     void set(MatrixType mat_type);
-    void transposition(const Matrix& M);
+    void transpose();
     double determinant();
     void exp(unsigned int level);
 };
@@ -60,11 +59,6 @@ Matrix::Matrix(const size_t n) : rows(n), cols(n) {
         throw Matrix_Exception("Incorrect input matrix: size cannot be zero");
     }
 
-    // Проверка на переполнение
-    if (SIZE_MAX / rows < cols) {
-        throw Matrix_Exception("Incorrect input matrix: multiplication of rows and cols causes overflow");
-    }
-
     data = new MatrixItem[rows * cols]{};
 }
 
@@ -73,21 +67,11 @@ Matrix::Matrix(const size_t row, const size_t col) : rows(row), cols(col) {
         throw Matrix_Exception("Incorrect input matrix: size cannot be zero");
     }
 
-    // Проверка на переполнение
-    if (SIZE_MAX / rows < cols) {
-        throw Matrix_Exception("Incorrect input matrix: multiplication of rows and cols causes overflow");
-    }
-
     data = new MatrixItem[rows * cols]{};
 }
 
 Matrix::Matrix(const Matrix& M) : rows(M.rows), cols(M.cols) {
     if (M.data) {
-        // Проверка на переполнение
-        if (SIZE_MAX / rows < cols) {
-            throw Matrix_Exception("Incorrect input matrix: multiplication of rows and cols causes overflow");
-        }
-
         data = new MatrixItem[rows * cols]{};
         std::copy(M.data, M.data + rows * cols, data);
     }
@@ -104,7 +88,6 @@ Matrix::Matrix(Matrix&& M) noexcept : rows(M.rows), cols(M.cols), data(M.data) {
 
 Matrix::~Matrix() {
     delete[] data;
-    data = nullptr;
 }
 
 Matrix& Matrix::operator= (const Matrix& M) {
@@ -112,11 +95,6 @@ Matrix& Matrix::operator= (const Matrix& M) {
 
     if (M.rows == 0 || M.cols == 0) {
         throw Matrix_Exception("Incorrect input matrix: source matrix is empty");
-    }
-
-    // Проверка на переполнение
-    if (SIZE_MAX / M.rows < M.cols) {
-        throw Matrix_Exception("Incorrect input matrix: multiplication of rows and cols causes overflow");
     }
 
     rows = M.rows;
@@ -188,9 +166,8 @@ Matrix& Matrix::operator*= (const Matrix& M) {
         cols = R.cols;
         rows = R.rows;
         delete[] data;
-        data = new MatrixItem[rows * cols];
-        std::copy(R.data, R.data + rows * cols, data);
-        delete[] R.data;
+        data = R.data;
+        R.data = nullptr;
     }
     else {
         throw Matrix_Exception("Your matrix or the source matrix is empty");
@@ -275,12 +252,18 @@ void Matrix::set(MatrixType mat_type) {
     }
 }
 
-void Matrix::transposition(const Matrix& M) {
+void Matrix::transpose() {
     if (!data) throw Matrix_Exception("Your matrix is empty");
 
-    for (size_t row = 0; row < M.rows; row++)
-        for (size_t col = 0; col < M.cols; col++)
-            data[row * M.rows + col] = M.data[col * M.cols + row];
+    MatrixItem* newData = new MatrixItem[rows * cols]{};
+
+    for (size_t row = 0; row < rows; row++)
+        for (size_t col = 0; col < cols; col++)
+            newData[row * cols + col] = data[col * rows + row];
+
+    delete[] data;
+    data = newData;
+    std::swap(rows, cols);
 }
 
 double Matrix::determinant() {
@@ -347,7 +330,7 @@ int main(void) {
                 "11 - C = A * B\n"
                 "12 - A.print()\n"
                 "13 - B.print()\n"
-                "14 - C.transposition(A)\n"
+                "14 - C.transpose()\n"
                 "15 - C.determinant()\n"
                 "16 - C.exp(20)\n"
                 << std::endl;
@@ -412,7 +395,7 @@ int main(void) {
                 B.print();
                 break;
             case 14:
-                C.transposition(A);
+                C.transpose();
                 C.print();
                 break;
             case 15:
@@ -421,8 +404,6 @@ int main(void) {
             case 16:
                 C.exp(20);
                 C.print();
-                break;
-            case 17:
                 break;
             default:
                 printf("wrong choice\n");
