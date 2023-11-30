@@ -196,6 +196,10 @@ void matrix_transposition(Matrix * this) {
         return;
     }
     Matrix buff = create_matrix(this->cols, this->rows);
+    if (NULL == buff.data) {
+        matrix_error_handler(NULL_MATRIX_ERROR, "matrix_transposition");
+        return;
+    }
     size_t size = matrix_size(this);
     for (size_t row = 0; row < this->rows; row++) {
         for (size_t col = 0; col < this->cols; col++) {
@@ -333,30 +337,29 @@ Matrix matrix_exponent(const Matrix * this, const uint8_t degree) {
             matrix_increasing(&A, this);
             return A;
     }
-    else {
-        matrix_increasing(&A, this);
-        Matrix buf_summand = create_matrix(this->rows, this->cols);
-        if (NULL == buf_summand.data) {
-            matrix_error_handler(NULL_MATRIX_ERROR, "matrix_exponent");
-            delete_matrix(&A);
-            return NULL_MATRIX;
-        }
-        fill_with_data(&buf_summand, this->data[0]);
-        for (uint8_t idx = 2; idx < degree; idx++) {
-                Matrix summand = matrix_exponent_summand(&buf_summand, this, idx);
-                    if (NULL == summand.data) {
-                        matrix_error_handler(NULL_MATRIX_ERROR, "matrix_exponent");
-                        delete_matrix(&A);
-                        delete_matrix(&summand);
-                        return NULL_MATRIX;
-                    }
-                fill_with_data(&buf_summand, summand.data[0]);
-                matrix_increasing(&A, &buf_summand);
-                delete_matrix(&summand);
-        }
-        delete_matrix(&buf_summand);
-        return A;
+    matrix_increasing(&A, this);
+    Matrix buf_summand = create_matrix(this->rows, this->cols);
+    if (NULL == buf_summand.data) {
+        matrix_error_handler(NULL_MATRIX_ERROR, "matrix_exponent");
+        delete_matrix(&A);
+        return NULL_MATRIX;
     }
+    fill_with_data(&buf_summand, this->data[0]);
+    for (uint8_t idx = 2; idx < degree; idx++) {
+            Matrix summand = matrix_exponent_summand(&buf_summand, this, idx);
+                if (NULL == summand.data) {
+                    matrix_error_handler(NULL_MATRIX_ERROR, "matrix_exponent");
+                    delete_matrix(&A);
+                    delete_matrix(&summand);
+                    return NULL_MATRIX;
+                }
+            fill_with_data(&buf_summand, summand.data[0]);
+            matrix_increasing(&A, &buf_summand);
+            delete_matrix(&summand);
+    }
+    delete_matrix(&buf_summand);
+    return A;
+
 }
 
 
