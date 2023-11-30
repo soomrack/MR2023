@@ -48,14 +48,15 @@ public:
 
 public:
     Matrix& operator= (const Matrix& M);
+    Matrix& operator= (const Matrix &&M);
     Matrix& operator+= (const Matrix& M);
     Matrix& operator-= (const Matrix& M);
     Matrix& operator*= (const double k);
     Matrix& operator*= (const Matrix& M);
-    Matrix operator+(const Matrix& M);
-    Matrix operator-(const Matrix& M);
-    Matrix operator*(const Matrix& M);
-    Matrix operator*(const double k);
+    Matrix& operator+(const Matrix& M);
+    Matrix& operator-(const Matrix& M);
+    Matrix& operator*(const Matrix& M);
+    Matrix& operator*(const double k);
 
 public:
     void print();
@@ -85,9 +86,9 @@ Matrix::Matrix(const size_t rows, const size_t cols)
     {
         throw MatrixException("The matrix is not initialized");
     }
+
     // rows * cols < MAX_SIZE / sizeof(MatrixItem)
-    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols)
-        throw MatrixException("The matrix is not initialized");
+    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) throw MatrixException("The matrix is not initialized");
 
     this->cols = cols;
     this->rows = rows;
@@ -126,6 +127,19 @@ Matrix& Matrix::operator= (const Matrix& M) {
     return *this;
 }
 
+Matrix& Matrix::operator= (const Matrix &&M) {
+    if (this == &M) return *this;    
+    delete[] data;
+
+    rows = M.rows;
+    cols = M.cols;
+
+    data = new MatrixItem[rows * cols];
+    memcpy(data, M.data, cols * rows * sizeof(MatrixItem));
+
+    return *this;
+}
+
 Matrix::~Matrix()
 {
     cols = 0;
@@ -136,8 +150,8 @@ Matrix::~Matrix()
 
 Matrix& Matrix::sum(const Matrix &A, const Matrix &B)
 {
-    if (A.cols != B.cols || A.rows != B.rows)
-        throw MatrixException("The matrices do not match in size");
+    if (A.cols != B.cols || A.rows != B.rows) throw MatrixException("The matrices do not match in size");
+
     Matrix *C = new Matrix(A.cols, A.rows);
     for (size_t idx = 0; idx < C->cols * C->rows; ++idx)
     {
@@ -149,19 +163,20 @@ Matrix& Matrix::sum(const Matrix &A, const Matrix &B)
 Matrix& Matrix::exp(Matrix &A, const size_t accuracy)
 {
     if (data == nullptr) throw ERRONEOUS_MESSAGE;
+
     if (A.cols != A.rows)
     {
         throw MatrixException("Error! The matrix is not square!");
     }
 
-    Matrix *item = new Matrix(A.rows, A.cols);
-    Matrix exp = make_ident(A.rows, A.cols);
+    Matrix *exp = new Matrix(A.rows, A.cols);
+    Matrix item = make_ident(A.rows, A.cols);
     for (double deg_acc = 1; deg_acc <= accuracy; ++deg_acc)
     {
-        *item =  (*item * A *(1 / deg_acc));
-        exp += *item;
+        item =  (item * A * (1/deg_acc));
+        *exp += item;
     }
-    return *item;
+    return *exp;
 }
 
 Matrix& Matrix::make_ident(size_t rows, size_t cols)
@@ -334,43 +349,50 @@ Matrix& Matrix::operator*= (const Matrix& M) {
         throw ERRONEOUS_MESSAGE;
 
     Matrix R(rows, M.cols);
-    for (size_t row = 0; row < R.rows; row++)
-        for (size_t col = 0; col < R.cols; col++)
-            for (size_t idx = 0; idx < M.rows; idx++)
+    for (size_t row = 0; row < R.rows; row++){
+        for (size_t col = 0; col < R.cols; col++){
+            for (size_t idx = 0; idx < M.rows; idx++){
                 R.data[row * R.cols + col] += data[row * cols + idx] * M.data[idx * M.cols + col]; 
-    
+            }
+        }
+    }
     cols = R.cols;
     rows = R.rows;
+    delete[] data;
     data = R.data;
     R.data = nullptr;
     return *this;
 }
 
-Matrix Matrix::operator+(const Matrix& M) {
-    Matrix rez = *this;
-    rez += M; 
-    return rez;
+Matrix& Matrix::operator+(const Matrix& M) {
+    Matrix *rez = new Matrix(M.cols, M.rows);
+    *rez = *this;
+    *rez += M;
+    return *rez;
 }
 
 
-Matrix Matrix::operator-(const Matrix& M) {
-    Matrix rez = *this;
-    rez -= M;
-    return rez;
+Matrix& Matrix::operator-(const Matrix& M) {
+    Matrix *rez = new Matrix(M.cols, M.rows);
+    *rez = *this;
+    *rez -= M;
+    return *rez;
 }
 
 
-Matrix Matrix::operator*(const Matrix& M) {
-    Matrix rez = *this;
-    rez *= M;
-    return rez;
+Matrix& Matrix::operator*(const Matrix& M) {
+    Matrix *rez = new Matrix(M.cols, M.rows);
+    *rez = *this;
+    *rez *= M;
+    return *rez;
 }
 
 
-Matrix Matrix::operator*(const double k) {
-    Matrix rez = *this;
-    rez *= k;
-    return rez;
+Matrix& Matrix::operator*(const double k) {
+    Matrix *rez = new Matrix(cols, rows);
+    *rez = *this;
+    *rez *= k;
+    return *rez;
 }
 
 
