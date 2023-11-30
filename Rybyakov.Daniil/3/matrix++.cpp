@@ -76,10 +76,10 @@ Matrix::Matrix(const Matrix& matrix) {
 Matrix::Matrix(Matrix&& matrix) {
     cols = matrix.cols;
     rows = matrix.rows;
-    matrix.cols = 0;
-    matrix.rows = 0;
     value = matrix.value;
     matrix.value = nullptr;
+    matrix.cols = 0;
+    matrix.rows = 0;
 }
 
 
@@ -114,7 +114,7 @@ Matrix::Matrix(size_t col) {
     }
 }
 
-double Matrix_one(size_t col, size_t row)
+Matrix& Matrix::set_one(size_t col, size_t row)
 {
     size_t cols = col;
     size_t rows = row;
@@ -129,35 +129,31 @@ double Matrix_one(size_t col, size_t row)
 }
 
 
-Matrix &Matrix::operator+ (const Matrix& matrix) const {
+Matrix& Matrix::operator+ (const Matrix& matrix) const {
 
-    if (rows != matrix.rows) throw ("Make matrix square\n");
-    if (cols != matrix.cols) throw ("Make matrix square\n");
-    Matrix result(matrix);
-    value = new double[cols * rows] {};
+    if (rows != matrix.rows || cols != matrix.cols) throw ("Make matrix square\n");
+    Matrix *result = new Matrix(matrix);
     for (size_t idx = 0; idx < matrix.cols * matrix.rows; idx++) {
         result.value[idx] += value[idx];
     }
-    return result;
+    return *result;
 }
 
 
-Matrix &Matrix::operator- (const Matrix& matrix) const {
-    if (rows != matrix.rows) throw ("Make matrix square\n");
-    if (cols != matrix.cols) throw ("Make matrix square\n");
-    Matrix result(matrix);
+Matrix& Matrix::operator- (const Matrix& matrix) const {
+    if (rows != matrix.rows || cols != matrix.cols) throw ("Make matrix square\n");
+    Matrix *result = new Matrix(matrix);
 
     for (size_t idx = 0; idx < matrix.cols * matrix.rows; idx++) {
         result.value[idx] -= value[idx];
     }
-    return result;
+    return *result;
 }
 
 
-Matrix &Matrix::operator* (const Matrix& matrix) const {
-    if (rows != matrix.rows) throw ("Make matrix square\n");
-    if (cols != matrix.cols) throw ("Make matrix square\n");
-    Matrix result(matrix);
+Matrix& Matrix::operator* (const Matrix& matrix) const {
+    if (rows != matrix.rows || cols != matrix.cols) throw ("Make matrix square\n");
+    Matrix *result = new Matrix(matrix);
 
     for (size_t row = 0; row < result.rows; row++) {
         for (size_t col = 0; col < result.cols; col++) {
@@ -167,22 +163,21 @@ Matrix &Matrix::operator* (const Matrix& matrix) const {
             }
         }
     }
-    return result;
+    return *result;
 }
 
 
-Matrix &Matrix::operator* (const double coefficient) const {
-    Matrix result(cols, rows);
+Matrix& Matrix::operator* (const double coefficient) const {
+    Matrix *result = new Matrix(coefficient);
 
     for (size_t idx = 0; idx < rows * cols; idx++) {
         result.value[idx] = value[idx] * coefficient;
     }
-    return result;
+    return *result;
 }
 
 
-
-Matrix &Matrix::operator= (Matrix& matrix) {
+Matrix& Matrix::operator= (Matrix& matrix) {
     if (this == &matrix) {
         return *this;
     }
@@ -190,7 +185,7 @@ Matrix &Matrix::operator= (Matrix& matrix) {
     cols = matrix.cols;
     if (rows * cols == matrix.rows * matrix.cols) {
         memcpy(value, matrix.value, rows * cols * sizeof(double));
-        return;
+        return *value;
     }
     delete[]value;
     value = new double[cols * rows];
@@ -199,9 +194,9 @@ Matrix &Matrix::operator= (Matrix& matrix) {
 }
 
 
-Matrix &Matrix::operator= (Matrix&& matrix) {
-    rows = 0;
-    cols = 0;
+Matrix& Matrix::operator= (Matrix&& matrix) {
+    rows = matrix.rows;
+    cols = matrix.cols;
     delete[]value;
     value = matrix.value;
     matrix.value = nullptr;
@@ -209,9 +204,9 @@ Matrix &Matrix::operator= (Matrix&& matrix) {
 }
 
 
-Matrix &Matrix::operator^ (size_t number) const {
+Matrix& Matrix::operator^ (size_t number) const {
     if (cols != rows) throw ("Make matrix square\n");
-    Matrix result(*this);
+    Matrix *result = new Matrix(matrix);
 
     if (number == 0) {
         Matrix matrix(cols);
@@ -227,11 +222,11 @@ Matrix &Matrix::operator^ (size_t number) const {
     for (size_t idx = 0; idx < number; idx++) {
         result = result * start;
     }
-    return result;
+    return *result;
 }
 
 
-Matrix &Matrix::operator/(const double number) const {
+Matrix& Matrix::operator/(const double number) const {
     if (number == 0) throw ("Can't divide by zero\n");
     Matrix result(cols, rows);
 
@@ -242,25 +237,24 @@ Matrix &Matrix::operator/(const double number) const {
 }
 
 
-Matrix &Matrix::exp(const size_t accuracy = 30) {
+Matrix& Matrix::exp(const size_t accuracy = 30) {
     if (A.rows != A.cols) throw ("Make matrix square\n");
     
-    double result = Matrix_one(A.cols, A.rows);
+    Matrix *result = new Matrix(A.rows, A.cols);
     double term = Matrix_one(A.cols, A.rows);
 
     for (int step = 1; step < accuracy; step++) {
         term = term * A / step;
         result = result + term;
     }
-    return result;
+    return *result;
 }
 
 
-
-Matrix &Matrix::matrix_minor(Matrix& A) {
+Matrix& Matrix::matrix_minor(Matrix& A) {
    
 
-    Matrix result = Matrix(A.rows, A.cols);
+    Matrix *result = new Matrix(A.rows, A.cols);
     size_t k = 0;
 
     for (size_t idx = 0; idx < rows * cols; idx++) {
@@ -271,7 +265,7 @@ Matrix &Matrix::matrix_minor(Matrix& A) {
     return result;
 }
 
-Matrix &Matrix::matrix_transp() {
+Matrix& Matrix::matrix_transp() {
     Matrix result = { cols, rows };
 
     for (size_t row = 0; row < result.rows; row++) {
@@ -281,8 +275,6 @@ Matrix &Matrix::matrix_transp() {
     }
     return result;
 }
-
-
 
 
 int main() {
