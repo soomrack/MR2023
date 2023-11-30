@@ -1,27 +1,27 @@
 #include <stdio.h>
 #include <math.h>
 
-const int BOBWAGE = 200000;
-const int ALICEWAGE = 200000;
-const int MORTGAGEINTEREST = 0.07;
-const float DEPOSITINTEREST = 0.009342;
-const int BOBINITIALCAPITAL = 1000000;
-const int ALICEINITIALCAPITAL = 1000000;
-const int DOWNPAYMENT = 1000000;
+const int BOBWAGE = 20000000;
+const int ALICEWAGE = 20000000;
+const double MORTGAGEINTEREST = 0.07;
+const double DEPOSITINTEREST = 0.009342;
+const int BOBINITIALCAPITAL = 100000000;
+const int ALICEINITIALCAPITAL = 100000000;
+const int DOWNPAYMENT = 10000000;
 const int MORTGAGEPERIOD = 30;
-const int ALICERENT = 30000;
-const int BOBRENT = 10000;
-const int BOBEXPENSES = 50000;
-const int ALICEEXPENSES = 50000;
-const long int APARTMENTPRICE = 20000000;
-const float MONTHINFLATION = 0.005945;
+const int ALICERENT = 3000000;
+const int BOBRENT = 1000000;
+const int BOBEXPENSES = 5000000;
+const int ALICEEXPENSES = 5000000;
+const long int APARTMENTPRICE = 2000000000;
+const double MONTHINFLATION = 0.005945;
 
 int totalPeriod = 30 * 12;
 int currentMonth = 1;
-float bobCapital = 1000000;
-float aliceCapital = 1000000;
-float mortgageDebt = APARTMENTPRICE;
-float realApartmentPrice = APARTMENTPRICE;
+double bobCapital = 100000000;
+double aliceCapital = 100000000;
+double mortgageDebt = APARTMENTPRICE;
+double realApartmentPrice = APARTMENTPRICE;
 
 int main() {
 
@@ -55,10 +55,10 @@ int main() {
 	printf("\n___________________");
 	printf("\n                   ");
 	printf("\nBob's net worth is ");
-	printf("%f", bobCapital + realApartmentPrice);
+	printf("%f", ((bobCapital + realApartmentPrice) / 100));
 	printf("\n rubles");
 	printf("\nAlice's net worth is ");
-	printf("%f", aliceCapital);
+	printf("%f", (aliceCapital) / 100);
 	printf("\n rubles");
 
 	return 0;
