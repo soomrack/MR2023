@@ -229,22 +229,26 @@ struct Matrix matrix_exp(struct Matrix A)
 	if (exp.data == NULL) return NULL_MATRIX;
 	matrix_set_one(exp);
 
-	struct Matrix term = matrix_create(A.rows, A.cols);  // ÷ëåí a_n
+	struct Matrix term = matrix_create(A.rows, A.cols);  // Ã·Ã«Ã¥Ã­ a_n
 	if (term.data == 0) {
 		matrix_delete(&exp);
 		return NULL_MATRIX;
 	};
 	matrix_set_one(term);
 
-	struct Matrix term_next;  // ÷ëåí a_n+1 
+	struct Matrix term_next;  // Ã·Ã«Ã¥Ã­ a_n+1 
 	for (int idx = 1; idx < 100; ++idx) {
 
 		term_next = matrix_mult(term, A);
 		matrix_delete(&term);
 		term = matrix_division(term_next, idx);
 		matrix_delete(&term_next);
-		matrix_add(exp, term);
-
+		matrix_add(exp, term);	
+		if (term.data == 0) {
+       		matrix_delete(&term);
+		matrix_delete(&exp);
+        	return NULL_MATRIX;
+    		}
 	}
 	matrix_delete(&term);
 	return exp;
