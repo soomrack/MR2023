@@ -179,31 +179,20 @@ struct Matrix matrix_exp(struct Matrix A, size_t N)
     struct Matrix exp = matrix_create(A.cols, A.rows);
     if (exp.data == NULL) {
         return NULL_MATRIX;
-        matrix_delete(&exp);
+       
     }
     struct Matrix temp = matrix_create(A.cols, A.rows);
     if (temp.data == NULL) {
-        return NULL_MATRIX;
         matrix_delete(&exp);
-        matrix_delete(&temp);
+        return NULL_MATRIX;
     }
 
     struct Matrix stepen = matrix_create(A.cols, A.rows);
     if (stepen.data == NULL) {
-        return NULL_MATRIX;
         matrix_delete(&exp);
         matrix_delete(&temp);
-        matrix_delete(&stepen);
+        return NULL_MATRIX;
     }
-
-    struct Matrix eCopy = matrix_create(A.cols, A.rows);
-    if (eCopy.data == NULL) {
-        return NULL_MATRIX;
-        matrix_delete(&exp);
-        matrix_delete(&temp);
-        matrix_delete(&stepen);
-        matrix_delete(&eCopy);
-    } 
 
     matrix_set_one(exp);
     matrix_set_one(stepen);
