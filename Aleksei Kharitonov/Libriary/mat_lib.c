@@ -205,16 +205,12 @@ struct Matrix matrix_exp(struct Matrix A, size_t N)
 
         matrix_delete(&temp);
         temp = matrix_mult(stepen, A);
-        matrix_delete(&stepen);
 
         matrix_delete(&stepen);
         stepen = matrix_div_on_number(temp, (double)i);
         matrix_delete(&temp);
 
-        eCopy = matrix_add(exp, stepen);
-        matrix_delete(&exp);
-
-        exp = eCopy;
+        exp = matrix_add(exp, stepen);
     }
     return exp;
 }
