@@ -13,7 +13,7 @@ typedef struct Matrix {
 } Matrix;
 
 
-const Matrix NULL_MATRIX = { .rows = 0, .cols = 0, .data = NULL };
+const Matrix MATRIX_NULL = { .rows = 0, .cols = 0, .data = NULL };
 
 
 Matrix matrix_allocation(const size_t rows, const size_t cols)
@@ -22,11 +22,11 @@ Matrix matrix_allocation(const size_t rows, const size_t cols)
         Matrix A = { .rows = rows, .cols = cols, .data = NULL };
         return A;
     }
-    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) return NULL_MATRIX;
+    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) return MATRIX_NULL;
 
     Matrix A = { .rows = rows, .cols = cols, .data = NULL };
     A.data = (MatrixItem*)malloc(sizeof(MatrixItem) * A.cols * A.rows);
-    if (A.data == NULL) return NULL_MATRIX;
+    if (A.data == NULL) return MATRIX_NULL;
     return A;
 }
 
@@ -78,22 +78,23 @@ void value_print(MatrixItem A, const char* text)
 
 
 // A += B
-void matrix_add( Matrix A, Matrix B) 
+Matrix matrix_add( Matrix A, Matrix B) 
 {
-    if (A.cols != B.cols || A.rows != B.rows) return; 
+    if (A.cols != B.cols || A.rows != B.rows) return MATRIX_NULL;
 
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx) 
-        A.data[idx] += B.data[idx]; 
+        A.data[idx] += B.data[idx];
+    return A;
 }
 
 
 // C = A + B
  Matrix matrix_sum( Matrix A, Matrix B) 
 {
-    if (A.cols != B.cols || A.rows != B.rows) return NULL_MATRIX; 
+    if (A.cols != B.cols || A.rows != B.rows) return MATRIX_NULL; 
 
     Matrix C = matrix_allocation(A.cols, A.rows); 
-    if (C.data == NULL) return NULL_MATRIX; 
+    if (C.data == NULL) return MATRIX_NULL; 
     
     memcpy(C.data, A.data, sizeof(MatrixItem) * A.cols * A.rows); 
     matrix_add(C, B);  
@@ -115,10 +116,10 @@ void matrix_sub(struct Matrix A, struct Matrix B)
 // D = A - B
 Matrix matrix_diff( Matrix A,  Matrix B)
 {
-    if (A.cols != B.cols || A.rows != B.rows) return NULL_MATRIX;
+    if (A.cols != B.cols || A.rows != B.rows) return MATRIX_NULL;
 
  Matrix D = matrix_allocation(A.cols, A.rows);
-    if (D.data == NULL) return NULL_MATRIX;
+    if (D.data == NULL) return MATRIX_NULL;
 
     memcpy(D.data, A.data, sizeof(MatrixItem) * A.cols * A.rows); 
     matrix_add(D, B); 
@@ -130,10 +131,10 @@ Matrix matrix_diff( Matrix A,  Matrix B)
 // MULT = A * B
  Matrix matrix_mult(Matrix A, Matrix B)
 {
-    if (A.cols != B.rows) return NULL_MATRIX;
+    if (A.cols != B.rows) return MATRIX_NULL;
 
  Matrix mult = matrix_allocation(A.rows, B.cols); 
-    if (mult.data == NULL) return NULL_MATRIX; 
+    if (mult.data == NULL) return MATRIX_NULL; 
 
     for (size_t rowA = 0; rowA < A.rows; ++rowA) {     
         
@@ -153,6 +154,7 @@ Matrix matrix_diff( Matrix A,  Matrix B)
 void matrix_mult_k(Matrix A, const MatrixItem k) 
 {
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx) { 
+        A.data[idx] *= k;
     }
     return;
 }
@@ -218,17 +220,17 @@ MatrixItem matrix_determinant(struct Matrix A)
 // EXP = e^A
 struct Matrix matrix_exp(struct Matrix A)
 {
-    if (A.cols != A.rows) return NULL_MATRIX;
-    if (A.cols == 0) return NULL_MATRIX;
+    if (A.cols != A.rows) return MATRIX_NULL;
+    if (A.cols == 0) return MATRIX_NULL;
 
     struct Matrix exp = matrix_allocation(A.rows, A.cols);
-    if (exp.data == NULL) return NULL_MATRIX;
+    if (exp.data == NULL) return MATRIX_NULL;
     matrix_set_one(exp);
 
     struct Matrix term_prev = matrix_allocation(A.rows, A.cols);
     if (term_prev.data == 0) {
         matrix_delete(&exp);
-        return NULL_MATRIX;
+        return MATRIX_NULL;
     };
     matrix_set_one(term_prev);
 
@@ -240,10 +242,12 @@ struct Matrix matrix_exp(struct Matrix A)
         if (term_next.data == NULL) {
             matrix_delete(&term_prev);
             matrix_delete(&exp);
-            return NULL_MATRIX;
+            return MATRIX_NULL;
         }
         matrix_div_k(term_next, idx);
-        memcpy(term_prev.data, term_next.data, sizeof(MatrixItem) * term_prev.cols * term_prev.rows);
+        for (size_t idx = 0; idx < term_prev.rows * term_prev.cols; ++idx) {
+            term_prev.data[idx] = term_next.data[idx];
+        }
         matrix_delete(&term_next);
         matrix_add(exp, term_prev);
 

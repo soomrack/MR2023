@@ -7,7 +7,6 @@ int main()
     Matrix B = matrix_allocation(3, 3);
     matrix_set_one(A);
     matrix_set_one(B);
-    matrix_add(A, B);
     Matrix C = matrix_sum(A, B);
     matrix_print(C, "Matrix");
 }
