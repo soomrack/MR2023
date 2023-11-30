@@ -19,17 +19,21 @@ public:
     Matrix(const size_t cols, const size_t rows, const MatrixItem *values);
     Matrix(Matrix& A);
     Matrix(Matrix&& A);
+
     ~Matrix();
 public:
     void print();
 public:
     Matrix& operator=(const Matrix& A);
+    Matrix& operator=(Matrix&& A);    
     Matrix& operator+(const Matrix& A);
     Matrix& operator-(const Matrix& A);
     Matrix& operator*(const Matrix& A);
     Matrix& transposition();
     MatrixItem determinant();
     Matrix& exponent();
+    Matrix& set_zero();
+    Matrix& set_one();
 };
 
 
@@ -45,7 +49,6 @@ void print_determinant(const MatrixItem a)
 {
     printf("\nMatrix determinant = %4.2lf\n", a);
 }
-// Можно ли добавить в класс матикс?
 
 Matrix::Matrix(const size_t cols, const size_t rows) 
     : cols(cols), rows(rows)
@@ -116,6 +119,21 @@ Matrix& Matrix::operator=(const Matrix& A)
     rows = A.rows;
     data = new MatrixItem[A.cols * A.rows];
     memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
+    return *this;
+}
+
+
+// C = A
+Matrix& Matrix::operator=(Matrix&& A)
+{
+    if (&A == this) return *this;
+
+    cols = A.cols;
+    rows = A.rows;
+    data = A.data;
+    A.rows = 0;
+    A.cols = 0;
+    A.data = nullptr;
     return *this;
 }
 
@@ -215,38 +233,45 @@ MatrixItem Matrix::determinant()
 }
 
 
+Matrix& Matrix::set_zero()
+{
+    memset(this->data, 0, sizeof(MatrixItem) * rows * cols);   
+    return *this;
+}
+
+
+Matrix& Matrix::set_one()
+{
+    for (size_t idx = 0; idx < rows * cols; idx += cols + 1) this->data[idx] = 1;
+    return *this;
+}
+
+
 // C = e^A
 Matrix& Matrix::exponent()
 {
     if (cols != rows) 
     throw MatrixExeption ("the numbers of columns znd rows of the matrix do not match");
 
-    Matrix *Previous_step = new Matrix(rows, cols);
-    memset(Previous_step->data, 0, sizeof(MatrixItem) * rows * cols);
-    for (size_t idx = 0; idx < rows * cols; idx += cols + 1) Previous_step->data[idx] = 1;
-    for (size_t idx = 0; idx < cols * rows; ++idx) Previous_step->data[idx] += this->data[idx];
+    Matrix *previous_step = new Matrix(rows, cols);
+    previous_step->set_zero();
+    previous_step->set_one();
+    previous_step->operator+(*this);
 
-    Matrix *Exp = new Matrix(rows, cols);
+    Matrix *exp = new Matrix(rows, cols);
 
-    Matrix *Power = new Matrix(rows, cols);
+    Matrix *power = new Matrix(rows, cols);
     
     for (unsigned int k = 2; k <= 5; ++k) { 
 
-        for (size_t Power_col = 0; Power_col < rows; ++Power_col) {
-            for (size_t Power_row = 0; Power_row < cols; ++Power_row) {
-                for (size_t idx = 0; idx < cols; ++idx) {
-                    Power->data[Power_row + Power_col * cols] += Previous_step->data[idx + (Power_col * cols)]
-                    * this->data[idx * cols + Power_row];
-                };
-            };
-        };
+        *power = *previous_step * *this;
         
         for (unsigned int idx = 0; idx < cols * rows; ++idx)
-            Exp->data[idx] = Power->data[idx] / k;
+            exp->data[idx] = power->data[idx] / k;
 
-        memcpy(Previous_step->data, Exp->data, rows * cols * sizeof(MatrixItem));
+        memcpy(previous_step->data, exp->data, rows * cols * sizeof(MatrixItem));
     };
-    return *Previous_step;
+    return *previous_step;
 }
 
 
