@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,15 +49,6 @@ public:
 };
 
 
-void Matrix::free()
-{
-    cols = 0;
-    rows = 0;
-    delete[] data;
-    data = nullptr;
-}
-
-
 Matrix::Matrix() {
     rows = 0;
     cols = 0;
@@ -66,6 +57,7 @@ Matrix::Matrix() {
 
 
 Matrix::Matrix(const size_t cols, const size_t rows)
+    : cols(cols), rows(rows)
 {
     if (cols == 0 || rows == 0) {
         data = nullptr;
@@ -170,6 +162,12 @@ void Matrix::print()
 Matrix& Matrix::operator=(const Matrix& A)
 {
     if (this == &A) return *this;
+    if (rows * cols == A.rows * A.cols) {
+        rows = A.rows;
+        cols = A.cols;
+        memcpy(data, A.data, rows * cols * sizeof(double));
+        return *this;
+    }
     delete[] data;
     rows = A.rows;
     cols = A.cols;
