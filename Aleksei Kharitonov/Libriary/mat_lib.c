@@ -211,7 +211,7 @@ struct Matrix matrix_exp(struct Matrix A, size_t N)
         matrix_delete(&temp);
 
         matrix_add(exp, stepen);
-     if (exp.data == NULL) {
+     if (stepen.data == NULL) {
         return NULL_MATRIX;
         matrix_delete(&exp);
         matrix_delete(&temp);
