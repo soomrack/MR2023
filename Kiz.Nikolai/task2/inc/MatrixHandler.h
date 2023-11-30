@@ -1,8 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#define SUCCESS 0
-#define FAIL 1
 #pragma once
 
 
@@ -57,7 +55,7 @@ double matrix_determinant(const Matrix * this);  //  done
 Matrix get_submatrix(const Matrix * this, const size_t row_to_delete, const size_t col_to_delete);  //  done
 Matrix matrix_multiplication(const Matrix * matrix_1, const Matrix * matrix_2);  //  done
 Matrix matrix_power(const Matrix * this, const uint16_t power);
-void constant_division(Matrix * this, double constant);
+void constant_division(Matrix this, double constant);
 Matrix matrix_exponent(const Matrix * this, const uint8_t degree);
 Matrix matrix_exponent_summand(const Matrix * left_operand, const Matrix * right_operand, const uint8_t degree);
 void matrix_increasing(Matrix * to_increase, const Matrix * increasing);

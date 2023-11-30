@@ -195,28 +195,17 @@ void matrix_transposition(Matrix * this) {
         matrix_error_handler(NULL_MATRIX_ERROR, "matrix_transposition");
         return;
     }
+    Matrix buff = create_matrix(this->cols, this->rows);
     size_t size = matrix_size(this);
-    matrix_element fill_data[size];
-    for (size_t col = 0; col < this->cols; col++) {
-        for (size_t row = 0; row < this->rows; row++) {
-            matrix_element value = this->data[row][col];
-            fill_data[col*this->rows + row] = value;
-#ifdef DEBUG
-            printf("%.3f\t", value);
-#endif
-        }
-#ifdef DEBUG
-        printf("\n");
-#endif
-    }
-    size_t new_rows = this->cols;
-    this->cols = this->rows;
-    this->rows = new_rows;
-    matrix_element * new_first_element = (matrix_element*)this->data +this->rows;  // реформатируем структуру матрицы
     for (size_t row = 0; row < this->rows; row++) {
-            this->data[row] = new_first_element + row * this->cols;
-    fill_with_data(this, fill_data);
+        for (size_t col = 0; col < this->cols; col++) {
+            buff.data[col][row] = this->data[row][col];
+        }
     }
+    free(this->data);
+    this->data = buff.data;
+    this->rows = buff.rows;
+    this->cols = buff.cols;
 }
 
 
@@ -297,6 +286,10 @@ Matrix matrix_multiplication(const Matrix * matrix_1, const Matrix * matrix_2) {
     }
     size_t dimension = matrix_1->cols;
     Matrix new_matrix = create_matrix(matrix_1->rows, matrix_2->cols);
+    if (NULL == new_matrix.data) {
+        matrix_error_handler(NULL_MATRIX_ERROR, "matrix_multiplication");
+        return NULL_MATRIX;
+    }
     fill_matrix(&new_matrix, BLANK);
     for (size_t row = 0; row < new_matrix.rows; row++) 
         for (size_t col = 0; col < new_matrix.cols; col++)
@@ -306,14 +299,14 @@ Matrix matrix_multiplication(const Matrix * matrix_1, const Matrix * matrix_2) {
     return new_matrix;
 }
 
-void constant_division(Matrix * this, double constant) {
-    if (NULL == this->data) {
+void constant_division(Matrix this, double constant) {
+    if (NULL == this.data) {
         matrix_error_handler(NULL_MATRIX_ERROR, "constant_division");
         return;
     }
-    size_t size = matrix_size(this);
+    size_t size = matrix_size(&this);
     for (size_t idx = 0; idx < size; idx++) {
-        *(this->data[0] + idx) /= constant;
+        *(this.data[0] + idx) /= constant;
     }
 }
 
@@ -345,6 +338,7 @@ Matrix matrix_exponent(const Matrix * this, const uint8_t degree) {
         Matrix buf_summand = create_matrix(this->rows, this->cols);
         if (NULL == buf_summand.data) {
             matrix_error_handler(NULL_MATRIX_ERROR, "matrix_exponent");
+            delete_matrix(&A);
             return NULL_MATRIX;
         }
         fill_with_data(&buf_summand, this->data[0]);
@@ -352,6 +346,8 @@ Matrix matrix_exponent(const Matrix * this, const uint8_t degree) {
                 Matrix summand = matrix_exponent_summand(&buf_summand, this, idx);
                     if (NULL == summand.data) {
                         matrix_error_handler(NULL_MATRIX_ERROR, "matrix_exponent");
+                        delete_matrix(&A);
+                        delete_matrix(&summand);
                         return NULL_MATRIX;
                     }
                 fill_with_data(&buf_summand, summand.data[0]);
@@ -364,8 +360,6 @@ Matrix matrix_exponent(const Matrix * this, const uint8_t degree) {
 }
 
 
-
-
 Matrix matrix_exponent_summand(const Matrix * left_operand, const Matrix * right_operand, const uint8_t degree) {
     if (NULL == left_operand->data || NULL == right_operand->data) {
         matrix_error_handler(NULL_MATRIX_ERROR, "matrix_exponent_summand");
@@ -376,7 +370,7 @@ Matrix matrix_exponent_summand(const Matrix * left_operand, const Matrix * right
         matrix_error_handler(NULL_MATRIX_ERROR, "matrix_exponent_summand");
         return NULL_MATRIX;
     }
-    constant_division(&summand, degree);
+    constant_division(summand, degree);
     return summand;
 }
 

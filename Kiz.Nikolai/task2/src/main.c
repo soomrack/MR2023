@@ -6,7 +6,7 @@ int main()
     Matrix A  = create_matrix(3, 4);
     Matrix B = create_matrix(4, 3);
 
-    double arr1[12] = {2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2};
+    double arr1[12] = {1,2,3,4,5,6,7,8,9,10,11,12};
     double arr2[12] = {3, 3, 3, 3, 3, 12, 3, 3, 3, 3, 3, 30};
     
     fill_with_data(&A, arr1);
@@ -19,11 +19,13 @@ int main()
 
 
     Matrix E = matrix_exponent(&D, 15);
-
-    // print_matrix(&A);
-    // print_matrix(&B);
-    // print_matrix(&C);
-    // print_matrix(&D);
+    print_matrix(&A);
+    matrix_transposition(&A);
+    print_matrix(&A);
+    print_matrix(&A);
+    print_matrix(&B);
+    print_matrix(&C);
+    print_matrix(&D);
     print_matrix(&E);
     print_matrix(&D);
 
