@@ -9,7 +9,7 @@
 
 
 typedef double MatrixItem;
-enum MatrixType { ZERO, ONES, RANDOM, I };
+
 
 //DO NOT USE!
 //NE UTILISER PAS!
@@ -52,6 +52,10 @@ public:
     Matrix& operator-= (const Matrix& M);
     Matrix& operator*= (const double k);
     Matrix& operator*= (const Matrix& M);
+    Matrix operator+(const Matrix& M);
+    Matrix operator-(const Matrix& M);
+    Matrix operator*(const Matrix& M);
+    Matrix operator*(const double k);
 
 public:
     void print();
@@ -67,11 +71,6 @@ private:
 Matrix sum_for_e(const size_t deg_acc, const Matrix &A);
 };
 
-Matrix& operator+(const Matrix& M, const Matrix& K);
-Matrix& operator-(const Matrix& M, const Matrix& K);
-Matrix& operator*(const Matrix& M, const Matrix& K);
-Matrix& operator*(const double k, const Matrix& M);
-Matrix& operator*(const Matrix& M, const double k);
 
 Matrix::Matrix()
 {
@@ -92,14 +91,7 @@ Matrix::Matrix(const size_t rows, const size_t cols)
 
     this->cols = cols;
     this->rows = rows;
-    data = nullptr;
     data = new double[cols * rows * sizeof(MatrixItem)];
-
-    if (this->data == nullptr)
-    {
-        throw MatrixException("The matrix is not initialized");
-    }
-
 }
 
 Matrix::Matrix(const size_t rows, const size_t cols, const double *values)
@@ -123,12 +115,12 @@ Matrix::Matrix(Matrix &&A){
 
 Matrix& Matrix::operator= (const Matrix& M) {
     if (this == &M) return *this;    
-    if (data != nullptr) delete data;
+    delete[] data;
 
     rows = M.rows;
     cols = M.cols;
 
-    this->data = new MatrixItem[rows * cols];
+    data = new MatrixItem[rows * cols];
     memcpy(data, M.data, cols * rows * sizeof(MatrixItem));
 
     return *this;
@@ -162,20 +154,14 @@ Matrix& Matrix::exp(Matrix &A, const size_t accuracy)
         throw MatrixException("Error! The matrix is not square!");
     }
 
-    Matrix *E = new Matrix(A.rows, A.cols);
-
-    if (E->data == nullptr)
+    Matrix *item = new Matrix(A.rows, A.cols);
+    Matrix exp = make_ident(A.rows, A.cols);
+    for (double deg_acc = 1; deg_acc <= accuracy; ++deg_acc)
     {
-        throw MatrixException("The matrix is empty");
+        *item =  (*item * A *(1 / deg_acc));
+        exp += *item;
     }
-    Matrix matrix_transfer;
-
-    for (size_t deg_acc = 1; deg_acc <= accuracy; ++deg_acc)
-    {
-        A.print();
-        E += A.sum_for_e(deg_acc, A);
-    }
-    return *E;
+    return *item;
 }
 
 Matrix& Matrix::make_ident(size_t rows, size_t cols)
@@ -296,44 +282,10 @@ Matrix::Matrix(const Matrix &A)
     }
 }
 
-Matrix Matrix::sum_for_e(const size_t deg_acc, const Matrix &A) // p
-{
-    if (deg_acc == 1)
-    {
-        Matrix E = make_ident(A.cols, A.rows);
-        return E;
-    }
-
-    if (deg_acc == 2)
-    {
-        return A;
-    }
-
-    Matrix E{A.rows, A.cols};
-    if (deg_acc > 2)
-    {
-        E = Matrix(A); // цикл for для ( функция копиии матрицчы)
-        for (size_t id = 2; id < deg_acc; ++id)
-        {
-            Matrix buf = E;
-            E = buf.mult(A);
-            for (size_t idx = 0; idx < E.rows * E.cols; ++idx)
-            {
-                E.data[idx] /= (id);
-            }
-        }
-    }
-    return E;
-}
 
 Matrix& Matrix::transp()
 {
     Matrix *C = new Matrix(rows, cols);
-
-    if (C->data == nullptr)
-    {
-        throw "Initialization error";
-    }
 
     for (size_t rowA = 0; rowA < rows; ++rowA)
     {
@@ -344,20 +296,6 @@ Matrix& Matrix::transp()
     }
     return *C;
 }
-
-Matrix& Matrix::operator= (const Matrix& M) {
-    if (this == &M) return *this;    
-    if (data != nullptr) delete data;
-
-    rows = M.rows;
-    cols = M.cols;
-
-    this->data = new MatrixItem[rows * cols];
-    memcpy(data, M.data, cols * rows * sizeof(MatrixItem));
-
-    return *this;
-}
-
 
 Matrix& Matrix::operator+= (const Matrix& M) { 
     if ((rows != M.rows) || (cols != M.cols)) 
@@ -393,7 +331,7 @@ Matrix& Matrix::operator*= (const double k) {
 
 Matrix& Matrix::operator*= (const Matrix& M) {
     if (cols != M.rows)
-        throw NO_MEMORY_ALLOCATED;
+        throw ERRONEOUS_MESSAGE;
 
     Matrix R(rows, M.cols);
     for (size_t row = 0; row < R.rows; row++)
@@ -408,37 +346,33 @@ Matrix& Matrix::operator*= (const Matrix& M) {
     return *this;
 }
 
-Matrix operator+(const Matrix& M, const Matrix& K) {
-    Matrix rez = M;
-    rez += K;
+Matrix Matrix::operator+(const Matrix& M) {
+    Matrix rez = *this;
+    rez += M; 
     return rez;
 }
 
 
-Matrix operator-(const Matrix& M, const Matrix& K) {
-    Matrix rez = M;
-    rez -= K;
+Matrix Matrix::operator-(const Matrix& M) {
+    Matrix rez = *this;
+    rez -= M;
     return rez;
 }
 
 
-Matrix operator*(const Matrix& M, const Matrix& K) {
-    Matrix rez = M;
-    rez *= K;
+Matrix Matrix::operator*(const Matrix& M) {
+    Matrix rez = *this;
+    rez *= M;
     return rez;
 }
 
 
-Matrix operator*(const double k, const Matrix& M) {
-    Matrix rez = M;
+Matrix Matrix::operator*(const double k) {
+    Matrix rez = *this;
     rez *= k;
     return rez;
 }
 
-
-Matrix operator*(const Matrix& M, const double k) {
-    return k * M;
-}
 
 
 int main()
