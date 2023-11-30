@@ -73,10 +73,10 @@ int matrix_add(struct Matrix A, struct Matrix B)
     return 0;
 }
 
-// Ñ = A + B
+// C = A + B
 void matrix_sum(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
-    if (A.cols != B.cols || A.rows != B.rows) {
+    if (A.cols != B.cols || A.rows != B.rows|| C.cols != B.cols || C.rows != B.rows) {
         matrix_error();
         return;
     }
@@ -91,7 +91,7 @@ void matrix_sum(const struct Matrix A, const struct Matrix B, const struct Matri
 // C = A - B
 void matrix_sub(const struct Matrix A, const struct Matrix B, const struct Matrix C)
 {
-    if (A.cols != B.cols || A.rows != B.rows) {
+    if (A.cols != B.cols || A.rows != B.rows || C.cols != B.cols || C.rows != B.rows) {
         matrix_error();
         return;
     }
