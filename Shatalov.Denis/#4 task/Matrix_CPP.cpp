@@ -127,11 +127,14 @@ void Matrix::print(const Matrix& A)
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
-   if (rows == A.rows && cols == A.cols) {
-      return  *this = A;           
-  }
+    if (rows == A.rows || cols == A.cols) {
+        std::memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
+        return *this;
+    }
     
     if (this == &A) return *this;
+
+
     delete[] data;
     rows = A.rows;
     cols = A.cols;
