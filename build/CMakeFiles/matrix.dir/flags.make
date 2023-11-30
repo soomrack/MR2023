@@ -6,5 +6,5 @@ C_DEFINES =
 
 C_INCLUDES = -I/home/yaaaniks/VSCode/domashka_proga/MR2023/Semikozov.Ian/task2
 
-C_FLAGS = -g
+C_FLAGS = -g -fvisibility=hidden
 

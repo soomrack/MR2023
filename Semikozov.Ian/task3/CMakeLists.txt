@@ -5,25 +5,18 @@ project(matrix  VERSION 0.1
                 LANGUAGES C)
 
 set(SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/matrix.c)
-set(HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/matrix.h)
+set(HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/matrix.hpp)
 
-set(CMAKE_ASM_NASM_COMPILER nasm)
-set(CMAKE_ASM_NASM_FLAGS "-f elf64")
-
-set(CMAKE_ASM_NASM_COMPILER "nasm")
-
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-# set(CMAKE_C_COMPILER gcc)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-add_library(${PROJECT_NAME} STATIC ${CMAKE_CURRENT_SOURCE_DIR}/matrix.h)
+add_library(${PROJECT_NAME} STATIC ${CMAKE_CURRENT_SOURCE_DIR}/matrix.hpp)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/matrix.h ${CMAKE_BINARY_DIR}/include/matrix.h COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/matrix.hpp ${CMAKE_BINARY_DIR}/include/matrix.hpp COPYONLY)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
                         LINKER_LANGUAGE C
                         VERSION ${PROJECT_VERSION}
                         SOVERSION 1
-                        PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/matrix.h)
+                        PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/matrix.hpp)
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES} ${HEADER_FILES})
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

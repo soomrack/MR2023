@@ -1,7 +1,7 @@
 [
 {
   "directory": "/home/yaaaniks/VSCode/domashka_proga/MR2023/build",
-  "command": "/usr/bin/gcc-12  -I/home/yaaaniks/VSCode/domashka_proga/MR2023/Semikozov.Ian/task2 -g -o CMakeFiles/matrix.dir/matrix.c.o -c /home/yaaaniks/VSCode/domashka_proga/MR2023/Semikozov.Ian/task2/matrix.c",
+  "command": "/usr/bin/gcc-12  -I/home/yaaaniks/VSCode/domashka_proga/MR2023/Semikozov.Ian/task2 -g -fvisibility=hidden -o CMakeFiles/matrix.dir/matrix.c.o -c /home/yaaaniks/VSCode/domashka_proga/MR2023/Semikozov.Ian/task2/matrix.c",
   "file": "/home/yaaaniks/VSCode/domashka_proga/MR2023/Semikozov.Ian/task2/matrix.c"
 },
 {
