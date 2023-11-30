@@ -1,6 +1,3 @@
-#pragma once
-//#ifdef LIBMATRIX_H
-//#define LIBATRIX_H
 #include <string.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -36,10 +33,11 @@ public:
 public:
     void set_zero();
     void set_one();
-    void print(const Matrix& A);
     Matrix& trans();
     MatrixItem det(Matrix& A);
     Matrix& exp(Matrix& A);
+public:
+    void print(const Matrix& A);
 };
 
 
@@ -85,22 +83,19 @@ Matrix::Matrix(Matrix&& A) noexcept
 {
     rows = A.rows;
     cols = A.cols;
-    data = new MatrixItem[rows * cols];
-    std::memcpy(data, A.data, sizeof(MatrixItem));
+    data = A.data;
     A.rows = 0;
     A.cols = 0;
     A.data = nullptr;
 }
 
 
-Matrix::~Matrix() 
-{
+Matrix::~Matrix() {
     delete[] data;
 }
 
 
-void Matrix::set_zero() 
-{
+void Matrix::set_zero() {
     if (data == nullptr) return;
     std::memset(data, 0, sizeof(MatrixItem) * rows * cols);
 }
@@ -131,9 +126,11 @@ Matrix& Matrix::operator=(Matrix& A)
 {
     if (this == &A) return *this;
     delete[] data;
+    if (rows * cols != A.rows * A.cols) {
+        data = new MatrixItem[rows * cols];
+    };
     rows = A.rows;
     cols = A.cols;
-    data = new MatrixItem[rows * cols];
     std::memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
     return *this;
 }
@@ -152,8 +149,7 @@ Matrix& Matrix::operator=(Matrix&& A) noexcept
 };
 
 
-Matrix& Matrix::operator+=(const Matrix& A) 
-{
+Matrix& Matrix::operator+=(const Matrix& A) {
     if (A.cols != cols || A.rows != rows) 
         throw Matrix_Exception("Operator+=: Incorrect sizes");
 
@@ -164,8 +160,7 @@ Matrix& Matrix::operator+=(const Matrix& A)
 }
 
 
-Matrix& Matrix::operator+(const Matrix& A) const 
-{
+Matrix& Matrix::operator+(const Matrix& A) const {
     if (A.cols != cols || A.rows != rows) 
         throw Matrix_Exception("Operator+: Incorrect sizes");
 
@@ -215,7 +210,7 @@ Matrix& Matrix::operator*(const Matrix& A)
     if (A.cols != rows) 
         throw Matrix_Exception("Operator*: Multiplication Error");
 
-    Matrix *C = new Matrix[rows, A.cols];
+    Matrix *C = new Matrix(rows, A.cols);
  
     for (size_t col = 0; col < cols; ++col) {
         for (size_t rowA = 0; rowA < A.rows; ++rowA) {
@@ -238,7 +233,7 @@ Matrix& Matrix::operator*=(const Matrix& A)
 
 Matrix& Matrix::operator/(const MatrixItem k) const
 {
-    Matrix *C = new Matrix[rows, cols];
+    Matrix *C = new Matrix(rows, cols);
 
     for (size_t idx = 0; idx < cols * rows; ++idx)
         C->data[idx] = data[idx] / k;
@@ -248,7 +243,7 @@ Matrix& Matrix::operator/(const MatrixItem k) const
 
 Matrix& Matrix::operator*(const MatrixItem k) const
 {
-    Matrix* C = new Matrix[rows, cols];
+    Matrix* C = new Matrix(rows, cols);
 
     for (size_t idx = 0; idx < cols * rows; ++idx)
         C->data[idx] = data[idx] * k;
@@ -285,12 +280,12 @@ Matrix& Matrix::exp(Matrix& A)
     if (A.cols != A.rows) 
         throw Matrix_Exception("exp: Not square");
     if (A.cols == 0) 
-        throw Matrix_Exception("exp: ");
+        throw Matrix_Exception("exp: Single Element Matrix");
 
     Matrix *exp = new Matrix(A.rows, A.cols);
     exp->set_one();
 
-    Matrix term (A.rows, A.cols);  // член a_n
+    Matrix term(A.rows, A.cols);  // член a_n
     term.set_one();
 
     for (int idx = 1; idx < 100; ++idx) {
@@ -301,5 +296,3 @@ Matrix& Matrix::exp(Matrix& A)
     }
     return *exp;
 }
-
-//#endif
