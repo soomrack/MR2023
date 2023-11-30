@@ -127,10 +127,9 @@ void Matrix::print(const Matrix& A)
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
-    if (rows == A.rows && cols == A.cols) {
-       data = A.data;
-       return *this;
-    }
+   if (rows == A.rows && cols == A.cols) {
+      return  *this = A;           
+  }
     
     if (this == &A) return *this;
     delete[] data;
