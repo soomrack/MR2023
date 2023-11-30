@@ -34,6 +34,7 @@ public:
     Matrix& exponent();
     Matrix& set_zero();
     Matrix& set_one();
+    Matrix& operator*(const MatrixItem A);
 };
 
 
@@ -126,8 +127,6 @@ Matrix& Matrix::operator=(const Matrix& A)
 // C = A
 Matrix& Matrix::operator=(Matrix&& A)
 {
-    if (&A == this) return *this;
-
     cols = A.cols;
     rows = A.rows;
     data = A.data;
@@ -183,6 +182,18 @@ Matrix& Matrix::operator*(const Matrix& A)
             };
         };
     };
+    return *C;
+}
+
+
+Matrix& Matrix::operator*(const MatrixItem A)
+{
+
+    Matrix *C = new Matrix(rows, cols);
+
+    for (unsigned int idx = 0; idx < cols * rows; ++idx)
+    C->data[idx] = this->data[idx] / A;
+
     return *C;
 }
 
@@ -259,15 +270,10 @@ Matrix& Matrix::exponent()
     previous_step->operator+(*this);
 
     Matrix *exp = new Matrix(rows, cols);
-
-    Matrix *power = new Matrix(rows, cols);
     
     for (unsigned int k = 2; k <= 5; ++k) { 
 
-        *power = *previous_step * *this;
-        
-        for (unsigned int idx = 0; idx < cols * rows; ++idx)
-            exp->data[idx] = power->data[idx] / k;
+        *exp = (*previous_step * *this) * (MatrixItem)(1. / k);
 
         memcpy(previous_step->data, exp->data, rows * cols * sizeof(MatrixItem));
     };
