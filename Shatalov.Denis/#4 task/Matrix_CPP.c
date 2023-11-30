@@ -1,51 +1,46 @@
-#pragma once
-
 #include <string.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <cstring>
 #include <iostream>
 
-
 typedef double MatrixItem;
 
 class Matrix {
-
 private:
     size_t rows;
     size_t cols;
     MatrixItem* data;
-
 public:
-  
     Matrix() : cols(0), rows(0), data(nullptr) {};
     Matrix(const size_t rows, const size_t cols);
     Matrix(const size_t cols, const size_t rows, const MatrixItem* values);
     Matrix(const Matrix& A);
     Matrix(Matrix&& A) noexcept;
     ~Matrix();
-
-    Matrix& operator + (const Matrix& A);
-    Matrix& operator - (const Matrix& A);
-    Matrix& operator * (const Matrix& A);
-    Matrix& operator * (const MatrixItem k);
-    Matrix& operator / (const MatrixItem k);
-
-    Matrix& operator = (const Matrix& A);
-    Matrix& operator = (Matrix&& A) noexcept;
-    
+public:
+    Matrix& operator+(const Matrix& A);
+    Matrix& operator-(const Matrix& A);
+    Matrix& operator*(const Matrix& A);
+    Matrix& operator*(const MatrixItem k);
+    Matrix& operator/(const MatrixItem k);
+public:
+    Matrix& operator=(const Matrix& A);
+    Matrix& operator=(Matrix&& A) noexcept;
+public:
     Matrix& operator+=(const Matrix& A);
     Matrix& operator-=(const Matrix& A);
     Matrix& operator*=(const Matrix& A);
     Matrix& operator/=(const MatrixItem k);
     Matrix& operator*=(const MatrixItem k);
-
+public:
     void set_zero();
     void set_one();
-    void print(const Matrix& A);
     Matrix& trans();
     MatrixItem det(Matrix& A);
     Matrix& exp(Matrix& A);
+public:
+    void print(const Matrix& A);
 };
 
 
@@ -91,8 +86,7 @@ Matrix::Matrix(Matrix&& A) noexcept
 {
     rows = A.rows;
     cols = A.cols;
-    data = new MatrixItem[rows * cols];
-    std::memcpy(data, A.data, sizeof(MatrixItem));
+    data = A.data;
     A.rows = 0;
     A.cols = 0;
     A.data = nullptr;
@@ -133,6 +127,11 @@ void Matrix::print(const Matrix& A)
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
+    if (rows == A.rows && cols == A.cols) {
+       data = A.data;
+       return *this;
+    }
+    
     if (this == &A) return *this;
     delete[] data;
     rows = A.rows;
@@ -222,7 +221,7 @@ Matrix& Matrix::operator*(const Matrix& A)
     if (A.cols != rows)
         throw Matrix_Exception("Operator*: Multiplication Error");
 
-    Matrix* C = new Matrix[rows, A.cols];
+    Matrix* C = new Matrix(rows, A.cols);
 
     for (size_t col = 0; col < cols; ++col) {
         for (size_t rowA = 0; rowA < A.rows; ++rowA) {
@@ -235,6 +234,7 @@ Matrix& Matrix::operator*(const Matrix& A)
     };
     return *C;
 }
+
 
 // B *= A
 Matrix& Matrix::operator*=(const Matrix& A)
@@ -256,7 +256,7 @@ Matrix& Matrix::operator/=(const MatrixItem k)
 // C = A / k
 Matrix& Matrix::operator/(const MatrixItem k)
 {
-    Matrix* C = new Matrix[rows, cols];
+    Matrix* C = new Matrix(rows, cols);
 
     for (size_t idx = 0; idx < cols * rows; ++idx)
         C->data[idx] = data[idx] / k;
@@ -267,7 +267,7 @@ Matrix& Matrix::operator/(const MatrixItem k)
 // C = A * k
 Matrix& Matrix::operator*(const MatrixItem k)
 {
-    Matrix* C = new Matrix[rows, cols];
+    Matrix* C = new Matrix(rows, cols);
 
     for (size_t idx = 0; idx < cols * rows; ++idx)
         C->data[idx] = data[idx] * k;
@@ -284,6 +284,7 @@ Matrix& Matrix::operator*=(const MatrixItem k)
 }
 
 
+// DET (A)
 MatrixItem Matrix::det(Matrix& A)
 {
     if (A.rows != A.cols)
