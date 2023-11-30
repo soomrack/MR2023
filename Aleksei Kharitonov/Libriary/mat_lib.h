@@ -14,13 +14,13 @@ struct Matrix {
 };
 
 
-struct Matrix matrix_create(const int rows, const int cols);
+struct Matrix matrix_create(const size_t rows, const size_t cols);
 
 
 void matrix_delete(struct Matrix* A);
 
 
-void matrix_set_zero(struct Matrix A);
+struct Matrix matrix_set_zero(struct Matrix A);
 
 
 void matrix_set_one(struct Matrix A);
@@ -42,11 +42,11 @@ struct Matrix matrix_mult(struct Matrix A, struct Matrix B);
 
 
 //A * number
-struct Matrix matrix_mult_on_number(struct Matrix A, int number);
+struct Matrix matrix_mult_on_number(struct Matrix A, size_t number);
 
 
 // A/number
-struct Matrix matrix_div_on_number(struct Matrix A, int number);
+struct Matrix matrix_div_on_number(struct Matrix A, size_t number);
 
 
 //A = A^t
@@ -58,7 +58,7 @@ double matrix_det(struct Matrix A);
 
 
 // exponent
-struct Matrix matrix_exp(struct Matrix A, int N);
+struct Matrix matrix_exp(struct Matrix A, size_t N);
 
 
 void matrix_fill(struct Matrix A, const double values[]);
