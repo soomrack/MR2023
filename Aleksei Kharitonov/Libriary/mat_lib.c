@@ -58,6 +58,14 @@ void matrix_print(const struct Matrix A)
     }
 }
 
+// A += B
+int matrix_ad(struct Matrix A, struct Matrix B) {
+    if (A.cols != B.cols || A.rows != B.rows) return 1;
+
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
+        A.data[idx] += B.data[idx];
+    return 0;
+}
 
 // A + B
 struct Matrix matrix_add(const struct Matrix A, const struct Matrix B)
@@ -209,12 +217,12 @@ struct Matrix matrix_exp(struct Matrix A, size_t N)
         matrix_delete(&stepen);
         stepen = matrix_div_on_number(temp, (double)i);
         matrix_delete(&temp);
-        
-        if ( matrix_add(exp, stepen) != 0) {
-       	matrix_delete(&stepen);
-		matrix_delete(&exp);
-        return NULL_MATRIX;
-    	}
+
+        if (matrix_ad(exp, stepen) != 0) {
+            matrix_delete(&stepen);
+            matrix_delete(&exp);
+            return NULL_MATRIX;
+        }
     }
     return exp;
 }
