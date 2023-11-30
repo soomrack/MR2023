@@ -48,7 +48,7 @@ public:
 
 public:
     Matrix& operator= (const Matrix& M);
-    Matrix& operator= (const Matrix &&M);
+    Matrix& operator= (Matrix &&M);
     Matrix& operator+= (const Matrix& M);
     Matrix& operator-= (const Matrix& M);
     Matrix& operator*= (const double k);
@@ -127,15 +127,14 @@ Matrix& Matrix::operator= (const Matrix& M) {
     return *this;
 }
 
-Matrix& Matrix::operator= (const Matrix &&M) {
+Matrix& Matrix::operator= (Matrix &&M) {
     if (this == &M) return *this;    
     delete[] data;
 
     rows = M.rows;
     cols = M.cols;
-
-    data = new MatrixItem[rows * cols];
-    memcpy(data, M.data, cols * rows * sizeof(MatrixItem));
+    data = M.data;
+    M.data = nullptr;
 
     return *this;
 }
