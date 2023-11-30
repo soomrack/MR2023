@@ -210,7 +210,13 @@ struct Matrix matrix_exp(struct Matrix A, size_t N)
         stepen = matrix_div_on_number(temp, (double)i);
         matrix_delete(&temp);
 
-        exp = matrix_add(exp, stepen);
+        matrix_add(exp, stepen);
+     if (exp.data == NULL) {
+        return NULL_MATRIX;
+        matrix_delete(&exp);
+        matrix_delete(&temp);
+        matrix_delete(&stepen);
+        }
     }
     return exp;
 }
