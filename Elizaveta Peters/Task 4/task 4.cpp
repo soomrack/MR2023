@@ -161,20 +161,20 @@ void Matrix::print()
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
-    if (rows == A.rows || cols == A.cols) {   
+    if (rows * cols == A.rows * A.cols) {
         rows = A.rows;
         cols = A.cols;
-        memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
+        memcpy(data, A.data, rows * cols * sizeof(double));
         return *this;
     }
-    
+
     if (this == &A) return *this;
     delete[] data;
     rows = A.rows;
     cols = A.cols;
     data = new MatrixItem[rows * cols];
     std::memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
-    return *this;
+      return *this;
 }
 
 
