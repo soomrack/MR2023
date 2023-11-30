@@ -161,13 +161,14 @@ void Matrix::print()
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
-    if (this == &A) return *this;
-    if (rows * cols == A.rows * A.cols) {
+    if (rows == A.rows || cols == A.cols) {   
         rows = A.rows;
         cols = A.cols;
-        memcpy(data, A.data, rows * cols * sizeof(double));
+        memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
         return *this;
     }
+    
+    if (this == &A) return *this;
     delete[] data;
     rows = A.rows;
     cols = A.cols;
