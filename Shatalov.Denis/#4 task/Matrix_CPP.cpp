@@ -124,10 +124,13 @@ void Matrix::print(const Matrix& A)
     std::cout << "\n";
 }
 
+
 Matrix& Matrix::operator=(const Matrix& A)
 {
     if (rows == A.rows || cols == A.cols) {   
-        std::memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
+        rows = A.rows;
+        cols = A.cols;
+        memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
         return *this;
     }
     
@@ -140,6 +143,7 @@ Matrix& Matrix::operator=(const Matrix& A)
     data = new MatrixItem[rows * cols];
     std::memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
     return *this;
+}
 
 
 Matrix& Matrix::operator=(Matrix&& A) noexcept
