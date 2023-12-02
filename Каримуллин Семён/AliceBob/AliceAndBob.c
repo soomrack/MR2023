@@ -3,7 +3,7 @@
 
 typedef long long int money; // считаем в копейках
 struct Person{
-    money capital;
+    money capital;  
     money income;
     money spendings;
     money flat_payment;
@@ -28,14 +28,14 @@ void alice_init(){
     Alice.capital = FIRST_FLAT_PAYNMENT;
     Alice.spendings = LIFE_SPENDING;
     Alice.flat_payment = FLAT_RENT_PRICE;
-    Alice.overpayment = FLAT_PRICE * powf((1.0 + INFLATION), YEARS) - FLAT_PRICE;
+    Alice.overpayment = FLAT_PRICE * pow((1.0 + INFLATION), YEARS) - FLAT_PRICE;
 }
 
 void bob_init(){
     Bob.income = SALARY;
     Bob.capital = 0;
     Bob.spendings = LIFE_SPENDING;
-    Bob.flat_payment = ((FLAT_PRICE - FIRST_FLAT_PAYNMENT) * (BANK_RATE / 12.0) * powf((1 + BANK_RATE / 12.0), (YEARS * 12.0)))
+    Bob.flat_payment = ((FLAT_PRICE - FIRST_FLAT_PAYNMENT) * (BANK_RATE / 12.0) * pow((1 + BANK_RATE / 12.0), (YEARS * 12.0)))
                         / (pow((1 + BANK_RATE / 12.0), (YEARS + 12.0)) - 1);
     Bob.overpayment = Bob.flat_payment * 12 * YEARS - FLAT_PRICE;
 }
