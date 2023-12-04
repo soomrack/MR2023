@@ -23,21 +23,21 @@ public:
     Matrix(Matrix&& matrix);
     ~Matrix();
 
-    void matrix_print();
-    void matrix_fill_random(int max_value);
+    void print();
+    void fill_random(int max_value);
     Matrix& operator+(const Matrix& matrix) const;
     Matrix& operator-(const Matrix& matrix) const;
     Matrix& operator*(const Matrix& matrix) const;
-    Matrix& operator*(size_t number) const;
+    Matrix& operator*(double number) const;
     Matrix& operator=(Matrix& matrix);
     Matrix& operator=(Matrix&& matrix);
     Matrix& operator^(size_t number) const;
-    Matrix& operator/(const size_t number) const;
+    Matrix& operator/(const double number) const;
     Matrix& exp(const size_t accuracy);
-    Matrix& matrix_minor(Matrix& matrix1);
-    Matrix& matrix_transp();
+    Matrix& minor(Matrix& matrix1);
+    Matrix& transp();
     void set_one();
-    double& matrix_det(Matrix matrix);
+    double& det(Matrix matrix);
 
 
 };
@@ -83,7 +83,7 @@ Matrix::Matrix(Matrix&& matrix) {
 }
 
 
-void Matrix::matrix_print() {
+void Matrix::print() {
     for (size_t row = 0; row < rows; ++row) {
         for (size_t col = 0; col < cols; ++col) {
             std::cout << value[row * cols + col] << " ";
@@ -94,7 +94,7 @@ void Matrix::matrix_print() {
 }
 
 
-void Matrix::matrix_fill_random(int max_value = 10) {
+void Matrix::fill_random(int max_value = 10) {
     for (size_t index = 0; index < rows * cols; ++index) {
         value[index] = rand() % max_value;
     }
@@ -150,8 +150,8 @@ Matrix& Matrix::operator* (const Matrix& matrix) const {
 }
 
 
-Matrix& Matrix::operator* (const size_t coefficient) const {
-    Matrix *result = new Matrix(coefficient, coefficient);
+Matrix& Matrix::operator* (const double coefficient) const {
+    Matrix *result = new Matrix(*this);
 
     for (size_t idx = 0; idx < rows * cols; idx++) {
         result->value[idx] = value[idx] * coefficient;
@@ -189,11 +189,11 @@ Matrix& Matrix::operator= (Matrix&& matrix) {
 
 Matrix& Matrix::operator^ (size_t number) const {
     if (cols != rows) throw ("Make matrix square\n");
-    Matrix *result = new Matrix();
+    Matrix *result = new Matrix(*this);
 
     if (number == 0) {
-        Matrix matrix(rows, cols);
-        return matrix;
+        result->set_one();
+        return *result;
     }
 
     if (number == 1) {
@@ -203,15 +203,15 @@ Matrix& Matrix::operator^ (size_t number) const {
     const Matrix& start(*result);
 
     for (size_t idx = 0; idx < number; idx++) {
-        *result = *result * start;
+        *result = *result * *this;
     }
     return *result;
 }
 
 
-Matrix& Matrix::operator/(const size_t number) const {
+Matrix& Matrix::operator/(const double number) const {
     if (number == 0) throw ("Can't divide by zero\n");
-    Matrix *result = new Matrix();
+    Matrix *result = new Matrix(*this);
 
     for (size_t idx = 0; idx < rows * cols; ++idx) {
         result->value[idx] = value[idx] / number;
@@ -224,20 +224,20 @@ Matrix& Matrix::exp(const size_t accuracy = 30) {
     if (this->rows != this->cols) throw ("Make matrix square\n");
     
     Matrix *result = new Matrix(this->rows, this->cols);
-    Matrix *term = new Matrix(rows, cols);
-    term->set_one();
-    *result = *term;
-   //Matrix *term = new set_one(this->cols, this->rows);
+    //Matrix *term = new Matrix(rows, cols);
+    Matrix term(cols, rows);
+    term.set_one();
+    *result = term;
 
     for (int step = 1; step < accuracy; step++) {
-        *term = *term * *this / step;
-        *result = *result + *term;
+        term = term * *this / step;
+        *result = *result + term;
     }
     return *result;
 }
 
 
-Matrix& Matrix::matrix_minor(Matrix& A) {
+Matrix& Matrix::minor(Matrix& A) {
    
 
     Matrix *result = new Matrix(A.rows, A.cols);
@@ -251,7 +251,7 @@ Matrix& Matrix::matrix_minor(Matrix& A) {
     return *result;
 }
 
-Matrix& Matrix::matrix_transp() {
+Matrix& Matrix::transp() {
     Matrix* result = new Matrix(this->rows, this->cols);
 
     for (size_t row = 0; row < result->rows; row++) {
@@ -265,22 +265,22 @@ Matrix& Matrix::matrix_transp() {
 
 int main() {
     Matrix matrix1(3, 3);
-    matrix1.matrix_fill_random();
-    matrix1.matrix_print();
+    matrix1.fill_random();
+    matrix1.print();
     Matrix matrix2(3, 3);
-    matrix2.matrix_fill_random();
-    matrix2.matrix_print();
+    matrix2.fill_random();
+    matrix2.print();
     Matrix sum = matrix1 + matrix2;
-    sum.matrix_print();
+    sum.print();
     Matrix sub = matrix1 - matrix2;
-    sub.matrix_print();
+    sub.print();
     Matrix mult = matrix1 * matrix2;
-    mult.matrix_print();
+    mult.print();
     Matrix mult_number = matrix1 * 2;
-    mult_number.matrix_print();
+    mult_number.print();
     Matrix pow = matrix1 ^ 2;
-    pow.matrix_print();
-    matrix1.exp(20);
-    matrix1.matrix_print();
+    pow.print();
+    matrix1.exp(5);
+    matrix1.print();
     return 0;
 }  
