@@ -1,0 +1,4 @@
+/home/prlx/MR2023/Каримуллин Семён/Matrix/build/CMakeFiles/matrix.dir
+/home/prlx/MR2023/Каримуллин Семён/Matrix/build/CMakeFiles/main.dir
+/home/prlx/MR2023/Каримуллин Семён/Matrix/build/CMakeFiles/edit_cache.dir
+/home/prlx/MR2023/Каримуллин Семён/Matrix/build/CMakeFiles/rebuild_cache.dir
