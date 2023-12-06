@@ -3,10 +3,11 @@
 
 int main()
 {
+    double a[9] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     Matrix A = matrix_allocation(3, 3);
-    Matrix B = matrix_allocation(3, 3);
-    matrix_set_one(A);
-    matrix_set_one(B);
-    Matrix C = matrix_sum(A, B);
-    matrix_print(C, "Matrix");
+    matrix_fill(A, a);
+    matrix_print(A, "asdf");
+    Matrix res = matrix_allocation(3, 3);
+    res = matrix_exp(&res, A);
+    matrix_print(res, "asdf");
 }

@@ -218,18 +218,15 @@ MatrixItem matrix_determinant(struct Matrix A)
 
 
 // EXP = e^A
-struct Matrix matrix_exp(struct Matrix A)
+struct Matrix matrix_exp(struct Matrix* res, struct Matrix A)
 {
     if (A.cols != A.rows) return MATRIX_NULL;
     if (A.cols == 0) return MATRIX_NULL;
 
-    struct Matrix exp = matrix_allocation(A.rows, A.cols);
-    if (exp.data == NULL) return MATRIX_NULL;
-    matrix_set_one(exp);
+    matrix_set_one(*res);
 
     struct Matrix term_prev = matrix_allocation(A.rows, A.cols);
     if (term_prev.data == 0) {
-        matrix_delete(&exp);
         return MATRIX_NULL;
     };
     matrix_set_one(term_prev);
@@ -241,7 +238,6 @@ struct Matrix matrix_exp(struct Matrix A)
         term_next = matrix_mult(term_prev, A);
         if (term_next.data == NULL) {
             matrix_delete(&term_prev);
-            matrix_delete(&exp);
             return MATRIX_NULL;
         }
         matrix_div_k(term_next, idx);
@@ -249,11 +245,11 @@ struct Matrix matrix_exp(struct Matrix A)
             term_prev.data[idx] = term_next.data[idx];
         }
         matrix_delete(&term_next);
-        matrix_add(exp, term_prev);
+        matrix_add(*res, term_prev);
 
     }
     matrix_delete(&term_prev);
-    return exp;
+    return *res;
 }
 
 

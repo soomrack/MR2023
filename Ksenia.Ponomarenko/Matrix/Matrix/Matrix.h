@@ -68,7 +68,7 @@ MatrixItem matrix_determinant(struct Matrix A);
 
 
 // EXP = e^A
-struct Matrix matrix_exp(struct Matrix A);
+struct Matrix matrix_exp(struct Matrix* res, struct Matrix A);
 
 
 // filling the matrix with values
