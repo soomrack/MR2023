@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/marsel/Polikek/programming/Matrix_lib/build",
+  "command": "/usr/bin/gcc  -I/home/marsel/Polikek/programming/Matrix_lib -g -o CMakeFiles/Matrix_lib.dir/matrix.c.o -c /home/marsel/Polikek/programming/Matrix_lib/matrix.c",
+  "file": "/home/marsel/Polikek/programming/Matrix_lib/matrix.c"
+},
+{
+  "directory": "/home/marsel/Polikek/programming/Matrix_lib/build/Examples",
+  "command": "/usr/bin/gcc  -I/home/marsel/Polikek/programming/Matrix_lib -g -o CMakeFiles/Matrix.dir/main.c.o -c /home/marsel/Polikek/programming/Matrix_lib/Examples/main.c",
+  "file": "/home/marsel/Polikek/programming/Matrix_lib/Examples/main.c"
+}
+]

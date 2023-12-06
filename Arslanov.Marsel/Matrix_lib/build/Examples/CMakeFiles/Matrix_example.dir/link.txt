@@ -1,0 +1,1 @@
+/usr/bin/gcc -g CMakeFiles/Matrix_example.dir/main.c.o -o Matrix_example  -lMatrix_example_lib 

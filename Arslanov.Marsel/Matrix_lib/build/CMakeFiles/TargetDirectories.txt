@@ -1,0 +1,6 @@
+/home/marsel/Polikek/programming/Matrix_lib/build/CMakeFiles/Matrix_lib.dir
+/home/marsel/Polikek/programming/Matrix_lib/build/CMakeFiles/edit_cache.dir
+/home/marsel/Polikek/programming/Matrix_lib/build/CMakeFiles/rebuild_cache.dir
+/home/marsel/Polikek/programming/Matrix_lib/build/Examples/CMakeFiles/Matrix.dir
+/home/marsel/Polikek/programming/Matrix_lib/build/Examples/CMakeFiles/edit_cache.dir
+/home/marsel/Polikek/programming/Matrix_lib/build/Examples/CMakeFiles/rebuild_cache.dir
