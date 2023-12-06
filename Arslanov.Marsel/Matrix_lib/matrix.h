@@ -59,7 +59,7 @@ matrix* matrix_transposition(matrix *m);
 
 double matrix_determinant(const matrix* m);
 
-matrix* matrix_mult(const matrix* a, const matrix* b);
+matrix* matrix_mult(matrix* a, const matrix* b);
 
 matrix* matrix_increase(matrix* m, const matrix* increase_matrix);
 

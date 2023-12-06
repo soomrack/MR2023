@@ -255,7 +255,7 @@ double matrix_determinant(const matrix* m)
     }
 }
 
-matrix* matrix_mult(const matrix* a, const matrix* b)
+matrix* matrix_mult(matrix* a, const matrix* b)
 {
     if (a == NULL || a->data == NULL ||
         b == NULL || b->data == NULL)
@@ -281,7 +281,10 @@ matrix* matrix_mult(const matrix* a, const matrix* b)
         }
     }
 
-    return product;
+    matrix_copy(a, product);
+    matrix_free(product);
+
+    return a;
 }
 
 void matrix_copy(matrix* dest, const matrix* src)
@@ -292,9 +295,13 @@ void matrix_copy(matrix* dest, const matrix* src)
         return;
     }
 
-    if (dest != NULL) matrix_free(dest);
+    // if (dest != NULL) matrix_free(dest);
 
-    dest = matrix_new(src->rows, src->cols);
+    // dest = matrix_new(src->rows, src->cols);
+    free(dest->data);
+    dest->data = (double*)malloc(sizeof(matrix_element) * src->cols * src->rows);
+    dest->cols = src->cols;
+    dest->rows = src->rows;
     memcpy(dest->data, src->data, dest->cols * dest->rows * sizeof(matrix_element));
 
     if (dest->data == NULL)
