@@ -1,135 +1,168 @@
-#include <stdio.h>  
-#include <math.h> 
+#include <stdio.h>
+#include <string.h>
 
-typedef long long int Rub;
+typedef unsigned long long int Money; 
 
 
 struct Person {
-    Rub capital;
-    Rub salary;
+	char name[5];
+	Money bank_schet;
+	Money kvartira;
+	Money zarplata;
+	Money arenda;
+	Money razhodi; // eda, odezda i razvlechenia
+	Money platez_ipoteka;
+	double pp_vklad;
 };
 
-struct Person Bob;  // buy house
+
 struct Person Alice;
+struct Person Bob;
 
 
-void bob_salary(int year, int month)
+void alice_init()
 {
-    if (month == 1) Bob.salary *= 1.10;    
-
-    if (month != 6)  // June -- no salary, days off.
-        Bob.capital += Bob.salary;
+	strcpy(Alice.name, "Alice");
+	Alice.bank_schet = 1 * 1000 * 1000 * 100;
+	Alice.kvartira = 0;
+	Alice.zarplata = 200 * 1000 * 100;
+	Alice.arenda = 30 * 1000 * 100;
+	Alice.razhodi = 60 * 1000 * 100;
+	Alice.platez_ipoteka = 0;
+	Alice.pp_vklad = 1.11;
 }
 
 
-void simulation()
+void bob_init()
 {
-    int month = 11;
-    int year = 2023;
-    
-    while( !(month == 9 & year == 2053) ) {
-        bob_salary(year, month);
-        bob_food(year, month);
-        bob_mortgage_payment();
-        bob_house(year, month);
-
-        alice_salary();
-        alice_food();
-
-        month++;
-        if (month == 13) {
-            month = 1;
-            year++;
-        }
-    }
+	strcpy(Bob.name, "Bob");
+	Bob.bank_schet = 0;
+	Bob.kvartira = 20 * 1000 * 1000 * 100;
+	Bob.zarplata = 200 * 1000 * 100;
+	Bob.arenda = 0;
+	Bob.razhodi = 60 * 1000 * 100;
+	Bob.platez_ipoteka = (10000 + 126407) * 100; // dengi na remont+platez
+	Bob.pp_vklad = 1.11;
 }
 
 
+Money bank_schet_inc(struct Person person) {
+	person.bank_schet = (Money)(person.bank_schet * (1 + 0.11 / 12.) + (person.zarplata - person.arenda - person.razhodi - person.platez_ipoteka));
+	return person.bank_schet;
+}
+
+
+Money inf_zarplata(struct Person person) {
+	person.zarplata = (Money)(person.zarplata * 1.07);
+	return person.zarplata;
+}
+
+
+Money inf_arenda(struct Person person) {
+	person.arenda = (Money)(person.arenda * 1.07);
+	return person.arenda;
+}
+
+
+Money inf_razhodi(struct Person person) {
+	person.razhodi = (Money)(person.razhodi * 1.07);
+	return person.razhodi;
+}
+
+
+Money inf_kvartira(struct Person person) {
+	person.kvartira = (Money)(person.kvartira * 1.07);
+	return person.kvartira;
+}
+
+
+void print_Bob(Money kapital) {
+	printf("Bob Êàïèòàë = %lld\n", kapital / 100);
+	printf("\n");
+}
+
+
+void print_Alice(Money kapital) {
+	printf("Alice Êàïèòàë = %lld\n", kapital / 100);
+	printf("\n");
+}
+
+
+Money sim_Bob(struct Person person)
+{
+	int month = 9;
+	int year = 2023;
+	while (!(year == 2053 && month == 9)) {
+		if (month == 1) {
+			Bob.zarplata = inf_zarplata(Bob);
+			Bob.arenda = inf_arenda(Bob);
+			Bob.razhodi = inf_razhodi(Bob);
+			Bob.kvartira = inf_kvartira(Bob);
+		}
+
+		if (!(month == 6 ^ month == 12)) {
+			Bob.bank_schet = bank_schet_inc(Bob);
+		}
+		else {
+			if (month == 6) {
+				Bob.bank_schet = bank_schet_inc(Bob) - Bob.zarplata;
+			}
+			if (month == 12) {
+				Bob.bank_schet = bank_schet_inc(Bob) + Bob.zarplata;
+			}
+		}
+
+		++month;
+		if (month == 13) {
+			month = 1;
+			++year;
+		}
+	}
+	return (Bob.bank_schet + Bob.kvartira);
+}
+
+
+Money sim_Alice(struct Person person)
+{
+	int month = 9;
+	int year = 2023;
+	while (!(year == 2053 && month == 9)) {
+		if (month == 1) {
+			Alice.zarplata = inf_zarplata(Alice);
+			Alice.arenda = inf_arenda(Alice);
+			Alice.razhodi = inf_razhodi(Alice);
+			Alice.kvartira = inf_kvartira(Alice);
+		}
+
+		if (!(month == 6 ^ month == 12)) {
+			Alice.bank_schet = bank_schet_inc(Alice);
+		}
+		else {
+			if (month == 6) {
+				Alice.bank_schet = bank_schet_inc(Alice) - Alice.zarplata;
+			}
+			if (month == 12) {
+				Alice.bank_schet = bank_schet_inc(Alice) + Alice.zarplata;
+			}
+		}
+
+		++month;
+		if (month == 13) {
+			month = 1;
+			++year;
+		}
+	}
+	return (Alice.bank_schet + Alice.kvartira);
+}
 
 
 int main()
 {
-    bob_init();
-    alice_init();
+	alice_init();
+	bob_init();
 
-    simulation();
+	print_Bob (sim_Bob(Bob));
+	print_Alice (sim_Alice(Alice));
 
-    print();
-
-    
-    int start = 1000000; //Начальный капитал
-    float kvar = 20000000; //Стоимость квартиры вначале
-    float vklad = 11; // % по вкладу
-    float ipoteka = 7; // % по ипотеке
-    int year = 30; // количество лет в опыте
-    int months = 12; // месяцев в опыте
-    float zp = 200000; // зарплата
-    float rent = 30000; // съем квартиры
-    float rashod = 30000; //  расходы ежемесячные
-    float inf = 7; // % инфляции
-    /////////////////////
-
-
-    //считаем сумму платежа Боба
-    int S = kvar - start; // Сумма кредита
-    float r = (ipoteka / 100) / 12; // Месячная ставка
-    int n = year * 12; // Кол-во месяцев во всем сроке кредита
-    float result = pow((1 + r), (float)n); // Возводим (1+r) в степень n
-    float plata = S * ((r * result) / (result - 1)); // Сумма ежемесячного платежа по ипотеке по формуле
-    /////////////////////
-
-    
-    // считаем капитал Элис
-    float zp_Alice = zp;
-    float rashod_Alice = rashod;
-    float ost_Alice;
-    float schet_Alice = start; // Элис положила стартовый капитал на вклад
-
-    for (int i = 1; i <= year; i++) { // Счетчик лет        
-        for (int j = 1; j <= months; j++) { // Счетчик месяцев в каждом годе
-            ost_Alice = zp_Alice - (rent + rashod_Alice); // Элис оплатила расходы
-
-            if ( j != 6 ) {  // June -- no salary
-                schet_Alice = schet_Alice + ost_Alice; // Счет Элис пополнился остатком зарплаты
-            }
-            
-            schet_Alice = schet_Alice * (1 + (vklad / 100) / 12); // Начисляем в конце месяца проценты по вкладу
-        }
-        zp_Alice = zp_Alice * (1 + (inf / 100)); // ЗП увеличилась на инфляцию
-        rashod_Alice = rashod_Alice * (1 + (inf / 100)); // расходы увеличились на инфляцию
-        rent = rent * (1 + (inf / 100)); // рента увеличилась на инфляцию
-    }
-    /////////////////////
-        
-
-    // В этом блоке идет расчет капитала Боба
-    float zp_Bob = zp;
-    float rashod_Bob = rashod;
-    float ost_Bob;
-    float schet_Bob = 0; // Стартовый капитал на первоначальный взнос по ипотеке
-
-    for (int i = 1; i <= year; i++) { // Счетчик лет
-        for (int j = 1; j <= months; j++) { // Счетчик месяцев в каждом годе
-            ost_Bob = zp_Bob - (plata + rashod_Bob); // Боб оплатил расходы и заплатил платеж по ипотеке
-            schet_Bob = (schet_Bob + ost_Bob); // Счет Боба пополнился остатком зарплаты
-            schet_Bob = schet_Bob * (1 + (vklad / 100) / 12); // Начисляем в конце месяца проценты по вкладу
-        }
-        zp_Bob = zp_Bob * (1 + (inf / 100)); // ЗП увеличилась на инфляцию
-        rashod_Bob = rashod_Bob * (1 + (inf / 100)); // расходы увеличились на инфляцию
-        kvar = kvar * (1 + (inf / 100)); // Инфляция на недвижимость
-    }
-    schet_Bob = schet_Bob + kvar;
-    /////////////////////
-
-
-    //  результаты
-    printf("Alice:                                 %.0f rub.\n", schet_Alice);
-    printf("Bob:                                   %.0f rub. \n", schet_Bob);
-    printf("Stoimost kvartiri na konec perioda:    %.0f rub. \n", kvar);
-    printf("Velichina platega po ipoteke:          %.0f rub. \n", plata);
-    /////////////////////
-  
-    getchar();getchar(); // Ждем символ, чтобы консоль не закрывалась автоматически
-    return 0; // Если дошло до этого момента, то возвращаем 0
-    
+	return 0;
 }
