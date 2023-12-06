@@ -1,114 +1,112 @@
-#include <stdio.h>
-#include <string.h>
+#include <stdio.h>  
+#include <math.h> 
 
-typedef unsigned long long int Money; 
+typedef long long int Rub;
 
 
 struct Person {
 	char name[5];
-	Money bank_schet;
-	Money kvartira;
-	Money zarplata;
-	Money arenda;
-	Money razhodi; // eda, odezda i razvlechenia
-	Money platez_ipoteka;
+    	Rub start;
+   	Rub zp;
+	Rub kvar;
+	Rub renta;
+	Rub rashod; // eda, odezda i razvlechenia
+	Rub platez_ipoteka;
 	double pp_vklad;
 };
 
-
+struct Person Bob;  // buy house
 struct Person Alice;
-struct Person Bob;
-
 
 void alice_init()
 {
 	strcpy(Alice.name, "Alice");
-	Alice.bank_schet = 1 * 1000 * 1000 * 100;
-	Alice.kvartira = 0;
-	Alice.zarplata = 200 * 1000 * 100;
-	Alice.arenda = 30 * 1000 * 100;
-	Alice.razhodi = 60 * 1000 * 100;
-	Alice.platez_ipoteka = 0;
+	Alice.start = 1000000;
+	Alice.kvar = 0;
+	Alice.zp = 200000;
+	Alice.renta = 30000;
+	Alice.razhod = 30000;
 	Alice.pp_vklad = 1.11;
+	Alice.platez_ipoteka = 0;
 }
 
 
 void bob_init()
 {
 	strcpy(Bob.name, "Bob");
-	Bob.bank_schet = 0;
-	Bob.kvartira = 20 * 1000 * 1000 * 100;
-	Bob.zarplata = 200 * 1000 * 100;
-	Bob.arenda = 0;
-	Bob.razhodi = 60 * 1000 * 100;
+	Bob.start = 0;
+	Bob.kvar = 20000000;
+	Bob.zp = 200000;
+	Bob.renta = 0;
+	Bob.razhod = 30000;
 	Bob.platez_ipoteka = (10000 + 126407) * 100; // dengi na remont+platez
 	Bob.pp_vklad = 1.11;
 }
 
 
-Money bank_schet_inc(struct Person person) {
-	person.bank_schet = (Money)(person.bank_schet * (1 + 0.11 / 12.) + (person.zarplata - person.arenda - person.razhodi - person.platez_ipoteka));
-	return person.bank_schet;
+Rub start_inc(struct Person person) {
+	person.start = (Rub)(person.start * (1 + 0.11 / 12.) + (person.zp - person.renta - person.razhod - person.platez_ipoteka));
+	return person.start;
 }
 
 
-Money inf_zarplata(struct Person person) {
-	person.zarplata = (Money)(person.zarplata * 1.07);
-	return person.zarplata;
+Rub inf_zp(struct Person person) {
+	person.zp = (Rub)(person.zp * 1.07);
+	return person.zp;
 }
 
 
-Money inf_arenda(struct Person person) {
-	person.arenda = (Money)(person.arenda * 1.07);
-	return person.arenda;
+Rub inf_renta(struct Person person) {
+	person.renta = (Rub)(person.renta * 1.07);
+	return person.renta;
 }
 
 
-Money inf_razhodi(struct Person person) {
-	person.razhodi = (Money)(person.razhodi * 1.07);
-	return person.razhodi;
+Rub inf_razhod(struct Person person) {
+	person.razhod = (Rub)(person.razhod * 1.07);
+	return person.razhod;
 }
 
 
-Money inf_kvartira(struct Person person) {
-	person.kvartira = (Money)(person.kvartira * 1.07);
-	return person.kvartira;
+Money inf_kvar(struct Person person) {
+	person.kvar = (Rub)(person.kvar * 1.07);
+	return person.kvar;
 }
 
 
-void print_Bob(Money kapital) {
-	printf("Bob Êàïèòàë = %lld\n", kapital / 100);
+void print_Bob(Rub kapital) {
+	printf("Bob kapital = %lld\n", kapital / 100);
 	printf("\n");
 }
 
 
-void print_Alice(Money kapital) {
-	printf("Alice Êàïèòàë = %lld\n", kapital / 100);
+void print_Alice(Rub kapital) {
+	printf("Alice kapital = %lld\n", kapital / 100);
 	printf("\n");
 }
 
 
-Money sim_Bob(struct Person person)
+Rub sim_Bob(struct Person person)
 {
 	int month = 9;
 	int year = 2023;
 	while (!(year == 2053 && month == 9)) {
 		if (month == 1) {
-			Bob.zarplata = inf_zarplata(Bob);
-			Bob.arenda = inf_arenda(Bob);
-			Bob.razhodi = inf_razhodi(Bob);
-			Bob.kvartira = inf_kvartira(Bob);
+			Bob.zp = inf_zp(Bob);
+			Bob.renta = inf_renta(Bob);
+			Bob.razhod = inf_razhod(Bob);
+			Bob.kvar = inf_kvar(Bob);
 		}
 
 		if (!(month == 6 ^ month == 12)) {
-			Bob.bank_schet = bank_schet_inc(Bob);
+			Bob.start = start_inc(Bob);
 		}
 		else {
 			if (month == 6) {
-				Bob.bank_schet = bank_schet_inc(Bob) - Bob.zarplata;
+				Bob.start = start_inc(Bob) - Bob.zp;
 			}
 			if (month == 12) {
-				Bob.bank_schet = bank_schet_inc(Bob) + Bob.zarplata;
+				Bob.start = start_inc(Bob) + Bob.zp;
 			}
 		}
 
@@ -118,31 +116,31 @@ Money sim_Bob(struct Person person)
 			++year;
 		}
 	}
-	return (Bob.bank_schet + Bob.kvartira);
+	return (Bob.start + Bob.kvar);
 }
 
 
-Money sim_Alice(struct Person person)
+Rub sim_Alice(struct Person person)
 {
 	int month = 9;
 	int year = 2023;
 	while (!(year == 2053 && month == 9)) {
 		if (month == 1) {
-			Alice.zarplata = inf_zarplata(Alice);
-			Alice.arenda = inf_arenda(Alice);
-			Alice.razhodi = inf_razhodi(Alice);
-			Alice.kvartira = inf_kvartira(Alice);
+			Alice.zp = inf_zp(Alice);
+			Alice.renta = inf_renta(Alice);
+			Alice.razhod = inf_razhod(Alice);
+			Alice.kvar = inf_kvar(Alice);
 		}
 
 		if (!(month == 6 ^ month == 12)) {
-			Alice.bank_schet = bank_schet_inc(Alice);
+			Alice.start = start_inc(Alice);
 		}
 		else {
 			if (month == 6) {
-				Alice.bank_schet = bank_schet_inc(Alice) - Alice.zarplata;
+				Alice.start = start_inc(Alice) - Alice.zp;
 			}
 			if (month == 12) {
-				Alice.bank_schet = bank_schet_inc(Alice) + Alice.zarplata;
+				Alice.start = start_inc(Alice) + Alice.zp;
 			}
 		}
 
@@ -152,7 +150,7 @@ Money sim_Alice(struct Person person)
 			++year;
 		}
 	}
-	return (Alice.bank_schet + Alice.kvartira);
+	return (Alice.start + Alice.kvar);
 }
 
 
