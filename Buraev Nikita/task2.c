@@ -2,199 +2,203 @@
 #include <stdlib.h>
 #include <math.h>
 
+// Функция для вывода сообщения об ошибке
 void matrix_errormsg(const char *errorMessage) {
     fprintf(stderr, "%s\n", errorMessage);
 }
 
 typedef struct {
-    size_t rows;
-    size_t cols;
+    int rows;
+    int cols;
     double **data;
-} Matrix;
+} Matrix; 
 
 const struct Matrix MATRIX_NULL = {.cols = 0, .rows = 0, .data = NULL};
 
-Matrix matrix_create(size_t rows, size_t cols) {
+// Функция для создания матрицы
+Matrix matrix_create(int rows, int cols) {
     Matrix A;
     A.rows = rows;
     A.cols = cols;
-
-    // Выделяем память для указателей на строки и данных матрицы одним блоком
+    
     A.data = (double **)malloc(rows * sizeof(double *) + rows * cols * sizeof(double));
     if (!A.data) {
+        matrix_errormsg("Ошибка выделения памяти матрицы.");
         return MATRIX_NULL;
-        return matrix_errormsg("Ошибка выделения памяти для матрицы.");
     }
-
-    // Устанавливаем указатели на строки
-    A.data[0] = (double *)(A.data + rows);
-    for (size_t row = 1; row < rows; row++) {
-        A.data[row] = A.data[row - 1] + cols;
-    }
-
+    
     return A;
 }
 
+// Функция для освобождения памяти, выделенной под матрицу
 void matrix_free(Matrix A)
 {
-    if(A.data != NULL || A.cols != 0 || A.rows != 0){
 
     A.cols = 0;
     A.rows = 0;
     free(A.data);
     A.data = NULL;
 
-    }
-
 }
 
+// Функция для вывода матрицы на экран
+void matrix_print(Matrix A) {
+    for (int row = 0; row < A.rows; row++) {
+        for (int col = 0; col < A.cols; col++) {
+            printf("%lf\t", A.data[row][col]);
+        }
+        printf("\n");
+    }
+}
 
+// Функция для сложения двух матриц
 Matrix matrix_sum(Matrix A, Matrix B) 
 {
     if (A.rows != B.rows || A.cols != B.cols) {
-        return matrix_errormsg("Невозможно сложить матрицы разных размеров.");
-    }
-
-    Matrix result = matrix_create(A.rows, A.cols);
+        matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
+        return MATRIX_NULL;
+    } 
     
-    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
+    // проверкa создания матриц
+    if(A.data == NULL || B.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+ 
+    Matrix result = matrix_create(A.rows, B.cols);
+
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
     
-    for (size_t row = 0; row < A.rows; row++) {
-        for (size_t col = 0; col < A.cols; col++) {
+    for (int row = 0; row < A.rows; row++) {
+        for (int col = 0; col < B.cols; col++) {
             result.data[row][col] = A.data[row][col] + B.data[row][col];
         }
     }
-
+    
     return result;
 }
 
-Matrix matrix_sub(Matrix A, Matrix B) 
-{
+// Функция для вычитания двух матриц
+Matrix matrix_sub(Matrix A, Matrix B) {
     if (A.rows != B.rows || A.cols != B.cols) {
-        return matrix_errormsg("Невозможно вычесть матрицы разных размеров.");
+        matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
+        return MATRIX_NULL;
     }
 
-    Matrix result = matrix_create(A.rows, A.cols);
-    
-    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
+    if(A.data == NULL || B.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
     
-    for (size_t row = 0; row < A.rows; row++) {
-        for (size_t col = 0; col < A.cols; col++) {
+    Matrix result = matrix_create(A.rows, A.cols);
+    
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+    
+    for (int row = 0; row < A.rows; row++) {
+        for (int col = 0; col < B.cols; col++) {
             result.data[row][col] = A.data[row][col] - B.data[row][col];
         }
     }
-
+    
     return result;
 }
 
-Matrix matrix_mult(Matrix A, Matrix B) 
-{
+// Функция для умножения двух матриц
+Matrix matrix_mult(Matrix A, Matrix B) {
     if (A.cols != B.rows) {
-        return matrix_errormsg("Невозможно умножить матрицы с данными размерами.");
+        matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
+        return MATRIX_NULL;
     }
 
-    Matrix result = matrix_create(A.rows, B.cols);
-    
-    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
+    if(A.data == NULL || B.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
     
-    for (size_t row = 0; row < A.rows; row++) {
-        for (size_t col = 0; col < B.cols; col++) {
+    Matrix result = matrix_create(A.rows, B.cols);
+    
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+    
+    for (int row = 0; row < A.rows; row++) {
+        for (int col = 0; col < B.cols; col++) {
             result.data[row][col] = 0;
-            for (size_t k = 0; k < A.cols; k++) {
+            for (int k = 0; k < A.cols; k++) {
                 result.data[row][col] += A.data[row][k] * B.data[k][col];
             }
         }
     }
-
+    
     return result;
 }
 
-Matrix matrix_tr(Matrix A) 
-{
-    Matrix result = matrix_create(A.cols, A.rows);
-    
-    if(A.rows == 0 || A.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
+// Функция для транспонирования матрицы
+Matrix matrix_tr(Matrix A) {
+    if(A.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
     }
     
-    for (size_t row = 0; row < A.rows; row++) {
-        for (size_t col = 0; col < A.cols; col++) {
+    Matrix result = matrix_create(A.cols, A.rows);
+    
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+    
+    for (int row = 0; row < A.rows; row++) {
+        for (int col = 0; col < A.cols; col++) {
             result.data[col][row] = A.data[row][col];
         }
     }
-
+    
     return result;
 }
 
-// Вычисление детерминанта
-double matrix_det_lu(Matrix A) 
-{
+// Функция для вычисления детерминанта матрицы (простой метод для квадратных матриц)
+double matrix_det(Matrix A) {
     if (A.rows != A.cols) {
+        matrix_errormsg("Ошибка: Матрица не является квадратной\n");
         return NAN;
-        return matrix_errormsg("Детерминант можно вычислить только для квадратных матриц.");
     }
     
-    if(A.rows == 0 || A.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
+    if(A.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return NAN;
+    }
+    
+    if (A.rows == 1) {
+        return A.data[0][0];
+    }
+    
+    if (A.rows == 2) {
+        return A.data[0][0] * A.data[1][1] - A.data[0][1] * A.data[1][0];
     }
 
-    size_t n = A.rows;
-    double det = 1.0;
-
-    Matrix copy = matrix_create(n, n);
-    for (size_t row = 0; row < n; row++) {
-        for (size_t col = 0; col < n; col++) {
-            copy.data[row][col] = A.data[row][col];
-        }
+     if (A.rows == 3) {
+        return A.data[0][0] * (A.data[1][1] * A.data[2][2] - A.data[1][2] * A.data[2][1]) -
+               A.data[0][1] * (A.data[1][0] * A.data[2][2] - A.data[1][2] * A.data[2][0]) +
+               A.data[0][2] * (A.data[1][0] * A.data[2][1] - A.data[1][1] * A.data[2][0]);
     }
 
-    for (size_t k = 0; k < n - 1; k++) {
-        if (copy.data[k][k] == 0.0) {
-            return NAN;
-            return matrix_errormsg("Найдено деление на ноль при вычислении детерминанта.");
-        }
-        for (size_t i = k + 1; i < n; i++) {
-            double factor = copy.data[i][k] / copy.data[k][k];
-            for (size_t j = k; j < n; j++) {
-                copy.data[i][j] -= factor * copy.data[k][j];
-            }
-        }
-    }
-
-    for (size_t i = 0; i < n; i++) {
-        det *= copy.data[i][i];
-    }
-
-    matrix_free(copy);
-
-    return det;
-}
-
-int matrix_is_zero(Matrix A) 
-{
-    for (size_t row = 0; row < A.rows; row++) {
-        for (size_t col = 0; col < A.cols; col++) {
-            if (A.data[row][col] != 0.0) {
-                return 0;
-            }
-        }
-    }
-    return 1;
+    return NAN;
 }
 
 Matrix matrix_mult_scalar(Matrix A, double scalar) {
     Matrix result = matrix_create(A.rows, A.cols);
+    
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
         
     if(A.rows == 0 || A.cols == 0){
         return matrix_errormsg("MATRIX_NULL");
@@ -222,6 +226,11 @@ void matrix_add_mult(Matrix A, const Matrix B)
 {
     Matrix result = matrix_create(A.rows, A.cols);
     
+    if(result.data == NULL){
+        matrix_errormsg("MATRIX_NULL");
+        return MATRIX_NULL;
+    }
+    
     if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
         return matrix_errormsg("MATRIX_NULL");
         return MATRIX_NULL;
@@ -241,10 +250,11 @@ void matrix_add_mult(Matrix A, const Matrix B)
     matrix_free(result);
 }
 
+// Функция для вычисления экспоненты матрицы (простой метод для квадратных матриц)
 Matrix matrix_exponent(const Matrix A, const double accuracy) 
 {
     if (A.rows != A.cols) {
-        return matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
+        matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
         return MATRIX_NULL;
     }
 
@@ -260,9 +270,7 @@ Matrix matrix_exponent(const Matrix A, const double accuracy)
 
     matrix_copy(B, A);
 
-    int degree = (int)(ceil(1.0 / accuracy));
-
-    for (int trm = 2; trm <= degree; ++trm) {
+    for (size_t trm = 2; trm <= accuracy; ++trm) {
         matrix_sum(B, matrix_mult_scalar(A, 1.0 / trm));
         matrix_sum(C, B);
     }
