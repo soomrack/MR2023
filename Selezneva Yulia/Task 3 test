@@ -1,0 +1,144 @@
+#include "matrix_cpp.cpp"
+
+
+double ADD_VAL[9] = { 11.0 , 13.0 , 15.0,
+					 17.0 , 19.0 , 21.0,
+					 23.0 , 25.0 , 27.0 };
+
+double SUB_VAL[9] = { -9.0, -9.0 , -9.0,
+					 -9.0 , -9.0 , -9.0,
+					 -9.0 , -9.0 , -9.0 };
+
+double MUL_VAL[9] = { 84.0 , 90.0 , 96.0,
+					 201.0 , 216.0 , 231.0,
+					 318.0 , 342.0 , 366.0 };
+
+double MAT_VAL[9] = { 1.0 , 12.0, 31.0,
+					 2.0 , 45.0 , 122.0,
+					 4.0 , 4.0 , 33.0 };
+
+double DET_VAL = 729.0;
+
+double EXP_VAL[9] = { 1118906.699 , 1374815.063 , 1630724.426 ,
+					 2533881.042 , 3113415.031 , 3692947.021,
+					 3948856.384 , 4852013.000 , 5755170.615 };
+
+void check_add() {
+	Matrix MAT_ADD;
+	MAT_ADD.fill_val(3, 3, ADD_VAL);
+
+	Matrix A;
+	double A_VAL[9] = { 1.0 , 2.0 , 3.0 ,
+						 4.0 , 5.0 , 6.0 ,
+						 7.0 , 8.0 , 9.0 };
+	A.fill_val(3 , 3 , A_VAL);
+
+	Matrix B;
+	double B_VAL[9] = { 10.0 , 11.0 , 12.0 ,
+					   13.0 , 14.0 , 15.0 ,
+					   16.0 , 17.0 , 18.0 };
+	B.fill_val(3 , 3 , B_VAL);
+
+	Matrix res;
+	res = A + B;
+
+	if (res != MAT_ADD) {
+		std::cout << "ERROR: ADDITION INCORRECT\n";
+		return;
+	}
+	std::cout << "ADDITION CORRECT\n";
+}
+void check_sub() {
+	Matrix MAT_SUB;
+	MAT_SUB.fill_val(3, 3, SUB_VAL);
+
+	Matrix A;
+	double A_VAL[9] = { 1.0 , 2.0 , 3.0 ,
+						 4.0 , 5.0 , 6.0 ,
+						 7.0 , 8.0 , 9.0 };
+	A.fill_val(3 , 3 , A_VAL);
+
+	Matrix B;
+	double B_VAL[9] = { 10.0 , 11.0 , 12.0 ,
+					   13.0 , 14.0 , 15.0 ,
+					   16.0 , 17.0 , 18.0 };
+	B.fill_val(3 , 3 , B_VAL);
+
+	Matrix res;
+	res = A - B;
+	if (res != MAT_SUB) {
+		std::cout << "ERROR: SUBTRACTION INCORRECT\n";
+		return;
+	}
+	std::cout << "SUBTRACTION CORRECT\n";
+}
+
+void check_mult() {
+	Matrix MAT_MUL;
+	MAT_MUL.fill_val(3, 3, MUL_VAL);
+
+	Matrix A;
+	double A_VAL[9] = { 1.0 , 2.0 , 3.0 ,
+						 4.0 , 5.0 , 6.0 ,
+						 7.0 , 8.0 , 9.0 };
+	A.fill_val(3, 3, A_VAL);
+
+	Matrix B;
+	double B_VAL[9] = { 10.0 , 11.0 , 12.0 ,
+					   13.0 , 14.0 , 15.0 ,
+					   16.0 , 17.0 , 18.0 };
+	B.fill_val(3, 3, B_VAL);
+
+	Matrix res;
+	res = A * B;
+
+	if (res != MAT_MUL) {
+		std::cout << "ERROR: MULTIPLICATION INCORRECT\n";
+		return;
+	}
+	std::cout << "MULTIPLICATION CORRECT\n";
+}
+
+void check_det() {
+	Matrix A;
+	A.fill_val(3, 3, MAT_VAL);
+
+	double det_a = matx_det(A);
+	if ((det_a - DET_VAL) > DETERMINANT_ACCURACY) {
+		printf("ERROR: DETERMINANT INCORRECT\n");
+		return;
+	}
+	printf("DETERMINANT CORRECT\n");
+}
+
+void check_exp() {
+	Matrix MAT_EXP;
+	MAT_EXP.fill_val(3, 3, EXP_VAL);
+
+	Matrix A;
+	double A_VAL[9] = { 1.0 , 2.0 , 3.0 ,
+						 4.0 , 5.0 , 6.0 ,
+						 7.0 , 8.0 , 9.0 };
+	A.fill_val(3, 3, A_VAL);
+
+	Matrix res = matrix_exp(&A);
+	if (res != MAT_EXP) {
+		std::cout << "ERROR: EXPONENT INCORRECT\n";
+		return;
+	}
+	std::cout << "EXPONENT CORRECT\n";
+}
+
+int main() {
+	check_add();
+	
+	check_sub();
+	
+	check_mult();
+	 
+	check_det();
+	
+	check_exp();
+
+	return 0;
+}
