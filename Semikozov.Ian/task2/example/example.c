@@ -2,39 +2,69 @@
 
 
 int main() {
-    Matrix_Instance matrix1 = create_matrix(2, 2);
+    Matrix_Instance matrix1 = create_matrix(4, 4);
     Matrix_Instance matrix2 = create_matrix(2, 2);
-    
+
+    fill_matrix_random(matrix1);
+    print_matrix(matrix1);
+    printf("\n\n");
+
     matrix1.pData[0][0] = 1.0;
     matrix1.pData[0][1] = 2.0;
-    matrix1.pData[1][0] = 3.0;
-    matrix1.pData[1][1] = 4.0;
+    matrix1.pData[0][2] = 3.0;
+    matrix1.pData[0][3] = 4.0;
+    matrix1.pData[1][0] = 5.0;
+    matrix1.pData[1][1] = 6.0;
+    matrix1.pData[1][2] = 7.0;
+    matrix1.pData[1][3] = 8.0;
+    matrix1.pData[2][0] = 9.0;
+    matrix1.pData[2][1] = 10.0;
+    matrix1.pData[2][2] = 11.0;
+    matrix1.pData[2][3] = 12.0;
+    matrix1.pData[3][0] = 13.0;
+    matrix1.pData[3][1] = 14.0;
+    matrix1.pData[3][2] = 15.0;
+    matrix1.pData[3][3] = 16.0;
 
-    matrix2.pData[0][0] = 5.0;
-    matrix2.pData[0][1] = 6.0;
-    matrix2.pData[1][0] = 7.0;
-    matrix2.pData[1][1] = 8.0;
+    print_matrix(matrix1);
+    printf("\n\n");
 
-    Matrix_Instance matrixDet = create_matrix(4, 4, Random_Matrix);
-    print_matrix(matrixDet);
-    double determinant = determinant_matrix(matrixDet);
+    matrix2.pData[0][0] = 0;
+    matrix2.pData[0][1] = 1.0;
+    matrix2.pData[1][0] = 2.0;
+    matrix2.pData[1][1] = 3.0;
+
+    Matrix_Instance expo = exponent_matrix(matrix2, 3);
+    print_matrix(expo);
+    printf("\n\n");
+    free_matrix(expo);
+
+    Matrix_Instance t_matrix = transpose_matrix(matrix1);
+    printf("\n\n");
+    print_matrix(t_matrix);
+    free_matrix(t_matrix);
+
+    Matrix_Instance det_matrix = create_matrix(4, 4, Random_Matrix);
+    double determinant = determinant_matrix(det_matrix);
     printf("Determinant is %f", determinant);
-    Matrix_Instance matrr1 = create_matrix(5, 5);
-    Matrix_Instance matrr = create_matrix(5, 5, Identity_Matrix);
-    // print_matrix(matrr);
-    Matrix_Instance matrixMul = multiply_matrix(matrr, 12);
+    printf("\n\n");
 
-    // print_matrix(matrixMul);
-    // free_matrix(matrixMul);
+    Matrix_Instance mul_matrix = multiply_matrix(matrix1, 12);
+    print_matrix(mul_matrix);
+    printf("\n\n");
+    free_matrix(mul_matrix);
 
-    // matrix_copy(matrr, matrr1);
-    Matrix_Instance result = sum_matrix(matrix1, matrix2);
+    Matrix_Instance mul_matrices = multiply_matrix(matrix1, matrix2);
+    print_matrix(mul_matrices);
+    printf("\n\n");
+    free_matrix(mul_matrices);
 
-    // print_matrix(matrr1);
+    Matrix_Instance sum_matrix = sum_matrices(matrix1, matrix2);
+    print_matrix(sum_matrix);
+    printf("\n\n");
+    free_matrix(sum_matrix);
 
     free_matrix(matrix1);
     free_matrix(matrix2);
-    free_matrix(result);
-
     return 0;
 }

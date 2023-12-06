@@ -6,7 +6,7 @@ const Matrix_Instance null_matrix = {0, 0, NULL};
 
 enum Error_Type {
     Memory_Error, 
-    Bad_Matix_Error, 
+    Bad_Matrix_Error, 
     Matrix_Dimension_Error,   
     Determinant_Error,
     Bad_Arguments
@@ -22,7 +22,7 @@ const char* error_messages[] = {
     "Bad arguments error!"
 };
 
-/************************ Common matrix functions ************************/
+/************************ Private matrix functions ************************/
 
 static inline void print_matrix_error(enum Error_Type error) {
     fprintf(stderr, "%s\n", error_messages[error]);
@@ -38,11 +38,19 @@ static inline Matrix_Instance allocate_matrix(int rows, int cols) {
     for (int i = 0; i < rows; i++) {
         matrix.pData[i] = (double *)malloc(cols * sizeof(double));
     }
+    if (NULL == matrix.pData) {
+        print_matrix_error(Memory_Error);
+        return null_matrix;
+    }
     return matrix;
 }
 
 static inline Matrix_Instance create_submatrix(const Matrix_Instance matrix, int excludeRow, int excludeCol) {
     Matrix_Instance submatrix = allocate_matrix(matrix.numRows - 1, matrix.numCols - 1);
+
+    if (NULL == submatrix.pData) {
+        return null_matrix;
+    }
 
     int sub_i = 0, sub_j = 0;
     for (int i = 0; i < matrix.numRows; i++) {
@@ -61,6 +69,7 @@ static inline Matrix_Instance create_submatrix(const Matrix_Instance matrix, int
     }
     return submatrix;
 }
+
 // double matrixSum(Matrix *matrix) {
 //     double sum = 0;
 //     __asm__ (
@@ -80,7 +89,7 @@ static inline Matrix_Instance create_submatrix(const Matrix_Instance matrix, int
 /************************ Basic matrix functions ************************/
 
 Matrix_Instance _internal_create_default_matrix(int rows, int cols) { // --> overloaded in create_matrix
-    if (rows == 0 || cols == 0) {
+    if (0 == rows || 0 == cols) {
         print_matrix_error(Bad_Arguments);
         return null_matrix;
     }
@@ -90,11 +99,16 @@ Matrix_Instance _internal_create_default_matrix(int rows, int cols) { // --> ove
 
 Matrix_Instance _internal_create_type_matrix(int rows, int cols, enum Matrix_Type matrix_type) { // --> overloaded in create_matrix
     // printf("Creating type matrix with %d\n", matrix_type);
-    if (rows == 0 || cols == 0) {
+    if (0 == rows || 0 == cols) {
         print_matrix_error(Bad_Arguments);
         return null_matrix;
     }
     Matrix_Instance matrix = allocate_matrix(rows, cols);
+    
+    if (NULL == matrix.pData) {
+        return null_matrix;
+    }
+
     switch (matrix_type) {
         case (Zero_Matrix):
             memset(matrix.pData, 0., matrix.numCols * matrix.numRows * sizeof(double));
@@ -120,9 +134,12 @@ Matrix_Instance _internal_create_type_matrix(int rows, int cols, enum Matrix_Typ
     return matrix;
 }
 
-Matrix_Instance matrix_copy(const Matrix_Instance A, const Matrix_Instance B) {
+Matrix_Instance copy_matrix(const Matrix_Instance A, const Matrix_Instance B) {
     if (A.numRows != B.numRows || A.numCols != B.numCols) {
         print_matrix_error(Matrix_Dimension_Error);
+        return null_matrix;
+    } else if (NULL == A.pData || NULL == B.pData) {
+        print_matrix_error(Memory_Error);
         return null_matrix;
     }
 
@@ -139,6 +156,7 @@ void free_matrix(Matrix_Instance matrix) {
         }
         free(matrix.pData);
     }
+    matrix = null_matrix;
 }
 
 void fill_matrix_random(Matrix_Instance matrix) {
@@ -168,6 +186,7 @@ void print_matrix(Matrix_Instance matrix) {
 }
 
 /************************ Math matrix functions ************************/
+
 Matrix_Instance _internal_multiply_matrices(const Matrix_Instance A, const Matrix_Instance B) { // --> overloaded in multiply_matrix
     if (A.numCols != B.numRows) {
         print_matrix_error(Matrix_Dimension_Error);
@@ -175,6 +194,10 @@ Matrix_Instance _internal_multiply_matrices(const Matrix_Instance A, const Matri
     }
 
     Matrix_Instance result = create_matrix(A.numRows, B.numCols);
+
+    if (NULL == result.pData) {
+        return null_matrix;
+    }
 
     for (int i = 0; i < A.numRows; i++) {
         for (int j = 0; j < B.numCols; j++) {
@@ -194,6 +217,10 @@ Matrix_Instance _internal_multiply_matrix_scalar(const Matrix_Instance matrix, c
     }
     Matrix_Instance result = allocate_matrix(matrix.numRows, matrix.numCols);
 
+    if (NULL == result.pData) {
+        return null_matrix;
+    }
+
     for (int i = 0; i < matrix.numRows; i++) {
         for (int j = 0; j < matrix.numCols; j++) {
             result.pData[i][j] = matrix.pData[i][j] * scalar;
@@ -202,7 +229,7 @@ Matrix_Instance _internal_multiply_matrix_scalar(const Matrix_Instance matrix, c
     return result;
 }
 
-Matrix_Instance substract_matrix(const Matrix_Instance A, const Matrix_Instance B) {
+Matrix_Instance substract_matrices(const Matrix_Instance A, const Matrix_Instance B) {
     if (A.numRows != B.numRows || A.numCols != B.numCols) {
         print_matrix_error(Matrix_Dimension_Error);
         return null_matrix;
@@ -212,6 +239,10 @@ Matrix_Instance substract_matrix(const Matrix_Instance A, const Matrix_Instance 
     }
 
     Matrix_Instance result = allocate_matrix(A.numRows, A.numCols);
+    
+    if (NULL == result.pData) {
+        return null_matrix;
+    }
 
     for (int i = 0; i < A.numRows; i++) {
         for (int j = 0; j < A.numCols; j++) {
@@ -221,13 +252,17 @@ Matrix_Instance substract_matrix(const Matrix_Instance A, const Matrix_Instance 
     return result;
 }
 
-Matrix_Instance sum_matrix(const Matrix_Instance A, const Matrix_Instance B) {
+Matrix_Instance sum_matrices(const Matrix_Instance A, const Matrix_Instance B) {
     if (A.numRows != B.numRows || A.numCols != B.numCols) {
         print_matrix_error(Matrix_Dimension_Error);
         return null_matrix;
     }
 
     Matrix_Instance result = create_matrix(A.numRows, A.numCols);
+    
+    if (NULL == result.pData) {
+        return null_matrix;
+    }
 
     for (size_t i = 0; i < A.numRows; ++i) {
         for (size_t j = 0; j < A.numCols; ++j) {
@@ -238,11 +273,14 @@ Matrix_Instance sum_matrix(const Matrix_Instance A, const Matrix_Instance B) {
 }
 
 Matrix_Instance transpose_matrix(const Matrix_Instance matrix) {
-    if (matrix.pData == NULL) {
+    if (NULL == matrix.pData) {
         print_matrix_error(Bad_Arguments);
-        return null_matrix;
+        return matrix;
     }
     Matrix_Instance result = allocate_matrix(matrix.numCols, matrix.numRows);
+    if (NULL == result.pData) {
+        return null_matrix;
+    }
 
     for (int i = 0; i < matrix.numRows; i++) {
         for (int j = 0; j < matrix.numCols; j++) {
@@ -252,10 +290,80 @@ Matrix_Instance transpose_matrix(const Matrix_Instance matrix) {
     return result;
 }
 
-Matrix_Instance exponent_matrix(const Matrix_Instance A, const unsigned int n);
+Matrix_Instance exponent_matrix(const Matrix_Instance matrix, const unsigned int n) {
+    if (NULL == matrix.pData) {
+        print_matrix_error(Bad_Matrix_Error);
+        return null_matrix;
+    }
 
-double sum_elements_matrix(const Matrix_Instance matrix) {double sum_elements_matrix(const Matrix_Instance A);
-    if (matrix.pData == NULL) {
+    if (matrix.numRows != matrix.numCols) {
+        print_matrix_error(Matrix_Dimension_Error);
+        return null_matrix;
+    }
+
+    Matrix_Instance exponent = create_matrix(matrix.numRows, matrix.numCols, Identity_Matrix);
+    Matrix_Instance summand = create_matrix(matrix.numRows, matrix.numCols, Identity_Matrix);
+    Matrix_Instance temp = create_matrix(matrix.numRows, matrix.numCols);
+
+    if (exponent.pData == NULL || summand.pData == NULL || temp.pData == NULL) {
+        return null_matrix;
+    }
+
+    if (n == 0) return exponent;
+
+    if (n == 1) {
+        temp = sum_matrices(exponent, matrix);
+        if (temp.pData == NULL) {
+            free_matrix(exponent);
+            free_matrix(summand);
+            free_matrix(temp);
+            return null_matrix;
+        }
+        copy_matrix(temp, exponent);
+        free_matrix(summand);
+        free_matrix(temp);
+        return exponent;
+    }
+
+    for (int i = 1; i <= n; i++) {
+        temp = multiply_matrix(summand, matrix);
+        if (temp.pData == NULL) {
+            free_matrix(exponent);
+            free_matrix(summand);
+            free_matrix(temp);
+            return null_matrix;
+        }
+        copy_matrix(temp, summand);
+        free_matrix(temp);
+
+        temp = multiply_matrix(summand, 1. / i);
+        if (temp.pData == NULL) {
+            free_matrix(exponent);
+            free_matrix(summand);
+            free_matrix(temp);
+            return null_matrix;
+        }
+        copy_matrix(temp, summand);
+        free_matrix(temp);
+
+        temp = sum_matrices(exponent, summand);
+        if (temp.pData == NULL) {
+            free_matrix(exponent);
+            free_matrix(summand);
+            free_matrix(temp);
+            return null_matrix;
+        }
+        copy_matrix(temp, exponent);
+        free_matrix(temp);
+    }
+
+    free_matrix(summand);
+
+    return exponent;
+}
+
+double sum_elements_matrix(const Matrix_Instance matrix) {
+    if (NULL == matrix.pData) {
         print_matrix_error(Bad_Arguments);
         return 0;
     }
@@ -271,12 +379,15 @@ double sum_elements_matrix(const Matrix_Instance matrix) {double sum_elements_ma
 }
 
 double determinant_matrix(const Matrix_Instance matrix) {
-    if (matrix.numRows != matrix.numCols) {
+    if (NULL == matrix.pData) {
+        print_matrix_error(Bad_Arguments);
+        return 0;
+    } else if (matrix.numRows != matrix.numCols) {
         print_matrix_error(Matrix_Dimension_Error);
-        return 0.0; // 
+        return 0.0; 
     }
 
-    if (matrix.numRows == 2 && matrix.numCols == 2) {
+    if (2 == matrix.numRows && 2 == matrix.numCols) {
         return matrix.pData[0][0] * matrix.pData[1][1] - matrix.pData[0][1] * matrix.pData[1][0];
     }
 
@@ -285,6 +396,9 @@ double determinant_matrix(const Matrix_Instance matrix) {
 
     for (int col = 0; col < matrix.numCols; col++) {
         submatrix = create_submatrix(matrix, 0, col);
+        if (NULL == submatrix.pData) {
+            return 0;
+        }
         det += pow(-1, col) * matrix.pData[0][col] * determinant_matrix(submatrix);
         free_matrix(submatrix);
     }
