@@ -31,10 +31,6 @@ Matrix create_zero_matrix(unsigned int rows, unsigned int cols);
 
 Matrix create_one_matrix(unsigned int rows, unsigned int cols);
 
-void fill_matrix_summ(Matrix *matrix);
-
-void fill_matrix_mult(Matrix *matrix);
-
 void fill_matrix_val(Matrix *matrix, const double* value);
 
 Matrix matrix_add(Matrix fst_matx, Matrix snd_matx);
