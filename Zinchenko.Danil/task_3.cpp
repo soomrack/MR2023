@@ -108,8 +108,7 @@ void Matrix::set_zero() {
 void Matrix::set_one()
 {
     set_zero();
-    for (size_t idx = 0; idx < rows * cols; idx += cols + 1)
-        data[idx] = 1.;
+    for (size_t idx = 0; idx < rows * cols; idx += cols + 1) data[idx] = 1;
 }
 
 
@@ -338,5 +337,6 @@ Matrix& Matrix::exp(Matrix& A)
 
 int main() {
 
-return 0;
+
+    return 0;
 }
