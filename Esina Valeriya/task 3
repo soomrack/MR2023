@@ -79,7 +79,8 @@ Matrix::Matrix(Matrix& A)
 {
     rows = A.rows;
     cols = A.cols;
-    if (A.data == nullptr) return *this;
+    if (A.data == nullptr) 
+        data = nullptr;
     data = new MatrixItem[rows * cols];
     memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
 }
