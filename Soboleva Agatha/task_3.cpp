@@ -30,7 +30,7 @@ public:
     Matrix& operator*(const Matrix& A);
     Matrix& transposition();
     MatrixItem determinant();
-    Matrix& exponent();
+    Matrix& exponent(unsigned int m);
     Matrix& set_zero();
     Matrix& set_one();
     Matrix& operator*(const MatrixItem A);
@@ -71,9 +71,7 @@ Matrix::Matrix(const size_t rows, const size_t cols, const MatrixItem* values)
 
 Matrix::~Matrix()
 {
-    if (data != nullptr) {
-        delete[] data;
-    }
+    delete[] data;
 }
 
 
@@ -114,11 +112,15 @@ Matrix& Matrix::operator=(const Matrix& A)
 {
     if (&A == this) return *this;
 
-    delete[] data;
     cols = A.cols;
     rows = A.rows;
-    data = new MatrixItem[A.cols * A.rows];
-    memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
+
+    if (A.data == nullptr)
+        data = nullptr;
+    else
+        delete[] data;
+        data = new MatrixItem[rows * cols];
+        memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
     return *this;
 }
 
@@ -252,31 +254,31 @@ Matrix& Matrix::set_zero()
 
 Matrix& Matrix::set_one()
 {
-    for (size_t idx = 0; idx < rows * cols; idx += cols + 1) this->data[idx] = 1;
+    set_zero();
+    for (size_t i = 0; i < rows * cols; i += cols + 1)
+        data[i] = 1.;
     return *this;
 }
 
 
 // C = e^A
-Matrix& Matrix::exponent()
+Matrix& Matrix::exponent(unsigned int m = 5)
 {
     if (cols != rows)
         throw MatrixExeption("the numbers of columns znd rows of the matrix do not match");
 
-    Matrix* previous_step = new Matrix(rows, cols);
-    previous_step->set_zero();
-    previous_step->set_one();
-    previous_step->operator+(*this);
-
     Matrix* exp = new Matrix(rows, cols);
+    exp->set_one();
 
-    for (unsigned int k = 2; k <= 5; ++k) {
+    Matrix step(rows, cols);
+    step.set_one();
 
-        *exp = (*previous_step * *this) * (MatrixItem)(1. / k);
+    for (unsigned int k = 1; k <= m; ++k) {
 
-        memcpy(previous_step->data, exp->data, rows * cols * sizeof(MatrixItem));
+        step = (step * *this) * (MatrixItem)(1. / k);
+        *exp = *exp + step;
     };
-    return *previous_step;
+    return *exp;
 }
 
 
@@ -290,12 +292,12 @@ int main() {
                            3., 2., 1. };
     MatrixItem values_3[] = { 1., 2., 3.,
                            4., 5., 6.,
-                           7., 8., 9. };
-    Matrix A(4, 3, values_2);
+                           7., 8., 10. };
+    Matrix A(4, 3, values_1);
     Matrix B(A);
     Matrix C(4, 3);
     Matrix D(4, 3);
-    Matrix E(3, 4, values_1);
+    Matrix E(3, 4, values_2);
     Matrix F(3, 3);
     Matrix G(3, 4);
     Matrix I(3, 3, values_3);
