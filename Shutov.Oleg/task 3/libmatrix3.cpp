@@ -21,21 +21,21 @@ public:
     Matrix(const Matrix&);
     Matrix(Matrix&&) noexcept;
 
-    void set_zero();
-    void set_one();
+    Matrix& set_zero();
+    Matrix& set_one();
     Matrix& matrix_transpose();
     Matrix& matrix_exponent(Matrix&);
     MatrixItem matrix_determinant(Matrix&);
 
-    void print(const Matrix&);
+    Matrix& print(const Matrix&);
 
     Matrix& operator=(Matrix&&) noexcept;
     Matrix& operator=(const Matrix&);
-    void operator+=(const Matrix&);
-    void operator-=(const Matrix&);
-    void operator*=(const MatrixItem);
-    void operator/=(const MatrixItem);
-    void operator*=(const Matrix&);
+    Matrix& operator+=(const Matrix&);
+    Matrix& operator-=(const Matrix&);
+    Matrix& operator*=(const MatrixItem);
+    Matrix& operator/=(const MatrixItem);
+    Matrix& operator*=(const Matrix&);
 
     Matrix& operator+(const Matrix&);
     Matrix& operator-(const Matrix&);
@@ -69,20 +69,20 @@ Matrix_Exception LARGESIZE("Error: Size of the matrix is too big\n");
 Matrix::Matrix(const Matrix& matrix) {
     rows = matrix.rows;
     cols = matrix.cols;
-    data = new MatrixItem[this->rows * this->cols];
-    if (!this->data)
-    memcpy(this->data, matrix.data, this->rows * this->cols * sizeof(MatrixItem));
+    data = new MatrixItem[rows * cols];
+    if (!data)
+    memcpy(data, matrix.data, rows * cols * sizeof(MatrixItem));
 }
 
 
 Matrix::Matrix(size_t num_row, size_t num_col, MatrixItem* array)
 {
 
-    this->rows = num_row;
-    this->cols = num_col;
-    this->data = new MatrixItem[rows * cols];
-    if (!this->data)
-    memcpy(this->data, array, rows * cols * sizeof(MatrixItem));
+    rows = num_row;
+    cols = num_col;
+    data = new MatrixItem[rows * cols];
+    if (!data)
+    memcpy(data, array, rows * cols * sizeof(MatrixItem));
 }
 
 
@@ -96,35 +96,33 @@ Matrix::Matrix(Matrix&& mat) noexcept : data(mat.data), rows(mat.rows), cols(mat
 
 Matrix::~Matrix()
 {
-    delete[] this->data;
-    this->cols = 0;
-    this->rows = 0;
-    this->data = nullptr;
+    delete[] data;
+    cols = 0;
+    rows = 0;
+    data = nullptr;
    
 }
 
 
-void Matrix::set_zero()
+Matrix& Matrix::set_zero()
 {
-    memset(this->data, 0, this->rows * this->cols * sizeof(MatrixItem));
-    if (data = nullptr)
-        throw EMPTY_MATRIX;
+    if (data = nullptr) return;
+    memset(data, 0, rows * cols * sizeof(MatrixItem));
+    
 }
 
 
-void Matrix::set_one()
+Matrix& Matrix::set_one()
 {
     set_zero();
-    for (unsigned int idx = 0; idx < this->cols * this->rows; idx += rows + 1)
+    for (unsigned int idx = 0; idx < cols * rows; idx += rows + 1)
     {
-        this->data[idx] = 1.0;
+        data[idx] = 1.0;
     }
-    if (data = nullptr)
-        throw EMPTY_MATRIX;
 }
 
 
-void Matrix::print(const Matrix& A)
+Matrix& Matrix::print(const Matrix& A)
 {
     for (size_t row = 0; row < A.rows; ++row) {
         std::cout << "[ ";
@@ -150,51 +148,51 @@ Matrix& Matrix::matrix_transpose()
 }
 
 
-void Matrix::operator+=(const Matrix& matrix)
+Matrix& Matrix::operator+=(const Matrix& matrix)
 {
-    if (this->rows != matrix.rows || this->cols != matrix.cols)
+    if (rows != matrix.rows || cols != matrix.cols)
         throw NOTEQUAL;
     for (unsigned int index = 0; index < rows * cols; ++index)
     {
-        this->data[index] += matrix.data[index];
+        data[index] += matrix.data[index];
     }
 }
 
 
-void Matrix::operator-=(const Matrix& matrix)
+Matrix& Matrix::operator-=(const Matrix& matrix)
 {
-    if (this->rows != matrix.rows || this->cols != matrix.cols)
+    if (rows != matrix.rows || cols != matrix.cols)
         throw NOTEQUAL;
     for (unsigned int index = 0; index < rows * cols; ++index)
     {
-        this->data[index] -= matrix.data[index];
+        data[index] -= matrix.data[index];
     }
 }
 
 
-void Matrix::operator*=(const MatrixItem k)
+Matrix& Matrix::operator*=(const MatrixItem k)
 {
-    for (unsigned int idx = 0; idx < this->rows * this->cols; idx++)
+    for (unsigned int idx = 0; idx < rows * cols; idx++)
     {
-        this->data[idx] *= k;
+        data[idx] *= k;
     }
 }
 
 
-void Matrix::operator/=(const MatrixItem k)
+Matrix& Matrix::operator/=(const MatrixItem k)
 {
-    for (unsigned int idx = 0; idx < this->rows * this->cols; idx++)
+    for (unsigned int idx = 0; idx < rows * cols; idx++)
     {
-        this->data[idx] /= k;
+        data[idx] /= k;
     }
 }
 
 
-void Matrix::operator*=(const Matrix& matrix)
+Matrix& Matrix::operator*=(const Matrix& matrix)
 {
-    if (this->cols != matrix.rows)
+    if (cols != matrix.rows)
         throw MULTIPLYERROR;
-    Matrix multiplication(this->rows, matrix.cols);
+    Matrix multiplication(rows, matrix.cols);
     for (unsigned int row = 0; row < multiplication.rows; row++)
     {
         for (unsigned int col = 0; col < multiplication.cols; col++)
@@ -215,12 +213,12 @@ Matrix& Matrix::operator=(const Matrix& A)
 {
     if (this == &A)
         return *this;
-    delete[] this->data;
-    this->rows = A.rows;
-    this->cols = A.cols;
-    this->data = new MatrixItem[rows * cols];
-    if (!data)
-    memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
+    delete[] data;
+    rows = A.rows;
+    cols = A.cols;
+    if (data == nullptr) return;
+    data = new MatrixItem[rows * cols];
+    memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
     return *this;
 }
 
@@ -229,10 +227,10 @@ Matrix& Matrix::operator=(Matrix&& A) noexcept
 {
     if (this == &A)
         return *this;
-    delete[] this->data;
-    this->rows = A.rows;
-    this->cols = A.cols;
-    this->data = A.data;
+    delete[] data;
+    rows = A.rows;
+    cols = A.cols;
+    data = A.data;
     A.data = nullptr;
     A.rows = 0;
     A.cols = 0;
@@ -308,7 +306,7 @@ MatrixItem Matrix::matrix_determinant(Matrix& A)
 }
 
 
-// exp(A)
+// A = exp(A)
 Matrix& Matrix::matrix_exponent(Matrix& A)
 {
     if (A.cols != A.rows)
@@ -326,7 +324,7 @@ Matrix& Matrix::matrix_exponent(Matrix& A)
 
         term = term * A / idx;
         *exp += term;
-
+        A = *exp;
     }
-    return *exp;
+    return A;
 }
