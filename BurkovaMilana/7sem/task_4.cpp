@@ -162,11 +162,11 @@ void Matrix::print()
 Matrix& Matrix::operator=(const Matrix& A)
     if (this == &A) return *this;
 
-    if (cols == 0 || rows == 0) {
+    if (A.cols == 0 || A.rows == 0) {
+        delete[] data;
         rows = A.rows;
         cols = A.cols;
         data = nullptr;
-        delete[] data;
         return *this;
 }
     if (rows * cols == A.rows * A.cols) {
