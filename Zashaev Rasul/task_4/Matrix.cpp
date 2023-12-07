@@ -38,7 +38,7 @@ public:
     void set_one();
     Matrix& trans();
     MatrixItem det(Matrix& A);
-    Matrix& exp(Matrix& A);
+    Matrix& exp(unsigned int idx = 100);
 public:
     void print(const Matrix& A);
 };
@@ -141,6 +141,13 @@ void Matrix::print(const Matrix& A)
 Matrix& Matrix::operator=(const Matrix& A)
 {
     if (this == &A) return *this;
+
+    if (rows * cols == A.rows * A.cols) {
+        rows = A.rows;
+        cols = A.cols;
+        memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
+        return *this;
+    }
 
      delete[] data;
     rows = A.rows;
@@ -305,24 +312,20 @@ MatrixItem Matrix::det(Matrix& A)
 
 
 // exp = exp(A)
-Matrix& Matrix::exp(Matrix& A)
+Matrix& Matrix::exp(unsigned int idx)
 {
-    if (A.cols != A.rows)
-        throw Matrix_Exception("exp: Not square");
-    if (A.cols == 0)
-        throw Matrix_Exception("exp: ");
 
     Matrix* exp = new Matrix(*this);
-    this->set_one();
+    exp->set_one();
 
-    Matrix term(A.rows, A.cols);
+    Matrix term(*this);
     term.set_one();
 
-    for (int idx = 1; idx < 5; ++idx) {
+    for (unsigned int k = 1; k < idx; ++k) {
 
-        term = term * A / idx;
-        *this += term;
+        term = term * *this / k;
+        *exp += term;
 
     }
-    return *this;
+    return *exp;
 }
