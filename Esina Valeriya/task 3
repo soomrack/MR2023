@@ -30,7 +30,7 @@ public:
     Matrix& operator*(const Matrix& A);
     Matrix& transposition();
     MatrixItem determinant();
-    Matrix& exponent(int m);
+    Matrix& exponent(unsigned int m);
     Matrix& set_zero();
     Matrix& set_one();
     Matrix& operator*(const MatrixItem A);
@@ -80,6 +80,10 @@ Matrix::Matrix(Matrix& A)
     rows = A.rows;
     cols = A.cols;
     data = new MatrixItem[rows * cols];
+    if (A.data == nullptr) {
+        data = nullptr;
+        return *this;
+    }
     memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
 }
 
@@ -112,12 +116,16 @@ Matrix& Matrix::operator=(const Matrix& A)
 {
     if (&A == this) return *this;
 
-    if (A.data == nullptr)
-        throw MatrixExeption("no memory for matrix");
-
     cols = A.cols;
     rows = A.rows;
-    data = new MatrixItem[A.cols * A.rows];
+
+    if (A.data == nullptr) {
+        data = nullptr;
+        return *this;
+    }
+
+    delete[] data;
+    data = new MatrixItem[rows * cols];
     memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
     return *this;
 }
@@ -260,24 +268,27 @@ Matrix& Matrix::set_one()
 
 
 // C = e^A
-Matrix& Matrix::exponent(int m = 5)
+Matrix& Matrix::exponent(unsigned int m = 5)
 {
+    if ((rows == 0) || (cols == 0))
+    {
+       throw MatrixExeption("Can't find exponent matrix for zero matrix"); 
+    }
     if (cols != rows)
         throw MatrixExeption("the numbers of columns znd rows of the matrix do not match");
 
-    Matrix* previous_step = new Matrix(rows, cols);
-    previous_step->set_one();
-    previous_step->operator+(*this);
-
     Matrix* exp = new Matrix(rows, cols);
+    exp->set_one();
 
-    for (unsigned int k = 2; k <= m; ++k) {
+    Matrix step(rows, cols);
+    step.set_one();
 
-        *exp = (*previous_step * *this) * (MatrixItem)(1. / k);
+    for (unsigned int k = 1; k <= m; ++k) {
 
-        memcpy(previous_step->data, exp->data, rows * cols * sizeof(MatrixItem));
+        step = (step * *this) * (MatrixItem)(1. / k);
+        *exp = *exp + step;
     };
-    return *previous_step;
+    return *exp;
 }
 
 
