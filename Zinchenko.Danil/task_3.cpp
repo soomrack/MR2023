@@ -40,7 +40,7 @@ public:
     void set_one();
     Matrix& trans();
     MatrixItem det(Matrix& A);
-    Matrix& exp(Matrix& A);
+    Matrix& exp(int idx);
     void print(const Matrix& A);
 };
 
@@ -312,22 +312,18 @@ MatrixItem Matrix::det(Matrix& A)
 
 
 // exp = exp(A)
-Matrix& Matrix::exp(Matrix& A)
+Matrix& Matrix::exp(unsigned int idx = 100)
 {
-    if (A.cols != A.rows)
-        throw Matrix_Exception("exp: Not square");
-    if (A.cols == 0)
-        throw Matrix_Exception("exp: ");
 
-    Matrix* exp = new Matrix(A.rows, A.cols);
+    Matrix* exp = new Matrix(*this);
     exp->set_one();
 
-    Matrix term(A.rows, A.cols);
+    Matrix term(*this);
     term.set_one();
 
-    for (int idx = 1; idx < 100; ++idx) {
+    for (unsigned int k = 1; k < idx; ++k) {
 
-        term = term * A / idx;
+        term = term * *this / idx;
         *exp += term;
 
     }
