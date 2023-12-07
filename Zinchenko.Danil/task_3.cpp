@@ -128,14 +128,20 @@ void Matrix::print(const Matrix& A)
 Matrix& Matrix::operator=(const Matrix& A)
 {
     if (this == &A) return *this;
-
+    if (rows * cols == 0) 
+        {
+          rows = A.rows;
+          cols = A.cols;
+          data = A.data;
+        return *this;
+            }
     if (rows * cols == A.rows * A.cols) {
         rows = A.rows;
         cols = A.cols;
         memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
         return *this;
     }
-    if (rows * cols == 0) return *this;
+    
     delete[] data;
     rows = A.rows;
     cols = A.cols;
