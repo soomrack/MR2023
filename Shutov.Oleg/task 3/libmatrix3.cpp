@@ -260,7 +260,7 @@ Matrix& Matrix::operator-(const Matrix& B)
 // A *= k
 Matrix& Matrix::operator*(const MatrixItem k)
 {
-    Matrix *multiply = new Matrix (*this); //через new 
+    Matrix *multiply = new Matrix (*this); 
     *multiply *= k;
     return *multiply;
 }
