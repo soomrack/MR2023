@@ -75,7 +75,7 @@ Matrix::Matrix(const size_t cols, const size_t rows, const MatrixItem* values)
 
 Matrix::Matrix(const Matrix& A)
 {
-    if (A.data == nullptr) {
+    if (A.data == nullptr || A.cols == 0 || A.rows == 0) {
         cols = 0;
         rows = 0;
         data = nullptr;
@@ -137,11 +137,11 @@ void Matrix::print(const Matrix& A)
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
-    if (A.data == nullptr) {
+    if (A.data == nullptr || A.cols == 0 || A.rows == 0) {
         cols = 0;
         rows = 0;
         data = nullptr;
-        throw Matrix_Exception("Operator=: NULL matrix");
+        return *this;
     };
 
     if (this == &A) return *this;
