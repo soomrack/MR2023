@@ -175,6 +175,16 @@ struct Matrix matrix_divk(const struct Matrix A, const MatrixItem k)
 }
 
 
+int matrix_divk_for_exp(const struct Matrix A, const MatrixItem k)
+{
+    if (k == 0) return NAN;
+    for (size_t id = 0; id < A.cols * A.rows; ++id) {
+        A.data[id] /= k;
+    }
+    return 0;
+}
+
+
 // TRANS = A^T
 struct Matrix matrix_transpose(const struct Matrix A)
 {
@@ -206,7 +216,7 @@ struct Matrix Minor(const struct Matrix A, const size_t row, const size_t col)
 }
 
 
-MatrixItem matrix_determinant(const struct Matrix A) {
+MatrixItem matrix_delete(const struct Matrix A) {
     if (A.rows != A.cols) {
         matrix_error();
         return NAN;
@@ -218,14 +228,11 @@ MatrixItem matrix_determinant(const struct Matrix A) {
     if (A.rows == 2) return (A.data[0] * A.data[3] - A.data[2] * A.data[1]);
     for (size_t id = 0; idx < A.rows; id++) {
         struct Matrix temp = Minor(A, 0, id);
-        det += k * A.data[idx] * matrix_determinant(temp);
+        det += k * A.data[idx] * matrix_delete(temp);
         k = -k;
         matrix_delete(&temp);
     }
     return det;
-}
-
-    return NAN;
 }
 
 
@@ -241,7 +248,7 @@ struct Matrix matrix_exp(const struct Matrix A, const int k)
 
     struct Matrix temp = matrix_create(A.rows, A.cols);
     if (temp.data == 0) {
-        matrix_destruction(&exp);
+        matrix_delete(&exp);
         return NULL_MATRIX;
     };
 
@@ -249,8 +256,8 @@ struct Matrix matrix_exp(const struct Matrix A, const int k)
 
     struct Matrix temp_more = matrix_create(A.rows, A.cols);
     if (temp_more.data == 0) {
-        matrix_destruction(&exp);
-        matrix_destruction(&temp);
+        matrix_delete(&exp);
+        matrix_delete(&temp);
         return NULL_MATRIX;
     };
 
@@ -261,10 +268,10 @@ struct Matrix matrix_exp(const struct Matrix A, const int k)
         matrix_divk_for_exp(temp, k0 * id);
         temp_more = matrix_mult(temp, A);
         matrix_add(exp, temp_more);
-        matrix_destruction(&temp_more);
+        matrix_delete(&temp_more);
     }
-    matrix_destruction(&temp_more);
-    matrix_destruction(&temp);
+    matrix_delete(&temp_more);
+    matrix_delete(&temp);
     return exp;
 }
 
