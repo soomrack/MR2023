@@ -75,13 +75,20 @@ Matrix::Matrix(const size_t cols, const size_t rows, const MatrixItem* values)
 
 Matrix::Matrix(const Matrix& A)
 {
-    if (A.data == nullptr || A.cols == 0 || A.rows == 0) {
+    if (A.data == nullptr) {
         cols = 0;
         rows = 0;
         data = nullptr;
         return;
     };
 
+    if (A.rows == 0) {
+        rows = A.rows + 1;
+    };
+
+    if (A.rows == 0) {
+        rows = A.cols + 1;
+    };
     rows = A.rows;
     cols = A.cols;
     data = new MatrixItem[rows * cols];
@@ -137,27 +144,17 @@ void Matrix::print(const Matrix& A)
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
-    if (A.data == nullptr || A.cols == 0 || A.rows == 0) {
-        cols = 0;
-        rows = 0;
-        data = nullptr;
-        return *this;
-    };
+    if (&A == this) return *this;
 
-    if (this == &A) return *this;
- 
-    if (rows * cols == A.rows * A.cols) {
-        rows = A.rows;
-        cols = A.cols;
-        memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
-        return *this;
-    }
-
-    delete[] data;
-    rows = A.rows;
     cols = A.cols;
+    rows = A.rows;
+
+    if (A.data == nullptr)
+        data = nullptr;
+    else
+        delete[] data;
     data = new MatrixItem[rows * cols];
-    std::memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
+    memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
     return *this;
 }
 
