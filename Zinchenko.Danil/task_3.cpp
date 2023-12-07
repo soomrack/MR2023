@@ -135,7 +135,9 @@ Matrix& Matrix::operator=(const Matrix& A)
         memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
         return *this;
     }
-
+  if (A.cols != cols || A.rows != rows)
+        throw Matrix_Exception("Operator-: Incorrect sizes");
+    
     delete[] data;
     rows = A.rows;
     cols = A.cols;
@@ -312,7 +314,7 @@ MatrixItem Matrix::det(Matrix& A)
 
 
 // exp = exp(A)
-Matrix& Matrix::exp(unsigned int idx = 100)
+Matrix& Matrix::exp(idx = 100)
 {
 
     Matrix* exp = new Matrix(*this);
