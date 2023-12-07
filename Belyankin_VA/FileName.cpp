@@ -312,7 +312,7 @@ MatrixItem Matrix::det(Matrix& A)
 
 
 // exp = exp(A)
-Matrix& Matrix::exp(unsigned int idx = 100)
+Matrix& Matrix::exp(unsigned int idx)
 {
 
     Matrix* exp = new Matrix(*this);
@@ -323,7 +323,7 @@ Matrix& Matrix::exp(unsigned int idx = 100)
 
     for (unsigned int k = 1; k < idx; ++k) {
 
-        term = term * *this / idx;
+        term = term * *this / k;
         *exp += term;
 
     }
