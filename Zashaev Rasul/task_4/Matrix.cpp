@@ -142,6 +142,15 @@ Matrix& Matrix::operator=(const Matrix& A)
 {
     if (this == &A) return *this;
 
+    if (A.rows * A.cols == 0)
+    {
+        rows = A.rows;
+        cols = A.cols;
+        data = A.data;
+        delete[] data;
+        return *this;
+    }
+    
     if (rows * cols == A.rows * A.cols) {
         rows = A.rows;
         cols = A.cols;
