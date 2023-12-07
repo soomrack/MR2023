@@ -160,10 +160,14 @@ void Matrix::print()
 
 
 Matrix& Matrix::operator=(const Matrix& A)
+    if (this == &A) return *this;
+
     if (cols == 0 || rows == 0) {
         rows = A.rows;
         cols = A.cols;
-        data = A.nullptr;
+        data = nullptr;
+        delete[] data;
+        return *this;
 }
     if (rows * cols == A.rows * A.cols) {
         rows = A.rows;
@@ -171,8 +175,6 @@ Matrix& Matrix::operator=(const Matrix& A)
         memcpy(data, A.data, rows * cols * sizeof(double));
         return *this;
     }
-
-    if (this == &A) return *this;
     delete[] data;
     rows = A.rows;
     cols = A.cols;
