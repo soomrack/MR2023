@@ -175,16 +175,6 @@ struct Matrix matrix_divk(const struct Matrix A, const MatrixItem k)
 }
 
 
-int matrix_divk_for_exp(const struct Matrix A, const MatrixItem k)
-{
-    if (k == 0) return NAN;
-    for (size_t id = 0; id < A.cols * A.rows; ++id) {
-        A.data[id] /= k;
-    }
-    return 0;
-}
-
-
 // TRANS = A^T
 struct Matrix matrix_transpose(const struct Matrix A)
 {
