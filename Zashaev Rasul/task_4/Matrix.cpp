@@ -144,10 +144,10 @@ Matrix& Matrix::operator=(const Matrix& A)
 
     if (A.rows * A.cols == 0)
     {
+        delete[] data;
         rows = A.rows;
         cols = A.cols;
         data = A.data;
-        delete[] data;
         return *this;
     }
     
