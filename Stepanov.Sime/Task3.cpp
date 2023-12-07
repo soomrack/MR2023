@@ -6,7 +6,6 @@
 
 typedef double MatrixItem;
 
-
 class Matrix {
 private:
     size_t rows;
@@ -15,9 +14,9 @@ private:
 public:
     Matrix() : cols(0), rows(0), data(nullptr) {};
     Matrix(const size_t rows, const size_t cols);
-    Matrix(const size_t cols, const size_t rows, const MatrixItem* data);
+    Matrix(const size_t cols, const size_t rows, const MatrixItem* values);
     Matrix(const Matrix& A);
-    Matrix(Matrix&& A);
+    Matrix(Matrix&& A) noexcept;
     ~Matrix();
 public:
     Matrix& operator+(const Matrix& A);
@@ -27,7 +26,7 @@ public:
     Matrix& operator/(const MatrixItem k);
 public:
     Matrix& operator=(const Matrix& A);
-    Matrix& operator=(Matrix&& A);
+    Matrix& operator=(Matrix&& A) noexcept;
 public:
     Matrix& operator+=(const Matrix& A);
     Matrix& operator-=(const Matrix& A);
@@ -39,7 +38,7 @@ public:
     void set_one();
     Matrix& trans();
     MatrixItem det(Matrix& A);
-    Matrix& exp(Matrix& A);
+    Matrix& exp();
 public:
     void print(const Matrix& A);
 };
@@ -76,6 +75,12 @@ Matrix::Matrix(const size_t cols, const size_t rows, const MatrixItem* values)
 
 Matrix::Matrix(const Matrix& A)
 {
+    if (A.data == nullptr) {
+        cols = A.cols;
+        rows = A.rows;
+        data = nullptr;
+        return;
+    };
     rows = A.rows;
     cols = A.cols;
     data = new MatrixItem[rows * cols];
@@ -115,6 +120,9 @@ void Matrix::set_one()
 
 void Matrix::print(const Matrix& A)
 {
+    if (data == nullptr) throw Matrix_Exception("Error in Matrix_print");
+
+    std::cout << "\n";
     for (size_t row = 0; row < A.rows; ++row) {
         std::cout << "[ ";
         for (size_t col = 0; col < A.cols; ++col) {
@@ -128,20 +136,18 @@ void Matrix::print(const Matrix& A)
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
-    if (this == &A) return *this;
+    if (&A == this) return *this;
 
-    if (rows * cols == A.rows * A.cols) {
-        rows = A.rows;
-        cols = A.cols;
-        memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
+    cols = A.cols;
+    rows = A.rows;
+
+    if (A.data == nullptr){
+        data = nullptr;
         return *this;
     }
-
-    delete[] data;
-    rows = A.rows;
-    cols = A.cols;
+        delete[] data;
     data = new MatrixItem[rows * cols];
-    std::memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
+    memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
     return *this;
 }
 
@@ -313,22 +319,21 @@ MatrixItem Matrix::det(Matrix& A)
 
 
 // exp = exp(A)
-Matrix& Matrix::exp(Matrix& A)
+Matrix& Matrix::exp()
 {
-    if (A.cols != A.rows)
+    if (cols != rows)
         throw Matrix_Exception("exp: Not square");
-    if (A.cols == 0)
+    if (cols == 0)
         throw Matrix_Exception("exp: ");
 
-    Matrix* exp = new Matrix(A.rows, A.cols);
-    exp->set_one();
-
-    Matrix term(A.rows, A.cols);
+    Matrix term = Matrix(rows, cols);
     term.set_one();
+
+    Matrix* exp = new Matrix(term);
 
     for (int idx = 1; idx < 100; ++idx) {
 
-        term = term * A / idx;
+        term = term * (*this) / idx;
         *exp += term;
 
     }
