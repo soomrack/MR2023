@@ -40,7 +40,7 @@ public:
     void set_one();
     Matrix& trans();
     MatrixItem det(Matrix& A);
-    Matrix& exp(int idx);
+    Matrix& exp(unsigned int idx);
     void print(const Matrix& A);
 };
 
@@ -135,9 +135,7 @@ Matrix& Matrix::operator=(const Matrix& A)
         memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
         return *this;
     }
-  if (A.cols != cols || A.rows != rows)
-        throw Matrix_Exception("Operator-: Incorrect sizes");
-    
+    if (rows * cols == 0) return *this;
     delete[] data;
     rows = A.rows;
     cols = A.cols;
