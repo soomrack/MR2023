@@ -30,7 +30,7 @@ public:
     Matrix& operator*(const Matrix& A);
     Matrix& transposition();
     MatrixItem determinant();
-    Matrix& exponent();
+    Matrix& exponent(int m);
     Matrix& set_zero();
     Matrix& set_one();
     Matrix& operator*(const MatrixItem A);
@@ -71,9 +71,7 @@ Matrix::Matrix(const size_t rows, const size_t cols, const MatrixItem* values)
 
 Matrix::~Matrix()
 {
-    if (data != nullptr) {
-        delete[] data;
-    }
+    delete[] data;
 }
 
 
@@ -114,7 +112,9 @@ Matrix& Matrix::operator=(const Matrix& A)
 {
     if (&A == this) return *this;
 
-    delete[] data;
+    if (A.data == nullptr)
+        throw MatrixExeption("no memory for matrix");
+
     cols = A.cols;
     rows = A.rows;
     data = new MatrixItem[A.cols * A.rows];
@@ -252,25 +252,26 @@ Matrix& Matrix::set_zero()
 
 Matrix& Matrix::set_one()
 {
-    for (size_t idx = 0; idx < rows * cols; idx += cols + 1) this->data[idx] = 1;
+    set_zero();
+    for (size_t i = 0; i < rows * cols; i += cols + 1)
+        data[i] = 1.;
     return *this;
 }
 
 
 // C = e^A
-Matrix& Matrix::exponent()
+Matrix& Matrix::exponent(int m = 5)
 {
     if (cols != rows)
         throw MatrixExeption("the numbers of columns znd rows of the matrix do not match");
 
     Matrix* previous_step = new Matrix(rows, cols);
-    previous_step->set_zero();
     previous_step->set_one();
     previous_step->operator+(*this);
 
     Matrix* exp = new Matrix(rows, cols);
 
-    for (unsigned int k = 2; k <= 5; ++k) {
+    for (unsigned int k = 2; k <= m; ++k) {
 
         *exp = (*previous_step * *this) * (MatrixItem)(1. / k);
 
