@@ -160,9 +160,11 @@ void Matrix::print()
 
 
 Matrix& Matrix::operator=(const Matrix& A)
-    if (cols == 0 || rows == 0)
-        throw Matrix_Exception("Operator-: Incorrect sizes");
-
+    if (cols == 0 || rows == 0) {
+        rows = A.rows;
+        cols = A.cols;
+        data = A.nullptr;
+}
     if (rows * cols == A.rows * A.cols) {
         rows = A.rows;
         cols = A.cols;
