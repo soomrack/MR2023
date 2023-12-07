@@ -312,7 +312,7 @@ MatrixItem Matrix::det(Matrix& A)
 
 
 // exp = exp(A)
-Matrix& Matrix::exp(Matrix& A)
+Matrix& Matrix::exp(unsigned int idx = 100)
 {
     if (A.cols != A.rows)
         throw Matrix_Exception("exp: Not square");
