@@ -79,6 +79,10 @@ Matrix::Matrix(Matrix& A)
 {
     rows = A.rows;
     cols = A.cols;
+    if (A.data == nullptr) {
+        data = nullptr;
+        return;
+    }
     data = new MatrixItem[rows * cols];
     memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
 }
@@ -115,12 +119,14 @@ Matrix& Matrix::operator=(const Matrix& A)
     cols = A.cols;
     rows = A.rows;
 
-    if (A.data == nullptr)
+    if (A.data == nullptr) {
         data = nullptr;
-    else
-        delete[] data;
-        data = new MatrixItem[rows * cols];
-        memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
+        return *this;
+    }
+
+    delete[] data;
+    data = new MatrixItem[rows * cols];
+    memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
     return *this;
 }
 
@@ -247,6 +253,7 @@ MatrixItem Matrix::determinant()
 
 Matrix& Matrix::set_zero()
 {
+    if (data == nullptr) return *this;
     memset(this->data, 0, sizeof(MatrixItem) * rows * cols);
     return *this;
 }
@@ -264,6 +271,10 @@ Matrix& Matrix::set_one()
 // C = e^A
 Matrix& Matrix::exponent(unsigned int m = 5)
 {
+    if ((rows == 0) || (cols == 0))
+    {
+       throw MatrixExeption("Can't find exponent matrix for zero matrix"); 
+    }
     if (cols != rows)
         throw MatrixExeption("the numbers of columns znd rows of the matrix do not match");
 
@@ -283,21 +294,21 @@ Matrix& Matrix::exponent(unsigned int m = 5)
 
 
 int main() {
-    MatrixItem values_1[] = { 1., 2., 3., 4.,
-                           5., 6., 7., 8.,
-                           9., 10., 11., 12. };
-    MatrixItem values_2[] = { 12., 11., 10.,
-                           9., 8., 7.,
-                           6., 5., 4.,
-                           3., 2., 1. };
-    MatrixItem values_3[] = { 1., 2., 3.,
-                           4., 5., 6.,
-                           7., 8., 10. };
-    Matrix A(4, 3, values_1);
+    MatrixItem values_1[] = { 21., 22., 23., 24.,
+                           19., 18., 17., 16.,
+                           100., 200., 300., 400. };
+    MatrixItem values_2[] = { 3., 4., 5.,
+                           6., 8., 10.,
+                           20., 21., 24.,
+                           30., 40., 50. };
+    MatrixItem values_3[] = { 11., 12., 121.,
+                           144., 13., 169.,
+                           14., 196., 225. };
+    Matrix A(4, 3, values_2);
     Matrix B(A);
     Matrix C(4, 3);
     Matrix D(4, 3);
-    Matrix E(3, 4, values_2);
+    Matrix E(3, 4, values_1);
     Matrix F(3, 3);
     Matrix G(3, 4);
     Matrix I(3, 3, values_3);
