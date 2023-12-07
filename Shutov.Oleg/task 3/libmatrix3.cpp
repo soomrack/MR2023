@@ -23,8 +23,8 @@ public:
 
     void set_zero();
     void set_one();
-    void matrix_transpose();
-    Matrix matrix_exponent(Matrix&);
+    Matrix& matrix_transpose();
+    Matrix& matrix_exponent(Matrix&);
     MatrixItem matrix_determinant(Matrix&);
 
     void print(const Matrix&);
@@ -37,11 +37,11 @@ public:
     void operator/=(const MatrixItem);
     void operator*=(const Matrix&);
 
-    Matrix operator+(const Matrix&);
-    Matrix operator-(const Matrix&);
-    Matrix operator*(const Matrix&);
-    Matrix operator*(const MatrixItem);
-    Matrix operator/(const MatrixItem);
+    Matrix& operator+(const Matrix&);
+    Matrix& operator-(const Matrix&);
+    Matrix& operator*(const Matrix&); 
+    Matrix& operator*(const MatrixItem);
+    Matrix& operator/(const MatrixItem);
  };
 
 
@@ -61,18 +61,16 @@ Matrix_Exception NOTSQUARE("Error: the matrix should have nxn size\n");
 Matrix_Exception NOTEQUAL("Error: the matrix should have the same size\n");
 Matrix_Exception MULTIPLYERROR("Error: first matrix cols not equal to the second matrix row.\n");
 Matrix_Exception ZERODIVISION("Error: divide by zero\n");
-Matrix_Exception MEM_ERROR("Error: memory is not allocated\n");
 Matrix_Exception EMPTY_MATRIX("Error: Function can't return an empty matrix\n");
 Matrix_Exception LARGESIZE("Error: Size of the matrix is too big\n");
 
 
 
 Matrix::Matrix(const Matrix& matrix) {
-    this->rows = matrix.rows;
-    this->cols = matrix.cols;
-    this->data = new MatrixItem[this->rows * this->cols];
+    rows = matrix.rows;
+    cols = matrix.cols;
+    data = new MatrixItem[this->rows * this->cols];
     if (!this->data)
-        throw MEM_ERROR;
     memcpy(this->data, matrix.data, this->rows * this->cols * sizeof(MatrixItem));
 }
 
@@ -84,7 +82,6 @@ Matrix::Matrix(size_t num_row, size_t num_col, MatrixItem* array)
     this->cols = num_col;
     this->data = new MatrixItem[rows * cols];
     if (!this->data)
-        throw MEM_ERROR;
     memcpy(this->data, array, rows * cols * sizeof(MatrixItem));
 }
 
@@ -99,19 +96,19 @@ Matrix::Matrix(Matrix&& mat) noexcept : data(mat.data), rows(mat.rows), cols(mat
 
 Matrix::~Matrix()
 {
-    if (this->data != nullptr)
-    {
-        delete[] this->data;
-        this->cols = 0;
-        this->rows = 0;
-        this->data = nullptr;
-    }
+    delete[] this->data;
+    this->cols = 0;
+    this->rows = 0;
+    this->data = nullptr;
+   
 }
 
 
 void Matrix::set_zero()
 {
     memset(this->data, 0, this->rows * this->cols * sizeof(MatrixItem));
+    if (data = nullptr)
+        throw EMPTY_MATRIX;
 }
 
 
@@ -122,6 +119,8 @@ void Matrix::set_one()
     {
         this->data[idx] = 1.0;
     }
+    if (data = nullptr)
+        throw EMPTY_MATRIX;
 }
 
 
@@ -139,17 +138,15 @@ void Matrix::print(const Matrix& A)
 
 
 // A^T
-void Matrix::matrix_transpose()
+Matrix& Matrix::matrix_transpose()
 {
-    Matrix trans(this->cols, this->rows);
-    for (unsigned int row = 0; row < trans.rows; row++)
-    {
-        for (unsigned int col = 0; col < trans.cols; col++)
-        {
-            trans.data[row * trans.cols + col] = this->data[col * trans.rows + row];
+    Matrix* A = new Matrix(cols, rows);
+    for (size_t row = 0; row < A->rows; ++row) {
+        for (size_t col = 0; col < A->cols; ++col) {
+            A->data[col * A->cols + row] = data[row * cols + col];
         }
     }
-    *this = trans;
+    return *A;
 }
 
 
@@ -223,7 +220,6 @@ Matrix& Matrix::operator=(const Matrix& A)
     this->cols = A.cols;
     this->data = new MatrixItem[rows * cols];
     if (!data)
-        throw MEM_ERROR;
     memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
     return *this;
 }
@@ -245,7 +241,7 @@ Matrix& Matrix::operator=(Matrix&& A) noexcept
 
 
 // A += B
-Matrix Matrix::operator+(const Matrix& B)
+Matrix& Matrix::operator+(const Matrix& B)
 {
     Matrix add(*this);
     add += B;
@@ -254,7 +250,7 @@ Matrix Matrix::operator+(const Matrix& B)
 
 
 // A -= B
-Matrix Matrix::operator-(const Matrix& B)
+Matrix& Matrix::operator-(const Matrix& B)
 {
     Matrix sub(*this);
     sub -= B;
@@ -263,7 +259,7 @@ Matrix Matrix::operator-(const Matrix& B)
 
 
 // A *= k
-Matrix Matrix::operator*(const MatrixItem k)
+Matrix& Matrix::operator*(const MatrixItem k)
 {
     Matrix multiply(*this);
     multiply *= k;
@@ -272,7 +268,7 @@ Matrix Matrix::operator*(const MatrixItem k)
 
 
 // C = A * B
-Matrix Matrix::operator*(const Matrix& B)
+Matrix& Matrix::operator*(const Matrix& B)
 {
     Matrix multiply(*this);
     multiply *= B;
@@ -281,7 +277,7 @@ Matrix Matrix::operator*(const Matrix& B)
 
 
 // A /= k
-Matrix Matrix::operator/(const MatrixItem k)
+Matrix& Matrix::operator/(const MatrixItem k)
 {
     Matrix multiply(*this);
     multiply /= k;
@@ -312,8 +308,8 @@ MatrixItem Matrix::matrix_determinant(Matrix& A)
 }
 
 
-// exp = exp(A)
-Matrix Matrix::matrix_exponent(Matrix& A)
+// exp(A)
+Matrix& Matrix::matrix_exponent(Matrix& A)
 {
     if (A.cols != A.rows)
         throw NOTSQUARE;
