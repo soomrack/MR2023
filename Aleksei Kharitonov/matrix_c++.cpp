@@ -38,7 +38,7 @@ public:
     void set_one();
     Matrix& trans();
     MatrixItem det(Matrix& A);
-    Matrix& exp(Matrix& A);
+    Matrix& exp();
 public:
     void print(const Matrix& A);
 };
@@ -75,6 +75,13 @@ Matrix::Matrix(const size_t cols, const size_t rows, const MatrixItem* values)
 
 Matrix::Matrix(const Matrix& A)
 {
+    if (A.data == nullptr) {
+        cols = 0;
+        rows = 0;
+        data = nullptr;
+        return;
+    };
+
     rows = A.rows;
     cols = A.cols;
     data = new MatrixItem[rows * cols];
@@ -130,8 +137,15 @@ void Matrix::print(const Matrix& A)
 
 Matrix& Matrix::operator=(const Matrix& A)
 {
+    if (A.data == nullptr) {
+        cols = 0;
+        rows = 0;
+        data = nullptr;
+        throw Matrix_Exception("Operator=: NULL matrix");
+    };
+
     if (this == &A) return *this;
-    delete[] data;
+ 
     if (rows * cols == A.rows * A.cols) {
         rows = A.rows;
         cols = A.cols;
@@ -315,22 +329,21 @@ MatrixItem Matrix::det(Matrix& A)
 
 
 // exp = exp(A)
-Matrix& Matrix::exp(Matrix& A)
+Matrix& Matrix::exp()
 {
-    if (A.cols != A.rows)
+    if (cols != rows)
         throw Matrix_Exception("exp: Not square");
-    if (A.cols == 0)
+    if (cols == 0)
         throw Matrix_Exception("exp: ");
 
-    Matrix* exp = new Matrix(A.rows, A.cols);
-    exp->set_one();
-
-    Matrix term(A.rows, A.cols);
+    Matrix term = Matrix(rows, cols);
     term.set_one();
+
+    Matrix* exp = new Matrix(term);
 
     for (int idx = 1; idx < 100; ++idx) {
 
-        term = term * A / idx;
+        term = term * (*this) / idx;
         *exp += term;
 
     }
