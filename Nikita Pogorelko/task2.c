@@ -190,24 +190,40 @@ struct Matrix matrix_transpose(const struct Matrix A)
 
 
 // det (A)
-MatrixItem matrix_determinant(const struct Matrix A)
+struct Matrix Minor(const struct Matrix A, const size_t row, const size_t col)
 {
-    if (A.cols == 1 && A.rows == 1) {
-        return A.data[0];
+    struct Matrix Minor = matrix_create(A.rows - 1, A.cols - 1);
+    size_t idx = 0;
+    for (size_t rowA = 0; rowA < A.rows; ++rowA) {
+        if (rowA == row) continue;
+        for (size_t colA = 0; colA < A.cols; ++colA) {
+            if (colA == col) continue;
+            Minor.data[idx] = A.data[rowA * A.cols + colA];
+            ++idx;
+        }
     }
+    return Minor;
+}
 
-    if (A.cols == 2 && A.rows == 2) {
-        return A.data[0] * A.data[3] - A.data[1] * A.data[2];
-    }
 
-    if (A.cols == 3 && A.rows == 3) {
-        return A.data[0] * A.data[4] * A.data[8]
-            + A.data[1] * A.data[5] * A.data[6]
-            + A.data[2] * A.data[7] * A.data[3]
-            - A.data[2] * A.data[4] * A.data[6]
-            - A.data[0] * A.data[5] * A.data[7]
-            - A.data[1] * A.data[8] * A.data[3];
+MatrixItem matrix_determinant(const struct Matrix A) {
+    if (A.rows != A.cols) {
+        matrix_error();
+        return NAN;
     }
+    double det = 0;
+    int k = 1;
+    if (A.rows == 0) return NAN;
+    if (A.rows == 1) return A.data[0];
+    if (A.rows == 2) return (A.data[0] * A.data[3] - A.data[2] * A.data[1]);
+    for (size_t id = 0; idx < A.rows; id++) {
+        struct Matrix temp = Minor(A, 0, id);
+        det += k * A.data[idx] * matrix_determinant(temp);
+        k = -k;
+        matrix_delete(&temp);
+    }
+    return det;
+}
 
     return NAN;
 }
