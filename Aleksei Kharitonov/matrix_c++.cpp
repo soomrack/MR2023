@@ -76,18 +76,10 @@ Matrix::Matrix(const size_t cols, const size_t rows, const MatrixItem* values)
 Matrix::Matrix(const Matrix& A)
 {
     if (A.data == nullptr) {
-        cols = 0;
-        rows = 0;
+        cols = A.cols;
+        rows = A.rows;
         data = nullptr;
         return;
-    };
-
-    if (A.rows == 0) {
-        rows = A.rows + 1;
-    };
-
-    if (A.rows == 0) {
-        rows = A.cols + 1;
     };
     rows = A.rows;
     cols = A.cols;
@@ -149,9 +141,10 @@ Matrix& Matrix::operator=(const Matrix& A)
     cols = A.cols;
     rows = A.rows;
 
-    if (A.data == nullptr)
+    if (A.data == nullptr){
         data = nullptr;
-    else
+        return *this;
+    }
         delete[] data;
     data = new MatrixItem[rows * cols];
     memcpy(this->data, A.data, rows * cols * sizeof(MatrixItem));
