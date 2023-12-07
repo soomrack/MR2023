@@ -69,8 +69,8 @@ Matrix_Exception LARGESIZE("Error: Size of the matrix is too big\n");
 Matrix::Matrix(const Matrix& matrix) {
     rows = matrix.rows;
     cols = matrix.cols;
+    if (rows * cols == 0) return; 
     data = new MatrixItem[rows * cols];
-    if (!data)
     memcpy(data, matrix.data, rows * cols * sizeof(MatrixItem));
 }
 
@@ -80,9 +80,9 @@ Matrix::Matrix(size_t num_row, size_t num_col, MatrixItem* array)
 
     rows = num_row;
     cols = num_col;
+    if (rows * cols == 0) return;
     data = new MatrixItem[rows * cols];
-    if (!data)
-    memcpy(data, array, rows * cols * sizeof(MatrixItem));
+     memcpy(data, array, rows * cols * sizeof(MatrixItem));
 }
 
 
@@ -216,7 +216,8 @@ Matrix& Matrix::operator=(const Matrix& A)
     delete[] data;
     rows = A.rows;
     cols = A.cols;
-    if (data == nullptr) return;
+    if (data == nullptr) data = nullptr;
+        return;
     data = new MatrixItem[rows * cols];
     memcpy(data, A.data, rows * cols * sizeof(MatrixItem));
     return *this;
@@ -241,45 +242,45 @@ Matrix& Matrix::operator=(Matrix&& A) noexcept
 // A += B
 Matrix& Matrix::operator+(const Matrix& B)
 {
-    Matrix add(*this);
-    add += B;
-    return add;
+    Matrix *add = new Matrix (*this);
+    *add += B;
+    return *add;
 }
 
 
 // A -= B
 Matrix& Matrix::operator-(const Matrix& B)
 {
-    Matrix sub(*this);
-    sub -= B;
-    return sub;
+    Matrix *sub = new Matrix (*this);
+    *sub -= B;
+    return *sub;
 }
 
 
 // A *= k
 Matrix& Matrix::operator*(const MatrixItem k)
 {
-    Matrix multiply(*this);
-    multiply *= k;
-    return multiply;
+    Matrix *multiply = new Matrix (*this); //через new 
+    *multiply *= k;
+    return *multiply;
 }
 
 
 // C = A * B
 Matrix& Matrix::operator*(const Matrix& B)
 {
-    Matrix multiply(*this);
-    multiply *= B;
-    return multiply;
+    Matrix *multiply = new Matrix (*this);
+    *multiply *= B;
+    return *multiply;
 }
 
 
 // A /= k
 Matrix& Matrix::operator/(const MatrixItem k)
 {
-    Matrix multiply(*this);
-    multiply /= k;
-    return multiply;
+    Matrix *multiply = new Matrix (*this);
+    *multiply /= k;
+    return *multiply;
 }
 
 
