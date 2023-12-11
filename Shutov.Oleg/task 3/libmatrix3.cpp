@@ -21,8 +21,8 @@ public:
     Matrix(const Matrix&);
     Matrix(Matrix&&) noexcept;
 
-    Matrix& set_zero();
-    Matrix& set_one();
+    void set_zero();
+    void set_one();
     Matrix& matrix_transpose();
     Matrix& matrix_exponent(Matrix&);
     MatrixItem matrix_determinant(Matrix&);
@@ -110,7 +110,7 @@ Matrix::~Matrix()
 }
 
 
-Matrix& Matrix::set_zero()
+void Matrix::set_zero()
 {
     if (data = nullptr) return;
     memset(data, 0, rows * cols * sizeof(MatrixItem));
@@ -118,7 +118,7 @@ Matrix& Matrix::set_zero()
 }
 
 
-Matrix& Matrix::set_one()
+void Matrix::set_one()
 {
     set_zero();
     for (unsigned int idx = 0; idx < cols * rows; idx += rows + 1)
@@ -202,7 +202,6 @@ Matrix& Matrix::operator*=(const Matrix& matrix)
 {
     if (cols != matrix.rows)
         throw MULTIPLYERROR;
-    Matrix *mult = new Matrix(*this);
     Matrix multiplication(rows, matrix.cols);
     for (unsigned int row = 0; row < multiplication.rows; row++)
     {
@@ -216,8 +215,7 @@ Matrix& Matrix::operator*=(const Matrix& matrix)
             multiplication.data[row * multiplication.cols + col] = sum;
         }
     }
-    *this = multiplication;
-    return *mult;
+    return *this;
 }
 
 
