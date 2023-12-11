@@ -71,8 +71,8 @@ Matrix::Matrix(const Matrix& matrix) {
     cols = matrix.cols;
     if (rows * cols == 0) {
         data = nullptr;
-        }
         return;
+    }
     data = new MatrixItem[rows * cols];
     memcpy(data, matrix.data, rows * cols * sizeof(MatrixItem));
 }
@@ -85,8 +85,8 @@ Matrix::Matrix(size_t num_row, size_t num_col, MatrixItem* array)
     cols = num_col;
     if (rows * cols == 0) {
         data = nullptr;
-        }
         return;
+    }
     data = new MatrixItem[rows * cols];
      memcpy(data, array, rows * cols * sizeof(MatrixItem));
 }
@@ -162,6 +162,7 @@ Matrix& Matrix::operator+=(const Matrix& matrix)
     {
         data[index] += matrix.data[index];
     }
+    return *this;
 }
 
 
@@ -173,6 +174,7 @@ Matrix& Matrix::operator-=(const Matrix& matrix)
     {
         data[index] -= matrix.data[index];
     }
+    return *this;
 }
 
 
@@ -182,6 +184,7 @@ Matrix& Matrix::operator*=(const MatrixItem k)
     {
         data[idx] *= k;
     }
+    return *this;
 }
 
 
@@ -191,6 +194,7 @@ Matrix& Matrix::operator/=(const MatrixItem k)
     {
         data[idx] /= k;
     }
+    return *this;
 }
 
 
