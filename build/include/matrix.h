@@ -25,7 +25,7 @@ typedef struct __attribute__((visibility("hidden"))) { int _; } NoArg;
 typedef struct {
     int numRows;
     int numCols;
-    double **pData;
+    double *pData;
 } Matrix_Instance;
 
 enum Matrix_Type {
