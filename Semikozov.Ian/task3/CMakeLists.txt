@@ -4,6 +4,7 @@ project(matrix  VERSION 0.1
                 DESCRIPTION "Library to work with matrix"
                 LANGUAGES CXX)
 
+set(SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/matrix.cpp)
 set(HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/matrix.hpp)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -17,7 +18,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
                         SOVERSION 1
                         PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/matrix.hpp)
 
-target_sources(${PROJECT_NAME} PRIVATE ${HEADER_FILES})
+target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES} ${HEADER_FILES})
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         DESTINATION ${CMAKE_BINARY_SOURCE_DIR}/include)
 target_compile_options(${PROJECT_NAME} PRIVATE -fvisibility=hidden)
