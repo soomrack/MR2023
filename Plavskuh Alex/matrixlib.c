@@ -243,9 +243,13 @@ struct Matrix matrix_exp(struct Matrix A)
 		matrix_delete(&term);
 		term = matrix_division(term_next, idx);
 		matrix_delete(&term_next);
+	if (matrix_ad(exp, term) != 0) {
+		matrix_delete(&term);
+		matrix_delete(&exp);
+		return NULL_MATRIX;
 		matrix_add(exp, term);
-
 	}
-	matrix_delete(&term);
-	return exp;
+		
+matrix_delete(&term);
+return exp;
 }
