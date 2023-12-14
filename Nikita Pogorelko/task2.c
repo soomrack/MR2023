@@ -267,8 +267,8 @@ struct Matrix matrix_exp(const struct Matrix A, const int k)
         temp_more = matrix_mult(temp, A);
         matrix_delete(&temp_more);
         matrix_add(exp, temp_more);
-        if (temp.data == 0) {
-            matrix_delete(&temp);
+        if (temp_more.data == 0) {
+            matrix_delete(&temp_more);
             matrix_delete(&exp);
         }
         matrix_delete(&temp_more);
