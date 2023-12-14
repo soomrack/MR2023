@@ -261,12 +261,16 @@ struct Matrix matrix_exp(const struct Matrix A, const int k)
     };
 
     matrix_set_one(temp_more);
-    int k0 = 1;
 
     for (int id = 1; id <= k; ++id) {
-        matrix_divk_for_exp(temp, k0 * id);
+        matrix_divk_for_exp(temp, id);
         temp_more = matrix_mult(temp, A);
+        matrix_delete(&temp_more);
         matrix_add(exp, temp_more);
+        if (temp.data == 0) {
+            matrix_delete(&temp);
+            matrix_delete(&exp);
+        }
         matrix_delete(&temp_more);
     }
     matrix_delete(&temp_more);
