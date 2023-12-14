@@ -22,6 +22,9 @@ Matrix create_zero_matrix(const unsigned int rows, const unsigned int cols) {
     zero.rows = rows;
     zero.values = malloc(rows * cols * sizeof(double));
     zero.item = malloc(rows * sizeof(double*));
+    if ((zero.values == nullptr) or (zero.item == nullptr)) {
+        return EMPTY;
+    }
     for(int k = 0; k < rows * cols; k++){
         zero.values[k] = 0.0;
     }
@@ -37,7 +40,10 @@ Matrix create_one_matrix(const unsigned int rows, const unsigned int cols) {
     one.rows = rows;
     one.values = malloc(rows * cols * sizeof(double));
     one.item = malloc(rows * sizeof(double*));
-    for(int k = 0; k < rows * cols; k++){
+    if ((one.values == nullptr) or (one.item == nullptr)) {
+        return EMPTY;
+    }
+    for (int k = 0; k < rows * cols; k++) {
         if((int)(k / cols) == (k % cols)){
             one.values[k] = 1.0;
         }
@@ -63,6 +69,9 @@ Matrix matrix_add(const Matrix fst_matx, const Matrix snd_matx) {
         message(ERR);
         return EMPTY;
     }
+    if (fst_matx == EMPTY or snd_matx == EMPTY) {
+        return EMPTY;
+    }
     unsigned int cols = snd_matx.cols;
     unsigned int rows = fst_matx.rows;
     Matrix res_matx = create_zero_matrix(rows,cols);
@@ -76,6 +85,9 @@ Matrix matrix_subt(const Matrix fst_matx, const Matrix snd_matx) {
     if (fst_matx.rows != snd_matx.rows || fst_matx.cols != snd_matx.cols){
         message(SUB);
         message(ERR);
+        return EMPTY;
+    }
+    if (fst_matx == EMPTY or snd_matx == EMPTY) {
         return EMPTY;
     }
     unsigned int cols = snd_matx.cols;
@@ -93,6 +105,9 @@ Matrix matrix_mult(const Matrix fst_matx, const Matrix snd_matx) {
         message(ERR);
         return EMPTY;
     }
+    if (fst_matx == EMPTY or snd_matx == EMPTY) {
+        return EMPTY;
+    }
     unsigned int cols = snd_matx.cols;
     unsigned int rows = fst_matx.rows;
     Matrix res_matx = create_zero_matrix(rows,cols);
@@ -107,6 +122,9 @@ Matrix matrix_mult(const Matrix fst_matx, const Matrix snd_matx) {
 }
 
 Matrix matrix_mult_by_num(const double a, const Matrix matrix) {
+    if (matrix == EMPTY) {
+        return EMPTY;
+    }
     unsigned int cols = matrix.cols;
     unsigned int rows = matrix.rows;
     Matrix res_matx = create_zero_matrix(rows,cols);
@@ -134,6 +152,9 @@ double matrix_det(const Matrix matrix) {
         message(ERR);
         return NAN;
     }
+    if (matrix == EMPTY) {
+        return EMPTY;
+    }
     double det = 1;
     Matrix trian_mat = copy_mat(matrix);
     for(int row_fix = 1; row_fix < trian_mat.rows; row_fix++) { // row that will be subtracted
@@ -157,6 +178,9 @@ Matrix matrix_pow(Matrix matrix, const int power){
     if(power == 0){
         return create_one_matrix(matrix.rows,matrix.cols);
     }
+    if (fst_matx == EMPTY or snd_matx == EMPTY) {
+        return EMPTY;
+    }
     Matrix res_mat = copy_mat(matrix);
     for(int k = 1; k < power; k++){
         double* val_mem = res_mat.values;
@@ -171,6 +195,9 @@ Matrix matrix_pow(Matrix matrix, const int power){
 }
 
 double check_max_dif(const Matrix fst_mat, const Matrix snd_mat){
+    if (matrix == EMPTY) {
+        return EMPTY;
+    }
     double dif = 0.0;
     for(int k = 0; k < fst_mat.cols * fst_mat.rows; k++){
         if(fabs(fst_mat.values[k] - snd_mat.values[k]) > dif){
@@ -187,6 +214,9 @@ Matrix matrix_exp(const Matrix matrix){
     if(matrix.rows != matrix.cols){
         message(EX);
         message(ERR);
+        return EMPTY;
+    }
+    if (matrix == EMPTY) {
         return EMPTY;
     }
     Matrix res_mat = create_one_matrix(matrix.rows,matrix.cols);
@@ -232,6 +262,9 @@ void free_mat(Matrix *matrix) {
 }
 
 void print_matx(Matrix matrix) {
+    if (matrix == EMPTY) {
+        return EMPTY;
+    }
     printf("\n");
     for(int k = 0; k < matrix.rows; k++){
         printf("(");
@@ -243,6 +276,9 @@ void print_matx(Matrix matrix) {
 }
 
 void print_items(Matrix matrix) {
+    if (matrix == EMPTY) {
+        return EMPTY;
+    }
     printf("\n");
     for(int k = 0; k < matrix.rows; k++){
         printf("(");
