@@ -42,7 +42,7 @@ void matrix_delete(struct Matrix* A)
 
 void matrix_set_zero(struct Matrix A)
 {
-    if (A.data != NULL) return NULL_MATRIX;
+    if (A.data != NULL) return;
         memset(A.data, 0, sizeof(MatrixItem) * A.rows * A.cols);
 }
 
@@ -216,9 +216,8 @@ struct Matrix Minor(const struct Matrix A, const size_t row, const size_t col)
 }
 
 
-MatrixItem matrix_delete(const struct Matrix A) {
+MatrixItem matrix_determinant(const struct Matrix A) {
     if (A.rows != A.cols) {
-        matrix_error();
         return NAN;
     }
     double det = 0;
@@ -226,9 +225,9 @@ MatrixItem matrix_delete(const struct Matrix A) {
     if (A.rows == 0) return NAN;
     if (A.rows == 1) return A.data[0];
     if (A.rows == 2) return (A.data[0] * A.data[3] - A.data[2] * A.data[1]);
-    for (size_t id = 0; idx < A.rows; id++) {
+    for (size_t id = 0; id < A.rows; id++) {
         struct Matrix temp = Minor(A, 0, id);
-        det += k * A.data[idx] * matrix_delete(temp);
+        det += k * A.data[id] * matrix_determinant(temp);
         k = -k;
         matrix_delete(&temp);
     }
