@@ -246,8 +246,8 @@ struct Matrix matrix_exp(struct Matrix A)
         term = matrix_division(term_next, (double)i);
         matrix_delete(&term_next);
 
-        if (matrix_sum(exp, term_next) != 0) {
-            matrix_delete(&sterm_next);
+        if (marix_sum(exp, term_next) != 0) {
+            matrix_delete(&term_next);
             matrix_delete(&exp);
             return NULL_MATRIX;
         }
