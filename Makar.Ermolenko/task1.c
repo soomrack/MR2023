@@ -1,0 +1,173 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+
+typedef long long int Money;
+
+
+struct Person
+{
+    Money schet;
+    char name[6];
+    Money salary;
+    Money rent;
+    Money platezh;
+    Money hata;
+};
+
+
+struct Person alice;
+struct Person bob;
+
+
+void alice_innit()
+{
+    alice.schet = 1000 * 1000 * 100;
+    strcpy(alice.name, "Alice");
+    alice.salary = 200 * 1000 * 100;
+    alice.rent = 30000 * 10;
+    alice.platezh = 0;
+    alice.hata = 0;
+}
+
+
+void bob_innit()
+{
+    //struct person alice = bob;
+    bob.schet = 1000 * 1000 * 100;
+    strcpy(bob.name, "Bob");
+    bob.salary = 200 * 1000 * 100;
+    bob.rent = 10000 * 100;
+    bob.platezh = 0;
+    bob.hata = 20 * 1000 * 1000;
+}
+
+
+void bob_platezh(struct Person person)
+{
+    float procent = (0.07/12) ;
+    Money hata = 20000000;
+    Money kredit = hata - bob.schet;
+    Money n = 30 * 12;
+    float skobki = pow((procent+1),n); 
+    bob.platezh = kredit * (((procent) * skobki) / (skobki - 1)); 
+
+}
+
+
+void alice_deposite_income(const int year, const int month)
+{
+    double plusvklad = 1 + (0.11 / 12);
+    alice.schet += (Money)(alice.schet * plusvklad);
+}
+
+
+void bob_deposite_income(const int year, const int month)
+{
+    double plusvklad = 1 + (0.11 / 12);
+    bob.schet += (Money)(bob.schet * plusvklad);
+}
+
+void alice_salary_income(const int year, const int month)
+{
+    alice.schet += alice.salary;
+}
+
+
+void bob_salary_income(const int year, const int month)
+{
+    bob.schet += bob.salary;
+}
+
+void alice_rent(const int year, const int month)
+{
+    alice.schet -= alice.rent;
+}
+
+void bob_rent(const int year, const int month)
+{
+    bob.schet -= (bob.rent + bob.platezh);
+}
+
+void alice_inflation(const int year, const int month)
+{
+    double inflation = 1.07;
+    alice.rent *= inflation;
+    alice.salary *= inflation;
+    alice.hata *= inflation;
+}
+
+void bob_inflation(const int year, const int month)
+{
+    double inflation = 1.07;
+    bob.rent *= inflation;
+    bob.salary *= inflation;
+    bob.hata *= inflation;
+}
+
+void simulation_alice(struct Person person)
+{
+    int year = 2023;
+    int month = 9;
+    while(!(year == 2053 && month == 9))
+    {
+        alice_deposite_income(year, month);
+        alice_salary_income(year, month);
+        alice_rent(year, month);
+        alice_inflation(year, month);
+        ++month;
+        if (month == 13)
+        {
+            month == 1;
+            ++year;
+        }
+    }
+}
+
+
+void simulation_bob(struct Person person)
+{
+    int year = 2023;
+    int month = 9;
+    while (!(year == 2053 && month == 9))
+    {
+        bob_deposite_income(year, month);
+        bob_salary_income(year, month);
+        bob_rent(year, month);
+        bob_inflation(year, month);
+        ++month;
+        if (month == 13)
+        {
+            month == 1;
+            ++year;
+        }
+    }
+}
+
+void print (struct Person person)
+{
+    person.schet += person.hata;
+    printf("Name:%s\n", person.name);
+    printf("schet:%lld\n", person.schet);
+    printf("salary:%lld\n", person.salary);
+    printf("rent:%lld\n", person.rent);
+    printf("platezhzhzh: % lld\n", person.platezh);
+}
+
+
+int main()
+{
+    alice_init();
+    bob_init();
+
+    bob_platezh(bob);
+    
+    simulation_alice(alice);
+    print(alice);
+    
+    simulation_bob(bob);
+    print(bob);
+    
+    return 0;
+}
