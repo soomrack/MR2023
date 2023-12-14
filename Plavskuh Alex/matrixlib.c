@@ -246,12 +246,12 @@ struct Matrix matrix_exp(struct Matrix A)
         term = matrix_division(term_next, (double)i);
         matrix_delete(&term_next);
 
-        if (matrix_ad(exp, term_next) != 0) {
+        if (matrix_sum(exp, term_next) != 0) {
             matrix_delete(&sterm_next);
             matrix_delete(&exp);
             return NULL_MATRIX;
         }
-		
+	}	
 matrix_delete(&term);
 return exp;
 }
