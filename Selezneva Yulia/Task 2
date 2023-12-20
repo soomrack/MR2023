@@ -6,6 +6,21 @@ void message(int ind) {
     printf("%s", MESSAGES[ind]);
 }
 
+int is_mat_equal(const Matrix A, const Matrix B) {
+    if (A.cols != B.cols) {
+        return 0;
+    }
+    if (A.rows != B.rows) {
+        return 0;
+    }
+    for (int k = 0; k < A.cols * A.rows; k++) {
+        if (fabs(A.values[k] - B.values[k]) > EQUAL_ACCURACY) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 Matrix copy_mat(Matrix matrix){
     unsigned int rows = matrix.rows;
     unsigned int cols = matrix.cols;
@@ -23,6 +38,7 @@ Matrix create_zero_matrix(const unsigned int rows, const unsigned int cols) {
     zero.values = malloc(rows * cols * sizeof(double));
     zero.item = malloc(rows * sizeof(double*));
     if ((zero.values == nullptr) or (zero.item == nullptr)) {
+        free_mat(zero);
         return EMPTY;
     }
     for(int k = 0; k < rows * cols; k++){
@@ -41,6 +57,7 @@ Matrix create_one_matrix(const unsigned int rows, const unsigned int cols) {
     one.values = malloc(rows * cols * sizeof(double));
     one.item = malloc(rows * sizeof(double*));
     if ((one.values == nullptr) or (one.item == nullptr)) {
+        free_mat(one);
         return EMPTY;
     }
     for (int k = 0; k < rows * cols; k++) {
@@ -69,12 +86,15 @@ Matrix matrix_add(const Matrix fst_matx, const Matrix snd_matx) {
         message(ERR);
         return EMPTY;
     }
-    if (fst_matx == EMPTY or snd_matx == EMPTY) {
+    if (is_mat_equal(fst_matx, EMPTY) or is_mat_equal(snd_matx, EMPTY)) {
         return EMPTY;
     }
     unsigned int cols = snd_matx.cols;
     unsigned int rows = fst_matx.rows;
     Matrix res_matx = create_zero_matrix(rows,cols);
+    if (is_mat_equal(res_matx, EMPTY)) {
+        return EMPTY;
+    }
     for(int k = 0; k < rows * cols; k++){
         res_matx.values[k] = fst_matx.values[k] + snd_matx.values[k];
     }
@@ -87,12 +107,15 @@ Matrix matrix_subt(const Matrix fst_matx, const Matrix snd_matx) {
         message(ERR);
         return EMPTY;
     }
-    if (fst_matx == EMPTY or snd_matx == EMPTY) {
+    if (is_mat_equal(fst_matx, EMPTY) or is_mat_equal(snd_matx, EMPTY)) {
         return EMPTY;
     }
     unsigned int cols = snd_matx.cols;
     unsigned int rows = fst_matx.rows;
     Matrix res_matx = create_zero_matrix(rows,cols);
+    if (is_mat_equal(res_matx, EMPTY)) {
+        return EMPTY;
+    }
     for(int k = 0; k < rows * cols; k++){
         res_matx.values[k] = fst_matx.values[k] - snd_matx.values[k];
     }
@@ -105,12 +128,15 @@ Matrix matrix_mult(const Matrix fst_matx, const Matrix snd_matx) {
         message(ERR);
         return EMPTY;
     }
-    if (fst_matx == EMPTY or snd_matx == EMPTY) {
+    if (is_mat_equal(fst_matx, EMPTY) or is_mat_equal(snd_matx, EMPTY)) {
         return EMPTY;
     }
     unsigned int cols = snd_matx.cols;
     unsigned int rows = fst_matx.rows;
     Matrix res_matx = create_zero_matrix(rows,cols);
+    if (is_mat_equal(res_matx, EMPTY)) {
+        return EMPTY;
+    }
     for(int k = 0; k < rows; k++) {
         for (int j = 0; j < cols; j++) {
             for (int n = 0; n < fst_matx.cols; n++) {
@@ -122,12 +148,15 @@ Matrix matrix_mult(const Matrix fst_matx, const Matrix snd_matx) {
 }
 
 Matrix matrix_mult_by_num(const double a, const Matrix matrix) {
-    if (matrix == EMPTY) {
+    if (is_mat_equal(matrix, EMPTY)) {
         return EMPTY;
     }
     unsigned int cols = matrix.cols;
     unsigned int rows = matrix.rows;
     Matrix res_matx = create_zero_matrix(rows,cols);
+    if (is_mat_equal(res_matx, EMPTY)) {
+        return EMPTY;
+    }
     //message(MULT);
     for(int k = 0; k < rows * cols; k++) {
         res_matx.values[k] = a * matrix.values[k];
@@ -139,6 +168,9 @@ Matrix matrix_mult_by_num(const double a, const Matrix matrix) {
 
 void matrix_change_rows(Matrix *matrix, const int fst_row, const int snd_row) {
     double item_buff;
+    if (is_mat_equal(matrix, EMPTY)) {
+        return EMPTY;
+    }
     for (int k = 0; k < matrix->cols; k++) {
         item_buff = matrix->item[snd_row][k];
         matrix->item[snd_row][k] = matrix->item[fst_row][k];
@@ -147,12 +179,16 @@ void matrix_change_rows(Matrix *matrix, const int fst_row, const int snd_row) {
 }
 
 double matrix_det(const Matrix matrix) {
+    if (is_mat_equal(matrix, EMPTY)) {
+        return EMPTY;
+    }
     if(matrix.rows != matrix.cols){
         message(DET);
         message(ERR);
         return NAN;
     }
     if (matrix == EMPTY) {
+        free_mat(matrix_det);
         return EMPTY;
     }
     double det = 1;
@@ -175,13 +211,19 @@ double matrix_det(const Matrix matrix) {
 }
 
 Matrix matrix_pow(Matrix matrix, const int power){
+    if (is_mat_equal(matrix, EMPTY)) {
+        return EMPTY;
+    }
     if(power == 0){
         return create_one_matrix(matrix.rows,matrix.cols);
     }
-    if (fst_matx == EMPTY or snd_matx == EMPTY) {
+    if (is_mat_equal(fst_matx, EMPTY) or is_mat_equal(snd_matx, EMPTY)) {
         return EMPTY;
     }
     Matrix res_mat = copy_mat(matrix);
+    if (is_mat_equal(res_matx, EMPTY)) {
+        return EMPTY;
+    }
     for(int k = 1; k < power; k++){
         double* val_mem = res_mat.values;
         double** item_mem = res_mat.item;
@@ -195,7 +237,7 @@ Matrix matrix_pow(Matrix matrix, const int power){
 }
 
 double check_max_dif(const Matrix fst_mat, const Matrix snd_mat){
-    if (matrix == EMPTY) {
+    if (is_mat_equal(matrix, EMPTY)) {
         return EMPTY;
     }
     double dif = 0.0;
@@ -216,7 +258,7 @@ Matrix matrix_exp(const Matrix matrix){
         message(ERR);
         return EMPTY;
     }
-    if (matrix == EMPTY) {
+    if (is_mat_equal(matrix, EMPTY)) {
         return EMPTY;
     }
     Matrix res_mat = create_one_matrix(matrix.rows,matrix.cols);
@@ -225,6 +267,21 @@ Matrix matrix_exp(const Matrix matrix){
     Matrix prev_mat = create_zero_matrix(0,0);
     Matrix mem_mat = create_zero_matrix(0,0);
     Matrix mult_mat = create_zero_matrix(0,0);
+    if (is_mat_equal(res_mat, EMPTY) or 
+        is_mat_equal(n_member, EMPTY) or
+        is_mat_equal(n1_member, EMPTY) or
+        is_mat_equal(prev_mat, EMPTY) or
+        is_mat_equal(mem_mat, EMPTY) or
+        is_mat_equal(mult_mat, EMPTY))
+    {
+        free_mat(&prev_mat);
+        free_mat(&mem_mat);
+        free_mat(&n1_member);
+        free_mat(&n_member);
+        free_mat(&mult_mat);
+        free_mat(&res_mat);
+        return EMPTY;
+    }
     for(int m = 1; m <= EXPONENT_STEPS; m++){
         free_mat(&prev_mat);
         prev_mat = copy_mat(res_mat);
@@ -262,7 +319,7 @@ void free_mat(Matrix *matrix) {
 }
 
 void print_matx(Matrix matrix) {
-    if (matrix == EMPTY) {
+    if (is_mat_equal(matrix, EMPTY)) {
         return EMPTY;
     }
     printf("\n");
@@ -276,7 +333,7 @@ void print_matx(Matrix matrix) {
 }
 
 void print_items(Matrix matrix) {
-    if (matrix == EMPTY) {
+    if (is_mat_equal(matrix, EMPTY)) {
         return EMPTY;
     }
     printf("\n");
