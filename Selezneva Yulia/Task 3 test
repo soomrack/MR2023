@@ -121,8 +121,8 @@ void check_exp() {
 						 7.0 , 8.0 , 9.0 };
 	A.fill_val(3, 3, A_VAL);
 
-	Matrix res = matrix_exp(&A);
-	if (res != MAT_EXP) {
+	A.matrix_exp();
+	if (A != MAT_EXP) {
 		std::cout << "ERROR: EXPONENT INCORRECT\n";
 		return;
 	}
@@ -130,15 +130,30 @@ void check_exp() {
 }
 
 int main() {
-	check_add();
-	
-	check_sub();
-	
-	check_mult();
-	 
-	check_det();
-	
-	check_exp();
-
+	try { check_add(); }
+	catch (MatrixExceptions& except) {
+		std::cerr << "Caught: " << except.what() << std::endl;
+		std::cerr << "Type: " << typeid(except).name() << std::endl;
+	}
+	try { check_sub(); }
+	catch (MatrixExceptions& except) {
+		std::cerr << "Caught: " << except.what() << std::endl;
+		std::cerr << "Type: " << typeid(except).name() << std::endl;
+	}
+	try { check_mult(); }
+	catch (MatrixExceptions& except) {
+		std::cerr << "Caught: " << except.what() << std::endl;
+		std::cerr << "Type: " << typeid(except).name() << std::endl;
+	}
+	try { check_det(); }
+	catch (MatrixExceptions& except) {
+		std::cerr << "Caught: " << except.what() << std::endl;
+		std::cerr << "Type: " << typeid(except).name() << std::endl;
+	}
+	try { check_exp(); }
+	catch (MatrixExceptions& except) {
+		std::cerr << "Caught: " << except.what() << std::endl;
+		std::cerr << "Type: " << typeid(except).name() << std::endl;
+	}
 	return 0;
 }
