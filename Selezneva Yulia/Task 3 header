@@ -5,6 +5,11 @@
 #include <iostream>
 #include <exception>
 
+const double DETERMINANT_ACCURACY = 0.000001;
+const double EXPONENT_ACCURACY = 0.001;
+const int EXPONENT_STEPS = 100;
+double EQUAL_ACCURACY = 0.001;
+
 enum Message {ADD = 0, SUB = 1, MUL = 2, DET = 3, EXP = 4};
 
 char MESSAGES[6][30] = {"\nAddition\n",
@@ -17,6 +22,16 @@ char MESSAGES[6][30] = {"\nAddition\n",
 void message(int ind) {
     std::cout << MESSAGES[ind];
 }
+
+class MatrixExceptions : public std::exception {
+public:
+	MatrixExceptions(const char* const& msg) : exception(msg) {}
+};
+
+const MatrixExceptions NOT_SQUARE("Matrix must be square!\n");
+const MatrixExceptions WRONG_SIZE("Incompatible matrix sizes!\n");
+const MatrixExceptions DIV_BY_ZERO("Division by zero!\n");
+
 
 class Matrix{
 protected:
@@ -56,6 +71,8 @@ public:
 
     void print_values() const;
 
+	void matrix_exp(double accuracy);
+
 	Matrix& operator = (const Matrix& orig);
 
 	Matrix& operator = (Matrix&& orig) noexcept;
@@ -78,20 +95,14 @@ public:
 
 	bool operator != (Matrix B);
 
+
 };
 
-
-const double DETERMINANT_ACCURACY = 0.000001;
-const double EXPONENT_ACCURACY = 0.001;
-const int EXPONENT_STEPS = 100;
-double EQUAL_ACCURACY = 0.001;
 
 
 double matx_det(Matrix matrix);
 
 double check_max_dif(Matrix* fst_mat, Matrix* snd_mat);
-
-Matrix matrix_exp(Matrix matrix);
 
 
 #endif //MATRIX_CPP_MATRIX_CPP_H
