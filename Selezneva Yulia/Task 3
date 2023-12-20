@@ -112,8 +112,7 @@ Matrix &Matrix::operator=(Matrix&& orig) noexcept{
 Matrix Matrix::operator+(Matrix const snd_matx) {
 	if (rows != snd_matx.rows || cols != snd_matx.cols){
         message(ADD);
-        Matrix error;
-		return error;
+        throw WRONG_SIZE;
     }
 	//std::cout << "Add operator\n";
     Matrix res_matx;
@@ -126,9 +125,8 @@ Matrix Matrix::operator+(Matrix const snd_matx) {
 
 Matrix Matrix::operator-(const Matrix snd_matx) {
     if (rows != snd_matx.rows || cols != snd_matx.cols){
-        message(SUB);
-        Matrix error;
-        return error;
+        message(ADD);
+        throw WRONG_SIZE;
     }
     Matrix res_matx;
     res_matx.make_zero(rows,cols);
@@ -140,9 +138,8 @@ Matrix Matrix::operator-(const Matrix snd_matx) {
 
 Matrix Matrix::operator*(const Matrix snd_matx) {
 	if (cols != snd_matx.rows){
-        message(MUL);
-        Matrix error;
-        return error;
+        message(ADD);
+        throw WRONG_SIZE;
     }
     Matrix res_matx;
     res_matx.make_zero(rows, snd_matx.cols);
@@ -167,8 +164,7 @@ Matrix Matrix::operator*(double const a) const {
 
 Matrix Matrix::operator / (double a)  const{
 	if (a == 0)  {
-        Matrix error;
-        return error;
+        throw DIV_BY_ZERO;
     }
 	Matrix res_matx;
 	res_matx.make_zero(rows,cols);
@@ -253,8 +249,7 @@ void Matrix::set_item(unsigned int row, unsigned int col, double val){
 
 double matx_det(const Matrix matrix) {
     if(matrix.get_rows() != matrix.get_cols()){
-        message(DET);
-        return NAN;
+        throw NOT_SQUARE;
      }
     double det = 1;
     Matrix trian_mat;
@@ -286,24 +281,24 @@ double check_max_dif(Matrix* fst_mat, Matrix* snd_mat) {
     return dif;
 }
 
-Matrix matrix_exp(const Matrix* matrix) {
-	if(matrix->get_rows() != matrix->get_cols()){
+void Matrix::matrix_exp(double accuracy = EXPONENT_ACCURACY) {
+	if(get_rows() != get_cols()){
 		message(EXP);
-		Matrix error;
-        return error;
+        throw NOT_SQUARE;
 	}
 	Matrix res_mat;
-	res_mat.make_one(matrix->get_rows(),matrix->get_cols());
+	res_mat.make_one(get_rows(),get_cols());
 	Matrix member;
-	member.make_one(matrix->get_rows(),matrix->get_cols());
+	member.make_one(get_rows(),get_cols());
 	Matrix prev_mat;
 	for(int m = 1; m <= EXPONENT_STEPS; m++){
 		prev_mat = res_mat;
-		member = member * *matrix / m;
+		member = member * *this / m;
 		res_mat += member;
-		if(fabs(check_max_dif(&res_mat,&prev_mat)) < EXPONENT_ACCURACY){
-			return res_mat;
+		if(fabs(check_max_dif(&res_mat,&prev_mat)) < accuracy){
+            *this = res_mat;
+			return;
 		}
 	}
-	return res_mat;
+    *this = res_mat;
 }
