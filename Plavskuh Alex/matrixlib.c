@@ -237,7 +237,7 @@ struct Matrix matrix_exp(struct Matrix A)
 	matrix_set_one(term);
 
 	struct Matrix term_next;  // ÷ëåí a_n+1 
-	for (size_t i = 1; i <= N; ++i) {
+	for (size_t i = 1; i <= 100; ++i) {
 
         matrix_delete(&term_next);
        term_next = matrix_mult(term, A);
@@ -246,7 +246,7 @@ struct Matrix matrix_exp(struct Matrix A)
         term = matrix_division(term_next, (double)i);
         matrix_delete(&term_next);
 
-        if (marix_sum(exp, term_next) == 0) {
+        if (marix_sum(exp, term_next) != 0) {
             matrix_delete(&term_next);
             matrix_delete(&exp);
             return NULL_MATRIX;
