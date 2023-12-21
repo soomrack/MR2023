@@ -244,22 +244,27 @@ struct Matrix matrix_exp(struct Matrix A)
 	matrix_set_one(term);
 
 	struct Matrix term_next;  // ÷ëåí a_n+1 
+	if (term_next.data == NULL) {
+        matrix_delete(&exp);
+        matrix_delete(&term);
+        return NULL_MATRIX;
+    }
+
+
 	for (size_t i = 1; i <= 100; ++i) {
 
         matrix_delete(&term_next);
-       term_next = matrix_mult(term, A);
+        term_next = matrix_mult(term, A);
 
         matrix_delete(&term);
         term = matrix_division(term_next, (double)i);
         matrix_delete(&term_next);
 
-        if (matrix_su(exp, term_next) != 0) {
+        if (matrix_su(exp, term) != 0) {
             matrix_delete(&term_next);
             matrix_delete(&exp);
             return NULL_MATRIX;
         }
-		matrix_add(exp, term_next);
-		matrix_delete(&term_next);
 	}	
 matrix_delete(&term);
 matrix_delete(&term_next);
