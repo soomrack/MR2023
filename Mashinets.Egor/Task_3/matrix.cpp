@@ -87,7 +87,6 @@ Matrix::Matrix(const size_t rows, const size_t cols)
         throw MatrixException("The matrix is not initialized");
     }
 
-    // rows * cols < MAX_SIZE / sizeof(MatrixItem)
     if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) throw MatrixException("The matrix is not initialized");
 
     this->cols = cols;
