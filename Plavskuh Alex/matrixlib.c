@@ -80,6 +80,13 @@ void matrix_print(const struct Matrix A)
 	printf("\n");
 }
 
+int matrix_su(struct Matrix A, struct Matrix B) {
+    if (A.cols != B.cols || A.rows != B.rows) return 1;
+
+    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
+        A.data[idx] += B.data[idx];
+    return 0;
+}
 
 //C=A+B
 struct Matrix marix_sum(struct Matrix A, struct Matrix B)
@@ -237,7 +244,7 @@ struct Matrix matrix_exp(struct Matrix A)
 	matrix_set_one(term);
 
 	struct Matrix term_next;  // ÷ëåí a_n+1 
-	for (size_t i = 1; i <= N; ++i) {
+	for (size_t i = 1; i <= 100; ++i) {
 
         matrix_delete(&term_next);
        term_next = matrix_mult(term, A);
@@ -246,7 +253,7 @@ struct Matrix matrix_exp(struct Matrix A)
         term = matrix_division(term_next, (double)i);
         matrix_delete(&term_next);
 
-        if (marix_sum(exp, term_next) == 0) {
+        if (matrix_su(exp, term_next) != 0) {
             matrix_delete(&term_next);
             matrix_delete(&exp);
             return NULL_MATRIX;
