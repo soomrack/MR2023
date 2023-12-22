@@ -1,13 +1,13 @@
 ﻿#include <stdio.h>  
 #include <stdlib.h>
 #include <time.h>
+#include <errno.h>
+#include <string.h>
 
 
 #define MATRIX_MUST_BE_SQUARE "\nMatrix must be square!\n\n"
-#define SHAPE_ERROR "\nError: The number of columns of matrix A must be equal to the number of rows of matrix B.\n\n"
-
-
-// int -> size_t for all variables storing unsigned information
+#define MULT_SHAPE_ERROR "\nError: The number of columns of matrix A must be equal to the number of rows of matrix B.\n\n"
+#define SHAPE_NOT_EQUAL_ERROR "\nError: The shape of the matrices must be the same!\n\n"
 
 
 typedef struct {
@@ -22,15 +22,20 @@ size_t matrix_memory(Matrix* matrix)
 {
     matrix->data = (double*)malloc(matrix->rows * matrix->cols * sizeof(double) + matrix->rows * sizeof(double*));
     
+    // Added a lot of allocation checks
 
-    // Added memory allocation check
-    if (matrix->data == NULL)
-        return 1;
+    if (matrix->data == NULL) return 1;
     
     matrix->values = matrix->data + matrix->rows * matrix->cols;
-    for (size_t row = 0; row < matrix->rows; row++)
+
+    if (matrix->values == NULL) return 1;
+
+    for (size_t row = 0; row < matrix->rows; row++) {
         matrix->values[row] = matrix->data + row * matrix->cols;
-    
+
+        if (matrix->values[row] == NULL) return 1;
+    }
+
     return 0;
 }
 
@@ -42,6 +47,12 @@ void delete_from_memory(Matrix* matrix)
 
 
 void copy_matrix(Matrix* source, Matrix* destination) {
+
+    // Added shape check
+    if (source->cols != destination->cols && source->rows != destination->rows) {
+        printf(SHAPE_NOT_EQUAL_ERROR);
+    }
+
     for (size_t rows = 0; rows < source->rows; rows++)
     {
         for (size_t cols = 0; cols < source->cols; cols++)
@@ -69,6 +80,7 @@ void output(Matrix* matrix)
 Matrix zero_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
+
 
     for (size_t rows = 0; rows < matrix->rows; rows++)
     {
@@ -134,6 +146,13 @@ Matrix multiply_by_scalar(Matrix* matrix, double scalar)
 
 Matrix add(Matrix* A, Matrix* B)
 {
+    // Added shape check
+    if (A->cols != B->cols && A->rows != B->rows) {
+        printf(SHAPE_NOT_EQUAL_ERROR);
+        printf("The result is incorrect!");
+        return *A;
+    }
+
     Matrix add_matrix = { A->rows, A->cols, NULL, NULL };
     matrix_memory(&add_matrix);
 
@@ -151,6 +170,13 @@ Matrix add(Matrix* A, Matrix* B)
 
 Matrix subtract(Matrix* A, Matrix* B)
 {
+    // Added shape check
+    if (A->cols != B->cols && A->rows != B->rows) {
+        printf(SHAPE_NOT_EQUAL_ERROR);
+        printf("The result is incorrect!");
+        return *A;
+    }
+
     Matrix subtract_matrix = { A->rows, A->cols, NULL, NULL };
     matrix_memory(&subtract_matrix);
 
@@ -169,8 +195,9 @@ Matrix subtract(Matrix* A, Matrix* B)
 Matrix multiply(Matrix* A, Matrix* B)
 {
     if (A->cols != B->rows) {
-        printf(SHAPE_ERROR);
-        return;
+        printf(MULT_SHAPE_ERROR);
+        printf("THe result is incorrect!");
+        return *A;
     }
 
     Matrix multiply_matrix = { A->rows, B->cols, NULL, NULL };
@@ -193,7 +220,7 @@ Matrix multiply(Matrix* A, Matrix* B)
 
 Matrix transpose(Matrix* A)
 {
-    Matrix transpose_matrix = { A->rows, A->cols, NULL, NULL };
+    Matrix transpose_matrix = { A->cols, A->rows, NULL, NULL }; // fixed shape
     transpose_matrix = zero_matrix(&transpose_matrix);
 
     for (size_t rows = 0; rows < transpose_matrix.rows; rows++)
@@ -213,7 +240,7 @@ double determinant(Matrix* A)
 
     if (A->cols != A->rows) {
         printf(MATRIX_MUST_BE_SQUARE);
-        return 1;
+        return 1.;
     }
 
     Matrix triangular_matrix = { A->rows, A->cols, NULL, NULL };
@@ -263,9 +290,9 @@ Matrix exponent(Matrix* A)
     size_t number_of_terms_in_exponential_expansion = 50;
 
     for (size_t term = 1; term < number_of_terms_in_exponential_expansion; term++) {
-        current_element = multiply(&current_element, A, &current_element, 0);
-        current_element = multiply_by_scalar(&current_element, 1.0 / term, 0);
-        exp_matrix = add(&exp_matrix, &current_element, &exp_matrix, 0);
+        current_element = multiply(&current_element, A); // fix arguments
+        current_element = multiply_by_scalar(&current_element, 1.0 / term);
+        exp_matrix = add(&exp_matrix, &current_element);
     }
 
     return exp_matrix;
