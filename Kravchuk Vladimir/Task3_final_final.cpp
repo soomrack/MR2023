@@ -16,7 +16,7 @@ private:
 public:
     Matrix();
     Matrix(const size_t col, const size_t row);
-    Matrix(Matrix& A);
+    Matrix(const Matrix& A);
     Matrix(Matrix&& A);
     ~Matrix();
 public:
@@ -34,7 +34,6 @@ public:
     void filling(std::vector <MatrixItem> values);
     void print();
     void transposition();
-    void set_zero();
     void set_one();
     double det(void);
     Matrix exp(const unsigned int level);
@@ -87,16 +86,13 @@ void Matrix::filling(std::vector <MatrixItem> values)
     else {
         auto idx = values.begin();
         for (; idx != values.end(); ++idx) {
-            data[idx - values.begin()] = *idx;
-        }
-        for (; idx != values.end(); ++idx) {
-            *idx = 0.0;
+            data[idx - values.begin()] = values[idx - values.begin()];
         }
     };
 }
 
 
-Matrix::Matrix(Matrix& A)
+Matrix::Matrix(const Matrix& A)
 {
     cols = A.cols;
     rows = A.rows;
@@ -135,7 +131,7 @@ void Matrix::print()
         std::cout << "[";
         for (size_t c = 0; c < cols; c++) {
             std::cout << data[r * cols + c];
-            if (cols != cols - 1)
+            if (c != cols - 1)
                 std::cout << "\t";
         }
         std::cout << "]\n";
@@ -220,7 +216,7 @@ Matrix& Matrix::operator-(const Matrix& A)
 }
 
 
-Matrix& Matrix::operator* (const Matrix& B) {
+Matrix& Matrix::operator*= (const Matrix& B) {
     if (cols != B.rows) throw Matrix_Exception("Error in Matrix_mult");
 
     *this = *this * B;
@@ -229,7 +225,7 @@ Matrix& Matrix::operator* (const Matrix& B) {
 }
 
 
-Matrix& Matrix::operator*= (const Matrix& B) {
+Matrix& Matrix::operator* (const Matrix& B) {
     if (cols != B.rows) throw Matrix_Exception("Error in Matrix_mult");
 
     Matrix* res = new Matrix(*this);
@@ -245,7 +241,7 @@ Matrix& Matrix::operator*= (const Matrix& B) {
 }
 
 
-Matrix& Matrix::operator*= (const double scalar) {
+Matrix& Matrix::operator* (const double scalar) {
     if (data == nullptr) throw Matrix_Exception("Error in Matrix_mult");
 
     Matrix* res = new Matrix(*this);
@@ -257,7 +253,7 @@ Matrix& Matrix::operator*= (const double scalar) {
 }
 
 
-Matrix& Matrix::operator* (const double scalar) {
+Matrix& Matrix::operator*= (const double scalar) {
     if (data == nullptr) throw Matrix_Exception("Error in Matrix_mult");
 
     for (size_t idx = 0; idx < rows * cols; idx++) {
@@ -297,31 +293,28 @@ double Matrix::det(void)
 }
 
 
-void Matrix::set_zero()
-{
-    if (data == nullptr) throw Matrix_Exception("Error in Matrix_zero");
-
-    memset(data, 0, cols * rows * sizeof(MatrixItem));
-}
-
-
 void Matrix::set_one()
 {
     if (data == nullptr) throw Matrix_Exception("Error in Matrix_one");
+    if (cols != rows) throw Matrix_Exception("Error in set_one with size");
 
-    for (size_t idx = 0; idx < rows; ++idx)
-        data[idx * cols + idx] += 1;
+    for (size_t row = 0; row < rows; ++row) {
+        for (size_t col = 0; col < cols; ++col) {
+            if (row = col) data[row * cols + col] = 1.0;
+            else data[row * cols + col] = 0.0;
+        }
+    }
+        
 }
 
 
-Matrix Matrix::exp(const unsigned int level = 5) {
+Matrix Matrix::exp(const unsigned int level = 10) {
     if (data == nullptr) throw Matrix_Exception("Error in Matrix_exp");
 
     if (cols != rows) throw Matrix_Exception("Error in Matrix_exp(cols/=rows)");
 
     Matrix* exp = new Matrix(cols, rows);
 
-    exp->set_zero();
     exp->set_one();
 
     *exp += *this;
