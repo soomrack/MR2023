@@ -361,34 +361,30 @@ Matrix& Matrix::operator*= (const Matrix& M) {
     R.data = nullptr;
     return *this;
 }
-
+/////////////////////////////////////////
 Matrix& Matrix::operator+(const Matrix& M) {
-    Matrix *rez = new Matrix(M.cols, M.rows);
-    *rez = *this;
+    Matrix *rez = new Matrix(*this);
     *rez += M;
     return *rez;
 }
 
 
 Matrix& Matrix::operator-(const Matrix& M) {
-    Matrix *rez = new Matrix(M.cols, M.rows);
-    *rez = *this;
+    Matrix *rez = new Matrix(*this);
     *rez -= M;
     return *rez;
 }
 
 
 Matrix& Matrix::operator*(const Matrix& M) {
-    Matrix *rez = new Matrix(M.cols, M.rows);
-    *rez = *this;
+    Matrix *rez = new Matrix(*this);
     *rez *= M;
     return *rez;
 }
 
 
 Matrix& Matrix::operator*(const double k) {
-    Matrix *rez = new Matrix(cols, rows);
-    *rez = *this;
+    Matrix *rez = new Matrix(*this);
     *rez *= k;
     return *rez;
 }
