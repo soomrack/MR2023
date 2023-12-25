@@ -10,10 +10,6 @@
 
 typedef double MatrixItem;
 
-
-//DO NOT USE!
-//NE UTILISER PAS!
-
 typedef double MatrixItem;
 
 class MatrixException : public std::exception
@@ -40,7 +36,7 @@ private:
 public:
     Matrix();
     Matrix(const size_t rows, const size_t cols, const double *values);
-    // Matrix(size_t cols, size_t rows, MatrixItem *data);
+
     Matrix(const size_t rows, const size_t cols);
     Matrix(const Matrix &A);
     Matrix(Matrix&& A);
@@ -93,12 +89,11 @@ Matrix::Matrix(const size_t rows, const size_t cols)
     this->rows = rows;
     data = new double[cols * rows * sizeof(MatrixItem)];
 }
-
+////////////////////////////
 Matrix::Matrix(const size_t rows, const size_t cols, const double *values)
 {
     this->cols = cols;
     this->rows = rows;
-    this->data = nullptr;
     this->data = new double[cols * rows * sizeof(MatrixItem)];
     memcpy(this->data, values, rows * cols * sizeof(double));
 }
