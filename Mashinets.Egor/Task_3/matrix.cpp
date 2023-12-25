@@ -171,14 +171,10 @@ Matrix& Matrix::exp(Matrix &A, const size_t accuracy)
     }
     return *exp;
 }
-
+////////////////////////////////////
 Matrix& Matrix::make_ident(size_t rows, size_t cols)
 {
     Matrix *I = new Matrix(rows, cols);
-    if (I->data == nullptr)
-    {
-        throw MatrixException("The matrix is not initialized");
-    }
     for (size_t idx = 0; idx < rows * cols; idx++)
     {
         if (idx % (rows + 1) == 0)
@@ -278,16 +274,14 @@ void Matrix::print()
         throw(WRONG_CONDITIONS);
     }
 }
-
+//////////////////////
 Matrix::Matrix(const Matrix &A)
 {
     cols = A.cols;
     rows = A.rows;
-    data = new double[cols * rows * sizeof(MatrixItem)];
-    for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
-    {
-        data[idx] = A.data[idx];
-    }
+    size_t dataSize = cols * rows * sizeof(MatrixItem);
+    data = new double[dataSize];
+    memcpy(data, A.data, dataSize);
 }
 
 
@@ -304,6 +298,7 @@ Matrix& Matrix::transp()
     }
     return *C;
 }
+
 
 Matrix& Matrix::operator+= (const Matrix& M) { 
     if ((rows != M.rows) || (cols != M.cols)) 
