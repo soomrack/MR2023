@@ -65,13 +65,12 @@ void print_matrix(const struct Matrix A)
 void matrix_copy(struct Matrix B, const struct Matrix A)
 {
     if (A.data == NULL) {
-        matrix_free(B);
         B = MATRIX_NULL;
         return;
     };
     
     if (!(A.cols == B.cols && A.rows == B.rows)) {
-        matrix_free(B);
+        matrix_free(&B);
         B = matrix_allocate(A.cols, A.rows);
     };
     
