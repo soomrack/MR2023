@@ -32,17 +32,15 @@ size_t matrix_memory(Matrix* matrix)
 
     for (size_t row = 0; row < matrix->rows; row++) {
         matrix->values[row] = matrix->data + row * matrix->cols;
-
-        if (matrix->values[row] == NULL) return 1;
     }
 
     return 0;
 }
 
 
-void delete_from_memory(Matrix* matrix)
+void delete_from_memory(Matrix matrix)
 {
-    free(matrix->data);
+    free(matrix.data);
 }
 
 
@@ -63,13 +61,13 @@ void copy_matrix(Matrix* source, Matrix* destination) {
 }
 
 
-void output(Matrix* matrix)
+void output(Matrix matrix)
 {
-    for (size_t rows = 0; rows < matrix->rows; rows++)
+    for (size_t rows = 0; rows < matrix.rows; rows++)
     {
-        for (size_t cols = 0; cols < matrix->cols; cols++)
+        for (size_t cols = 0; cols < matrix.cols; cols++)
         {
-            printf("%lf ", matrix->values[rows][cols]);
+            printf("%lf ", matrix.values[rows][cols]);
         }
         printf("\n");
     }
@@ -80,6 +78,7 @@ void output(Matrix* matrix)
 Matrix zero_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
+    
 
 
     for (size_t rows = 0; rows < matrix->rows; rows++)
@@ -103,11 +102,11 @@ Matrix identity_matrix(Matrix* matrix)
         {
             if (rows == cols)
             {
-                matrix->values[rows][cols] = 1;
+                matrix->values[rows][cols] = 1.;
             }
             else
             {
-                matrix->values[rows][cols] = 0;
+                matrix->values[rows][cols] = 0.;
             }
         }
     }
@@ -119,12 +118,9 @@ Matrix* random_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
 
-    for (size_t rows = 0; rows < matrix->rows; rows++)
+    for (size_t item = 0; item < matrix->rows*matrix->cols; item++)
     {
-        for (size_t cols = 0; cols < matrix->cols; cols++)
-        {
-            matrix->values[rows][cols] = rand() % 10;
-        }
+            matrix->data[item] = rand() % 10;
     }
     return matrix;
 }
@@ -132,12 +128,9 @@ Matrix* random_matrix(Matrix* matrix)
 
 Matrix multiply_by_scalar(Matrix* matrix, double scalar)
 {
-    for (size_t rows = 0; rows < matrix->rows; rows++)
+    for (size_t item = 0; item < matrix->rows*matrix->cols; item++)
     {
-        for (size_t cols = 0; cols < matrix->cols; cols++)
-        {
-            matrix->values[rows][cols] *= scalar;
-        }
+            matrix->data[item] *= scalar;
     }
 
     return *matrix;
@@ -156,12 +149,9 @@ Matrix add(Matrix* A, Matrix* B)
     Matrix add_matrix = { A->rows, A->cols, NULL, NULL };
     matrix_memory(&add_matrix);
 
-    for (size_t rows = 0; rows < add_matrix.rows; rows++)
+    for (size_t item = 0; item < add_matrix.rows*add_matrix.cols; item++)
     {
-        for (size_t cols = 0; cols < add_matrix.cols; cols++)
-        {
-            add_matrix.values[rows][cols] = A->values[rows][cols] + B->values[rows][cols];
-        }
+        add_matrix.data[item] = A->data[item] + B->data[item]
     }
 
     return add_matrix;
@@ -180,12 +170,9 @@ Matrix subtract(Matrix* A, Matrix* B)
     Matrix subtract_matrix = { A->rows, A->cols, NULL, NULL };
     matrix_memory(&subtract_matrix);
 
-    for (size_t rows = 0; rows < subtract_matrix.rows; rows++)
+    for (size_t item = 0; item < subtract_matrix.rows*subtract_matrix.cols; item++)
     {
-        for (size_t cols = 0; cols < subtract_matrix.cols; cols++)
-        {
-            subtract_matrix.values[rows][cols] = A->values[rows][cols] - B->values[rows][cols];
-        }
+        subtract_matrix.data[item] = A->data[item] - B->data[item]
     }
 
     return subtract_matrix;
@@ -266,7 +253,7 @@ double determinant(Matrix* A)
     for (size_t i = 0; i < A->rows; i++) {
         det *= triangular_matrix.values[i][i];
     }
-    delete_from_memory(&triangular_matrix);
+    delete_from_memory(triangular_matrix);
 
     return det;
 }
@@ -276,7 +263,8 @@ Matrix exponent(Matrix* A)
 {
     if (A->cols != A->rows) {
         printf(MATRIX_MUST_BE_SQUARE);
-        return;
+        printf("THe result is incorrect!");
+        return *A;
     }
 
 
@@ -309,27 +297,27 @@ void function_testing()
     random_matrix(&B);
     random_matrix(&C);
     printf("Matrix A:\n");
-    output(&A);
+    output(A);
     printf("Matrix B:\n");
-    output(&B);
+    output(B);
 
     printf("Operations:\n");
 
     C = add(&A, &B);
     printf("\nSUM:\n");
-    output(&C);
+    output(C);
 
     C = subtract(&A, &B);
     printf("\nDIFFERENCE:\n");
-    output(&C);
+    output(C);
 
     C = multiply(&A, &B);
     printf("\nPRODUCT:\n");
-    output(&C);
+    output(C);
 
     C = transpose(&A);
     printf("\nTRANSPOSITION:\n");
-    output(&C);
+    output(C);
 
     det = determinant(&A);
     printf("\nDETERMINANT:\n");
@@ -337,12 +325,12 @@ void function_testing()
 
     C = exponent(&A);
     printf("\nEXPONENT:\n");
-    output(&C);
+    output(C);
 
     
-    delete_from_memory(&A);
-    delete_from_memory(&B);
-    delete_from_memory(&C);
+    delete_from_memory(A);
+    delete_from_memory(B);
+    delete_from_memory(C);
 }
 
 
