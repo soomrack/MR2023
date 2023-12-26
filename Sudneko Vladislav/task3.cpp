@@ -119,14 +119,12 @@ Matrix::Matrix(size_t r_num, size_t c_num) {
     rows = r_num;
     columns = c_num;
     cells = new double[rows * columns];
-    if (!cells) throw MEMORY_ERROR;
 }
 
 Matrix::Matrix(const Matrix& other_matrix) {
     rows = other_matrix.rows;
     columns = other_matrix.columns;
     cells = new double[rows * columns];
-    if (!cells) throw MEMORY_ERROR;
     memcpy(cells, other_matrix.cells, sizeof(double) * rows * columns);
 }
 
@@ -196,7 +194,6 @@ Matrix& Matrix::operator=(const Matrix& other_matrix) {
 }
 
 Matrix& Matrix::operator=(Matrix&& other_matrix) noexcept {
-    if (this == &other_matrix) return *this;
     delete[] cells;
     rows = other_matrix.rows;
     columns = other_matrix.columns;
