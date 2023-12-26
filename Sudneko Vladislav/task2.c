@@ -38,10 +38,14 @@ size_t matrix_memory(Matrix* matrix)
     return 0;
 }
 
+void matrix_error(const char* error_message) {
+    printf("%s", error_message);
+}
 
 void delete_from_memory(Matrix matrix)
 {
     free(matrix.data);
+    matrix.data = NULL;
 }
 
 
@@ -49,7 +53,7 @@ void copy_matrix(Matrix* source, Matrix* destination) {
 
     // Added shape check
     if (source->cols != destination->cols || source->rows != destination->rows) {
-        printf(SHAPE_NOT_EQUAL_ERROR);
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
     }
 
     memcopy(destination->data, source->data, sizeof(double)*source->cols*source->rows);
@@ -74,7 +78,7 @@ Matrix zero_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
     if (matrix->data == NULL){
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         printf("The result is incorrect!");
         return matrix;
     } 
@@ -95,7 +99,7 @@ Matrix identity_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
     if (matrix->data == NULL){
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         printf("The result is incorrect!");
         return *matrix;
     } 
@@ -122,7 +126,7 @@ Matrix* random_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
     if (matrix->data == NULL){
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         printf("The result is incorrect!");
         return matrix;
     } 
@@ -165,7 +169,7 @@ Matrix add(Matrix* A, Matrix* B)
 
     for (size_t item = 0; item < add_matrix.rows*add_matrix.cols; item++)
     {
-        add_matrix.data[item] = A->data[item] + B->data[item]
+        add_matrix.data[item] = A->data[item] + B->data[item];
     }
 
     return add_matrix;
@@ -196,7 +200,7 @@ Matrix subtract(Matrix* A, Matrix* B)
 Matrix multiply(Matrix* A, Matrix* B)
 {
     if (A->cols != B->rows) {
-        printf(MULT_SHAPE_ERROR);
+        matrix_error(MULT_SHAPE_ERROR);
         printf("THe result is incorrect!");
         return *A;
     }
@@ -240,7 +244,7 @@ double determinant(Matrix* A)
 {
 
     if (A->cols != A->rows) {
-        printf(MATRIX_MUST_BE_SQUARE);
+        matrix_error(MATRIX_MUST_BE_SQUARE);
         return 1.;
     }
 
@@ -276,7 +280,7 @@ double determinant(Matrix* A)
 Matrix exponent(Matrix* A)
 {
     if (A->cols != A->rows) {
-        printf(MATRIX_MUST_BE_SQUARE);
+        matrix_error(MATRIX_MUST_BE_SQUARE);
         printf("THe result is incorrect!");
         return *A;
     }
@@ -287,13 +291,13 @@ Matrix exponent(Matrix* A)
 
     exp_matrix = identity_matrix(&exp_matrix);
     if (exp_matrix.data == NULL){
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         printf("The result is incorrect!");
         return *A;
     }  
     current_element = identity_matrix(&current_element);
     if (current_element.data == NULL){
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         printf("The result is incorrect!");
         return *A;
     } 
@@ -301,7 +305,7 @@ Matrix exponent(Matrix* A)
     size_t number_of_terms_in_exponential_expansion = 50;
 
     for (size_t term = 1; term < number_of_terms_in_exponential_expansion; term++) {
-        current_element = multiply(&current_element, A); // fix arguments
+        current_element = multiply(&current_element, A);
         current_element = multiply_by_scalar(&current_element, 1.0 / term);
         exp_matrix = add(&exp_matrix, &current_element);
     }
