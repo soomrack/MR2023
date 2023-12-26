@@ -45,7 +45,11 @@ void matrix_error(const char* error_message) {
 void matrix_delete_from_memory(Matrix matrix)
 {
     free(matrix.data);
+    matrix.rows = 0;
+    matrix.cols = 0;
     matrix.data = NULL;
+    matrix.values = NULL;
+    matrix_null
 }
 
 
@@ -80,17 +84,25 @@ Matrix matrix_zero(Matrix* matrix)
     if (matrix->data == NULL){
         matrix_error(MEMORY_ERROR);
         printf("The result is incorrect!");
+        Matrix null = { matrix->rows, matrix->cols, NULL, NULL };
+        matrix_null(&null);
         return matrix;
     } 
 
+    memset(matrix->data, 0, matrix->rows*matrix->cols*sizeof(double));
+    return *matrix;
+}
 
-    for (size_t rows = 0; rows < matrix->rows; rows++)
-    {
-        for (size_t cols = 0; cols < matrix->cols; cols++)
-        {
-            matrix->values[rows][cols] = 0;
-        }
-    }
+Matrix matrix_null(Matrix* matrix)
+{
+    matrix_memory(matrix);
+    if (matrix->data == NULL){
+        matrix_error(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        return matrix;
+    } 
+
+    memset(matrix->data, NULL, matrix->rows*matrix->cols*sizeof(double));
     return *matrix;
 }
 
@@ -128,6 +140,8 @@ Matrix* matrix_random(Matrix* matrix)
     if (matrix->data == NULL){
         matrix_error(MEMORY_ERROR);
         printf("The result is incorrect!");
+        Matrix null = { matrix->rows, matrix->cols, NULL, NULL };
+        matrix_null(&null);
         return matrix;
     } 
 
@@ -156,7 +170,9 @@ Matrix matrix_addition(Matrix* A, Matrix* B)
     if (A->cols != B->cols || A->rows != B->rows) {
         printf(SHAPE_NOT_EQUAL_ERROR);
         printf("The result is incorrect!");
-        return *A;
+        Matrix null = { A->rows, A->cols, NULL, NULL };
+        matrix_null(&null);
+        return matrix;
     }
 
     Matrix add_matrix = { A->rows, A->cols, NULL, NULL };
@@ -164,7 +180,9 @@ Matrix matrix_addition(Matrix* A, Matrix* B)
     if (add_matrix.data == NULL){
         printf(MEMORY_ERROR);
         printf("The result is incorrect!");
-        return *A;
+        Matrix null = { A->rows, A->cols, NULL, NULL };
+        matrix_null(&null);
+        return matrix;
     } 
 
     for (size_t item = 0; item < add_matrix.rows*add_matrix.cols; item++)
@@ -182,11 +200,20 @@ Matrix matrix_subtraction(Matrix* A, Matrix* B)
     if (A->cols != B->cols || A->rows != B->rows) {
         printf(SHAPE_NOT_EQUAL_ERROR);
         printf("The result is incorrect!");
-        return *A;
+        Matrix null = { A->rows, A->cols, NULL, NULL };
+        matrix_null(&null);
+        return matrix;
     }
 
     Matrix subtract_matrix = { A->rows, A->cols, NULL, NULL };
     matrix_memory(&subtract_matrix);
+    if (subtract_matrix.data == NULL){
+        printf(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        Matrix null = { A->rows, A->cols, NULL, NULL };
+        matrix_null(&null);
+        return matrix;
+    }
 
     for (size_t item = 0; item < subtract_matrix.rows*subtract_matrix.cols; item++)
     {
@@ -202,11 +229,20 @@ Matrix matrix_multiplication(Matrix* A, Matrix* B)
     if (A->cols != B->rows) {
         matrix_error(MULT_SHAPE_ERROR);
         printf("THe result is incorrect!");
-        return *A;
+        Matrix null = { A->rows, A->cols, NULL, NULL };
+        matrix_null(&null);
+        return matrix;
     }
 
     Matrix multiply_matrix = { A->rows, B->cols, NULL, NULL };
     multiply_matrix = matrix_zero(&multiply_matrix);
+    if (multiply_matrix.data == NULL){
+        printf(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        Matrix null = { A->rows, A->cols, NULL, NULL };
+        matrix_null(&null);
+        return matrix;
+    }
 
     for (size_t rows = 0; rows < multiply_matrix.rows; rows++)
     {
@@ -227,6 +263,13 @@ Matrix matrix_transpose(Matrix* A)
 {
     Matrix transpose_matrix = { A->cols, A->rows, NULL, NULL }; // fixed shape
     transpose_matrix = matrix_zero(&transpose_matrix);
+    if (transpose_matrix.data == NULL){
+        printf(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        Matrix null = { A->rows, A->cols, NULL, NULL };
+        matrix_null(&null);
+        return matrix;
+    }
 
     for (size_t rows = 0; rows < transpose_matrix.rows; rows++)
     {
@@ -245,11 +288,18 @@ double matrix_determinant(Matrix* A)
 
     if (A->cols != A->rows) {
         matrix_error(MATRIX_MUST_BE_SQUARE);
-        return 1.;
+        return -134389453;
     }
 
     Matrix triangular_matrix = { A->rows, A->cols, NULL, NULL };
     matrix_zero(&triangular_matrix);
+    if (triangular_matrix.data == NULL){
+        printf(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        Matrix null = { A->rows, A->cols, NULL, NULL };
+        matrix_null(&null);
+        return matrix;
+    }
     matrix_copy(A, &triangular_matrix);
 
     for (size_t current_row = 0; current_row < A->rows; current_row++) {
@@ -282,7 +332,9 @@ Matrix matrix_exponent(Matrix* A)
     if (A->cols != A->rows) {
         matrix_error(MATRIX_MUST_BE_SQUARE);
         printf("THe result is incorrect!");
-        return *A;
+        Matrix null = { A->rows, A->cols, NULL, NULL };
+        matrix_null(&null);
+        return matrix;
     }
 
     Matrix exp_matrix = { A->rows, A->cols, NULL, NULL };
@@ -299,7 +351,9 @@ Matrix matrix_exponent(Matrix* A)
     if (current_element.data == NULL){
         matrix_error(MEMORY_ERROR);
         printf("The result is incorrect!");
-        return *A;
+        Matrix null = { A->rows, A->cols, NULL, NULL };
+        matrix_null(&null);
+        return matrix;
     } 
 
     size_t number_of_terms_in_matrix_exponential_expansion = 50;
