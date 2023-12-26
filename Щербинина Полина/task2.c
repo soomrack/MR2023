@@ -60,8 +60,8 @@ MatrixException NULL_MATRIX("Your matrix is empty\n");
 
 void Matrix::free()
 {
-    A.cols = 0;
-    A.rows = 0;
+    cols = 0;
+    rows = 0;
     delete[] data;
     data = nullptr;
 }
@@ -131,9 +131,9 @@ void Matrix::print()
 Matrix::Matrix(Matrix& A)
 {
     if (A.data == nullptr) {
-        A.cols = 0;
-        A.rows = 0;
-        A.data = nullptr;
+        cols = A.cols;
+        rows = A.rows;
+        data = nullptr;
         return;
     };
 
@@ -278,7 +278,7 @@ Matrix& Matrix::operator*=(const double& coeff)
 }
 
 
-Matrix Matrix::transp()
+Matrix& Matrix::transp()
 {
     Matrix result = Matrix(*this);
 
@@ -290,7 +290,7 @@ Matrix Matrix::transp()
 }
 
 
-Matrix* Matrix::exponent(const Matrix A, const unsigned int degree = 10)
+Matrix& Matrix::exponent(const Matrix A, const unsigned int degree = 10)
 {
     if (A.cols != A.rows) throw INCORRECT_SIZE_OF_MATRIX;
     
