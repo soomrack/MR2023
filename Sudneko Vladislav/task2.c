@@ -42,14 +42,14 @@ void matrix_error(const char* error_message) {
     printf("%s", error_message);
 }
 
-void matrix_delete_from_memory(Matrix matrix)
+void matrix_delete_from_memory(Matrix* matrix)
 {
     free(matrix.data);
-    matrix.rows = 0;
-    matrix.cols = 0;
-    matrix.data = NULL;
-    matrix.values = NULL;
-    matrix_null
+    matrix->rows = 0;
+    matrix->cols = 0;
+    matrix->data = NULL;
+    matrix->values = NULL;
+    matrix = NULL;
 }
 
 
