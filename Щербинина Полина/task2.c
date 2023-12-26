@@ -1,287 +1,428 @@
+#include <iostream>
+#include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <string>
+#include <stdint.h>
+#include <vector>
 
-// Функция для вывода сообщения об ошибке
-void matrix_errormsg(const char *errorMessage) {
-    fprintf(stderr, "%s\n", errorMessage);
-}
 
-typedef struct {
-    int rows;
-    int cols;
-    double **data;
-} Matrix; 
+typedef double MatrixItem; 
 
-const struct Matrix MATRIX_NULL = {.cols = 0, .rows = 0, .data = NULL};
 
-// Функция для создания матрицы
-Matrix matrix_create(int rows, int cols) {
-    Matrix A;
-    A.rows = rows;
-    A.cols = cols;
-    
-    A.data = (double **)malloc(rows * sizeof(double *) + rows * cols * sizeof(double));
-    if (!A.data) {
-        matrix_errormsg("Ошибка выделения памяти матрицы.");
-        return MATRIX_NULL;
-    }
-    
-    return A;
-}
+class Matrix {
+private:
+    size_t rows;
+    size_t cols;
+    MatrixItem* data;
+public:
+    Matrix() : rows(0), cols(0), data(nullptr) {};
+    Matrix(const size_t cols, const size_t rows);
+    Matrix(Matrix& A);
+    Matrix(Matrix&& A);
+    ~Matrix();
+public:
+    Matrix& operator=(const Matrix& A);
+    Matrix& operator=(const Matrix&& A);
+    Matrix& operator+(const Matrix& A);
+    Matrix& operator+=(const Matrix& A); //Matrix&& A
+    Matrix& operator-(const Matrix& A);
+    Matrix& operator-=(const Matrix& A);
+    Matrix& operator*(const Matrix& B);
+    Matrix& operator*=(const Matrix& B);
+    Matrix& operator*(const double& coeff);
+    Matrix& operator*=(const double& coeff);
+public:
+    void fill(std::vector <MatrixItem> values);
+    void free();
+    void print();
+    void set_zero();
+    Matrix transp();
+    Matrix exponent(const Matrix A, const unsigned int degree = 10);
+    double determinant();
+private:
+    int det_if_zero();
+    void det_prep(size_t diag, double *coeff);
+};
 
-// Функция для освобождения памяти, выделенной под матрицу
-void matrix_free(Matrix A)
+
+class MatrixException: public std::exception {
+private:
+    std::string msg;
+public:
+    Matrix_Exception(std::string msg) : msg{ msg } {}
+    std::string get_message() const { return msg; }
+};
+
+MatrixException INCORRECT_SIZE_OF_MATRIX("The matrix has an incorrect size\n");
+MatrixException NULL_MATRIX("Your matrix is empty\n");
+
+
+void Matrix::free()
 {
+    A.cols = 0;
+    A.rows = 0;
+    delete[] data;
+    data = nullptr;
+}
+
+
+Matrix::Matrix(const size_t cols, const size_t rows)
+    : cols(cols), rows(rows), data(nullptr)
+{
+    if (cols == 0 || rows == 0) {
+        data = nullptr;
+        return;
+    };
+
+    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) {
+        free();
+        return;
+    };
+
+    data = new MatrixItem[cols * rows];
+}
+
+
+Matrix::~Matrix() {
+    free();
+}
+
+
+void Matrix::set_zero()
+{
+    if (data == nullptr) throw NULL_MATRIX;
+
+    memset(data, 0, cols * rows * sizeof(MatrixItem));
+}
+
+
+void Matrix::fill(std::vector <MatrixItem> values)
+{
+    if (data == nullptr) throw NULL_MATRIX;
+
+    if (values.size() > rows * cols)
+        for (size_t idx = 0; idx < cols * rows; ++idx)
+            data[idx] = values[idx];
+    else {
+        for (auto idx = values.begin(); idx != values.end(); ++idx)
+            data[idx] = values[idx];
+        if (values.size() < cols * rows)
+            for (auto idx = values.end(); idx < cols * rows - 1; ++idx)
+                data[idx] = 0.0;
+    };
+}
+
+
+void Matrix::print()
+{
+    if (data == nullptr) throw NULL_MATRIX;
+
+    std::cout << "_____________________________________________" << std::endl;
+
+    for (size_t idx = 1; idx <= cols * rows; ++idx) {
+        std::cout << data[idx - 1];
+        if (idx % cols == 0 && idx >= cols)
+            std::cout << "" << std::endl;
+    };
+}
+
+
+Matrix::Matrix(Matrix& A)
+{
+    if (A.data == nullptr) {
+        A.cols = 0;
+        A.rows = 0;
+        A.data = nullptr;
+        return;
+    };
+
+    cols = A.cols;
+    rows = A.rows;
+    data = new MatrixItem[cols * rows];
+
+    memcpy(data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+}
+
+
+Matrix::Matrix(Matrix&& A)
+{
+    cols = A.cols;
+    rows = A.rows;
+    data = A.data;
+    A.cols = 0;
+    A.rows = 0;
+    A.data = nullptr;
+}
+
+
+Matrix& Matrix::operator=(const Matrix& A)
+{
+    if (this == &A) return *this;
+
+    cols = A.cols;
+    rows = A.rows;
+
+    delete[] data;
+    data = new MatrixItem[cols * rows];
+    memcpy(data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+    return *this;
+}
+
+
+Matrix& Matrix::operator=(Matrix&& A)
+{   
+    cols = A.cols;
+    rows = A.rows;
+    delete[] data;
+    data = A.data;
 
     A.cols = 0;
     A.rows = 0;
-    free(A.data);
-    A.data = NULL;
+    A.data = nullptr;
 
+    return *this;
 }
 
-// Функция для вывода матрицы на экран
-void matrix_print(Matrix A) {
-    for (int row = 0; row < A.rows; row++) {
-        for (int col = 0; col < A.cols; col++) {
-            printf("%lf\t", A.data[row][col]);
-        }
-        printf("\n");
-    }
-}
 
-// Функция для сложения двух матриц
-Matrix matrix_sum(Matrix A, Matrix B) 
+Matrix& Matrix::operator+(const Matrix& A)
 {
-    if (A.rows != B.rows || A.cols != B.cols) {
-        matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
-        return MATRIX_NULL;
-    } 
-    
-    // проверкa создания матриц
-    if(A.data == NULL || B.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
- 
-    Matrix result = matrix_create(A.rows, B.cols);
+    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
 
-    if(result.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
-    
-    for (int row = 0; row < A.rows; row++) {
-        for (int col = 0; col < B.cols; col++) {
-            result.data[row][col] = A.data[row][col] + B.data[row][col];
-        }
-    }
-    
-    return result;
+    Matrix* result = new Matrix(*this);
+
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        result->data[idx] += A.data[idx];
+
+    return *result;
 }
 
-// Функция для вычитания двух матриц
-Matrix matrix_sub(Matrix A, Matrix B) {
-    if (A.rows != B.rows || A.cols != B.cols) {
-        matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
-        return MATRIX_NULL;
-    }
 
-    if(A.data == NULL || B.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
+Matrix& Matrix::operator+=(const Matrix& A)
+{
+    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
+
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        data[idx] += A.data[idx];
     
-    Matrix result = matrix_create(A.rows, A.cols);
-    
-    if(result.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
-    
-    for (int row = 0; row < A.rows; row++) {
-        for (int col = 0; col < B.cols; col++) {
-            result.data[row][col] = A.data[row][col] - B.data[row][col];
-        }
-    }
-    
-    return result;
+    return *this;
 }
 
-// Функция для умножения двух матриц
-Matrix matrix_mult(Matrix A, Matrix B) {
-    if (A.cols != B.rows) {
-        matrix_errormsg("Ошибка: Размеры матриц не совпадают\n");
-        return MATRIX_NULL;
-    }
 
-    if(A.data == NULL || B.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
-    
-    Matrix result = matrix_create(A.rows, B.cols);
-    
-    if(result.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
-    
-    for (int row = 0; row < A.rows; row++) {
-        for (int col = 0; col < B.cols; col++) {
-            result.data[row][col] = 0;
-            for (int k = 0; k < A.cols; k++) {
-                result.data[row][col] += A.data[row][k] * B.data[k][col];
-            }
-        }
-    }
-    
-    return result;
+Matrix& Matrix::operator-(const Matrix& A)
+{
+    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
+
+    Matrix* result = new Matrix(*this);
+
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        result->data[idx] -= A.data[idx];
+
+    return *result;
 }
 
-// Функция для транспонирования матрицы
-Matrix matrix_tr(Matrix A) {
-    if(A.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
-    
-    Matrix result = matrix_create(A.cols, A.rows);
-    
-    if(result.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
-    
-    for (int row = 0; row < A.rows; row++) {
-        for (int col = 0; col < A.cols; col++) {
-            result.data[col][row] = A.data[row][col];
-        }
-    }
-    
-    return result;
+
+Matrix& Matrix::operator-=(const Matrix& A)
+{
+    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
+
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        data[idx] -= A.data[idx];
+
+    return *this;
 }
 
-// Функция для вычисления детерминанта матрицы (простой метод для квадратных матриц)
-double matrix_det(Matrix A) {
-    if (A.rows != A.cols) {
-        matrix_errormsg("Ошибка: Матрица не является квадратной\n");
-        return NAN;
-    }
-    
-    if(A.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return NAN;
-    }
-    
-    if (A.rows == 1) {
-        return A.data[0][0];
-    }
-    
-    if (A.rows == 2) {
-        return A.data[0][0] * A.data[1][1] - A.data[0][1] * A.data[1][0];
-    }
 
-     if (A.rows == 3) {
-        return A.data[0][0] * (A.data[1][1] * A.data[2][2] - A.data[1][2] * A.data[2][1]) -
-               A.data[0][1] * (A.data[1][0] * A.data[2][2] - A.data[1][2] * A.data[2][0]) +
-               A.data[0][2] * (A.data[1][0] * A.data[2][1] - A.data[1][1] * A.data[2][0]);
-    }
+Matrix& Matrix::operator*(const Matrix& B)
+{
+    if (cols != B.rows) throw INCORRECT_SIZE_OF_MATRIX;
 
-    return NAN;
+    Matrix* result = new Matrix(*this);
+
+    for (size_t rowA = 0; rowA < rows; ++rowA)
+        for (size_t colB = 0; colB < B.cols; ++colB) {
+            result->data[result->cols * rowA + colB] = 0.0;
+            for (size_t colA = 0; colA < cols; ++colA)
+                result->data[result->cols * rowA + colB] += data[colA + rowA * cols] * B.data[B.cols * colA + colB];
+        };
+    
+    return *result;
 }
 
-Matrix matrix_mult_scalar(Matrix A, double scalar) {
-    Matrix result = matrix_create(A.rows, A.cols);
+
+Matrix& Matrix::operator*=(const Matrix& B)
+{
+    *this = *this * B;
+
+    return *this;
+}
+
+
+Matrix& Matrix::operator*(const double& coeff)
+{
+    Matrix *result = new Matrix(*this);
+
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        result->data[idx] = data[idx] * coeff;
     
-    if(result.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
+    return *result;
+}
+
+
+Matrix& Matrix::operator*=(const double& coeff)
+{
+    for (size_t idx = 0; idx < cols * rows; ++idx)
+        data[idx] = data[idx] * coeff;
+    
+    return *this;
+}
+
+
+Matrix Matrix::transp()
+{
+    Matrix result = Matrix(*this);
+
+    for (size_t row = 0; row < rows; ++row)
+        for (size_t col = 0; col < cols; ++col)
+            result.data[row * cols + col] = data[row + col * cols];
+    
+    return *result;
+}
+
+
+Matrix* Matrix::exponent(const Matrix A, const unsigned int degree = 10)
+{
+    if (A.cols != A.rows) throw INCORRECT_SIZE_OF_MATRIX;
+    
+    Matrix* result = new Matrix(A.cols, A.rows);
+
+    result->set_zero();
+
+    Matrix B = Matrix(A);
+
+    for (size_t diag = 0; diag < result->rows; ++diag)
+        result->data[diag * result->cols + diag] += 1;
+
+    for (unsigned int trm = 1; trm <= degree; ++trm) {
+       B *= A;
+       B *= 1.0 / trm;
+       *result += B;
+    };
+
+    return *result;
+}
+
+
+int Matrix::det_if_zero()
+{
+    size_t count;
+
+    for (size_t row = 0; row < rows; ++row) { // суммы по строкам
+        count = 0;
+        for (size_t col = 0; col < cols; ++col) {
+            count += 1;
+            if (data[row * cols + col] != 0.0)
+                break;
+        };
         
-    if(A.rows == 0 || A.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
+        if (count == cols)
+            return 0;
+    };
     
-    for (size_t row = 0; row < A.rows; row++) {
-        for (size_t col = 0; col < A.cols; col++) {
-            result.data[row][col] = A.data[row][col] * scalar;
-        }
-    }
+    for (size_t col = 0; col < cols; ++col) { // суммы по строкам
+        count = 0;
+        for (size_t row = 0; row < rows; ++row) {
+            count += 1;
+            if (data[row * cols + col] != 0.0)
+                break;
+        };
+        
+        if (count == rows)
+            return 0;
+    };
+    
+    return 1;
+}
+
+
+void Matrix::det_prep(size_t diag, double *coeff)
+{
+    size_t buff_one = diag; // запоминается номер строки
+
+    if (data[diag * cols + diag] == 0.0) {
+        for (size_t row = diag; row < rows; ++row) {
+            buff_one += 1;
+            if (data[row * cols] != 0.0)
+                break;
+        };
+
+        double buff_two = 0; // запоминается значение в ячейке
+        
+        for (size_t col = diag; col < cols; ++col) {
+            buff_two = data[diag * cols + col];
+            data[diag * cols + col] = data[buff_one * cols + col];
+            data[buff_one * cols + col] = buff_two;
+        };
+
+        *coeff *= -1;
+    };
+}
+
+
+double Matrix::determinant()
+{
+    if (cols != rows) throw INCORRECT_SIZE_OF_MATRIX;
+    
+    Matrix C = Matrix(cols, rows);
+    if (C.data == nullptr) throw NULL_MATRIX;
+    C = *this;
+
+    if (cols == 1) {
+        C.free();
+        return data[0];
+    };
+
+    if (C.det_if_zero() == 0) {
+        C.free();
+        return 0.0;
+    };
+    
+    double coeff = 1.0;
+    double diagonal = 1.0;
+    double buff_one, buff_two;
+
+    for (size_t diag = 0; diag < rows - 1; ++diag) {
+        C.det_prep(diag, &coeff);
+        coeff *= C.data[diag * cols + diag];
+        buff_one = C.data[diag * cols + diag];
+
+        for (size_t col = diag; col < cols; ++col)
+            C.data[diag * cols + col] /= buff_one;
+
+        for (size_t row = diag + 1; row < rows; ++row) {
+            buff_two = C.data[row * cols + diag];
+            for (size_t col = diag; col < cols; ++col) {
+                C.data[row * cols + col] = C.data[row * cols + col] - C.data[diag * cols + col] * buff_two;
+            };  
+        };
+    };
+
+    for (size_t diag = 0; diag < rows; ++diag)
+        diagonal *= C.data[diag * cols + diag];
+    
+    C.free();
+
+    double result = coeff * diagonal;
+    
     return result;
 }
 
-void matrix_copy(Matrix destination, const Matrix source) 
+
+int main()
 {
-    for (size_t row = 0; row < source.rows; row++) {
-        for (size_t col = 0; col < source.cols; col++) {
-            destination.data[row][col] = source.data[row][col];
-        }
-    }
-}
-
-void matrix_add_mult(Matrix A, const Matrix B) 
-{
-    Matrix result = matrix_create(A.rows, A.cols);
-    
-    if(result.data == NULL){
-        matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
-    
-    if(A.rows == 0 || A.cols == 0 || B.rows == 0 || B.cols == 0){
-        return matrix_errormsg("MATRIX_NULL");
-        return MATRIX_NULL;
-    }
-
-    for (size_t row = 0; row < A.rows; row++) {
-        for (size_t col = 0; col < A.cols; col++) {
-            double matrix_sum = 0.0;
-            for (size_t k = 0; k < A.cols; k++) {
-                matrix_sum += A.data[row][k] * B.data[k][col];
-            }
-            result.data[row][col] = matrix_sum;
-        }
-    }
-
-    matrix_copy(A, result);
-    matrix_free(result);
-}
-
-// Функция для вычисления экспоненты матрицы (простой метод для квадратных матриц)
-Matrix matrix_exponent(const Matrix A, const double accuracy) 
-{
-    if (A.rows != A.cols) {
-        matrix_errormsg("Матрица должна быть квадратной для вычисления экспоненты.");
-        return MATRIX_NULL;
-    }
-
-    size_t n = A.rows;
-    Matrix C = matrix_create(n, n);
-    Matrix B = matrix_create(n, n);
-
-    if (C.data == NULL || B.data == NULL) {
-        matrix_free(C);
-        matrix_free(B);
-        return MATRIX_NULL;
-    }
-
-    matrix_copy(B, A);
-
-    for (size_t trm = 2; trm <= accuracy; ++trm) {
-        matrix_sum(B, matrix_mult_scalar(A, 1.0 / trm));
-        matrix_sum(C, B);
-    }
-
-    matrix_sum(C, A);
-
-    for (size_t diag = 0; diag < C.rows; ++diag) {
-        C.data[diag][diag] += 1;
-    }
-
-    matrix_free(B);
-
-    return C;
+    Matrix A(3, 3);
+    std::vector <MatrixItem> array(1.0, 2.0, 3.0, 4.0, 5.0, 0.0, 2.0, 9.0, -3.0);
+    A.fill(array);
+    A.print();
+    A.free();
 }
