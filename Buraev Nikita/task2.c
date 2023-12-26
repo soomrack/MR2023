@@ -62,7 +62,7 @@ void print_matrix(const struct Matrix A)
 
 
 // B <- A
-void matrix_copy(const struct Matrix B, const struct Matrix A)
+void matrix_copy(struct Matrix B, const struct Matrix A)
 {
     if (A.data == NULL) {
         matrix_free(B);
@@ -117,13 +117,17 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 
 
 // A += B
-void matrix_add(const struct Matrix A, const struct Matrix B)
+void matrix_add(struct Matrix A, const struct Matrix B)
 {
-    if (A.cols != B.cols || A.rows != B.rows)
+    if (A.cols != B.cols || A.rows != B.rows) {
+        A = MATRIX_NULL;
         return;
+    }
 
-    if (A.data == NULL || B.data == NULL)
+    if (A.data == NULL || B.data == NULL){
+        A = MATRIX_NULL;
         return;
+    }
 
     for (size_t idx = 0; idx < A.cols * A.rows; ++idx)
         A.data[idx] = A.data[idx] + B.data[idx];

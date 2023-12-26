@@ -170,10 +170,8 @@ Matrix& Matrix::operator=(const Matrix& A)
 }
 
 
-Matrix& Matrix::operator=(const Matrix&& A)
-{
-    if (this == &A) return *this;
-    
+Matrix& Matrix::operator=(Matrix&& A)
+{   
     cols = A.cols;
     rows = A.rows;
     delete[] data;
@@ -292,25 +290,23 @@ Matrix Matrix::transp()
 }
 
 
-Matrix Matrix::exponent(const Matrix A, const unsigned int degree = 10)
+Matrix* Matrix::exponent(const Matrix A, const unsigned int degree = 10)
 {
     if (A.cols != A.rows) throw INCORRECT_SIZE_OF_MATRIX;
     
-    Matrix result = Matrix(A.cols, A.rows);
+    Matrix* result = new Matrix(A.cols, A.rows);
 
-    result.set_zero();
+    result->set_zero();
 
     Matrix B = Matrix(A);
 
-    for (size_t diag = 0; diag < result.rows; ++diag)
-        result.data[diag * result.cols + diag] += 1;
-    
-    result += A;
+    for (size_t diag = 0; diag < result->rows; ++diag)
+        result->data[diag * result->cols + diag] += 1;
 
-    for (int trm = 2; trm <= degree; ++trm) {
+    for (unsigned int trm = 1; trm <= degree; ++trm) {
        B *= A;
        B *= 1.0 / trm;
-       result += B;
+       *result += B;
     };
 
     return result;
