@@ -8,6 +8,7 @@
 #define MATRIX_MUST_BE_SQUARE "\nMatrix must be square!\n\n"
 #define MULT_SHAPE_ERROR "\nError: The number of columns of matrix A must be equal to the number of rows of matrix B.\n\n"
 #define SHAPE_NOT_EQUAL_ERROR "\nError: The shape of the matrices must be the same!\n\n"
+#define MEMORY_ERROR "\nError: Memory error\n\n"
 
 
 typedef struct {
@@ -47,17 +48,11 @@ void delete_from_memory(Matrix matrix)
 void copy_matrix(Matrix* source, Matrix* destination) {
 
     // Added shape check
-    if (source->cols != destination->cols && source->rows != destination->rows) {
+    if (source->cols != destination->cols || source->rows != destination->rows) {
         printf(SHAPE_NOT_EQUAL_ERROR);
     }
 
-    for (size_t rows = 0; rows < source->rows; rows++)
-    {
-        for (size_t cols = 0; cols < source->cols; cols++)
-        {
-            destination->values[rows][cols] = source->values[rows][cols];
-        }
-    }
+    memcopy(destination, source, sizeof(double)*source->cols*source->rows);
 }
 
 
@@ -78,7 +73,11 @@ void output(Matrix matrix)
 Matrix zero_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
-    
+    if (matrix->data == NULL){
+        printf(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        return matrix;
+    } 
 
 
     for (size_t rows = 0; rows < matrix->rows; rows++)
@@ -95,6 +94,11 @@ Matrix zero_matrix(Matrix* matrix)
 Matrix identity_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
+    if (matrix->data == NULL){
+        printf(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        return *matrix;
+    } 
 
     for (size_t rows = 0; rows < matrix->rows; rows++)
     {
@@ -117,6 +121,11 @@ Matrix identity_matrix(Matrix* matrix)
 Matrix* random_matrix(Matrix* matrix)
 {
     matrix_memory(matrix);
+    if (matrix->data == NULL){
+        printf(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        return matrix;
+    } 
 
     for (size_t item = 0; item < matrix->rows*matrix->cols; item++)
     {
@@ -140,7 +149,7 @@ Matrix multiply_by_scalar(Matrix* matrix, double scalar)
 Matrix add(Matrix* A, Matrix* B)
 {
     // Added shape check
-    if (A->cols != B->cols && A->rows != B->rows) {
+    if (A->cols != B->cols || A->rows != B->rows) {
         printf(SHAPE_NOT_EQUAL_ERROR);
         printf("The result is incorrect!");
         return *A;
@@ -148,6 +157,11 @@ Matrix add(Matrix* A, Matrix* B)
 
     Matrix add_matrix = { A->rows, A->cols, NULL, NULL };
     matrix_memory(&add_matrix);
+    if (add_matrix.data == NULL){
+        printf(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        return *A;
+    } 
 
     for (size_t item = 0; item < add_matrix.rows*add_matrix.cols; item++)
     {
@@ -161,7 +175,7 @@ Matrix add(Matrix* A, Matrix* B)
 Matrix subtract(Matrix* A, Matrix* B)
 {
     // Added shape check
-    if (A->cols != B->cols && A->rows != B->rows) {
+    if (A->cols != B->cols || A->rows != B->rows) {
         printf(SHAPE_NOT_EQUAL_ERROR);
         printf("The result is incorrect!");
         return *A;
