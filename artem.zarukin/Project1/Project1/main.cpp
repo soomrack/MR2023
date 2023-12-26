@@ -28,7 +28,7 @@ short int currentMonth = 1;
 double mortgageDebt = APARTMENTPRICE;
 double realApartmentPrice = APARTMENTPRICE;
 
-void InitialCapital()
+void bobInitialCapital()
 {
 
 	bob.wage = 200 * 1000 * 100;
@@ -36,44 +36,24 @@ void InitialCapital()
 	bob.rent = 10 * 1000 * 100;
 	bob.expenses = 50 * 1000 * 100;
 
+	bob.capital = bob.initialCapital - DOWNPAYMENT;
+
+};
+
+void aliceInitialCapital()
+{
+
 	alice.wage = 200 * 1000 * 100;
 	alice.initialCapital = 1000 * 1000 * 100;
 	alice.rent = 30 * 1000 * 100;
 	alice.expenses = 50 * 1000 * 100;
 
-	bob.capital = bob.initialCapital - DOWNPAYMENT;
 	alice.capital = alice.initialCapital;
 
 };
 
-void calc()
+void printCapital()
 {
-	for (currentMonth; currentMonth <= totalPeriod; currentMonth++) {
-
-		bob.capital = bob.capital + bob.wage;
-		bob.capital = bob.capital - bob.expenses - bob.expenses * MONTHINFLATION * currentMonth;
-		bob.capital = bob.capital - APARTMENTPRICE / totalPeriod - mortgageDebt * MORTGAGEINTEREST / totalPeriod;
-		mortgageDebt = mortgageDebt - APARTMENTPRICE / totalPeriod - mortgageDebt * MORTGAGEINTEREST / totalPeriod;
-		bob.capital = bob.capital - bob.rent - bob.rent * MONTHINFLATION * currentMonth;
-		realApartmentPrice = realApartmentPrice + realApartmentPrice * MONTHINFLATION;
-
-		alice.capital = alice.capital + alice.wage + alice.wage * MONTHINFLATION * currentMonth;
-		alice.capital = alice.capital - alice.expenses - alice.expenses * MONTHINFLATION * currentMonth;
-		alice.capital = alice.capital - alice.rent - alice.rent * MONTHINFLATION * currentMonth;
-		alice.capital = alice.capital + alice.capital * DEPOSITINTEREST;
-
-		printf("\nThe end of month: ");
-		printf("%d", currentMonth);
-		printf("\nBob's estimater capital is ");
-		printf("%f", bob.capital / 100);
-		printf(" rubles");
-		printf("\nAlice's estimater capital is ");
-		printf("%f", alice.capital / 100);
-		printf("\n rubles");
-	}
-	printf("\n                   ");
-	printf("\n___________________");
-	printf("\n                   ");
 	printf("\nBob's net worth is ");
 	printf("%f", (bob.capital + realApartmentPrice) / 100);
 	printf("\n rubles");
@@ -82,11 +62,49 @@ void calc()
 	printf("\n rubles");
 };
 
+void wages()
+{
+		bob.capital = bob.capital + bob.wage;
+
+		alice.capital = alice.capital + alice.wage + alice.wage * MONTHINFLATION * currentMonth;
+};
+
+void spendings()
+{
+		bob.capital = bob.capital - bob.expenses - bob.expenses * MONTHINFLATION * currentMonth;
+		bob.capital = bob.capital - bob.rent - bob.rent * MONTHINFLATION * currentMonth;
+
+		alice.capital = alice.capital - alice.expenses - alice.expenses * MONTHINFLATION * currentMonth;
+		alice.capital = alice.capital - alice.rent - alice.rent * MONTHINFLATION * currentMonth;	
+};
+               
+void banking()
+{
+		mortgageDebt = mortgageDebt - APARTMENTPRICE / totalPeriod - mortgageDebt * MORTGAGEINTEREST / totalPeriod;
+		bob.capital = bob.capital - APARTMENTPRICE / totalPeriod - mortgageDebt * MORTGAGEINTEREST / totalPeriod;
+		realApartmentPrice = realApartmentPrice + realApartmentPrice * MONTHINFLATION;
+
+		alice.capital = alice.capital + alice.capital * DEPOSITINTEREST;
+};
+
+void calc()
+{
+	for (currentMonth; currentMonth <= totalPeriod; currentMonth++) {
+
+		wages();
+		spendings();
+		banking();
+	};
+};
+
 int main() 
 {
-	InitialCapital();
+	bobInitialCapital();
+	aliceInitialCapital();
 
 	calc();
+
+	printCapital();
 
 	return 0;
 }
