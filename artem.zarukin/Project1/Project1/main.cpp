@@ -9,7 +9,6 @@ struct Person
 	int rent;
 	int expenses;
 	double capital;
-	char name[6];
 };
 
 
