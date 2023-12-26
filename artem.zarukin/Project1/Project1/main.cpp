@@ -64,9 +64,11 @@ void printCapital()
 
 void wages()
 {
+	if (((currentMonth + 1) % 12) != 0) {
 		bob.capital = bob.capital + bob.wage;
 
 		alice.capital = alice.capital + alice.wage + alice.wage * MONTHINFLATION * currentMonth;
+	};
 };
 
 void spendings()
