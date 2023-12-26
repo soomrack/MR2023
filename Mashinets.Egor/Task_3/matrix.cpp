@@ -332,7 +332,7 @@ Matrix& Matrix::operator*= (const Matrix& M) {
         throw ERRONEOUS_MESSAGE;
 
     Matrix R(rows, M.cols);
-    memset(R.data, 0, rows * M.cols);
+    memset(R.data, 0, rows * M.cols * sizeof(MatrixItem));
     for (size_t row = 0; row < R.rows; row++){
         for (size_t col = 0; col < R.cols; col++){
             for (size_t idx = 0; idx < M.rows; idx++){
