@@ -52,7 +52,7 @@ void copy_matrix(Matrix* source, Matrix* destination) {
         printf(SHAPE_NOT_EQUAL_ERROR);
     }
 
-    memcopy(destination, source, sizeof(double)*source->cols*source->rows);
+    memcopy(destination->data, source->data, sizeof(double)*source->cols*source->rows);
 }
 
 
@@ -281,13 +281,22 @@ Matrix exponent(Matrix* A)
         return *A;
     }
 
-
     Matrix exp_matrix = { A->rows, A->cols, NULL, NULL };
 
     Matrix current_element = { A->rows, A->cols, NULL, NULL };
 
     exp_matrix = identity_matrix(&exp_matrix);
+    if (exp_matrix.data == NULL){
+        printf(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        return *A;
+    }  
     current_element = identity_matrix(&current_element);
+    if (current_element.data == NULL){
+        printf(MEMORY_ERROR);
+        printf("The result is incorrect!");
+        return *A;
+    } 
 
     size_t number_of_terms_in_exponential_expansion = 50;
 
@@ -297,6 +306,7 @@ Matrix exponent(Matrix* A)
         exp_matrix = add(&exp_matrix, &current_element);
     }
 
+    delete_from_memory(current_element);
     return exp_matrix;
 }
 
