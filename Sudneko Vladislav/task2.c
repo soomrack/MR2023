@@ -307,7 +307,7 @@ void function_testing() {
     Matrix A = {3, 3, NULL, NULL};
     Matrix B = {3, 3, NULL, NULL};
     Matrix C = {3, 3, NULL, NULL};
-    double det = 0.0;
+    double det = NAN;
 
     matrix_from_array(&A, (double[]){1, -2, 3, 4, 0, 6, -7, 8, 9});
     matrix_from_array(&B, (double[]){1., 2., 3., 4., 5., 6., 7., 8., 9.});
