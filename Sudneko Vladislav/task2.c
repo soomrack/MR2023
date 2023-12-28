@@ -50,7 +50,7 @@ void matrix_delete_from_memory(Matrix* matrix) {
     matrix->values = NULL;
     matrix->rows = 0;
     matrix->cols = 0;
-    matrix = NULL;  // is this necessary?
+    matrix = NULL;
 }
 
 void matrix_copy(Matrix* source, Matrix* destination) {
