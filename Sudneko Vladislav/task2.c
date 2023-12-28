@@ -47,6 +47,7 @@ void matrix_error(const char* error_message) { printf("%s", error_message); }
 
 void matrix_delete_from_memory(Matrix* matrix) {
     free(matrix->data);
+    matrix->values = NULL;
     matrix->rows = 0;
     matrix->cols = 0;
     matrix = NULL;  // is this necessary?
@@ -103,7 +104,7 @@ void matrix_identity(Matrix* matrix) {
 void matrix_from_array(Matrix* matrix, double* array) {
     matrix_memory(matrix);
     if (matrix->data == NULL) {
-        printf("%d", sizeof(array) / sizeof(array[0]));
+        printf("%ld", sizeof(array) / sizeof(array[0]));
         matrix_error(MEMORY_ERROR);
         return;
     }
@@ -130,7 +131,7 @@ Matrix matrix_multiplication_by_scalar(Matrix matrix, double scalar) {
     matrix_copy(&matrix, &scaled_matrix);
 
     if (scaled_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         return matrix_null;
     }
 
@@ -143,14 +144,14 @@ Matrix matrix_multiplication_by_scalar(Matrix matrix, double scalar) {
 
 Matrix matrix_addition(Matrix A, Matrix B) {
     if (A.cols != B.cols || A.rows != B.rows) {
-        printf(SHAPE_NOT_EQUAL_ERROR);
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
         return matrix_null;
     }
 
     Matrix add_matrix = {A.rows, A.cols, NULL, NULL};
     matrix_memory(&add_matrix);
     if (add_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         return matrix_null;
     }
 
@@ -163,14 +164,14 @@ Matrix matrix_addition(Matrix A, Matrix B) {
 
 Matrix matrix_subtraction(Matrix A, Matrix B) {
     if (A.cols != B.cols || A.rows != B.rows) {
-        printf(SHAPE_NOT_EQUAL_ERROR);
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
         return matrix_null;
     }
 
     Matrix subtract_matrix = {A.rows, A.cols, NULL, NULL};
     matrix_memory(&subtract_matrix);
     if (subtract_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         return matrix_null;
     }
 
@@ -191,7 +192,7 @@ Matrix matrix_multiplication(Matrix A, Matrix B) {
     Matrix multiply_matrix = {A.rows, B.cols, NULL, NULL};
     matrix_zero(&multiply_matrix);
     if (multiply_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         return matrix_null;
     }
 
@@ -211,7 +212,7 @@ Matrix matrix_transpose(Matrix A) {
     Matrix transpose_matrix = {A.cols, A.rows, NULL, NULL};
     matrix_zero(&transpose_matrix);
     if (transpose_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
 
         return matrix_null;
     }
@@ -234,7 +235,7 @@ double matrix_determinant(Matrix A) {
     Matrix triangular_matrix = {A.rows, A.cols, NULL, NULL};
     matrix_zero(&triangular_matrix);
     if (triangular_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         return NAN;
     }
     matrix_copy(&A, &triangular_matrix);
@@ -268,6 +269,54 @@ double matrix_determinant(Matrix A) {
     return det;
 }
 
+static int matrix_exp_multiplication(Matrix* A, Matrix* B) {
+    if (A->cols != B->rows) {
+        matrix_error(MULT_SHAPE_ERROR);
+        return 1;
+    }
+
+    Matrix multiply_matrix = {A->rows, A->cols, NULL, NULL};
+    matrix_memory(&multiply_matrix);
+    matrix_copy(A, &multiply_matrix);
+    
+    if (multiply_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return 1;
+    }
+    
+    for (size_t rows = 0; rows < multiply_matrix.rows; rows++) {
+        for (size_t cols = 0; cols < multiply_matrix.cols; cols++) {
+            A->values[rows][cols] = 0;
+            for (size_t k = 0; k < multiply_matrix.cols; k++) {
+                A->values[rows][cols] +=
+                    multiply_matrix.values[rows][k] * B->values[k][cols];
+            }
+        }
+    }
+    
+    matrix_delete_from_memory(&multiply_matrix);
+    return 0;
+}
+
+static void matrix_exp_multiplication_by_scalar(Matrix* matrix, double scalar) {
+    for (size_t item = 0; item < matrix->rows * matrix->cols; item++) {
+        matrix->data[item] *= scalar;
+    }
+}
+
+static int matrix_exp_addition(Matrix* A, Matrix* B) {
+    if (A->cols != B->cols || A->rows != B->rows) {
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
+        return 1;
+    }
+
+    for (size_t item = 0; item < A->rows * A->cols; item++) {
+        A->data[item] = A->data[item] + B->data[item];
+    }
+    return 0;
+}
+
+
 Matrix matrix_exponent(Matrix A) {
     if (A.cols != A.rows) {
         matrix_error(MATRIX_MUST_BE_SQUARE);
@@ -286,6 +335,7 @@ Matrix matrix_exponent(Matrix A) {
     matrix_identity(&current_element);
     if (current_element.data == NULL) {
         matrix_error(MEMORY_ERROR);
+        matrix_delete_from_memory(&exp_matrix);
         return matrix_null;
     }
 
@@ -293,10 +343,13 @@ Matrix matrix_exponent(Matrix A) {
 
     for (size_t term = 1;
          term < number_of_terms_in_matrix_exponential_expansion; term++) {
-        current_element = matrix_multiplication(current_element, A);
-        current_element =
-            matrix_multiplication_by_scalar(current_element, 1.0 / term);
-        exp_matrix = matrix_addition(exp_matrix, current_element);
+        if (matrix_exp_multiplication(&current_element, &A) == 1) {
+            return matrix_null;
+        };
+        matrix_exp_multiplication_by_scalar(&current_element, 1.0 / term);
+        if (matrix_exp_addition(&exp_matrix, &current_element) == 1) {
+            return matrix_null;
+        };
     }
 
     matrix_delete_from_memory(&current_element);
