@@ -47,6 +47,7 @@ void matrix_error(const char* error_message) { printf("%s", error_message); }
 
 void matrix_delete_from_memory(Matrix* matrix) {
     free(matrix->data);
+    matrix->values = NULL;
     matrix->rows = 0;
     matrix->cols = 0;
     matrix = NULL;  // is this necessary?
