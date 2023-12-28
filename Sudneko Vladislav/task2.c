@@ -301,24 +301,15 @@ static void matrix_exp_multiplication_by_scalar(Matrix* matrix, double scalar) {
     }
 }
 
-static void matrix_addition(Matrix* A, Matrix* B) {
+static void matrix_exp_addition(Matrix* A, Matrix* B) {
     if (A->cols != B->cols || A->rows != B->rows) {
-        printf(SHAPE_NOT_EQUAL_ERROR);
-        return matrix_null;
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
+        return;
     }
 
-    Matrix add_matrix = {A.rows, A.cols, NULL, NULL};
-    matrix_memory(&add_matrix);
-    if (add_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
-        return matrix_null;
+    for (size_t item = 0; item < A->rows * A->cols; item++) {
+        A->data[item] = A->data[item] + B->data[item];
     }
-
-    for (size_t item = 0; item < add_matrix.rows * add_matrix.cols; item++) {
-        add_matrix.data[item] = A.data[item] + B.data[item];
-    }
-
-    return add_matrix;
 }
 
 
@@ -349,7 +340,7 @@ Matrix matrix_exponent(Matrix A) {
          term < number_of_terms_in_matrix_exponential_expansion; term++) {
         matrix_exp_multiplication(&current_element, &A);
         matrix_exp_multiplication_by_scalar(&current_element, 1.0 / term);
-        exp_matrix = matrix_exp_addition(exp_matrix, current_element);
+        matrix_exp_addition(&exp_matrix, &current_element);
     }
 
     matrix_delete_from_memory(&current_element);
