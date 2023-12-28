@@ -103,7 +103,7 @@ void matrix_identity(Matrix* matrix) {
 void matrix_from_array(Matrix* matrix, double* array) {
     matrix_memory(matrix);
     if (matrix->data == NULL) {
-        printf("%d", sizeof(array) / sizeof(array[0]));
+        printf("%ld", sizeof(array) / sizeof(array[0]));
         matrix_error(MEMORY_ERROR);
         return;
     }
