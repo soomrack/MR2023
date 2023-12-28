@@ -285,6 +285,7 @@ static void matrix_exp_multiplication(Matrix* A, Matrix* B) {
     
     for (size_t rows = 0; rows < multiply_matrix.rows; rows++) {
         for (size_t cols = 0; cols < multiply_matrix.cols; cols++) {
+            A->values[rows][cols] = 0;
             for (size_t k = 0; k < multiply_matrix.cols; k++) {
                 A->values[rows][cols] +=
                     multiply_matrix.values[rows][k] * B->values[k][cols];
