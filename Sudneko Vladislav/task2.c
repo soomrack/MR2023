@@ -130,7 +130,7 @@ Matrix matrix_multiplication_by_scalar(Matrix matrix, double scalar) {
     matrix_copy(&matrix, &scaled_matrix);
 
     if (scaled_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         return matrix_null;
     }
 
@@ -143,14 +143,14 @@ Matrix matrix_multiplication_by_scalar(Matrix matrix, double scalar) {
 
 Matrix matrix_addition(Matrix A, Matrix B) {
     if (A.cols != B.cols || A.rows != B.rows) {
-        printf(SHAPE_NOT_EQUAL_ERROR);
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
         return matrix_null;
     }
 
     Matrix add_matrix = {A.rows, A.cols, NULL, NULL};
     matrix_memory(&add_matrix);
     if (add_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         return matrix_null;
     }
 
@@ -163,14 +163,14 @@ Matrix matrix_addition(Matrix A, Matrix B) {
 
 Matrix matrix_subtraction(Matrix A, Matrix B) {
     if (A.cols != B.cols || A.rows != B.rows) {
-        printf(SHAPE_NOT_EQUAL_ERROR);
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
         return matrix_null;
     }
 
     Matrix subtract_matrix = {A.rows, A.cols, NULL, NULL};
     matrix_memory(&subtract_matrix);
     if (subtract_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         return matrix_null;
     }
 
@@ -191,7 +191,7 @@ Matrix matrix_multiplication(Matrix A, Matrix B) {
     Matrix multiply_matrix = {A.rows, B.cols, NULL, NULL};
     matrix_zero(&multiply_matrix);
     if (multiply_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         return matrix_null;
     }
 
@@ -211,7 +211,7 @@ Matrix matrix_transpose(Matrix A) {
     Matrix transpose_matrix = {A.cols, A.rows, NULL, NULL};
     matrix_zero(&transpose_matrix);
     if (transpose_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
 
         return matrix_null;
     }
@@ -234,7 +234,7 @@ double matrix_determinant(Matrix A) {
     Matrix triangular_matrix = {A.rows, A.cols, NULL, NULL};
     matrix_zero(&triangular_matrix);
     if (triangular_matrix.data == NULL) {
-        printf(MEMORY_ERROR);
+        matrix_error(MEMORY_ERROR);
         return NAN;
     }
     matrix_copy(&A, &triangular_matrix);
