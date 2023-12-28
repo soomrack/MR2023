@@ -268,6 +268,60 @@ double matrix_determinant(Matrix A) {
     return det;
 }
 
+static void matrix_exp_multiplication(Matrix* A, Matrix* B) {
+    if (A->cols != B->rows) {
+        matrix_error(MULT_SHAPE_ERROR);
+        return;
+    }
+
+    Matrix multiply_matrix = {A->rows, A->cols, NULL, NULL};
+    matrix_memory(&multiply_matrix);
+    matrix_copy(A, &multiply_matrix);
+    
+    if (multiply_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return;
+    }
+    
+    for (size_t rows = 0; rows < multiply_matrix.rows; rows++) {
+        for (size_t cols = 0; cols < multiply_matrix.cols; cols++) {
+            for (size_t k = 0; k < multiply_matrix.cols; k++) {
+                A->values[rows][cols] +=
+                    multiply_matrix.values[rows][k] * B->values[k][cols];
+            }
+        }
+    }
+    
+    matrix_delete_from_memory(&multiply_matrix);
+}
+
+static void matrix_exp_multiplication_by_scalar(Matrix* matrix, double scalar) {
+    for (size_t item = 0; item < matrix->rows * matrix->cols; item++) {
+        matrix->data[item] *= scalar;
+    }
+}
+
+static void matrix_addition(Matrix* A, Matrix* B) {
+    if (A->cols != B->cols || A->rows != B->rows) {
+        printf(SHAPE_NOT_EQUAL_ERROR);
+        return matrix_null;
+    }
+
+    Matrix add_matrix = {A.rows, A.cols, NULL, NULL};
+    matrix_memory(&add_matrix);
+    if (add_matrix.data == NULL) {
+        printf(MEMORY_ERROR);
+        return matrix_null;
+    }
+
+    for (size_t item = 0; item < add_matrix.rows * add_matrix.cols; item++) {
+        add_matrix.data[item] = A.data[item] + B.data[item];
+    }
+
+    return add_matrix;
+}
+
+
 Matrix matrix_exponent(Matrix A) {
     if (A.cols != A.rows) {
         matrix_error(MATRIX_MUST_BE_SQUARE);
@@ -293,10 +347,9 @@ Matrix matrix_exponent(Matrix A) {
 
     for (size_t term = 1;
          term < number_of_terms_in_matrix_exponential_expansion; term++) {
-        current_element = matrix_multiplication(current_element, A);
-        current_element =
-            matrix_multiplication_by_scalar(current_element, 1.0 / term);
-        exp_matrix = matrix_addition(exp_matrix, current_element);
+        matrix_exp_multiplication(&current_element, &A);
+        matrix_exp_multiplication_by_scalar(&current_element, 1.0 / term);
+        exp_matrix = matrix_exp_addition(exp_matrix, current_element);
     }
 
     matrix_delete_from_memory(&current_element);
