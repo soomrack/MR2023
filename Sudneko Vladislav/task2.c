@@ -50,7 +50,7 @@ void matrix_delete_from_memory(Matrix* matrix) {
     matrix->values = NULL;
     matrix->rows = 0;
     matrix->cols = 0;
-    matrix = NULL;
+    matrix = NULL;  // is this necessary?
 }
 
 void matrix_copy(Matrix* source, Matrix* destination) {
@@ -269,10 +269,10 @@ double matrix_determinant(Matrix A) {
     return det;
 }
 
-static void matrix_exp_multiplication(Matrix* A, Matrix* B) {
+static int matrix_exp_multiplication(Matrix* A, Matrix* B) {
     if (A->cols != B->rows) {
         matrix_error(MULT_SHAPE_ERROR);
-        return;
+        return 1;
     }
 
     Matrix multiply_matrix = {A->rows, A->cols, NULL, NULL};
@@ -281,7 +281,7 @@ static void matrix_exp_multiplication(Matrix* A, Matrix* B) {
     
     if (multiply_matrix.data == NULL) {
         matrix_error(MEMORY_ERROR);
-        return;
+        return 1;
     }
     
     for (size_t rows = 0; rows < multiply_matrix.rows; rows++) {
@@ -295,6 +295,7 @@ static void matrix_exp_multiplication(Matrix* A, Matrix* B) {
     }
     
     matrix_delete_from_memory(&multiply_matrix);
+    return 0;
 }
 
 static void matrix_exp_multiplication_by_scalar(Matrix* matrix, double scalar) {
@@ -333,6 +334,7 @@ Matrix matrix_exponent(Matrix A) {
     matrix_identity(&current_element);
     if (current_element.data == NULL) {
         matrix_error(MEMORY_ERROR);
+        matrix_delete_from_memory(&exp_matrix);
         return matrix_null;
     }
 
@@ -340,7 +342,10 @@ Matrix matrix_exponent(Matrix A) {
 
     for (size_t term = 1;
          term < number_of_terms_in_matrix_exponential_expansion; term++) {
-        matrix_exp_multiplication(&current_element, &A);
+        if (matrix_exp_multiplication(&current_element, &A) == 1) {
+            matrix_error(MEMORY_ERROR);
+            return matrix_null;
+        };
         matrix_exp_multiplication_by_scalar(&current_element, 1.0 / term);
         matrix_exp_addition(&exp_matrix, &current_element);
     }
