@@ -279,7 +279,7 @@ double matrix_determinant(const Matrix * this) {
     }
 }
 
-Matrix matrix_multiplication(const Matrix * matrix_1, const Matrix * matrix_2) {
+Matrix matrix_multiplication(const Matrix* matrix_1, const Matrix * matrix_2) {
     if (matrix_1->cols != matrix_2->rows) {
         matrix_error_handler(MATH_DOMAIN_ERROR, "matrix_multiplication");
         return NULL_MATRIX;
@@ -321,7 +321,7 @@ uint64_t factorial(const uint16_t number) {
 }
 
 
-Matrix matrix_exponent(const Matrix * this, const uint8_t degree) {
+Matrix matrix_exponent(const Matrix* this, const uint8_t degree) {
     if (NULL == this->data) {
         matrix_error_handler(NULL_MATRIX_ERROR, "matrix_exponent");
         return NULL_MATRIX;
@@ -363,7 +363,7 @@ Matrix matrix_exponent(const Matrix * this, const uint8_t degree) {
 }
 
 
-Matrix matrix_exponent_summand(const Matrix * left_operand, const Matrix * right_operand, const uint8_t degree) {
+Matrix matrix_exponent_summand(const Matrix* left_operand, const Matrix* right_operand, const uint8_t degree) {
     if (NULL == left_operand->data || NULL == right_operand->data) {
         matrix_error_handler(NULL_MATRIX_ERROR, "matrix_exponent_summand");
         return NULL_MATRIX;
@@ -378,7 +378,7 @@ Matrix matrix_exponent_summand(const Matrix * left_operand, const Matrix * right
 }
 
 
-void matrix_increasing(Matrix * to_increase, const Matrix * increasing) {
+void matrix_increasing(Matrix* to_increase, const Matrix* increasing) {
     if (to_increase->rows != increasing->rows || to_increase->cols != increasing->cols) {
         matrix_error_handler(MATH_DOMAIN_ERROR, "matrix_self_sum");
         return;
