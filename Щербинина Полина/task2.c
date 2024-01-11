@@ -1,428 +1,408 @@
-#include <iostream>
-#include <cstdlib>
+#include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string>
-#include <stdint.h>
-#include <vector>
+#include <string.h>
+#include <time.h>
 
+#ifdef NAN
+#endif
 
-typedef double MatrixItem; 
+#define MATRIX_MUST_BE_SQUARE "\nMatrix must be square!\n\n"
+#define MULT_SHAPE_ERROR                                                      \
+    "\nError: The number of columns of matrix A must be equal to the number " \
+    "of rows of matrix B.\n\n"
+#define SHAPE_NOT_EQUAL_ERROR \
+    "\nError: The shape of the matrices must be the same!\n\n"
+#define MEMORY_ERROR "\nError: Memory error\n\n"
 
-
-class Matrix {
-private:
+typedef struct {
     size_t rows;
     size_t cols;
-    MatrixItem* data;
-public:
-    Matrix() : rows(0), cols(0), data(nullptr) {};
-    Matrix(const size_t cols, const size_t rows);
-    Matrix(Matrix& A);
-    Matrix(Matrix&& A);
-    ~Matrix();
-public:
-    Matrix& operator=(const Matrix& A);
-    Matrix& operator=(const Matrix&& A);
-    Matrix& operator+(const Matrix& A);
-    Matrix& operator+=(const Matrix& A); //Matrix&& A
-    Matrix& operator-(const Matrix& A);
-    Matrix& operator-=(const Matrix& A);
-    Matrix& operator*(const Matrix& B);
-    Matrix& operator*=(const Matrix& B);
-    Matrix& operator*(const double& coeff);
-    Matrix& operator*=(const double& coeff);
-public:
-    void fill(std::vector <MatrixItem> values);
-    void free();
-    void print();
-    void set_zero();
-    Matrix transp();
-    Matrix exponent(const Matrix A, const unsigned int degree = 10);
-    double determinant();
-private:
-    int det_if_zero();
-    void det_prep(size_t diag, double *coeff);
-};
+    double** values;
+    double* data;
+} Matrix;
 
+const Matrix matrix_null = {0, 0, NULL, NULL};
 
-class MatrixException: public std::exception {
-private:
-    std::string msg;
-public:
-    Matrix_Exception(std::string msg) : msg{ msg } {}
-    std::string get_message() const { return msg; }
-};
+size_t matrix_memory(Matrix* matrix) {
+    matrix->data =
+        (double*)malloc(matrix->rows * matrix->cols * sizeof(double) +
+                        matrix->rows * sizeof(double*));
 
-MatrixException INCORRECT_SIZE_OF_MATRIX("The matrix has an incorrect size\n");
-MatrixException NULL_MATRIX("Your matrix is empty\n");
+    if (matrix->data == NULL) return 1;
 
+    matrix->values = matrix->data + matrix->rows * matrix->cols;
 
-void Matrix::free()
-{
-    cols = 0;
-    rows = 0;
-    delete[] data;
-    data = nullptr;
+    if (matrix->values == NULL) return 1;
+
+    for (size_t row = 0; row < matrix->rows; row++) {
+        matrix->values[row] = matrix->data + row * matrix->cols;
+    }
+
+    return 0;
 }
 
+void matrix_error(const char* error_message) { printf("%s", error_message); }
 
-Matrix::Matrix(const size_t cols, const size_t rows)
-    : cols(cols), rows(rows), data(nullptr)
-{
-    if (cols == 0 || rows == 0) {
-        data = nullptr;
+void matrix_delete_from_memory(Matrix* matrix) {
+    free(matrix->data);
+    matrix->values = NULL;
+    matrix->rows = 0;
+    matrix->cols = 0;
+    matrix = NULL;  // is this necessary?
+}
+
+void matrix_copy(Matrix* source, Matrix* destination) {
+    if (source->cols != destination->cols ||
+        source->rows != destination->rows) {
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
+    }
+
+    memcpy(destination->data, source->data,
+           sizeof(double) * source->cols * source->rows);
+}
+
+void matrix_print(Matrix matrix) {
+    for (size_t rows = 0; rows < matrix.rows; rows++) {
+        for (size_t cols = 0; cols < matrix.cols; cols++) {
+            printf("%lf ", matrix.values[rows][cols]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void matrix_zero(Matrix* matrix) {
+    matrix_memory(matrix);
+    if (matrix->data == NULL) {
+        matrix_error(MEMORY_ERROR);
         return;
-    };
+    }
 
-    if (rows >= SIZE_MAX / sizeof(MatrixItem) / cols) {
-        free();
+    memset(matrix->data, 0, matrix->rows * matrix->cols * sizeof(double));
+}
+
+void matrix_identity(Matrix* matrix) {
+    matrix_memory(matrix);
+    if (matrix->data == NULL) {
+        matrix_error(MEMORY_ERROR);
         return;
-    };
+    }
 
-    data = new MatrixItem[cols * rows];
+    for (size_t rows = 0; rows < matrix->rows; rows++) {
+        for (size_t cols = 0; cols < matrix->cols; cols++) {
+            if (rows == cols) {
+                matrix->values[rows][cols] = 1.;
+            } else {
+                matrix->values[rows][cols] = 0.;
+            }
+        }
+    }
 }
 
-
-Matrix::~Matrix() {
-    free();
-}
-
-
-void Matrix::set_zero()
-{
-    if (data == nullptr) throw NULL_MATRIX;
-
-    memset(data, 0, cols * rows * sizeof(MatrixItem));
-}
-
-
-void Matrix::fill(std::vector <MatrixItem> values)
-{
-    if (data == nullptr) throw NULL_MATRIX;
-
-    if (values.size() > rows * cols)
-        for (size_t idx = 0; idx < cols * rows; ++idx)
-            data[idx] = values[idx];
-    else {
-        for (auto idx = values.begin(); idx != values.end(); ++idx)
-            data[idx] = values[idx];
-        if (values.size() < cols * rows)
-            for (auto idx = values.end(); idx < cols * rows - 1; ++idx)
-                data[idx] = 0.0;
-    };
-}
-
-
-void Matrix::print()
-{
-    if (data == nullptr) throw NULL_MATRIX;
-
-    std::cout << "_____________________________________________" << std::endl;
-
-    for (size_t idx = 1; idx <= cols * rows; ++idx) {
-        std::cout << data[idx - 1];
-        if (idx % cols == 0 && idx >= cols)
-            std::cout << "" << std::endl;
-    };
-}
-
-
-Matrix::Matrix(Matrix& A)
-{
-    if (A.data == nullptr) {
-        cols = A.cols;
-        rows = A.rows;
-        data = nullptr;
+void matrix_from_array(Matrix* matrix, double* array) {
+    matrix_memory(matrix);
+    if (matrix->data == NULL) {
+        printf("%ld", sizeof(array) / sizeof(array[0]));
+        matrix_error(MEMORY_ERROR);
         return;
-    };
+    }
 
-    cols = A.cols;
-    rows = A.rows;
-    data = new MatrixItem[cols * rows];
-
-    memcpy(data, A.data, A.cols * A.rows * sizeof(MatrixItem));
+    size_t index = 0;
+    memcpy(matrix->data, array, matrix->cols * matrix->rows * sizeof(double));
 }
 
+void matrix_random(Matrix* matrix) {
+    matrix_memory(matrix);
+    if (matrix->data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return;
+    }
 
-Matrix::Matrix(Matrix&& A)
-{
-    cols = A.cols;
-    rows = A.rows;
-    data = A.data;
-    A.cols = 0;
-    A.rows = 0;
-    A.data = nullptr;
+    for (size_t item = 0; item < matrix->rows * matrix->cols; item++) {
+        matrix->data[item] = rand() % 10;
+    }
 }
 
+Matrix matrix_multiplication_by_scalar(Matrix matrix, double scalar) {
+    Matrix scaled_matrix = {matrix.rows, matrix.cols, NULL, NULL};
+    matrix_memory(&scaled_matrix);
+    matrix_copy(&matrix, &scaled_matrix);
 
-Matrix& Matrix::operator=(const Matrix& A)
-{
-    if (this == &A) return *this;
+    if (scaled_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return matrix_null;
+    }
 
-    cols = A.cols;
-    rows = A.rows;
+    for (size_t item = 0; item < matrix.rows * matrix.cols; item++) {
+        scaled_matrix.data[item] *= scalar;
+    }
 
-    delete[] data;
-    data = new MatrixItem[cols * rows];
-    memcpy(data, A.data, A.cols * A.rows * sizeof(MatrixItem));
-    return *this;
+    return scaled_matrix;
 }
 
+Matrix matrix_addition(Matrix A, Matrix B) {
+    if (A.cols != B.cols || A.rows != B.rows) {
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
+        return matrix_null;
+    }
 
-Matrix& Matrix::operator=(Matrix&& A)
-{   
-    cols = A.cols;
-    rows = A.rows;
-    delete[] data;
-    data = A.data;
+    Matrix add_matrix = {A.rows, A.cols, NULL, NULL};
+    matrix_memory(&add_matrix);
+    if (add_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return matrix_null;
+    }
 
-    A.cols = 0;
-    A.rows = 0;
-    A.data = nullptr;
+    for (size_t item = 0; item < add_matrix.rows * add_matrix.cols; item++) {
+        add_matrix.data[item] = A.data[item] + B.data[item];
+    }
 
-    return *this;
+    return add_matrix;
 }
 
+Matrix matrix_subtraction(Matrix A, Matrix B) {
+    if (A.cols != B.cols || A.rows != B.rows) {
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
+        return matrix_null;
+    }
 
-Matrix& Matrix::operator+(const Matrix& A)
-{
-    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
+    Matrix subtract_matrix = {A.rows, A.cols, NULL, NULL};
+    matrix_memory(&subtract_matrix);
+    if (subtract_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return matrix_null;
+    }
 
-    Matrix* result = new Matrix(*this);
+    for (size_t item = 0; item < subtract_matrix.rows * subtract_matrix.cols;
+         item++) {
+        subtract_matrix.data[item] = A.data[item] - B.data[item];
+    }
 
-    for (size_t idx = 0; idx < cols * rows; ++idx)
-        result->data[idx] += A.data[idx];
-
-    return *result;
+    return subtract_matrix;
 }
 
+Matrix matrix_multiplication(Matrix A, Matrix B) {
+    if (A.cols != B.rows) {
+        matrix_error(MULT_SHAPE_ERROR);
+        return matrix_null;
+    }
 
-Matrix& Matrix::operator+=(const Matrix& A)
-{
-    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
+    Matrix multiply_matrix = {A.rows, B.cols, NULL, NULL};
+    matrix_zero(&multiply_matrix);
+    if (multiply_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return matrix_null;
+    }
 
-    for (size_t idx = 0; idx < cols * rows; ++idx)
-        data[idx] += A.data[idx];
+    for (size_t rows = 0; rows < multiply_matrix.rows; rows++) {
+        for (size_t cols = 0; cols < multiply_matrix.cols; cols++) {
+            for (size_t k = 0; k < A.cols; k++) {
+                multiply_matrix.values[rows][cols] +=
+                    A.values[rows][k] * B.values[k][cols];
+            }
+        }
+    }
+
+    return multiply_matrix;
+}
+
+Matrix matrix_transpose(Matrix A) {
+    Matrix transpose_matrix = {A.cols, A.rows, NULL, NULL};
+    matrix_zero(&transpose_matrix);
+    if (transpose_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+
+        return matrix_null;
+    }
+
+    for (size_t rows = 0; rows < transpose_matrix.rows; rows++) {
+        for (size_t cols = 0; cols < transpose_matrix.cols; cols++) {
+            transpose_matrix.values[rows][cols] = A.values[cols][rows];
+        }
+    }
+
+    return transpose_matrix;
+}
+
+double matrix_determinant(Matrix A) {
+    if (A.cols != A.rows) {
+        matrix_error(MATRIX_MUST_BE_SQUARE);
+        return NAN;
+    }
+
+    Matrix triangular_matrix = {A.rows, A.cols, NULL, NULL};
+    matrix_zero(&triangular_matrix);
+    if (triangular_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return NAN;
+    }
+    matrix_copy(&A, &triangular_matrix);
+
+    for (size_t current_row = 0; current_row < A.rows; current_row++) {
+        for (size_t next_row = current_row + 1; next_row < A.rows; next_row++) {
+            if (triangular_matrix.values[current_row][current_row] == 0) {
+                triangular_matrix.values[current_row][current_row] = 1.0e-18;
+            }
+
+            double current_row_scaler =
+                triangular_matrix.values[next_row][current_row] /
+                triangular_matrix.values[current_row][current_row];
+
+            for (size_t column = 0; column < A.rows; column++) {
+                triangular_matrix.values[next_row][column] =
+                    triangular_matrix.values[next_row][column] -
+                    current_row_scaler *
+                        triangular_matrix.values[current_row][column];
+            }
+        }
+    }
+
+    double det = 1.0;
+    for (size_t diagonal_element = 0; diagonal_element < A.rows;
+         diagonal_element++) {
+        det *= triangular_matrix.values[diagonal_element][diagonal_element];
+    }
+    matrix_delete_from_memory(&triangular_matrix);
+
+    return det;
+}
+
+static int matrix_exp_multiplication(Matrix* A, Matrix* B) {
+    if (A->cols != B->rows) {
+        matrix_error(MULT_SHAPE_ERROR);
+        return 1;
+    }
+
+    Matrix multiply_matrix = {A->rows, A->cols, NULL, NULL};
+    matrix_memory(&multiply_matrix);
+    matrix_copy(A, &multiply_matrix);
     
-    return *this;
+    if (multiply_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return 1;
+    }
+    
+    for (size_t rows = 0; rows < multiply_matrix.rows; rows++) {
+        for (size_t cols = 0; cols < multiply_matrix.cols; cols++) {
+            A->values[rows][cols] = 0;
+            for (size_t k = 0; k < multiply_matrix.cols; k++) {
+                A->values[rows][cols] +=
+                    multiply_matrix.values[rows][k] * B->values[k][cols];
+            }
+        }
+    }
+    
+    matrix_delete_from_memory(&multiply_matrix);
+    return 0;
+}
+
+static void matrix_exp_multiplication_by_scalar(Matrix* matrix, double scalar) {
+    for (size_t item = 0; item < matrix->rows * matrix->cols; item++) {
+        matrix->data[item] *= scalar;
+    }
+}
+
+static int matrix_exp_addition(Matrix* A, Matrix* B) {
+    if (A->cols != B->cols || A->rows != B->rows) {
+        matrix_error(SHAPE_NOT_EQUAL_ERROR);
+        return 1;
+    }
+
+    for (size_t item = 0; item < A->rows * A->cols; item++) {
+        A->data[item] = A->data[item] + B->data[item];
+    }
+    return 0;
 }
 
 
-Matrix& Matrix::operator-(const Matrix& A)
-{
-    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
+Matrix matrix_exponent(Matrix A) {
+    if (A.cols != A.rows) {
+        matrix_error(MATRIX_MUST_BE_SQUARE);
+        return matrix_null;
+    }
 
-    Matrix* result = new Matrix(*this);
+    Matrix exp_matrix = {A.rows, A.cols, NULL, NULL};
 
-    for (size_t idx = 0; idx < cols * rows; ++idx)
-        result->data[idx] -= A.data[idx];
+    Matrix current_element = {A.rows, A.cols, NULL, NULL};
 
-    return *result;
-}
+    matrix_identity(&exp_matrix);
+    if (exp_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return matrix_null;
+    }
+    matrix_identity(&current_element);
+    if (current_element.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        matrix_delete_from_memory(&exp_matrix);
+        return matrix_null;
+    }
 
+    size_t number_of_terms_in_matrix_exponential_expansion = 50;
 
-Matrix& Matrix::operator-=(const Matrix& A)
-{
-    if (A.cols != cols || A.rows != rows) throw INCORRECT_SIZE_OF_MATRIX;
-
-    for (size_t idx = 0; idx < cols * rows; ++idx)
-        data[idx] -= A.data[idx];
-
-    return *this;
-}
-
-
-Matrix& Matrix::operator*(const Matrix& B)
-{
-    if (cols != B.rows) throw INCORRECT_SIZE_OF_MATRIX;
-
-    Matrix* result = new Matrix(*this);
-
-    for (size_t rowA = 0; rowA < rows; ++rowA)
-        for (size_t colB = 0; colB < B.cols; ++colB) {
-            result->data[result->cols * rowA + colB] = 0.0;
-            for (size_t colA = 0; colA < cols; ++colA)
-                result->data[result->cols * rowA + colB] += data[colA + rowA * cols] * B.data[B.cols * colA + colB];
+    for (size_t term = 1;
+         term < number_of_terms_in_matrix_exponential_expansion; term++) {
+        if (matrix_exp_multiplication(&current_element, &A) == 1) {
+            return matrix_null;
         };
-    
-    return *result;
-}
-
-
-Matrix& Matrix::operator*=(const Matrix& B)
-{
-    *this = *this * B;
-
-    return *this;
-}
-
-
-Matrix& Matrix::operator*(const double& coeff)
-{
-    Matrix *result = new Matrix(*this);
-
-    for (size_t idx = 0; idx < cols * rows; ++idx)
-        result->data[idx] = data[idx] * coeff;
-    
-    return *result;
-}
-
-
-Matrix& Matrix::operator*=(const double& coeff)
-{
-    for (size_t idx = 0; idx < cols * rows; ++idx)
-        data[idx] = data[idx] * coeff;
-    
-    return *this;
-}
-
-
-Matrix& Matrix::transp()
-{
-    Matrix result = Matrix(*this);
-
-    for (size_t row = 0; row < rows; ++row)
-        for (size_t col = 0; col < cols; ++col)
-            result.data[row * cols + col] = data[row + col * cols];
-    
-    return *result;
-}
-
-
-Matrix& Matrix::exponent(const Matrix A, const unsigned int degree = 10)
-{
-    if (A.cols != A.rows) throw INCORRECT_SIZE_OF_MATRIX;
-    
-    Matrix* result = new Matrix(A.cols, A.rows);
-
-    result->set_zero();
-
-    Matrix B = Matrix(A);
-
-    for (size_t diag = 0; diag < result->rows; ++diag)
-        result->data[diag * result->cols + diag] += 1;
-
-    for (unsigned int trm = 1; trm <= degree; ++trm) {
-       B *= A;
-       B *= 1.0 / trm;
-       *result += B;
-    };
-
-    return *result;
-}
-
-
-int Matrix::det_if_zero()
-{
-    size_t count;
-
-    for (size_t row = 0; row < rows; ++row) { // суммы по строкам
-        count = 0;
-        for (size_t col = 0; col < cols; ++col) {
-            count += 1;
-            if (data[row * cols + col] != 0.0)
-                break;
+        matrix_exp_multiplication_by_scalar(&current_element, 1.0 / term);
+        if (matrix_exp_addition(&exp_matrix, &current_element) == 1) {
+            return matrix_null;
         };
-        
-        if (count == cols)
-            return 0;
-    };
-    
-    for (size_t col = 0; col < cols; ++col) { // суммы по строкам
-        count = 0;
-        for (size_t row = 0; row < rows; ++row) {
-            count += 1;
-            if (data[row * cols + col] != 0.0)
-                break;
-        };
-        
-        if (count == rows)
-            return 0;
-    };
-    
-    return 1;
+    }
+
+    matrix_delete_from_memory(&current_element);
+    return exp_matrix;
 }
 
+void function_testing() {
+    Matrix A = {3, 3, NULL, NULL};
+    Matrix B = {3, 3, NULL, NULL};
+    Matrix C = {3, 3, NULL, NULL};
+    double det = NAN;
 
-void Matrix::det_prep(size_t diag, double *coeff)
-{
-    size_t buff_one = diag; // запоминается номер строки
+    matrix_from_array(&A, (double[]){1, -2, 3, 4, 0, 6, -7, 8, 9});
+    matrix_from_array(&B, (double[]){1., 2., 3., 4., 5., 6., 7., 8., 9.});
+    matrix_memory(&C);
 
-    if (data[diag * cols + diag] == 0.0) {
-        for (size_t row = diag; row < rows; ++row) {
-            buff_one += 1;
-            if (data[row * cols] != 0.0)
-                break;
-        };
+    printf("Matrix A:\n");
+    matrix_print(A);
+    printf("Matrix B:\n");
+    matrix_print(B);
 
-        double buff_two = 0; // запоминается значение в ячейке
-        
-        for (size_t col = diag; col < cols; ++col) {
-            buff_two = data[diag * cols + col];
-            data[diag * cols + col] = data[buff_one * cols + col];
-            data[buff_one * cols + col] = buff_two;
-        };
+    printf("Operations:\n");
 
-        *coeff *= -1;
-    };
+    C = matrix_addition(A, B);
+    printf("\nSUM:\n");
+    matrix_print(C);
+
+    C = matrix_subtraction(A, B);
+    printf("\nDIFFERENCE:\n");
+    matrix_print(C);
+
+    C = matrix_multiplication(A, B);
+    printf("\nPRODUCT:\n");
+    matrix_print(C);
+
+    C = matrix_transpose(A);
+    printf("\nTRANSPOSITION:\n");
+    matrix_print(C);
+
+    det = matrix_determinant(A);
+    printf("\nDETERMINANT:\n");
+    printf("%lf\n\n", det);
+
+    C = matrix_exponent(A);
+    printf("\nEXPONENT:\n");
+    matrix_print(C);
+
+    matrix_delete_from_memory(&A);
+    matrix_delete_from_memory(&B);
+    matrix_delete_from_memory(&C);
 }
 
-
-double Matrix::determinant()
-{
-    if (cols != rows) throw INCORRECT_SIZE_OF_MATRIX;
-    
-    Matrix C = Matrix(cols, rows);
-    if (C.data == nullptr) throw NULL_MATRIX;
-    C = *this;
-
-    if (cols == 1) {
-        C.free();
-        return data[0];
-    };
-
-    if (C.det_if_zero() == 0) {
-        C.free();
-        return 0.0;
-    };
-    
-    double coeff = 1.0;
-    double diagonal = 1.0;
-    double buff_one, buff_two;
-
-    for (size_t diag = 0; diag < rows - 1; ++diag) {
-        C.det_prep(diag, &coeff);
-        coeff *= C.data[diag * cols + diag];
-        buff_one = C.data[diag * cols + diag];
-
-        for (size_t col = diag; col < cols; ++col)
-            C.data[diag * cols + col] /= buff_one;
-
-        for (size_t row = diag + 1; row < rows; ++row) {
-            buff_two = C.data[row * cols + diag];
-            for (size_t col = diag; col < cols; ++col) {
-                C.data[row * cols + col] = C.data[row * cols + col] - C.data[diag * cols + col] * buff_two;
-            };  
-        };
-    };
-
-    for (size_t diag = 0; diag < rows; ++diag)
-        diagonal *= C.data[diag * cols + diag];
-    
-    C.free();
-
-    double result = coeff * diagonal;
-    
-    return result;
-}
-
-
-int main()
-{
-    Matrix A(3, 3);
-    std::vector <MatrixItem> array(1.0, 2.0, 3.0, 4.0, 5.0, 0.0, 2.0, 9.0, -3.0);
-    A.fill(array);
-    A.print();
-    A.free();
+void main() {
+    srand(3);
+    function_testing();
 }
