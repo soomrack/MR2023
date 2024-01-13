@@ -45,11 +45,11 @@ public:
 
     // 6. Matrix arithmetic operators
     double* operator[](size_t row);
-    Matrix operator+(const Matrix& other_matrix) const;
-    Matrix operator-(const Matrix& other_matrix) const;
-    Matrix operator*(const Matrix& other_matrix) const;
-    Matrix operator*(double value) const;
-    Matrix operator/(double value) const;
+    Matrix& operator+(const Matrix& other_matrix) const;
+    Matrix& operator-(const Matrix& other_matrix) const;
+    Matrix& operator*(const Matrix& other_matrix) const;
+    Matrix& operator*(double value) const;
+    Matrix& operator/(double value) const;
     void operator+=(const Matrix& other_matrix) {
         *this = *this + other_matrix;
     }
@@ -129,19 +129,19 @@ Matrix::Matrix(Matrix&& other_matrix) noexcept {
 
 // 2. Matrix Filling Functions
 
-Matrix Matrix::fill_with_value(double value) {
+Matrix& Matrix::fill_with_value(double value) {
     for (size_t cell = 0; cell < rows * columns; cell++) cells[cell] = value;
     return *this;
 }
 
-Matrix Matrix::fill_random(size_t min_value, size_t max_value) {
+Matrix& Matrix::fill_random(size_t min_value, size_t max_value) {
     for (size_t cell = 0; cell < rows * columns; cell++) {
         cells[cell] = min_value + rand() % (max_value - min_value + 1);
     }
     return *this;
 }
 
-Matrix Matrix::fill_identity() {
+Matrix& Matrix::fill_identity() {
     if (rows != columns) throw SQUARE_ERROR;
     fill_with_value(0.0);
     for (size_t cell = 0; cell < rows * columns; cell += columns + 1) {
@@ -150,7 +150,7 @@ Matrix Matrix::fill_identity() {
     return *this;
 }
 
-Matrix Matrix::fill_from_array(double* array) {
+Matrix& Matrix::fill_from_array(double* array) {
     if (rows * columns != sizeof(array) / sizeof(double)) {
         throw ARRAY_SIZE_ERROR;
     }
@@ -178,7 +178,6 @@ Matrix& Matrix::operator=(const Matrix& other_matrix) {
     rows = other_matrix.rows;
     columns = other_matrix.columns;
     cells = new double[rows * columns];
-    if (cells == nullptr) throw MEMORY_ERROR;
     memcpy(cells, other_matrix.cells, rows * columns * sizeof(double));
     return *this;
 }
@@ -220,7 +219,7 @@ double* Matrix::operator[](size_t cell) {
     return cells + cell * columns;
 }
 
-Matrix Matrix::operator+(const Matrix& other_matrix) const {
+Matrix& Matrix::operator+(const Matrix& other_matrix) const {
     if (rows != other_matrix.rows || columns != other_matrix.columns)
         throw SIZE_ERROR;
 
@@ -232,7 +231,7 @@ Matrix Matrix::operator+(const Matrix& other_matrix) const {
     return *result;
 }
 
-Matrix Matrix::operator-(const Matrix& other_matrix) const {
+Matrix& Matrix::operator-(const Matrix& other_matrix) const {
     if (rows != other_matrix.rows || columns != other_matrix.columns)
         throw SIZE_ERROR;
 
@@ -244,7 +243,7 @@ Matrix Matrix::operator-(const Matrix& other_matrix) const {
     return *result;
 }
 
-Matrix Matrix::operator*(const double value) const {
+Matrix& Matrix::operator*(const double value) const {
     Matrix* result = new Matrix(*this);
 
     for (size_t cell = 0; cell < rows * columns; cell++)
@@ -253,7 +252,7 @@ Matrix Matrix::operator*(const double value) const {
     return *result;
 }
 
-Matrix Matrix::operator/(const double value) const {
+Matrix& Matrix::operator/(const double value) const {
     Matrix* result = new Matrix(*this);
 
     for (size_t cell = 0; cell < rows * columns; cell++)
@@ -263,7 +262,7 @@ Matrix Matrix::operator/(const double value) const {
 }
 
 
-Matrix Matrix::operator*(const Matrix& other_matrix) const {
+Matrix& Matrix::operator*(const Matrix& other_matrix) const {
     if (columns != other_matrix.rows) throw SHAPE_ERROR;
 
     Matrix* result = new Matrix(rows, other_matrix.columns);
@@ -286,7 +285,7 @@ Matrix Matrix::operator*(const Matrix& other_matrix) const {
 
 // 7. Linear algebra matrix operations
 
-Matrix Matrix::T() const {
+Matrix& Matrix::T() const {
     Matrix* result = new Matrix(columns, rows);
     for (size_t row = 0; row < result->rows; row++) {
         for (size_t column = 0; column < result->columns; column++) {
@@ -339,7 +338,7 @@ double Matrix::det() const {
 }
 
 
-Matrix Matrix::exp() const {
+Matrix& Matrix::exp() const {
     if (rows != columns) throw SQUARE_ERROR;
 
     // Fix thirst element
