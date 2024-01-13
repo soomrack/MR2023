@@ -30,6 +30,13 @@ int main()
     std::cout << A;
     std::cout << (A == B) << "\n";
     std::cout << E;
+    const Matrix R(std::move(A));
+    std::cout << R(2,2);
+    // R(3,2) = 1;  //  CE
+    // std::cout << A;  //  CE
 
+    D = {2,2,2,2,2,2,2,2,2,2,2,2};
+    Matrix L(D = C);
+    
     return 0;
 }

@@ -3,7 +3,7 @@
 #include <math.h>
 #include <iomanip>
 
-// #define DEBUG
+#define DEBUG
 
 namespace MatrixHandler {
 
@@ -11,10 +11,12 @@ Matrix::Matrix(const size_t rows, const size_t cols):
     _rows(rows), _cols(cols) {
     if (rows == 0 || cols == 0)
         throw MatrixException(MatrixException::MATH_DOMAIN_ERROR);
+
     if ( _rows > SIZE_MAX / sizeof(matrix_element) / _cols) 
         throw MatrixException(MatrixException::OVERFLOW_ERROR);
+
     _data = new matrix_element[get_size()]{};
-}  //  regular constructor
+}
 
 
 Matrix::Matrix(size_t rows, size_t cols, const InfillPattern pattern):
@@ -40,8 +42,8 @@ Matrix(rows, cols) {
             unit_infill();
             break;
         }
+        throw MatrixException(MatrixException::BAD_INITIALIZER_ERROR);
     }
-
 }
 
 
@@ -49,6 +51,7 @@ Matrix::Matrix(const size_t rows, const size_t cols, std::initializer_list<matri
 Matrix(rows, cols) {
     if (get_size() != l.size())
         throw MatrixException(MatrixException::BAD_INITIALIZER_ERROR);
+        
     std::copy(l.begin(), l.end(), _data); 
 }
 
@@ -62,7 +65,7 @@ Matrix::Matrix(const size_t dim, const InfillPattern pattern): Matrix(dim, dim, 
 Matrix::Matrix(const size_t dim, std::initializer_list<matrix_element> l): Matrix(dim, dim, l) {}
 
 
-Matrix::Matrix(const Matrix & copy): Matrix(copy._rows, copy._cols) {
+Matrix::Matrix(const Matrix& copy): Matrix(copy._rows, copy._cols) {
     std::memcpy(_data, copy._data, sizeof(matrix_element)*copy.get_size());    
 }
 
@@ -83,7 +86,14 @@ Matrix::~Matrix() {
 }
 
 
-matrix_element& Matrix::operator()(const size_t row, const size_t col) const {
+matrix_element& Matrix::operator()(const size_t row, const size_t col) {
+    if (_rows <= row || _cols <= col)
+        throw MatrixException(MatrixException::INDEX_ERROR);
+    return *(_data + (_cols * row + col));
+}
+
+
+const matrix_element& Matrix::operator()(const size_t row, const size_t col) const {
     if (_rows <= row || _cols <= col)
         throw MatrixException(MatrixException::INDEX_ERROR);
     return *(_data + (_cols * row + col));
@@ -185,8 +195,10 @@ void Matrix::operator*=(const Matrix& multi) {
 void Matrix::operator+=(const Matrix& summand) {
     if (!_data || !summand._data) 
         throw MatrixException(MatrixException::NULL_MATRIX_ERROR);
+
     if (_rows != summand._rows || _cols != summand._cols)
         throw MatrixException(MatrixException::MATH_DOMAIN_ERROR);
+
     for (size_t idx = 0; idx < get_size(); ++idx)
         (*this)[idx] += summand[idx];
 }
@@ -195,38 +207,44 @@ void Matrix::operator+=(const Matrix& summand) {
 void Matrix::operator-=(const Matrix& deductible) {
     if (!_data || !deductible._data) 
         throw MatrixException(MatrixException::NULL_MATRIX_ERROR);
+
     if (_rows != deductible._rows || _cols != deductible._cols)
         throw MatrixException(MatrixException::MATH_DOMAIN_ERROR);
+        
     for (size_t idx = 0; idx < get_size(); ++idx)
         (*this)[idx] -= deductible[idx];
 }
 
 
 bool Matrix::operator==(const Matrix& comparison) const {
+    if (_data == nullptr || comparison._data == nullptr)
+            throw MatrixException(MatrixException::NULL_MATRIX_ERROR);
+
     if (_rows != comparison._rows || _cols != comparison._cols) 
         return false;
-    if (_data == nullptr || comparison._data == nullptr)
-        throw MatrixException(MatrixException::NULL_MATRIX_ERROR);
+
     for (size_t idx = 0; idx < get_size(); ++idx) {
         if ((*this)[idx] != comparison[idx]) return false;
     }
+
     return true;
 }
 
 
 std::ostream& operator<<(std::ostream& stream, const Matrix& output) {
-    // TODO: exception for null-matrix
+    if (!output._data)
+        throw MatrixException(MatrixException::NULL_MATRIX_ERROR);
 
     for (size_t row = 0; row < output._rows; row++) {
-        std::cout << "[";
+        stream << "[";
         for (size_t col = 0; col < output._cols; col++) {
-            std::cout << std::setprecision(5);
-            std::cout << std::right << std::setw(10);
-            std::cout << output(row,col);
+            stream << std::setprecision(5);
+            stream << std::right << std::setw(10);
+            stream << output(row,col);
         }   
-        std::cout << "]\n";
+        stream << "]\n";
     }
-    std::cout << "\n";
+    stream << "\n";
     return stream;
 }
 
@@ -234,6 +252,7 @@ std::ostream& operator<<(std::ostream& stream, const Matrix& output) {
 matrix_element Matrix::determinant() {
     if (!_data)
         throw MatrixException(MatrixException::NULL_MATRIX_ERROR);
+
     if (_rows != _cols)
         throw MatrixException(MatrixException::MATH_DOMAIN_ERROR);
     
@@ -244,9 +263,10 @@ matrix_element Matrix::determinant() {
         return (_data[0] * _data[3] - _data[1] * _data[2]);
 
     if (_cols == 3)
-        return  (_data[0] * _data[4] * _data[8]) + (_data[1] * _data[5] * _data[6]) + \
-                (_data[2] * _data[3] * _data[7]) - (_data[2] * _data[4] * _data[6]) - \
+        return  (_data[0] * _data[4] * _data[8]) + (_data[1] * _data[5] * _data[6]) + 
+                (_data[2] * _data[3] * _data[7]) - (_data[2] * _data[4] * _data[6]) - 
                 (_data[0] * _data[5] * _data[7]) - (_data[1] * _data[3] * _data[8]); 
+
     throw MatrixException(MatrixException::DETERMINANT_ERROR);
 }
 
@@ -254,8 +274,10 @@ matrix_element Matrix::determinant() {
 void Matrix::transpose() {
     if (!_data) 
         throw MatrixException(MatrixException::NULL_MATRIX_ERROR);
+
     Matrix copy(*this);
     std::swap(_rows, _cols);
+
     for (size_t row = 0; row < _rows; ++row)
         for (size_t col = 0; col < _cols; ++col)
             (*this)(row,col) = copy(col,row);
@@ -265,17 +287,22 @@ void Matrix::transpose() {
 Matrix Matrix::exponent(unsigned int degree) {
     if (!_data)
         throw MatrixException(MatrixException::NULL_MATRIX_ERROR);
+
     if (_rows != _cols)
         throw MatrixException(MatrixException::MATH_DOMAIN_ERROR);
+
     Matrix summand(*this);
     Matrix exponent(_rows, _cols, UNIT);
+
     if (degree == 0) {
         return exponent;
     }
     if (degree == 1) {
         return exponent + summand;
     }
+
     exponent += summand;
+
     for (unsigned int idx = 2; idx < degree; ++idx) {
         summand *= (*this);
         summand *= (1./idx);
@@ -289,6 +316,7 @@ void Matrix::random_infill() {
     std::random_device rd;
     std::default_random_engine engine(rd());
     std::uniform_real_distribution<matrix_element> d(FLOAT_MIN, FLOAT_MAX);
+
     for (size_t idx = 0; idx < get_size(); idx++) {
         this->_data[idx] = d(engine);
     }
@@ -298,6 +326,7 @@ void Matrix::random_infill() {
 void Matrix::unit_infill() {
     if (_rows != _cols)
         throw MatrixException(MatrixException::MATH_DOMAIN_ERROR);
+
     for (size_t idx = 0; idx < get_size(); idx++) 
         this->_data[idx] = idx % (this->_rows + 1) == 0 ? 1 : 0;
 }

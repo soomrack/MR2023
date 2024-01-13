@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.22.0)
-project(CxxMatrixHandler VERSION 0.1.0 LANGUAGES C CXX)
+project(CxxMatrixHandler VERSION 0.1.0 LANGUAGES CXX)
 
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-add_executable(${PROJECT_NAME} src/matrixHandler.cpp src/main.cpp)
+
+add_executable(${PROJECT_NAME} matrixHandler.cpp example.cpp)
 
 
 target_link_libraries(${PROJECT_NAME} PRIVATE m)
