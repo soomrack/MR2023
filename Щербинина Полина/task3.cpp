@@ -105,10 +105,10 @@ void Matrix::print() {
 
 Matrix::Matrix() : rows(0), columns(0), cells(nullptr) {}
 
-Matrix::Matrix(size_t r_num, size_t c_num) {
-    rows = r_num;
-    columns = c_num;
-    cells = new double[rows * columns];
+Matrix::Matrix(size_t r_num, size_t c_num) : rows(r_num), columns(c_num), cells(nullptr) {
+    if (rows > 0 && columns > 0) {
+        cells = new double[rows * columns];
+    }
 }
 
 Matrix::Matrix(const Matrix& other_matrix) {
