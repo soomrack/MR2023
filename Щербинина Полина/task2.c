@@ -50,7 +50,6 @@ void matrix_delete_from_memory(Matrix* matrix) {
     matrix->values = NULL;
     matrix->rows = 0;
     matrix->cols = 0;
-    matrix = NULL;  // is this necessary?
 }
 
 void matrix_copy(Matrix* source, Matrix* destination) {
@@ -344,10 +343,14 @@ Matrix matrix_exponent(Matrix A) {
     for (size_t term = 1;
          term < number_of_terms_in_matrix_exponential_expansion; term++) {
         if (matrix_exp_multiplication(&current_element, &A) == 1) {
+            matrix_delete_from_memory(&exp_matrix);
+            matrix_delete_from_memory(&current_element);
             return matrix_null;
         };
         matrix_exp_multiplication_by_scalar(&current_element, 1.0 / term);
         if (matrix_exp_addition(&exp_matrix, &current_element) == 1) {
+            matrix_delete_from_memory(&exp_matrix);
+            matrix_delete_from_memory(&current_element);
             return matrix_null;
         };
     }
