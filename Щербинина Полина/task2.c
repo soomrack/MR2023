@@ -52,14 +52,17 @@ void matrix_delete_from_memory(Matrix* matrix) {
     matrix->cols = 0;
 }
 
-void matrix_copy(Matrix* source, Matrix* destination) {
+int matrix_copy(Matrix* source, Matrix* destination) {
     if (source->cols != destination->cols ||
         source->rows != destination->rows) {
         matrix_error(SHAPE_NOT_EQUAL_ERROR);
+        return 1;
     }
-
-    memcpy(destination->data, source->data,
-           sizeof(double) * source->cols * source->rows);
+     if (source->data == nullptr || destination->data == nullptr) {
+        matrix_error(NULL_DATA_ERROR);
+        return 1;
+    }
+    memcpy(destination->data, source->data, sizeof(double) * source->cols * source->rows);
 }
 
 void matrix_print(Matrix matrix) {
@@ -127,9 +130,8 @@ void matrix_random(Matrix* matrix) {
 Matrix matrix_multiplication_by_scalar(Matrix matrix, double scalar) {
     Matrix scaled_matrix = {matrix.rows, matrix.cols, NULL, NULL};
     matrix_memory(&scaled_matrix);
-    matrix_copy(&matrix, &scaled_matrix);
 
-    if (scaled_matrix.data == NULL) {
+    if (matrix_copy(&matrix, &scaled_matrix) == 1 || scaled_matrix.data == NULL) {
         matrix_error(MEMORY_ERROR);
         return matrix_null;
     }
@@ -237,7 +239,12 @@ double matrix_determinant(Matrix A) {
         matrix_error(MEMORY_ERROR);
         return NAN;
     }
-    matrix_copy(&A, &triangular_matrix);
+    
+    if (matrix_copy(&A, &triangular_matrix) == 1) {
+        matrix_error(MEMORY_ERROR);
+        matrix_delete_from_memory(&triangular_matrix);
+        return NAN;
+    }
 
     for (size_t current_row = 0; current_row < A.rows; current_row++) {
         for (size_t next_row = current_row + 1; next_row < A.rows; next_row++) {
@@ -276,7 +283,11 @@ static int matrix_exp_multiplication(Matrix* A, Matrix* B) {
 
     Matrix multiply_matrix = {A->rows, A->cols, NULL, NULL};
     matrix_memory(&multiply_matrix);
-    matrix_copy(A, &multiply_matrix);
+    
+    if (matrix_copy(A, &multiply_matrix) == 1 || multiply_matrix.data == NULL) {
+        matrix_error(MEMORY_ERROR);
+        return 1;
+    }
     
     if (multiply_matrix.data == NULL) {
         matrix_error(MEMORY_ERROR);
