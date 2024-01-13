@@ -115,7 +115,14 @@ Matrix::Matrix(const Matrix& other_matrix) {
     rows = other_matrix.rows;
     columns = other_matrix.columns;
     cells = new double[rows * columns];
-    memcpy(cells, other_matrix.cells, sizeof(double) * rows * columns);
+    if (columns * rows == 0) {
+        cells = nullptr;
+        return;
+    }
+    cells = new double[rows * columns];
+    if (other_matrix.cells) {
+        memcpy(cells, other_matrix.cells, rows * columns * sizeof(double));
+    }
 }
 
 Matrix::Matrix(Matrix&& other_matrix) noexcept {
@@ -151,6 +158,9 @@ Matrix& Matrix::fill_identity() {
 }
 
 Matrix& Matrix::fill_from_array(double* array) {
+    if (rows * columns == 0) {
+        return *this;
+    }
     if (rows * columns != sizeof(array) / sizeof(double)) {
         throw ARRAY_SIZE_ERROR;
     }
@@ -177,8 +187,14 @@ Matrix& Matrix::operator=(const Matrix& other_matrix) {
     delete[] cells;
     rows = other_matrix.rows;
     columns = other_matrix.columns;
+    if (columns * rows == 0) {
+        cells = nullptr;
+        return *this;
+    }
     cells = new double[rows * columns];
-    memcpy(cells, other_matrix.cells, rows * columns * sizeof(double));
+    if (other_matrix.cells) {
+        memcpy(cells, other_matrix.cells, rows * columns * sizeof(double));
+    }
     return *this;
 }
 
