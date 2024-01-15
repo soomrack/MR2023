@@ -87,12 +87,8 @@ void matrix_copy(struct Matrix* B, const struct Matrix* A)
         return;
     }
     
-    if (!(A->cols == B->cols && A->rows == B->rows)) {
-        matrix_free(B);
-        *B = matrix_allocate(A->cols, A->rows);
-    }
-    
-    memcpy(B->data, A->data, A->cols * A->rows * sizeof(MatrixItem));
+    *B = matrix_allocate(A->cols, A->rows);
+    memmove(B->data, A->data, A->cols * A->rows * sizeof(MatrixItem));
 }
 
 
