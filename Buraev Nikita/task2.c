@@ -88,6 +88,11 @@ void matrix_copy(struct Matrix* B, const struct Matrix* A)
     }
     
     *B = matrix_allocate(A->cols, A->rows);
+    if (B->data == NULL) {
+        *B = MATRIX_NULL;
+        return;
+    }
+    
     memmove(B->data, A->data, A->cols * A->rows * sizeof(MatrixItem));
 }
 
@@ -188,7 +193,7 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 
 
 // A *= B
-void matrix_add_mult(const struct Matrix A, const struct Matrix B)
+void matrix_add_mult(struct Matrix* A, const struct Matrix B)
 {
     struct Matrix C;
     C = matrix_mult(A, B);
@@ -196,10 +201,16 @@ void matrix_add_mult(const struct Matrix A, const struct Matrix B)
     if (C.data == NULL)
         return;
     
-    matrix_free(&A);
-    A = matrix_allocate(C.cols, C.rows);
-    A.data = C.data;
-
+    matrix_free(A);
+    *A = matrix_allocate(C.cols, C.rows);
+    if (A->data == NULL) {
+        *A = MATRIX_NULL;
+        return;
+    }
+    
+    memmove(A->data, C.data, C.cols * C.rows * sizeof(MatrixItem));
+    matrix_free(C);
+    
     return;
 }
 
@@ -236,7 +247,10 @@ struct Matrix matrix_exponent(const struct Matrix A, const double accuracy) //ac
     degree = (int)(ceil(1.0 / accuracy));
 
     for (int trm = 2; trm <= degree; ++trm) {
-       matrix_add_mult(B, A);
+       matrix_add_mult(&B, A);
+       if (B.data == NULL) {
+            return MATRIX_NULL;
+       }
        matrix_mult_by_coeff(B, 1.0 / trm);
        matrix_add(C, B);
     };
