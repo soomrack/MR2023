@@ -37,7 +37,10 @@ void matrix_error(enum ErrorType error) {
 
 struct Matrix matrix_allocate(const size_t rows, const size_t cols) {
     // Проверка на случай, если переданы нулевые значения для rows и cols
-    if (rows == 0 && cols == 0) return MATRIX_NULL;
+    if(rows == 0 || cols == 0){
+        struct Matrix M = {.rows = rows, .cols = cols, .data = NULL};
+        return M;
+    }
 
     // Проверка на переполнение памяти при выделении
     if (rows >= SIZE_MAX / sizeof(matrix_item) / cols) {
@@ -110,17 +113,12 @@ void matrix_fill(struct Matrix *M, enum MatrixType matrix_type) {
 */
 
 void matrix_print(const struct Matrix M) {
-    if (M.data == NULL) {
-        // Вывод ошибки, если матрица пустая
-        matrix_error(BAD_MATRIX_ERROR);
-    } else {
-        for (size_t idx = 1; idx <= M.cols * M.rows; ++idx) {
-            printf("%.2f \t", M.data[idx - 1]);
-            if (idx % M.cols == 0 && idx >= M.cols) printf("\n");
-        }
-        printf("\n");
+    for (size_t idx = 1; idx <= M.cols * M.rows; ++idx) {
+        printf("%.2f \t", M.data[idx - 1]);
+        if (idx % M.cols == 0 && idx >= M.cols) printf("\n");
     }
-}
+    printf("\n");
+    }
 
 /*
    Функция matrix_create создает новую матрицу заданного типа с указанным числом строк и столбцов.
@@ -132,8 +130,6 @@ void matrix_print(const struct Matrix M) {
 */
 
 struct Matrix matrix_create(const size_t rows, const size_t cols, enum MatrixType mat_type) {
-    if (rows == 0 && cols == 0) return MATRIX_NULL;
-
     // Выделение памяти под новую матрицу и заполнение ее значениями
     struct Matrix M = matrix_allocate(rows, cols);
 
@@ -158,13 +154,8 @@ struct Matrix matrix_create(const size_t rows, const size_t cols, enum MatrixTyp
 */
 
 void matrix_free(struct Matrix *M) {
-    if (M->data == NULL) {
-        // Вывод ошибки, если матрица пустая
-        matrix_error(FREE_ERROR);
-    } else {
-        free(M->data);
-        *M = MATRIX_NULL;
-    }
+    if(M->data != NULL) free(M->data);
+    *M = MATRIX_NULL;
 }
 
 /*
@@ -210,12 +201,6 @@ struct Matrix matrix_copy(const struct Matrix A, struct Matrix B) {
 */
 
 struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B) {
-    if (A.data == NULL || B.data == NULL) {
-        // Вывод ошибки, если одна или обе матрицы пустые
-        matrix_error(BAD_MATRIX_ERROR);
-        return MATRIX_NULL;
-    }
-
     if (A.cols != B.cols || A.rows != B.rows) {
         // Вывод ошибки, если размеры матриц A и B не совпадают
         matrix_error(COLS_ROWS_ERROR);
@@ -250,12 +235,6 @@ struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B) {
 */
 
 struct Matrix matrix_subtract(const struct Matrix A, const struct Matrix B) {
-    if (A.data == NULL || B.data == NULL) {
-        // Вывод ошибки, если одна или обе матрицы пустые
-        matrix_error(BAD_MATRIX_ERROR);
-        return MATRIX_NULL;
-    }
-
     if (A.cols != B.cols || A.rows != B.rows) {
         // Вывод ошибки, если размеры матриц A и B не совпадают
         matrix_error(COLS_ROWS_ERROR);
@@ -289,11 +268,6 @@ struct Matrix matrix_subtract(const struct Matrix A, const struct Matrix B) {
 */
 
 struct Matrix matrix_multiply(const struct Matrix A, const double scalar) {
-    if (A.data == NULL) {
-        // Вывод ошибки, если матрица пустая
-        matrix_error(BAD_MATRIX_ERROR);
-        return MATRIX_NULL;
-    }
 
     // Создание новой матрицы B для хранения результата
     struct Matrix B = matrix_allocate(A.rows, A.cols);
@@ -323,12 +297,6 @@ struct Matrix matrix_multiply(const struct Matrix A, const double scalar) {
 */
 
 struct Matrix matrix_product(const struct Matrix A, const struct Matrix B) {
-    if (A.data == NULL || B.data == NULL) {
-        // Вывод ошибки, если одна или обе матрицы пустые
-        matrix_error(BAD_MATRIX_ERROR);
-        return MATRIX_NULL;
-    }
-
     if (A.cols != B.rows) {
         // Вывод ошибки, если количество столбцов матрицы A не равно количеству строк матрицы B
         matrix_error(COLS_ROWS_ERROR);
@@ -365,11 +333,6 @@ struct Matrix matrix_product(const struct Matrix A, const struct Matrix B) {
 */
 
 struct Matrix matrix_transpose(const struct Matrix A) {
-    if (A.data == NULL) {
-        // Вывод ошибки, если матрица пустая
-        matrix_error(BAD_MATRIX_ERROR);
-        return MATRIX_NULL;
-    }
 
     // Создание новой матрицы B для хранения результата транспонирования
     struct Matrix B = matrix_allocate(A.cols, A.rows);
@@ -401,12 +364,6 @@ struct Matrix matrix_transpose(const struct Matrix A) {
 */
 
 double matrix_det(const struct Matrix A) {
-    if (A.data == NULL) {
-        // Вывод ошибки, если матрица пустая
-        matrix_error(BAD_MATRIX_ERROR);
-        return NAN;
-    }
-
     if (A.cols != A.rows) {
         // Вывод ошибки, если количество столбцов не равно количеству строк
         matrix_error(COLS_ROWS_ERROR);
@@ -446,12 +403,6 @@ double matrix_det(const struct Matrix A) {
 */
 
 struct Matrix matrix_exp(const struct Matrix A, const unsigned int n) {
-    if (A.data == NULL) {
-        // Вывод ошибки, если матрица пустая
-        matrix_error(BAD_MATRIX_ERROR);
-        return MATRIX_NULL;
-    }
-
     if (A.rows != A.cols) {
         // Вывод ошибки, если матрица не квадратная
         matrix_error(COLS_ROWS_ERROR);
