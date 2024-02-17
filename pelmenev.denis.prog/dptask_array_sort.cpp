@@ -33,8 +33,6 @@ void sort_bubble(std::vector <int> &array)
 void merge(std::vector <int> &array, std::vector <int> &sub_array_left, std::vector <int> &sub_array_right)
 {
     for (size_t idx = 0; idx < array.size(); ++idx) {
-        if (sub_array_left.empty() && sub_array_right.empty()) break;
-
         if (sub_array_left.empty() && !sub_array_right.empty()) {
             array[idx] = sub_array_right[0];
             sub_array_right.erase(sub_array_right.begin());
