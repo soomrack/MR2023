@@ -1,20 +1,24 @@
-import numpy as np
+from abc import ABC, abstractmethod
 import logging
 import sys
-from abc import ABC, abstractmethod
 import os
 
 import tifffile
 from PIL import Image
+import numpy as np
 
 
 class AugmentorBase(ABC):
     LOGGING_FORMAT = "%(asctime)s - %(levelname)s: %(message)s"
-    ALLOWED_AUGMENTATIONS = ("rotate", "flip", "resize", "crop", "saturation",
-                             "brightness", "contrast", "blur", "noise")
+    ALLOWED_AUGMENTATIONS = ("rotate", "flip", "resize", "crop",
+                             "saturation", "brightness", "contrast", "blur", "noise")
     FLOAT_PRECISION = 4
 
     def __init__(self, debug: bool = False, log_path: str = None):
+        """
+        :param debug: flag that enables debug information in terminal or log file
+        :param log_path: filepath to log file with .txt extension, leave *None* to use terminal instead
+        """
         level = logging.INFO if not debug else logging.DEBUG
         if log_path is None:
             logging.basicConfig(stream=sys.stdout,
@@ -27,7 +31,7 @@ class AugmentorBase(ABC):
                                 datefmt='%H:%M:%S',
                                 level=level)
         else:
-            raise ValueError(f"Log path should be in .txt format")
+            raise ValueError(f"Log path should be with .txt extension")
 
         logging.debug("Augmentor base class object initialized")
 
@@ -41,7 +45,21 @@ class AugmentorBase(ABC):
         logging.debug("Augmentor base class object deleted")
         logging.shutdown()
 
+    # Augmentation methods
+
     def augment(self, *args, **kwargs):
+        """
+        Augment dataset by modifying images and labels in selected subsets with given augmentation pipeline in arguments
+        using *load_path* and *save_path* paths, *train*, *val* and *test* flags from keyword arguments. In the process,
+        the original dataset gets copied to *save_path* and augmented images and bounding boxes get saved along with
+        unique filenames - *original-name_augmentation_id.original-extension*
+        :param args: each augmentation in the pipeline should be passed as 2 consequent arguments - augmentation name
+                     and corresponding value (e.g. *"rotate", 90* to rotate images by angle 90)
+        :param kwargs: *load_path* to directory with dataset for augmentation, *save_path* to nonexistent directory
+                       where augmented dataset will be created and saved, *train*, *val* and *test* flags to indicate
+                       which subsets are to be augmented
+        :return:
+        """
         self.load_path = kwargs.get("load_path", "")
         self.save_path = kwargs.get("save_path", "")
 
@@ -71,25 +89,25 @@ class AugmentorBase(ABC):
                      f"images will be augmented")
 
         if train:
-            self.augment_subset(augmentations, image_paths["train"], label_paths["train"], "train")
+            self._augment_subset(augmentations, image_paths["train"], label_paths["train"], "train")
 
         if val:
-            self.augment_subset(augmentations, image_paths["val"], label_paths["val"], "val")
+            self._augment_subset(augmentations, image_paths["val"], label_paths["val"], "val")
 
         if test:
-            self.augment_subset(augmentations, image_paths["test"], label_paths["test"], "test")
+            self._augment_subset(augmentations, image_paths["test"], label_paths["test"], "test")
 
         logging.info(f"{self.load_path.rsplit('/')[-1]} dataset has been augmented")
 
-    def augment_subset(self, augmentations: dict, image_paths: list, label_paths: list, subset: str):
+    def _augment_subset(self, augmentations: dict, image_paths: list, label_paths: list, subset: str):
         logging.info(f"Augmenting {self._subset_lower(subset)} subset...")
 
         for augmentation in augmentations:
             count = 0
 
             for image_path, label_path in zip(image_paths, label_paths):
-                self.image_read(image_path)
-                self.bboxes_read(label_path)
+                self._image_read(image_path)
+                self._bboxes_read(label_path)
 
                 getattr(self, f"_AugmentorBase__{augmentation}")(augmentations[augmentation])
 
@@ -97,37 +115,48 @@ class AugmentorBase(ABC):
                     load_image_path = image_path.replace(self.load_path, self.save_path)
                     load_label_path = label_path.replace(self.load_path, self.save_path)
 
-                    self.image_write(f"{load_image_path.rsplit('.', 1)[0]}_{augmentation}_"
-                                     f"{count}.{load_image_path.rsplit('.', 1)[1]}")
-                    self.bboxes_write(f"{load_label_path.rsplit('.', 1)[0]}_{augmentation}_"
-                                      f"{count}.{load_label_path.rsplit('.', 1)[1]}")
+                    self._image_write(f"{load_image_path.rsplit('.', 1)[0]}_{augmentation}_"
+                                      f"{count}.{load_image_path.rsplit('.', 1)[1]}")
+                    self._bboxes_write(f"{load_label_path.rsplit('.', 1)[0]}_{augmentation}_"
+                                       f"{count}.{load_label_path.rsplit('.', 1)[1]}")
 
                     count += 1
+
+    # Dataset scanning methods
 
     @classmethod
     @abstractmethod
     def scan(cls, path: str, train: bool, val: bool, test: bool) -> tuple[dict, dict]:
         pass
 
-    def image_read(self, image_path: str):
+    @classmethod
+    @abstractmethod
+    def _scan_subset(cls, path: str, subset: str) -> tuple[list, list]:
+        pass
+
+    # Reading/writing methods
+
+    def _image_read(self, image_path: str):
         logging.debug(f"Reading image {image_path}")
 
         self.image = tifffile.imread(image_path) if image_path.endswith((".tif", ".tiff")) \
-            else np.array(Image.open(image_path))
+            else np.array(Image.open(image_path).convert("RGB"))
 
-    def image_write(self, image_path: str):
+    def _image_write(self, image_path: str):
         logging.debug(f"Writing image {image_path}")
 
         tifffile.imwrite(image_path, self.image) if image_path.endswith((".tif", ".tiff")) \
-            else Image.fromarray(self.image).save(image_path)
+            else Image.fromarray(self.image, "RGB").save(image_path)
 
     @abstractmethod
-    def bboxes_read(self, label_path: str):
+    def _bboxes_read(self, label_path: str):
         pass
 
     @abstractmethod
-    def bboxes_write(self, label_path: str):
+    def _bboxes_write(self, label_path: str):
         pass
+
+    # Augmentation checkout methods
 
     @classmethod
     def _check_arg(cls, augmentation: str, argument: int or float or tuple):
@@ -139,9 +168,9 @@ class AugmentorBase(ABC):
         if augmentation in (cls.ALLOWED_AUGMENTATIONS[0], cls.ALLOWED_AUGMENTATIONS[1], cls.ALLOWED_AUGMENTATIONS[4],
                             cls.ALLOWED_AUGMENTATIONS[5], cls.ALLOWED_AUGMENTATIONS[6], cls.ALLOWED_AUGMENTATIONS[7]):
             if type(argument) is not int:
-                raise TypeError(f"For {augmentation} augmentation additional argument should be integer")
+                raise TypeError(f"For {augmentation} augmentation value should be integer")
 
-            if augmentation is cls.ALLOWED_AUGMENTATIONS[0] and argument not in (-270, -180, 90, 90, 180, 270):
+            if augmentation is cls.ALLOWED_AUGMENTATIONS[0] and argument not in (-270, -180, -90, 90, 180, 270):
                 raise ValueError(f"Cannot rotate by angle {argument}")
 
             if augmentation is cls.ALLOWED_AUGMENTATIONS[1] and argument not in (-1, 0, 1):
@@ -156,7 +185,7 @@ class AugmentorBase(ABC):
 
         elif augmentation in (cls.ALLOWED_AUGMENTATIONS[2], cls.ALLOWED_AUGMENTATIONS[8]):
             if type(argument) is not float:
-                raise TypeError(f"For {augmentation} augmentation additional argument should be float")
+                raise TypeError(f"For {augmentation} augmentation value should be float")
 
             if augmentation is cls.ALLOWED_AUGMENTATIONS[2] and 0. >= argument > 4.:
                 raise ValueError(f"Resize ratio {argument} is out of range (0.0..4.0)")
@@ -166,7 +195,7 @@ class AugmentorBase(ABC):
 
         elif augmentation is cls.ALLOWED_AUGMENTATIONS[3]:
             if type(argument) is not tuple or len(argument) != 4 or not all(type(coord) is int for coord in argument):
-                raise TypeError("For crop augmentation additional argument should be a tuple of 4 integers")
+                raise TypeError("For crop augmentation value should be a tuple of 4 integers")
 
             if (augmentation is cls.ALLOWED_AUGMENTATIONS[3] and
                     argument[0] < 0 or argument[1] < 0 or argument[2] <= 0 or argument[3] <= 0):
@@ -200,6 +229,18 @@ class AugmentorBase(ABC):
             logging.warning(f"{dif} redundant {subset_lower} labels have been found")
 
     @staticmethod
+    def _check_shape(shape: [int, int, int], coordinates: tuple[int, int, int, int]):
+        height, width, _ = shape
+
+        if coordinates[0] + coordinates[2] > width:
+            raise ValueError("Crop zone exceeds processing image width")
+
+        if coordinates[1] + coordinates[3] > height:
+            raise ValueError("Crop zone exceeds processing image height")
+
+    # Subset formatting methods
+
+    @staticmethod
     def _subset_upper(subset: str) -> str:
         return "Training" if subset == "train" else "Validation" if subset == "val" else "Testing"
 
@@ -207,21 +248,80 @@ class AugmentorBase(ABC):
     def _subset_lower(subset: str) -> str:
         return "training" if subset == "train" else "validation" if subset == "val" else "testing"
 
+    # Geometric modification methods
+
     def __rotate(self, angle: int):
-        self.image = self.image
-        self.bboxes = self.bboxes
+        if angle == 180 or angle == -180:
+            self.__flip(-1)
+            return
+
+        self.image = np.rot90(self.image, k=-1)
+        self.bboxes = [[self.image.shape[1] - y - h, x, h, w, class_] for [x, y, w, h, class_] in self.bboxes]
+
+        self.__flip(1) if angle == 270 or angle == -90 else None
 
     def __flip(self, axis: int):
-        self.image = self.image
-        self.bboxes = self.bboxes
+        height, width, _ = self.image.shape
+
+        if axis == 0:
+            self.image = np.flip(self.image, 0)
+            self.bboxes = [[x, height - y - h, w, h, class_] for [x, y, w, h, class_] in self.bboxes]
+
+        elif axis == 1:
+            self.image = np.flip(self.image, 1)
+            self.bboxes = [[width - x - w, y, w, h, class_] for [x, y, w, h, class_] in self.bboxes]
+
+        else:
+            self.image = np.flip(self.image, (0, 1))
+            self.bboxes = [[width - x - w, height - y - h, w, h, class_] for [x, y, w, h, class_] in self.bboxes]
 
     def __resize(self, ratio: float):
-        self.image = self.image
-        self.bboxes = self.bboxes
+        height, width, _ = self.image.shape
+
+        self.image = np.array(Image.fromarray(self.image).resize((int(width * ratio), int(height * ratio))))
+        self.bboxes = [[ratio * x, ratio * y, ratio * w, ratio * h, class_] for [x, y, w, h, class_] in self.bboxes]
 
     def __crop(self, coordinates: tuple[int, int, int, int]):
-        self.image = self.image
-        self.bboxes = self.bboxes
+        self._check_shape(self.image.shape, coordinates)
+
+        bboxes_crop = list()
+        x_crop, y_crop, w_crop, h_crop = coordinates
+        self.image = self.image[y_crop:y_crop + h_crop, x_crop:x_crop + w_crop]
+
+        for bbox in self.bboxes:
+            x, y, w, h, class_ = bbox
+
+            if x >= x_crop and x + w <= x_crop + w_crop:
+                bbox[0] -= x_crop
+
+            if x < x_crop and x + w <= x_crop + w_crop:
+                bbox[0] = 0
+                bbox[2] += x - x_crop
+
+            if x >= x_crop and x + w > x_crop + w_crop:
+                bbox[0] -= x_crop
+                bbox[2] = x_crop + w_crop - x
+
+            if y >= y_crop and y + h <= y_crop + h_crop:
+                bbox[1] -= y_crop
+
+            if y < y_crop and y + h <= y_crop + h_crop:
+                bbox[1] = 0
+                bbox[3] += y - y_crop
+
+            if y >= y_crop and y + h > y_crop + h_crop:
+                bbox[1] -= y_crop
+                bbox[3] = y_crop + h_crop - y
+
+            if (bbox[0] < 0 or bbox[1] < 0 or bbox[2] < 0 or bbox[3] < 0
+                    or bbox[0] + bbox[2] > w_crop or bbox[1] + bbox[3] > h_crop):
+                continue
+
+            bboxes_crop.append(bbox)
+
+        self.bboxes = bboxes_crop
+
+    # Photometric modification methods
 
     def __saturation(self, level: int):
         self.image = self.image
