@@ -27,6 +27,8 @@ public:
     void MergeSort(MassItem* mas, MassItem* tmp, size_t size);
     void InsertionSort(MassItem* mas, size_t size);
     void QuickSort(MassItem* mas, size_t size);
+    void HeapSort(MassItem* mas, size_t size);
+    void HeapCorrection(MassItem* mas, size_t size, size_t i);
 };
 
 Massive::Massive() {
@@ -125,7 +127,7 @@ void Massive::InsertionSort(MassItem* mas, size_t size)
 void Massive::QuickSort(MassItem* mas, size_t size)
 {
     size_t b = 0, e = size - 1;
-    MassItem x = mas[size / 2];
+    MassItem key = mas[size / 2];
 
     if (size < 2)
         return;
@@ -133,9 +135,9 @@ void Massive::QuickSort(MassItem* mas, size_t size)
     {
         while (b <= e)
         {
-            while (b < size && mas[b] < x)
+            while (b < size && mas[b] < key)
                 b++;
-            while (e >= 0 && mas[e] > x)
+            while (e >= 0 && mas[e] > key)
                 e--;
             if (b <= e)
             {
@@ -150,6 +152,35 @@ void Massive::QuickSort(MassItem* mas, size_t size)
     }
 }
 
+void Massive::HeapSort(MassItem* mas, size_t size)
+{
+    int i, k;
+
+    for (i = size / 2 - 1; i >= 0; i--)
+        HeapCorrection(mas, size, i);
+    for (k = size - 1; k >= 0; k--)
+    {
+        Swap(&mas[0], &mas[k]);
+        HeapCorrection(mas, k, 0);
+    }
+}
+
+void Massive::HeapCorrection(MassItem* mas, size_t size, size_t i)
+{
+    while (1)
+    {
+        size_t l = 2 * i + 1, r = 2 * i + 2, big = i;
+
+        if (l < size && mas[l] > mas[i])
+            big = l;
+        if (r < size && mas[r] > mas[big])
+            big = r;
+        if (i == big)
+            return;
+        Swap(&mas[i], &mas[big]);
+        i = big;
+    }
+}
 
 int main(void)
 {
@@ -176,6 +207,11 @@ int main(void)
     M.print();
     M.QuickSort(M.getdata(), M.getsize());
     M.print();
+    
+    M.set();
+    M.print();
+    M.HeapSort(M.getdata(), M.getsize());
+    M.print();   
 
     return 1;
 }
