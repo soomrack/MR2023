@@ -3,9 +3,11 @@
 
 const int nmax = 10;
 
+typedef int int_arr;
+
 
 template <typename T>
-void bubbleSort(T *arr, size_t size) 
+void bubble_sort(T *arr, size_t size) 
 {
     for (size_t i = 0; i < size - 1; i++) {
         for (size_t j = size - 1; i < j; j--) {
@@ -16,47 +18,52 @@ void bubbleSort(T *arr, size_t size)
 }
 
 
-void Merg(int* arr, int begin, int end)
+void merg(int* arr, int begin, int end)
 {
-    int i = begin;
+    int first_arr = begin;
     int mid = begin + (end - begin) / 2;
-    int j = mid + 1;
+    int second_arr = mid + 1;
     int k = 0;
     int d[nmax];
 
-    while (i <= mid && j <= end)
+    while (first_arr <= mid && second_arr <= end)
     {
-        if(arr[i] <= arr[j]){
-            d[k] = arr[i];
-            i++;
+        if(arr[first_arr] <= arr[second_arr]){
+            d[k] = arr[first_arr];
+            first_arr++;
         }else {
-            d[k] = arr[j];
-            j++;
+            d[k] = arr[second_arr];
+            second_arr++;
         }
         k++;
     }
     
-    while (i <= mid)
+
+    /*
+    memcpy()
+    */
+    while (first_arr <= mid)
     {
-        d[k] = arr[i];
-        i++;
+        d[k] = arr[first_arr];
+        first_arr++;
         k++;
     }
 
-    while (j <= end)
+    while (second_arr <= end)
     {
-        d[k] = arr[j];
-        j++;
+        d[k] = arr[second_arr];
+        second_arr++;
         k++;
     }
 
-    for(i = 0; i < k; i++){
-        arr[begin + 1] = d[i];
+    for(first_arr = 0; first_arr < k; first_arr++){
+        arr[begin] = d[first_arr];
+        begin++;
     }    
 
 }
 
-void MergeSort(int *arr, int left, int right)
+void merge_sort(int *arr, int left, int right)
 {
     int temp = 0;
     if(left < right){ //is the array single-element?
@@ -67,9 +74,9 @@ void MergeSort(int *arr, int left, int right)
                 arr[right] = temp;
             }
         } else {
-            MergeSort(arr, left, left + (right - left) / 2);
-            MergeSort(arr, (left + (right - left) / 2) + 1, right);
-            Merg(arr, left, right);
+            merge_sort(arr, left, left + (right - left) / 2);
+            merge_sort(arr, (left + (right - left) / 2) + 1, right);
+            merg(arr, left, right);
         }
     }
 
@@ -110,8 +117,9 @@ int main()
     std::cout << "The source array:" << std::endl;
     print(arr,n);
 
-    MergeSort(arr, 0, n - 1);
+    merge_sort(arr, 0, n - 1);
 
+    //bubble_sort(arr, 10);
     std::cout << "Sorted array" << std::endl;
     print(arr,n);
 
