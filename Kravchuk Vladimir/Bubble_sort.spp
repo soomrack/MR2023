@@ -1,0 +1,22 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+int main()
+{
+    std::vector<int> array = { 20, 8, 7, 15, 10, 6 };
+    int N = array.size();
+
+    for (size_t m = N; m > 1; m--) {
+        for (size_t k = 0; k < m - 1; k++) {
+            if (array[k] > array[k + 1]) std::swap(array[k], array[k + 1]);
+        }
+    } 
+    
+    std::cout << "Sorted array: ";
+    for (size_t i = 0; i < N; i++) {
+        std::cout << array[i] << " ";
+    }
+
+    return 0;
+}
