@@ -26,6 +26,7 @@ public:
     void BubbleSort();
     void MergeSort(MassItem* mas, MassItem* tmp, size_t size);
     void InsertionSort(MassItem* mas, size_t size);
+    void QuickSort(MassItem* mas, size_t size);
 };
 
 Massive::Massive() {
@@ -121,11 +122,39 @@ void Massive::InsertionSort(MassItem* mas, size_t size)
     }
 }
 
+void Massive::QuickSort(MassItem* mas, size_t size)
+{
+    size_t b = 0, e = size - 1;
+    MassItem x = mas[size / 2];
+
+    if (size < 2)
+        return;
+    else
+    {
+        while (b <= e)
+        {
+            while (b < size && mas[b] < x)
+                b++;
+            while (e >= 0 && mas[e] > x)
+                e--;
+            if (b <= e)
+            {
+                if (b != e)
+                    Swap(&mas[b], &mas[e]);
+                b++;
+                e--;
+            }
+        }
+        QuickSort(mas, e + 1);
+        QuickSort(mas + b, size - b);
+    }
+}
+
 
 int main(void)
 {
     Massive M;
-
+    
     M.set();
     M.print();
     M.BubbleSort();
@@ -141,6 +170,11 @@ int main(void)
     M.set();
     M.print();
     M.InsertionSort(M.getdata(), M.getsize());
+    M.print();
+    
+    M.set();
+    M.print();
+    M.QuickSort(M.getdata(), M.getsize());
     M.print();
 
     return 1;
