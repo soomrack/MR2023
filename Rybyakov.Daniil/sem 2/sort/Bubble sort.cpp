@@ -37,5 +37,5 @@ int main()
 	int* array = new int[10] { 2, 4, 1, 11, 9, 7, 4, 9, 50, 20 };
 	print_array(array, array_size);
 	bubble_sort(array, array_size);
-	
+	delete[] array;
 }
