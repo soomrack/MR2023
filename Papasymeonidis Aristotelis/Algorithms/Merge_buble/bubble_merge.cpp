@@ -87,7 +87,7 @@ void merge_sort(int *arr, int left, int right)
 
 void input(int *m, int &n)
 {
-    std :: cout<< "Enter the number of array elements: ";
+    std :: cout << "Enter the number of array elements: ";
     std :: cin >> n;
     for(int i = 0; i < n; ++i){
         std::cout << "a[" << i << "]= ";
@@ -110,11 +110,11 @@ void print(int *m, int n)
 int main()
 {
     int n;
-    //int arr[nmax];
+    //int arr[ARRAY_SIZE];
 
     //input(arr, n);
     n = 10;
-    int arr[10] = {1, 3, 4, 3, 2, 5, 7, 140, 2, 9};
+    int arr[ARRAY_SIZE] = {1, 3, 4, 3, 2, 5, 7, 140, 2, 9};
     //int arr[3] = {1, 8, 6};
     std::cout << "The source array:" << std::endl;
     print(arr,n);
