@@ -60,18 +60,24 @@ void array_print(int array_size, int *array)
 }
 
 
-int main()
+void initialization()
 {
 	int array_size = 10;
-	int *array = new int[10]{ 2, 4, 1, 11, 9, 7, 4, 9, 50, 20 };
+	int* array = new int[10] { 2, 4, 1, 11, 9, 7, 4, 9, 50, 20 };
 
 	int help_array_size = 10;
 	int* help_array = new int[10];
-		
+
 	array_print(array_size, array);
 	merge_sort(array, 0, array_size - 1, help_array);
 	array_print(array_size, array);
 
 	delete[] array;
 	delete[] help_array;
+}
+
+
+int main()
+{
+	initialization();
 }
