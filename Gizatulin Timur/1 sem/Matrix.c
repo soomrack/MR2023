@@ -62,6 +62,7 @@ int matrix_add(const struct Matrix A, const struct Matrix B)
     return 0;
 }
 
+
 // C = A + B
 struct Matrix matrix_sum(const struct Matrix A, const struct Matrix B)
 {
@@ -136,8 +137,6 @@ struct Matrix matrix_mult(const struct Matrix A, const struct Matrix B)
 }
 
 
-
-
 struct Matrix matrix_transp(const struct Matrix A)
 {
     struct Matrix C = matrix_allocate(A.cols, A.rows);
@@ -170,7 +169,6 @@ double det(const struct Matrix A)
     }
     return NAN;
 }
-
 
 
 struct Matrix sum_for_matrix_exp(struct Matrix A, unsigned int level)
@@ -207,8 +205,6 @@ struct Matrix sum_for_matrix_exp(struct Matrix A, unsigned int level)
 }
    
 
-
-
 struct Matrix matrix_E(const struct Matrix A)
 {
     struct Matrix E = matrix_allocate(A.cols, A.rows);
@@ -219,8 +215,6 @@ struct Matrix matrix_E(const struct Matrix A)
 
     return E;
 }
-
-
 
 
 // C = e ^ (A)
@@ -249,7 +243,6 @@ struct Matrix matrix_exp(struct Matrix A, unsigned long int level)
 }
 
 
-f
 void matrix_print(const struct Matrix A)
 {
     for (size_t row = 0; row < A.rows; ++row) {
@@ -261,7 +254,6 @@ void matrix_print(const struct Matrix A)
     }
     printf("\n");
 }
-
 
 
 int main()

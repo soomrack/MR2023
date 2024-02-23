@@ -8,7 +8,7 @@ typedef long long int Money;  // ךמןויךט
 struct Person
 {
     Money capital;
-    Money income;              // zp הההההההה
+    Money income;              // zp 
     Money life_spendings;      // expenses for life
     Money monthly_payment;     // expenses for monthly payment
     Money overpayment;         // overpayment 
