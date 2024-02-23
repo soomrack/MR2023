@@ -1,10 +1,12 @@
 #include <iostream>
-
+#include<cstring>
+#define ARRAY_SIZE 10
 
 const int nmax = 10;
 
 typedef int int_arr;
 
+int_arr buf_arr[ARRAY_SIZE];
 
 template <typename T>
 void bubble_sort(T *arr, size_t size) 
@@ -24,15 +26,15 @@ void merg(int* arr, int begin, int end)
     int mid = begin + (end - begin) / 2;
     int second_arr = mid + 1;
     int k = 0;
-    int d[nmax];
+    memset(buf_arr, 0, ARRAY_SIZE);
 
     while (first_arr <= mid && second_arr <= end)
     {
         if(arr[first_arr] <= arr[second_arr]){
-            d[k] = arr[first_arr];
+            buf_arr[k] = arr[first_arr];
             first_arr++;
         }else {
-            d[k] = arr[second_arr];
+            buf_arr[k] = arr[second_arr];
             second_arr++;
         }
         k++;
@@ -44,20 +46,20 @@ void merg(int* arr, int begin, int end)
     */
     while (first_arr <= mid)
     {
-        d[k] = arr[first_arr];
+        buf_arr[k] = arr[first_arr];
         first_arr++;
         k++;
     }
 
     while (second_arr <= end)
     {
-        d[k] = arr[second_arr];
+        buf_arr[k] = arr[second_arr];
         second_arr++;
         k++;
     }
 
     for(first_arr = 0; first_arr < k; first_arr++){
-        arr[begin] = d[first_arr];
+        arr[begin] = buf_arr[first_arr];
         begin++;
     }    
 
@@ -112,7 +114,7 @@ int main()
 
     //input(arr, n);
     n = 10;
-    int arr[10] = {1, 3, 4, 3, 2, 5, 7, 2, 2, 9};
+    int arr[10] = {1, 3, 4, 3, 2, 5, 7, 140, 2, 9};
     //int arr[3] = {1, 8, 6};
     std::cout << "The source array:" << std::endl;
     print(arr,n);
@@ -120,7 +122,7 @@ int main()
     merge_sort(arr, 0, n - 1);
 
     //bubble_sort(arr, 10);
-    std::cout << "Sorted array" << std::endl;
+    std::cout << "Sorted array: " << std::endl;
     print(arr,n);
 
     return 0;
