@@ -24,11 +24,17 @@ void incertion_sort(int* array, int array_size)
 }
 
 
-int main()
+void initialization()
 {
 	int array_size = 10;
 	int* array = new int[10] { 2, 4, 1, 11, 9, 7, 4, 9, 50, 20 };
 	print_array(array, array_size);
 	incertion_sort(array, array_size);
 	delete[] array;
+}
+
+
+int main()
+{
+	initialization();
 }
