@@ -4,25 +4,47 @@
 
 typedef int arr_type;
 
+enum type {less, greater};
+
 
 arr_type sorted_part[ARRAY_SIZE];
 
+bool predicate(arr_type left, arr_type right, type key){
+    switch(key)
+   {
+    case less:
+        return left < right ? true:false;
+    break;
 
-void insert_sort(arr_type *arr, size_t number){
-    arr_type buf_var;
+    case greater:
+        return left > right ? true:false;
+    break;
 
-    for(int sort_part_size = 0; sort_part_size <= number; sort_part_size++){
-        buf_var = arr[sort_part_size + 1];
-        for(int i = sort_part_size + 1; i > 0; i--)
+   } 
+}
+
+void insert_sort(arr_type *arr, type kind, size_t number){
+    arr_type see[ARRAY_SIZE];
+    
+    for (size_t j = 1; j < number; j++)
+    {
+        for(int i = 0; i < ARRAY_SIZE; i++){
+            see[i] = arr[i];
+        }
+
+        arr_type buf_var = arr[j];
+        int already_sorted = j - 1;
+
+        while (already_sorted >= 0 && predicate(arr[already_sorted], buf_var, kind))
         {
-           if(arr[i - 1] > buf_var){
-            arr[i] = arr[i - 1];
-            arr[i - 1] = buf_var;
-           } else {
-            arr[i+1] = buf_var;
-           }
-        }   
+            arr[already_sorted + 1] = arr[already_sorted];
+            already_sorted--;
+        }
+        arr[++already_sorted] = buf_var;
+        
     }
+    
+
 }
 
 
@@ -38,7 +60,7 @@ void print(int *arr, int number_out)
 int main(){
 
     arr_type arr[ARRAY_SIZE] = {1, 3, 4, 3, 2, 5, 7, 140, 2, 9};
-    insert_sort(arr, ARRAY_SIZE);
+    insert_sort(arr, greater, ARRAY_SIZE);
     print(arr, ARRAY_SIZE);
 
 
