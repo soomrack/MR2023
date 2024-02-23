@@ -2,7 +2,7 @@
 #include<cstring>
 #define ARRAY_SIZE 10
 
-const int nmax = 10;
+
 
 typedef int int_arr;
 
