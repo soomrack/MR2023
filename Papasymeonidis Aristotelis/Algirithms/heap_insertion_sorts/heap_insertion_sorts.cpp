@@ -9,6 +9,35 @@ enum type {less, greater};
 
 arr_type sorted_part[ARRAY_SIZE];
 
+
+void heapify(arr_type *arr[], int size_of_heap, int i)
+{
+    int largest = i;
+    
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    // If left child is larger than than largest so far 
+    if(left < size_of_heap && arr[left] > arr[largest]){
+        largest = left;
+    }
+
+    // If right child is larger than than largest so far 
+    if(right < size_of_heap && arr[right] > arr[largest]){
+        largest = right;
+    }
+
+    // If largest is not root
+
+
+
+
+
+
+}
+
+
+// available to make lambda function later! 
 bool predicate(arr_type left, arr_type right, type key){
     switch(key)
    {
@@ -60,7 +89,7 @@ void print(int *arr, int number_out)
 int main(){
 
     arr_type arr[ARRAY_SIZE] = {1, 3, 4, 3, 2, 5, 7, 140, 2, 9};
-    insert_sort(arr, greater, ARRAY_SIZE);
+    insert_sort(arr, less, ARRAY_SIZE);
     print(arr, ARRAY_SIZE);
 
 
