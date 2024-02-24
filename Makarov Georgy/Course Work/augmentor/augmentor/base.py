@@ -255,7 +255,7 @@ class AugmentorBase(ABC):
             self.__flip(-1)
             return
 
-        self.image = np.rot90(self.image, k=-1)
+        self.image = np.rot90(self.image, k=1)
         self.bboxes = [[self.image.shape[1] - y - h, x, h, w, class_] for [x, y, w, h, class_] in self.bboxes]
 
         self.__flip(1) if angle == 270 or angle == -90 else None
