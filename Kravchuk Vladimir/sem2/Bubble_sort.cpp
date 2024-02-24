@@ -2,9 +2,8 @@
 #include <iostream>
 #include <vector>
 
-void bubble(std::vector<int>& array)
+void bubble(std::vector<int>& array, int size)
 {
-    int size = array.size();
     for (size_t numberElements = size; numberElements > 1; numberElements--) {
         for (size_t idx = 0; idx < size - 1; idx++) {
             if (array[idx] > array[idx + 1]) std::swap(array[idx], array[idx + 1]);
@@ -13,7 +12,7 @@ void bubble(std::vector<int>& array)
 
 }
 
-void printArray(int size, std::vector<int>& array)
+void printArray(std::vector<int>& array, int size)
 {
     std::cout << "\nSorted array: ";
     for (int idx = 0; idx < size; idx++) {
@@ -26,9 +25,9 @@ void initialization()
     std::vector<int> array = { 20, 8, 7, 15, 10, 6 };
     int size = array.size();
 
-    bubble(array);
+    bubble(array, size);
 
-    printArray(size, array);
+    printArray(array, size);
 }
 
 int main()
