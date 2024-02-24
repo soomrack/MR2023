@@ -6,8 +6,8 @@ void bubble(std::vector<int>& array)
 {
     int size = array.size();
     for (size_t numberElements = size; numberElements > 1; numberElements--) {
-        for (size_t element = 0; element < size - 1; element++) {
-            if (array[element] > array[element + 1]) std::swap(array[element], array[element + 1]);
+        for (size_t idx = 0; idx < size - 1; idx++) {
+            if (array[idx] > array[idx + 1]) std::swap(array[idx], array[idx + 1]);
         }
     }
 
