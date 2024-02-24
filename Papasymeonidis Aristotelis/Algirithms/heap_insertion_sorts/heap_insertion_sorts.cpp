@@ -10,7 +10,7 @@ enum type {less, greater};
 arr_type sorted_part[ARRAY_SIZE];
 
 
-void heapify(arr_type *arr[], int size_of_heap, int i)
+void heapify(arr_type arr[], int size_of_heap, int i)
 {
     int largest = i;
     
@@ -27,12 +27,31 @@ void heapify(arr_type *arr[], int size_of_heap, int i)
         largest = right;
     }
 
-    // If largest is not root
+    // If largest is not root (корневой)
+    if(largest != i){
+        std::swap(arr[i], arr[largest]);
+        
+        // Recursively heapify the affected sub-tree
+        heapify(arr, size_of_heap, largest);
+    }
+}
 
+void heap_sort(arr_type arr[], int size_of_heap)
+{
+    //build heap (rearrange array) - переставить массив
+    for(int idx = size_of_heap / 2 - 1; idx >= 0; idx--){
+        heapify(arr, size_of_heap, idx);
+    }
 
+    // One by one extract an element from heap
+    for(int idx = size_of_heap - 1; idx > 0; idx--){
+        // Move current root to end
+        std::swap(arr[0], arr[idx]);
 
+        // Call max (вверхний) heapify on the reduced heap
+        heapify(arr, idx, 0);
 
-
+    }
 
 }
 
@@ -89,7 +108,9 @@ void print(int *arr, int number_out)
 int main(){
 
     arr_type arr[ARRAY_SIZE] = {1, 3, 4, 3, 2, 5, 7, 140, 2, 9};
-    insert_sort(arr, less, ARRAY_SIZE);
+    int n = sizeof(arr) / sizeof(arr[0]);
+    //insert_sort(arr, less, ARRAY_SIZE);
+    heap_sort(arr, n);
     print(arr, ARRAY_SIZE);
 
 
