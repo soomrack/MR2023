@@ -47,10 +47,13 @@ void sort(std::vector<int>& array, int initial, int last)
 		int* secondPart = new int[last - middle];
 
 		merge(array, initial, middle, last,  firstPart, secondPart);
+
+		delete[] firstPart;
+		delete[] secondPart;
 	}
 }
 
-void print_array(int size, std::vector<int>& array)
+void printArray(int size, std::vector<int>& array)
 {
 	std::cout << "\nSorted array: ";
 	for (int idx = 0; idx < size; idx++) {
@@ -65,7 +68,9 @@ void initialization()
 
 	sort(array, 0, size - 1);
 
-	print_array(size, array);
+	printArray(size, array);
+
+	
 }
 
 int main() 
