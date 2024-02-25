@@ -117,7 +117,7 @@ void merge_sort_main(auto& array, auto temp, size_t start_index, size_t end_inde
  */
 void merge_sort(auto& array, size_t start_index, size_t end_index) {
     using temp_type = remove_reference<decltype( array[0] )>::type;
-    int temp_size = end_index+1; 
+    size_t temp_size = end_index+1; 
     temp_type temp[temp_size];
     merge_sort_main(array, temp, start_index, end_index);
 }
@@ -130,15 +130,15 @@ void merge_sort(auto& array, size_t start_index, size_t end_index) {
  * @param array_size        The size of the array.
  * @param non_leaf_node     The index to start heapifying from.
  */
-void heapify(auto& array, int array_size, int non_leaf_node) { 
-    int largest = non_leaf_node; 
-    int l = 2*non_leaf_node + 1; 
-    int r = 2*non_leaf_node + 2; 
-    if (l < array_size && array[l] > array[largest]) { 
-        largest = l; 
+void heapify(auto& array, size_t array_size, size_t non_leaf_node) { 
+    size_t largest = non_leaf_node; 
+    size_t left = 2*non_leaf_node + 1; 
+    size_t right = 2*non_leaf_node + 2; 
+    if (left < array_size && array[left] > array[largest]) { 
+        largest = left; 
     } 
-    if (r < array_size && array[r] > array[largest]) { 
-        largest = r; 
+    if (right < array_size && array[right] > array[largest]) { 
+        largest = right; 
     } 
     if (largest != non_leaf_node) { 
         swap(array[largest], array[non_leaf_node]); 
@@ -154,10 +154,10 @@ void heapify(auto& array, int array_size, int non_leaf_node) {
  * @param array_size     The size of the array.
  */
 void heap_sort(auto& array, int array_size) { 
-    for (int non_leaf_node = floor(array_size/2) - 1; non_leaf_node >= 0; non_leaf_node--) { 
+    for (size_t non_leaf_node = floor(array_size/2) - 1; non_leaf_node >= 0; non_leaf_node--) { 
         heapify(array, array_size, non_leaf_node); 
     } 
-    for (int non_leaf_node = array_size - 1; non_leaf_node >= 0; non_leaf_node--) {
+    for (size_t non_leaf_node = array_size - 1; non_leaf_node >= 0; non_leaf_node--) {
         swap(array[0], array[non_leaf_node]);
         heapify(array, non_leaf_node, 0); 
     } 
@@ -170,10 +170,12 @@ void heap_sort(auto& array, int array_size) {
  * @param array          The array to be sorted.
  * @param array_size     The size of the array.
  */
-void insertion_sort(auto& array, int array_size) {
-    int temp;
-    int index_of_element_before;
-    for (int index_of_current_element = 1; index_of_current_element < array_size; index_of_current_element++) {
+void insertion_sort(auto& array, size_t array_size) {
+    using temp_type = remove_reference<decltype( array[0] )>::type;
+    temp_type temp;
+    size_t index_of_element_before;
+    for (size_t index_of_current_element = 1; index_of_current_element < array_size; index_of_current_element++) {
+
         temp =  array[index_of_current_element];
         index_of_element_before = index_of_current_element - 1;
 
