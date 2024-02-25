@@ -14,17 +14,9 @@ void print(const std::string &info, const std::vector<int> &vector) {
 void bubble_sort(std::vector<int> &vector) {
     const size_t size = vector.size();
 
-    int temp;
-
-    for (size_t idx = 0; idx < size; idx++) {
-        for (size_t item = 0; item < size - 1; item++) {
-            if (vector[item] > vector[item + 1]) {
-                temp = vector[item];
-                vector[item] = vector[item + 1];
-                vector[item + 1] = temp;
-            }
-        }
-    }
+    for (size_t idx = 0; idx < size; idx++)
+        for (size_t item = 0; item < size - 1; item++)
+            if (vector[item] > vector[item + 1]) std::swap(vector[item], vector[item + 1]);
 }
 
 
