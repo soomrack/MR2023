@@ -1,0 +1,84 @@
+#define SPEED_R         5
+#define SPEED_L         6
+#define DIR_R           4
+#define DIR_L           7 
+#define LIGHT_RIGHT     1
+#define LIGHT_LEFT      0
+
+
+void Setup() {   
+  pinMode(LIGHT_RIGHT, INPUT); // Turning the right light sensor pins into environmental perception mode
+  pinMode(LIGHT_LEFT, INPUT); // Turning the left light sensor pins into environmental perception mode
+  int freshold = 800; // Black color is more than 800, white is about 300, 
+                        // for greater confidence we will set the threshold to 800
+  while (true) { // We use a loop in the setup to disable console checking
+      // If both sensors see black, drive forward
+      if ((analogRead(LIGHT_RIGHT) > freshold)  &&  (analogRead(LIGHT_LEFT) > freshold)) {forward(255);}
+      // If the left sensor sees white, turn right
+      if ((analogRead(LIGHT_RIGHT) > freshold)  &&  (analogRead(LIGHT_LEFT) < freshold)) {right(255);}
+      // If the right sensor sees white, turn left
+      if ((analogRead(LIGHT_RIGHT) < freshold)  &&  (analogRead(LIGHT_LEFT) > freshold)) {left(255);}
+      // If both sensors are white, the search begins
+      if ((analogRead(LIGHT_RIGHT) < freshold)  &&  (analogRead(LIGHT_LEFT) < freshold)) {search();}  
+  }
+}
+
+void loop() {}
+
+void forward(byte speed){
+  digitalWrite(DIR_R, 1); // Set the direction of right motors to forward
+  digitalWrite(DIR_L, 1); // Set the direction of left motors to forward
+  analogWrite(SPEED_R, speed); // Set the speed of right motors to maximum
+  analogWrite(SPEED_L, speed); // Set the speed of left motors to maximum
+} 
+
+
+void stop() { 
+  analogWrite(SPEED_R, 0); // stop the right motors
+  analogWrite(SPEED_L, 0); // stop the left motors
+} 
+
+
+void left(byte speed) { 
+  digitalWrite(DIR_R, 0); // Set the direction of right motors to backward
+  digitalWrite(DIR_L, 1); // Set the direction of left motors to forward
+  analogWrite(SPEED_R, 255); // Set the speed of right motors to maximum
+  analogWrite(SPEED_L, speed); // Set the speed of left motors
+} 
+
+
+void right(byte speed) { 
+  digitalWrite(DIR_R, 1); // Set the direction of right motors to forward
+  digitalWrite(DIR_L, 0); // Set the direction of left motors to backward
+  analogWrite(SPEED_R, speed); // Set the speed of right motors
+  analogWrite(SPEED_L, 255); // Set the speed of left motors to maximum
+} 
+
+
+void back(byte speed) {
+  digitalWrite(DIR_R, 0); // Set the direction of right motors to backward
+  digitalWrite(DIR_L, 0); // Set the direction of left motors to backward
+  analogWrite(SPEED_R, speed); // Set the speed of right motors to maximum
+  analogWrite(SPEED_L, speed); // Set the speed of left motors to maximum
+}
+
+
+void search() {
+  back(255); 
+  delay(300);
+  // If this doesn't work, we start going in a spiral
+  byte speedIncrement = 100; // Set the initial forward speed when searching
+  while ((analogRead(LIGHT_RIGHT) < 800) && (analogRead(LIGHT_LEFT) < 800)) { // while both sensors are on white
+    delay(100); // this is the second part of the driving time forward
+    left(150); // make a left turn at a speed of 150
+    delay(100); // time to turn
+    forward(speedIncrement); // moving forward at a higher speed = further
+
+    // We set a speed limit, otherwise the sensors won't be able to detect the line in time.
+    if (speedIncrement > 150) { 
+      speedIncrement = 150; 
+    } 
+    speedIncrement += 1; // increase speed = increase radius of circle
+    delay(100); // this is the first part of the driving time forward
+  } 
+}
