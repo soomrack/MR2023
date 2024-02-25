@@ -17,7 +17,7 @@ void print_array(const std::vector <ArrayItem> &array)
 
 void swap_elements(ArrayItem &a, ArrayItem &b)
 {
-    int buff = a;
+    ArrayItem buff = a;
     a = b;
     b = buff;
 }
@@ -90,14 +90,86 @@ void sort_merge(std::vector <ArrayItem> &array, std::vector <ArrayItem> &array_s
 }
 
 
+void heap_tree(std::vector <ArrayItem> &array, size_t sub_size)
+{
+    size_t pair_count = 0;
+    size_t length = sub_size;
+    
+    if (sub_size % 2 == 0) {
+        if (array[sub_size - 1] > array[(sub_size - 2) / 2])
+            swap_elements(array[sub_size - 1], array[(sub_size - 2) / 2]);
+        
+        pair_count++;
+        length--;
+    }
+
+    if (sub_size <= 3) return;
+
+    size_t half = sub_size / 2;
+
+    for (size_t idx = length - 1; idx >= half; idx -= 2) {
+        if ((array[idx] > array[(idx - 2) / 2]) || (array[idx - 1] > array[(idx - 2) / 2])) {
+            if (array[idx] >= array[idx - 1])
+                swap_elements(array[idx], array[(idx - 2) / 2]);
+            else
+                swap_elements(array[idx - 1], array[(idx - 2) / 2]);
+        }
+
+        pair_count++;
+    }
+
+    size_t rem = half - pair_count;
+
+    for (size_t nod = rem - 1; nod >= 0; --nod) {
+        size_t idx = nod;
+        
+        while (2*idx + 1 <= sub_size - 1) {
+            if (2*idx + 2 >= sub_size) {
+                if (array[idx] < array[2*idx + 1])
+                    swap_elements(array[idx], array[2*idx + 1]);
+                
+                break;
+            }
+            
+            if ((array[idx] >= array[2*idx+ 1]) && (array[idx] >= array[2*idx + 2]))
+                break;
+
+            if ((array[idx] < array[2*idx + 2]) && (array[2*idx + 2] >= array[2*idx + 1])) {
+                swap_elements(array[idx], array[2*idx + 2]);
+                idx = 2*idx + 2;
+                continue;
+            } 
+            
+            if ((array[idx] < array[2*idx + 1]) && (array[2*idx + 1] >= array[2*idx + 2])){
+                swap_elements(array[idx], array[2*idx + 1]);
+                idx = 2*idx + 1;
+                continue;
+            }
+        }
+    }
+}
+
+
+void sort_heap(std::vector <ArrayItem> &array)
+{
+    for (size_t sub_size = array.size(); sub_size > 1; --sub_size) {
+        heap_tree(array, sub_size);
+
+        swap_elements(array[0], array[sub_size - 1]);
+        //print_array(array);
+    }
+}
+
+
 int main()
 {
     std::vector <ArrayItem> a = {5, 4, 1, 3, 7, 3};
     std::vector <ArrayItem> b;
     print_array(a);
-    std::cout << "______________" << std::endl;
     //sort_bubble(a);
-    sort_merge(a, b);
+    //sort_merge(a, b);
+    sort_heap(a);
+    std::cout << "______________" << std::endl;
     print_array(a);
 
     return 0;
