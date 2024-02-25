@@ -29,9 +29,7 @@ void bubble_sort(auto& array, int array_size) {
     for (size_t iteration = 0; iteration < unsorted; iteration++, unsorted--) {
         for (size_t element = 0; element < unsorted - 1; element++) {
             if (array[element] > array[element+1]) {
-                temp = array[element];
-                array[element] = array[element + 1];
-                array[element + 1] = temp; 
+                swap(array[element], array[element+1]);
             }
         }
     }
