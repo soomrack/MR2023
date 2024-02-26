@@ -33,7 +33,7 @@ const byte PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // default 111 i
 const byte PS_16 = (1 << ADPS2); // Set division coefficient to 16 => 1 MHz
 // ************************************
 
-void Setup() {
+void setup() {
     /*
     ***************************************
     * Changing the ADC frequency to speed up analogRead Part 2
@@ -119,10 +119,7 @@ void back(byte speed) {
 * Function for searching the path
 */ 
 void search() {
-  // At first we just assume that we went a little ahead of the road
-  back(255); // we reconfigure the engines for driving backwards
-  delay(300); // Let's go back
-  // If this doesn't work, we start going in a spiral
+  // Start going in a spiral
   byte speedIncrement = 100; // Set the initial forward speed when searching
   while ((analogRead(LIGHT_RIGHT) < 800) && (analogRead(LIGHT_LEFT) < 800)) { // while both sensors are on white
     delay(100); // this is the second part of the driving time forward
