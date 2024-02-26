@@ -6,7 +6,6 @@
 
 typedef int int_arr;
 
-int_arr buf_arr[ARRAY_SIZE];
 
 template <typename T>
 void bubble_sort(T *arr, size_t size) 
@@ -20,7 +19,7 @@ void bubble_sort(T *arr, size_t size)
 }
 
 
-void merg(int* arr, int begin, int end)
+void merg(int* arr, int_arr* buf_arr, int begin, int end)
 {
     int first_arr = begin;
     int mid = begin + (end - begin) / 2;
@@ -65,20 +64,17 @@ void merg(int* arr, int begin, int end)
 
 }
 
-void merge_sort(int *arr, int left, int right)
+void merge_sort(int *arr, int_arr *buf_arr, int left, int right)
 {
-    int temp = 0;
-    if(left < right){ //is the array single-element?
-        if(right - left == 1){ //is the array two-element?
-            if(arr[left] > arr[right]){
-                temp = arr[left];
-                arr[left] = arr[right];
-                arr[right] = temp;
+    if (left < right) { //array > 1
+        if(right - left == 1){ //array is two-element
+            if( arr[left] > arr[right]) {
+                std :: swap(arr[left], arr[right]);
             }
         } else {
-            merge_sort(arr, left, left + (right - left) / 2);
-            merge_sort(arr, (left + (right - left) / 2) + 1, right);
-            merg(arr, left, right);
+            merge_sort(arr, buf_arr, left, left + (right - left) / 2);
+            merge_sort(arr, buf_arr, (left + (right - left) / 2) + 1, right);
+            merg(arr, buf_arr, left, right);
         }
     }
 
@@ -90,8 +86,8 @@ void input(int *m, int &n)
     std :: cout << "Enter the number of array elements: ";
     std :: cin >> n;
     for(int i = 0; i < n; ++i){
-        std::cout << "a[" << i << "]= ";
-        std::cin >> m[i];
+        std :: cout << "a[" << i << "]= ";
+        std :: cin >> m[i];
     }
 }
 
@@ -99,10 +95,10 @@ void input(int *m, int &n)
 void print(int *m, int n)
 {
     for(int i = 0; i < n; i++){
-        std::cout << m[i] << " ";
+        std :: cout << m[i] << " ";
     }
 
-    std::cout<< std::endl;
+    std :: cout<< std :: endl;
 }
 
 
@@ -112,6 +108,8 @@ int main()
     int n;
     //int arr[ARRAY_SIZE];
 
+    int_arr buf_arr[ARRAY_SIZE];
+
     //input(arr, n);
     n = 10;
     int arr[ARRAY_SIZE] = {1, 3, 4, 3, 2, 5, 7, 140, 2, 9};
@@ -119,7 +117,7 @@ int main()
     std::cout << "The source array:" << std::endl;
     print(arr,n);
 
-    merge_sort(arr, 0, n - 1);
+    merge_sort(arr, buf_arr, 0, n - 1);
 
     //bubble_sort(arr, 10);
     std::cout << "Sorted array: " << std::endl;
