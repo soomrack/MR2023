@@ -116,9 +116,9 @@ void heap_tree(std::vector <ArrayItem> &array, size_t sub_size)
         }
     }
 
-    sub_size--;
+    sub_size = sub_size / 2;
 
-    } while (sub_size >= 5);
+    } while (sub_size > 2);
 }
 
 
