@@ -5,29 +5,24 @@
 #define SENSOR_RIGHT 1
 #define SENSOR_LEFT 0
 
-
-const byte PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // 128 => 125 KHz
-const byte PS_16 = (1 << ADPS2); // 16 => 1 MHz
-
-const int threshold = 800; // ~800 is tantamount to black, ~300 is tantamount to white
-const int speedDefault = 150;
+const int sensorThreshold = 800; // ~800 is tantamount to black, ~300 is tantamount to white
+const int searchDelay = 100;
+const int timeLimit = 10000;
+const byte speedDefault = 255;
 
 void setup() {
-    ADCSRA &= ~PS_128;
-    ADCSRA |= PS_16;
-
     pinMode(SENSOR_RIGHT, INPUT);
     pinMode(SENSOR_LEFT, INPUT);
 }
 
 void loop() {
-    if ((analogRead(SENSOR_RIGHT) > threshold) && (analogRead(SENSOR_LEFT) > threshold)) forward(255);
+    if ((analogRead(SENSOR_RIGHT) > sensorThreshold) && (analogRead(SENSOR_LEFT) > sensorThreshold)) forward(speedDefault);
 
-    if ((analogRead(SENSOR_RIGHT) > threshold) && (analogRead(SENSOR_LEFT) < threshold)) right(255);
+    if ((analogRead(SENSOR_RIGHT) > sensorThreshold) && (analogRead(SENSOR_LEFT) < sensorThreshold)) right(speedDefault);
 
-    if ((analogRead(SENSOR_RIGHT) < threshold) && (analogRead(SENSOR_LEFT) > threshold)) left(255);
+    if ((analogRead(SENSOR_RIGHT) < sensorThreshold) && (analogRead(SENSOR_LEFT) > sensorThreshold)) left(speedDefault);
 
-    if ((analogRead(SENSOR_RIGHT) < threshold) && (analogRead(SENSOR_LEFT) < threshold)) search();
+    if ((analogRead(SENSOR_RIGHT) < sensorThreshold) && (analogRead(SENSOR_LEFT) < sensorThreshold)) search();
 }
 
 void forward(byte speed) {
@@ -56,26 +51,29 @@ void right(byte speed) {
     analogWrite(SPEED_LEFT, 255);
 }
 
-void back(byte speed) {
-    digitalWrite(DIRECTION_RIGHT, 0);
-    digitalWrite(DIRECTION_LEFT, 0);
-    analogWrite(SPEED_RIGHT, speed);
-    analogWrite(SPEED_LEFT, speed);
-}
+// void back(byte speed) {
+//     digitalWrite(DIRECTION_RIGHT, 0);
+//     digitalWrite(DIRECTION_LEFT, 0);
+//     analogWrite(SPEED_RIGHT, speed);
+//     analogWrite(SPEED_LEFT, speed);
+// }
 
 void search() {
-    byte speedIncrement = 100;
+    byte speedSearching = 100;
+    int time = millis();
 
-    while ((analogRead(SENSOR_RIGHT) < threshold) && (analogRead(SENSOR_LEFT) < threshold)) {
-        delay(100);
-        left(speedDefault);
+    while ((analogRead(SENSOR_RIGHT) < sensorThreshold) && (analogRead(SENSOR_LEFT) < sensorThreshold)) {
+      if (millis() - time > timeLimit) exit(-1);
+            
+      delay(searchDelay);
+      left(speedSearching);
 
-        delay(100);
-        forward(speedIncrement);
+      delay(searchDelay);
+      forward(speedSearching);
 
-        if (speedIncrement > speedDefault) speedIncrement = speedDefault;
+      if (speedSearching > speedDefault) speedSearching = speedDefault;
+      speedSearching += 5;
 
-        speedIncrement += 1;
-        delay(100);
+      delay(searchDelay);
     }
 }
