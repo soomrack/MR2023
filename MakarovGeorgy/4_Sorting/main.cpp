@@ -55,14 +55,12 @@ void merge(std::vector<int> &vector, size_t start, size_t middle, size_t end) {
 }
 
 void merge_sort_body(std::vector<int> &vector, size_t start, size_t end) {
-    if (start < end) {
-        size_t middle = start + (end - start) / 2;
+    size_t middle = start + (end - start) / 2;
 
-        merge_sort_body(vector, start, middle);
-        merge_sort_body(vector, middle + 1, end);
+    merge_sort_body(vector, start, middle);
+    merge_sort_body(vector, middle + 1, end);
 
-        merge(vector, start, middle, end);
-    }
+    merge(vector, start, middle, end);
 }
 
 void merge_sort(std::vector<int> &vector) {
