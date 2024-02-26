@@ -70,10 +70,12 @@ void merge(size_t begin, size_t mid, size_t end, std::vector <ArrayItem> &array,
 
 void split_array(size_t begin, size_t end, std::vector <ArrayItem> &array, std::vector <ArrayItem> &array_sort)
 {
-    if ((end - begin) <= 1) return;
+    size_t arr_size = end - begin;
 
-    size_t mid = (size_t)(std::ceil((double)((end - begin) / 2.0)));
-    std::cout << begin << " " << mid << " " << end << std::endl;
+    if (arr_size <= 1) return;
+
+    size_t mid = arr_size - arr_size / 2;
+    //std::cout << begin << " " << mid << " " << end << std::endl;                //DEBUG
 
     split_array(begin, mid, array_sort, array);
     split_array(mid, end, array_sort, array);
