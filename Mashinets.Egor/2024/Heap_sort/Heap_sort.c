@@ -9,48 +9,48 @@ void swap(int *a, int *b) {
 }
 
 void print_arr(int *arr, int size) {
-  for (int i = 0; i < size; i++) {
-    printf("%d ", arr[i]);
+  for (int idx = 0; idx < size; idx++) {
+    printf("%d ", arr[idx]);
   }
   printf("\n");
 }
 
 void heap_sort(int *arr, int size) {
   // Строим бинарное дерево
-  for (int i = size / 2 - 1; i >= 0; i--) {
-    heapify(arr, size, i);
+  for (int idx = size / 2 - 1; idx >= 0; idx--) {
+    heapify(arr, size, idx);
   }
 
   // Извлекаем элементы из дерева в порядке убывания по индексу
-  for (int i = size - 1; i > 0; i--) {
-    swap(&arr[0], &arr[i]);
+  for (int idx = size - 1; idx > 0; idx--) {
+    swap(&arr[0], &arr[idx]);
 
-    heapify(arr, i, 0);
+    heapify(arr, idx, 0);
   }
 }
 
-void heapify(int *arr, int size, int i) {
-  int largest = i;
-  int l = 2 * i + 1;
-  int r = 2 * i + 2;
+void heapify(int *arr, int size, int idx) {
+  int largest = idx;
+  int left = 2 * idx + 1;
+  int right = 2 * idx + 2;
 
-  if (l < size && arr[l] > arr[largest]) {
-    largest = l;
+  if (left < size && arr[left] > arr[largest]) {
+    largest = left;
   }
 
-  if (r < size && arr[r] > arr[largest]) {
-    largest = r;
+  if (right < size && arr[right] > arr[largest]) {
+    largest = right;
   }
 
-  if (largest != i) {
-    swap(&arr[i], &arr[largest]);
-    heapify(arr, size, i);
+  if (largest != idx) {
+    swap(&arr[idx], &arr[largest]);
+    heapify(arr, size, idx);
   }
 }
 
 int main() {
   int arr[] = {100, 7, 8, -9, 1, 5};
-  size_t size = sizeof(arr) / sizeof(arr[0]);
+  int size = sizeof(arr) / sizeof(arr[0]);
 
   heap_sort(arr, size);
 

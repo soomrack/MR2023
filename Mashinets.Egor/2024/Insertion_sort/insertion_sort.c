@@ -1,23 +1,23 @@
 #include <stdio.h>
 
-void insertionSort(int *array, size_t size) {
-    for (int i = 1; i < size; i++) {
-        int key = array[i];
-        int j = i - 1;
+void insertionSort(int *array, size_t size) { //типы данных + переимеовать i j 
+    for (size_t idx = 1; idx < size; idx++) {
+        int temp = array[idx];
+        int current_idx = idx - 1;
 
-        while (j >= 0 && array[j] > key) {
-            array[j + 1] = array[j];
-            j--;
+        while (current_idx >= 0 && array[current_idx] > temp) {
+            array[current_idx + 1] = array[current_idx];
+            current_idx--;
         }
 
 
-        array[j + 1] = key;
+        array[current_idx + 1] = temp;
     }
 }
 
 void print_arr(int *array, size_t size){
-    for(int i = 0; i < size; i++){
-        printf("%d ", array[i]);
+    for(size_t idx = 0; idx < size; idx++){
+        printf("%d ", array[idx]);
     }
     printf("\n");
 }
