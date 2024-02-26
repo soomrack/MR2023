@@ -6,19 +6,19 @@ void swap(int *a, int *b){
     *b = temp;
 }
 
-void bubble_sort(int *arr, size_t size){
-    for(int i = 0; i < size; i++){
-        for(int j = 0; j < size; j++){
-            if(j < size-1 && arr[j]>arr[j+1]){
-                swap(&arr[j], &arr[j+1]);
+void bubble_sort(int *arr, size_t size){ // одинаковые типы данных current
+    for(size_t idx = 0; idx < size; idx++){
+        for(size_t current_idx = 0; current_idx < size; current_idx++){
+            if(current_idx < size-1 && arr[current_idx]>arr[current_idx+1]){
+                swap(&arr[current_idx], &arr[current_idx+1]);
             }
         }
     }
 }
 
 void print_arr(int *arr, size_t size){
-    for(int i = 0; i < size; i++){
-        printf("%d ", arr[i]);
+    for(size_t idx = 0; idx < size; idx++){
+        printf("%d ", arr[idx]);
     }
     printf("\n");
 }
