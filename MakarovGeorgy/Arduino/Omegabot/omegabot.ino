@@ -12,25 +12,23 @@ const byte PS_16 = (1 << ADPS2); // 16 => 1 MHz
 const int threshold = 800; // ~800 is tantamount to black, ~300 is tantamount to white
 const int speedDefault = 150;
 
-void Setup() {
+void setup() {
     ADCSRA &= ~PS_128;
     ADCSRA |= PS_16;
 
     pinMode(SENSOR_RIGHT, INPUT);
     pinMode(SENSOR_LEFT, INPUT);
-
-    while (true) {
-        if ((analogRead(SENSOR_RIGHT) > threshold) && (analogRead(SENSOR_LEFT) > threshold)) forward(255);
-
-        if ((analogRead(SENSOR_RIGHT) > threshold) && (analogRead(SENSOR_LEFT) < threshold)) right(255);
-
-        if ((analogRead(SENSOR_RIGHT) < threshold) && (analogRead(SENSOR_LEFT) > threshold)) left(255);
-
-        if ((analogRead(SENSOR_RIGHT) < threshold) && (analogRead(SENSOR_LEFT) < threshold)) search();
-    }
 }
 
-void loop() {}
+void loop() {
+    if ((analogRead(SENSOR_RIGHT) > threshold) && (analogRead(SENSOR_LEFT) > threshold)) forward(255);
+
+    if ((analogRead(SENSOR_RIGHT) > threshold) && (analogRead(SENSOR_LEFT) < threshold)) right(255);
+
+    if ((analogRead(SENSOR_RIGHT) < threshold) && (analogRead(SENSOR_LEFT) > threshold)) left(255);
+
+    if ((analogRead(SENSOR_RIGHT) < threshold) && (analogRead(SENSOR_LEFT) < threshold)) search();
+}
 
 void forward(byte speed) {
     digitalWrite(DIRECTION_RIGHT, 1);
