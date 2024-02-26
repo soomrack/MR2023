@@ -1,81 +1,102 @@
-#define SPEED_RIGHT 5
-#define SPEED_LEFT 6
-#define DIRECTION_RIGHT 4
-#define DIRECTION_LEFT 7
-#define SENSOR_RIGHT 1
-#define SENSOR_LEFT 0
+#define PIN_SPEED_R 5
+#define PIN_SPEED_L 6
+#define PIN_DIR_R 4
+#define PIN_DIR_L 7
+
+#define PIN_SENSOR_R 1
+#define PIN_SENSOR_L 0
+
+#define PIN_BUZZER 8
 
 
-const byte PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // 128 => 125 KHz
-const byte PS_16 = (1 << ADPS2); // 16 => 1 MHz
+const byte SPEED_DEFAULT = 255;
 
-const int threshold = 800; // ~800 is tantamount to black, ~300 is tantamount to white
-const int speedDefault = 150;
+const int SENSOR_THRESHOLD = 800; // ~800 is tantamount to black, ~300 is tantamount to white
+
+const int TIME_DELAY = 100;  
+const int TIME_LIMIT = 10000; 
+
 
 void setup() {
-    ADCSRA &= ~PS_128;
-    ADCSRA |= PS_16;
-
-    pinMode(SENSOR_RIGHT, INPUT);
-    pinMode(SENSOR_LEFT, INPUT);
+  pinMode(PIN_SENSOR_R, INPUT);
+  pinMode(PIN_SENSOR_L, INPUT);
+  pinMode(PIN_BUZZER, OUTPUT);
 }
+
 
 void loop() {
-    if ((analogRead(SENSOR_RIGHT) > threshold) && (analogRead(SENSOR_LEFT) > threshold)) forward(255);
+  if ((analogRead(PIN_SENSOR_R) > SENSOR_THRESHOLD) && 
+      (analogRead(PIN_SENSOR_L) > SENSOR_THRESHOLD)) 
+        move_forward(SPEED_DEFAULT);
 
-    if ((analogRead(SENSOR_RIGHT) > threshold) && (analogRead(SENSOR_LEFT) < threshold)) right(255);
+  if ((analogRead(PIN_SENSOR_R) > SENSOR_THRESHOLD) && 
+    (analogRead(PIN_SENSOR_L) < SENSOR_THRESHOLD)) 
+        turn_right(SPEED_DEFAULT);
 
-    if ((analogRead(SENSOR_RIGHT) < threshold) && (analogRead(SENSOR_LEFT) > threshold)) left(255);
+  if ((analogRead(PIN_SENSOR_R) < SENSOR_THRESHOLD) && 
+    (analogRead(PIN_SENSOR_L) > SENSOR_THRESHOLD)) 
+        turn_left(SPEED_DEFAULT);
 
-    if ((analogRead(SENSOR_RIGHT) < threshold) && (analogRead(SENSOR_LEFT) < threshold)) search();
+  if ((analogRead(PIN_SENSOR_R) < SENSOR_THRESHOLD) && 
+    (analogRead(PIN_SENSOR_L) < SENSOR_THRESHOLD)) 
+      search();
 }
 
-void forward(byte speed) {
-    digitalWrite(DIRECTION_RIGHT, 1);
-    digitalWrite(DIRECTION_LEFT, 1);
-    analogWrite(SPEED_RIGHT, speed);
-    analogWrite(SPEED_LEFT, speed);
+
+void move_forward(byte speed) {
+  digitalWrite(PIN_DIR_R, 1);
+  digitalWrite(PIN_DIR_L, 1);
+  analogWrite(PIN_SPEED_R, speed);
+  analogWrite(PIN_SPEED_L, speed);
 }
 
-void stop() {
-    analogWrite(SPEED_RIGHT, 0);
-    analogWrite(SPEED_LEFT, 0);
+void move_backward(byte speed) {
+    digitalWrite(PIN_DIR_R, 0);
+    digitalWrite(PIN_DIR_L, 0);
+    analogWrite(PIN_SPEED_R, speed);
+    analogWrite(PIN_SPEED_L, speed);
 }
 
-void left(byte speed) {
-    digitalWrite(DIRECTION_RIGHT, 0);
-    digitalWrite(DIRECTION_LEFT, 1);
-    analogWrite(SPEED_RIGHT, 255);
-    analogWrite(SPEED_LEFT, speed);
+void turn_left(byte speed) {
+    digitalWrite(PIN_DIR_R, 0);
+    digitalWrite(PIN_DIR_L, 1);
+    analogWrite(PIN_SPEED_R, 255);
+    analogWrite(PIN_SPEED_L, speed);
 }
 
-void right(byte speed) {
-    digitalWrite(DIRECTION_RIGHT, 1);
-    digitalWrite(DIRECTION_LEFT, 0);
-    analogWrite(SPEED_RIGHT, speed);
-    analogWrite(SPEED_LEFT, 255);
+void turn_right(byte speed) {
+    digitalWrite(PIN_DIR_R, 1);
+    digitalWrite(PIN_DIR_L, 0);
+    analogWrite(PIN_SPEED_R, speed);
+    analogWrite(PIN_SPEED_L, 255);
 }
 
-void back(byte speed) {
-    digitalWrite(DIRECTION_RIGHT, 0);
-    digitalWrite(DIRECTION_LEFT, 0);
-    analogWrite(SPEED_RIGHT, speed);
-    analogWrite(SPEED_LEFT, speed);
-}
 
 void search() {
-    byte speedIncrement = 100;
+    byte speedSearching = 100;
+    int time = millis();
 
-    while ((analogRead(SENSOR_RIGHT) < threshold) && (analogRead(SENSOR_LEFT) < threshold)) {
-        delay(100);
-        left(speedDefault);
+    while ((analogRead(PIN_SENSOR_R) < SENSOR_THRESHOLD) && (analogRead(PIN_SENSOR_L) < SENSOR_THRESHOLD)) {
+      if (millis() - time > TIME_LIMIT) {
+        analogWrite(PIN_SPEED_R, 0);
+        analogWrite(PIN_SPEED_L, 0);
 
-        delay(100);
-        forward(speedIncrement);
+        digitalWrite(PIN_BUZZER, 1);
+        delay(2000);
+        digitalWrite(PIN_BUZZER, 0);
 
-        if (speedIncrement > speedDefault) speedIncrement = speedDefault;
+        exit(-1);
+      }
+            
+      delay(TIME_DELAY);
+      turn_left(speedSearching);
 
-        speedIncrement += 1;
-        delay(100);
+      delay(TIME_DELAY);
+      move_forward(speedSearching);
+
+      if (speedSearching > SPEED_DEFAULT) speedSearching = SPEED_DEFAULT;
+      speedSearching += 5;
+
+      delay(TIME_DELAY);
     }
 }

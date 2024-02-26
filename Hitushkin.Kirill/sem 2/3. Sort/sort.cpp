@@ -11,13 +11,13 @@ void swap(int* array, const int one, const int two)
 
 void bubble_sort(int* array, int size)
 {
-    for (int i = 0; i + 1 < size; i++)
+    for (int idx_one = 0; idx_one + 1 < size; idx_one++)
     {
-        for (int j = 0; j + 1 < size - i; j++)
+        for (int idx_two = 0; idx_two + 1 < size - idx_one; idx_two++)
         {
-            if (array[j] > array[j + 1])
+            if (array[idx_two] > array[idx_two + 1])
             {
-                swap(array, j, j + 1);
+                swap(array, idx_two, idx_two + 1);
             }
         }
     }
@@ -26,18 +26,18 @@ void bubble_sort(int* array, int size)
 
 void insertion_sort(int* array, const int size)
 {
-    for (int i = 1; i < size; i++) 
+    for (int idx_one = 1; idx_one < size; idx_one++) 
     {
-        int key = array[i];
-        int j = i - 1;
+        int key = array[idx_one];
+        int idx_two = idx_one - 1;
 
-        while (j >= 0 && array[j] > key) 
+        while (idx_two >= 0 && array[idx_two] > key) 
         {
-            array[j + 1] = array[j];
-            j--;
+            array[idx_two + 1] = array[idx_two];
+            idx_two--;
         }
 
-        array[j + 1] = key;
+        array[idx_two + 1] = key;
     }
 }
 
