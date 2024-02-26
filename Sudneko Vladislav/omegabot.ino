@@ -9,6 +9,7 @@
 #define DIR_L           7 
 #define LIGHT_RIGHT     1
 #define LIGHT_LEFT      0
+#define SOUND           8
 
 /*
 ***************************************
@@ -45,6 +46,7 @@ void setup() {
 
     pinMode(LIGHT_RIGHT, INPUT); // Turning the right light sensor pins into environmental perception mode
     pinMode(LIGHT_LEFT, INPUT); // Turning the left light sensor pins into environmental perception mode
+    pinMode(SOUND, OUTPUT);
     int freshold = 800; // Black color is more than 800, white is about 300, 
                         // for greater confidence we will set the threshold to 800
     while (true) { // We use a loop in the setup to disable console checking
@@ -80,6 +82,17 @@ void forward(byte speed){
 void stop() { 
   analogWrite(SPEED_R, 0); // stop the right motors
   analogWrite(SPEED_L, 0); // stop the left motors
+  
+  while (true) {
+    digitalWrite(SOUND, 1);
+    if ((analogRead(LIGHT_RIGHT) > 800)  ||  (analogRead(LIGHT_LEFT) > 800)) {
+      digitalWrite(SOUND, 0);
+      break;
+    }
+    delay(300);
+    digitalWrite(SOUND, 0);
+    delay(300);
+  };
 } 
 
 /* 
@@ -120,6 +133,7 @@ void back(byte speed) {
 */ 
 void search() {
   // Start going in a spiral
+  unsigned long time = millis(); // time from start
   byte speedIncrement = 100; // Set the initial forward speed when searching
   while ((analogRead(LIGHT_RIGHT) < 800) && (analogRead(LIGHT_LEFT) < 800)) { // while both sensors are on white
     delay(100); // this is the second part of the driving time forward
@@ -132,6 +146,10 @@ void search() {
       speedIncrement = 150; 
     } 
     speedIncrement += 1; // increase speed = increase radius of circle
+    if (millis() - time > 7000) { // if robot doesn't see line for 7 sec 
+      stop();
+      break;
+    }
     delay(100); // this is the first part of the driving time forward
   } 
 }
