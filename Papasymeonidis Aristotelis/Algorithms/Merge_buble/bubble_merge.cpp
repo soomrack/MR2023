@@ -18,66 +18,49 @@ void bubble_sort(T *arr, size_t size)
     }
 }
 
-
-void merg(int* arr, int_arr* buf_arr, int begin, int end)
-{
+void merge(int* arr, int* left_arr, int* right_arr, int begin, int mid, int end) {
     int first_arr = begin;
-    int mid = begin + (end - begin) / 2;
     int second_arr = mid + 1;
-    int k = 0;
-    memset(buf_arr, 0, ARRAY_SIZE);
+    int k = begin;
 
-    while (first_arr <= mid && second_arr <= end)
-    {
-        if(arr[first_arr] <= arr[second_arr]){
-            buf_arr[k] = arr[first_arr];
+    while (first_arr <= mid && second_arr <= end) {
+        if (left_arr[first_arr - begin] <= right_arr[second_arr - mid - 1]) {
+            arr[k] = left_arr[first_arr - begin];
             first_arr++;
-        }else {
-            buf_arr[k] = arr[second_arr];
+        } else {
+            arr[k] = right_arr[second_arr - mid - 1];
             second_arr++;
         }
         k++;
     }
-    
 
-    /*
-    memcpy()
-    */
-    while (first_arr <= mid)
-    {
-        buf_arr[k] = arr[first_arr];
+    while (first_arr <= mid) {
+        arr[k] = left_arr[first_arr - begin];
         first_arr++;
         k++;
     }
 
-    while (second_arr <= end)
-    {
-        buf_arr[k] = arr[second_arr];
+    while (second_arr <= end) {
+        arr[k] = right_arr[second_arr - mid - 1];
         second_arr++;
         k++;
     }
-
-    for(first_arr = 0; first_arr < k; first_arr++){
-        arr[begin] = buf_arr[first_arr];
-        begin++;
-    }    
-
 }
 
-void merge_sort(int *arr, int_arr *buf_arr, int left, int right)
-{
-    if (left < right) { //array > 1
-        if(right - left == 1){ //array is two-element
-            if( arr[left] > arr[right]) {
-                std :: swap(arr[left], arr[right]);
-            }
-        } else {
-            merge_sort(arr, buf_arr, left, left + (right - left) / 2);
-            merge_sort(arr, buf_arr, (left + (right - left) / 2) + 1, right);
-            merg(arr, buf_arr, left, right);
-        }
-    }
+void merge_sort(int* arr, int* left_arr, int* right_arr, int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
 
+        merge_sort(arr, left_arr, right_arr, left, mid);
+        merge_sort(arr, left_arr, right_arr, mid + 1, right);
+
+        // Copy the left and right halves to separate arrays
+        std::copy(arr + left, arr + mid + 1, left_arr);
+        std::copy(arr + mid + 1, arr + right + 1, right_arr);
+
+        // Merge the two halves directly into arr
+        merge(arr, left_arr, right_arr, left, mid, right);
+    }
 }
 
 
@@ -117,7 +100,12 @@ int main()
     std::cout << "The source array:" << std::endl;
     print(arr,n);
 
-    merge_sort(arr, buf_arr, 0, n - 1);
+    int left_arr[ARRAY_SIZE / 2];
+    int right_arr[ARRAY_SIZE - ARRAY_SIZE / 2];
+
+    merge_sort(arr, left_arr, right_arr, 0, ARRAY_SIZE - 1);
+
+    
 
     //bubble_sort(arr, 10);
     std::cout << "Sorted array: " << std::endl;
