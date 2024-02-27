@@ -11,13 +11,13 @@ void swap(int* array, const int one, const int two)
 
 void bubble_sort(int* array, int size)
 {
-    for (int idx_one = 0; idx_one + 1 < size; idx_one++)
+    for (int sorted_size = 0; sorted_size + 1 < size; sorted_size++)
     {
-        for (int idx_two = 0; idx_two + 1 < size - idx_one; idx_two++)
+        for (int idx = 0; idx + 1 < size - sorted_size; idx++)
         {
-            if (array[idx_two] > array[idx_two + 1])
+            if (array[idx] > array[idx + 1])
             {
-                swap(array, idx_two, idx_two + 1);
+                swap(array, idx, idx + 1);
             }
         }
     }
@@ -26,18 +26,18 @@ void bubble_sort(int* array, int size)
 
 void insertion_sort(int* array, const int size)
 {
-    for (int idx_one = 1; idx_one < size; idx_one++) 
+    for (int sort_idx = 1; sort_idx < size; sort_idx++) 
     {
-        int key = array[idx_one];
-        int idx_two = idx_one - 1;
+        int key = array[sort_idx];
+        int back_idx = sort_idx - 1;
 
-        while (idx_two >= 0 && array[idx_two] > key) 
+        while (back_idx >= 0 && array[back_idx] > key) 
         {
-            array[idx_two + 1] = array[idx_two];
-            idx_two--;
+            array[back_idx + 1] = array[back_idx];
+            back_idx--;
         }
 
-        array[idx_two + 1] = key;
+        array[back_idx + 1] = key;
     }
 }
 
@@ -98,11 +98,14 @@ void heap_sort(int* array, int size)
 
 void merge_sort(int* array, int size)
 {
-    int* sorted_block = new int[size];
+    int* temp_array = new int[size];
+    
+    int* sorted_array = temp_array;
+    int* output_array = array;
     
     for (int block_size = 1; block_size < size; block_size *= 2)
     {
-        for (int block_idx = 0; block_idx < size - block_size; block_idx += 2 * block_size)
+        for (int block_idx = 0; block_idx < size; block_idx += 2 * block_size)
         {
             int left_idx = 0;
             int right_idx = 0;
@@ -115,38 +118,41 @@ void merge_sort(int* array, int size)
 
             while (left_border + left_idx < mid_border && mid_border + right_idx < right_border)
             {
-                if (array[left_border + left_idx] < array[mid_border + right_idx])
+                if (output_array[left_border + left_idx] < output_array[mid_border + right_idx])
                 {
-                    sorted_block[left_idx + right_idx] = array[left_border + left_idx];
+                    sorted_array[left_border + left_idx + right_idx] = output_array[left_border + left_idx];
                     left_idx++;
                 }
                 else
                 {
-                    sorted_block[left_idx + right_idx] = array[mid_border + right_idx];
+                    sorted_array[left_border + left_idx + right_idx] = output_array[mid_border + right_idx];
                     right_idx++;
                 }
             }
 
             while (left_border + left_idx < mid_border)
             {
-                sorted_block[left_idx + right_idx] = array[left_border + left_idx];
+                sorted_array[left_border + left_idx + right_idx] = output_array[left_border + left_idx];
                 left_idx++;
             }
 
             while (mid_border + right_idx < right_border)
             {
-                sorted_block[left_idx + right_idx] = array[mid_border + right_idx];
+                sorted_array[left_border + left_idx + right_idx] = output_array[mid_border + right_idx];
                 right_idx++;
             }
-
-            for (int merge_idx = 0; merge_idx < left_idx + right_idx; merge_idx++)
-            {
-                array[left_border + merge_idx] = sorted_block[merge_idx];
-            }
         }
+
+        std::swap(output_array, sorted_array);
     }
 
-    delete[] sorted_block;
+    if (output_array != array) 
+    {
+        std::swap(output_array, sorted_array);
+        memcpy(output_array, sorted_array, size * sizeof(int));
+    }
+
+    delete[] temp_array;
 }
 
 
