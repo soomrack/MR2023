@@ -61,31 +61,31 @@ void sort_insertion(ArrayItem array[], size_t size)
             r_count++;
         }
     }
-}
+}*/
 
 
-void split_array(size_t begin, size_t end, std::vector <ArrayItem> &array, std::vector <ArrayItem> &array_sort)
+void split_array(int begin, int end, ArrayItem array[], ArrayItem array_sort[])
 {
-    size_t arr_size = end - begin;
+    int arr_size = end - begin;
 
     if (arr_size <= 1) return;
 
-    size_t mid = arr_size - arr_size / 2;
-    //std::cout << begin << " " << mid << " " << end << std::endl;                //DEBUG
+    int mid = arr_size - arr_size / 2;
+    std::cout << begin << " " << mid << " " << end << std::endl;                //DEBUG
 
     split_array(begin, mid, array_sort, array);
     split_array(mid, end, array_sort, array);
 
-    merge(begin, mid, end, array, array_sort);
+    //merge(begin, mid, end, array, array_sort);
 }
 
 
-void sort_merge(std::vector <ArrayItem> &array, std::vector <ArrayItem> &array_sort)
+void sort_merge(ArrayItem array[], int size, ArrayItem array_sort[])
 {
-    copy_array(array, array_sort);
+    copy_array(array, array_sort, size);
 
-    split_array(0, array.size(), array, array_sort);
-} */
+    split_array(0, size, array, array_sort);
+}
 
 
 void rebuild_tree(ArrayItem array[], size_t sorted)
@@ -163,15 +163,15 @@ void sort_heap(ArrayItem array[], size_t size)
 
 int main()
 {
-    ArrayItem a[] = {5, 4, 1, 3, 7, 3, 2, 0, 9, 6, 8};
-    size_t a_size = 11;
-    ArrayItem b[11];
+    ArrayItem a[] = {5, 4, 1, 3, 7, 3};
+    size_t a_size = 6;
+    ArrayItem b[6];
     print_array(a, a_size);
     std::cout << "______________" << std::endl;
     //sort_bubble(a, a_size);
     //sort_insertion(a, a_size);
-    //sort_merge(a, a_size, b);
-    sort_heap(a, a_size);
+    sort_merge(a, a_size, b);
+    //sort_heap(a, a_size);
     std::cout << "______________" << std::endl;
     print_array(a, a_size);
 
