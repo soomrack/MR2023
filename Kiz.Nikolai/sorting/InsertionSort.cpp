@@ -1,0 +1,22 @@
+#include "AbstractSort.hpp"
+
+template <typename T>
+class InsertionSort final: public AbstractSort<T> {
+    using AbstractSort<T>::AbstractSort;
+
+public:
+    void sort() final {
+        for (size_t sorted = 1; sorted < this->sz; ++sorted) { 
+            size_t temp = sorted;
+            for (size_t idx = sorted-1; idx >= 0; --idx) {
+                if (this->arr[idx] > this->arr[sorted]) {
+                     this->swap(idx, sorted); 
+                     --sorted;
+                    }
+                else break;
+            }
+            sorted = temp;
+        }
+    }
+};  //  Class InsertionSort
+
