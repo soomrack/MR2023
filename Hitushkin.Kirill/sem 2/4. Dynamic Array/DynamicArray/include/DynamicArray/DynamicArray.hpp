@@ -5,7 +5,7 @@
 #include <initializer_list>
 #include <iostream>
 
-namespace dinar
+namespace DynArr
 {
     template <typename Type>
     class DynamicArray

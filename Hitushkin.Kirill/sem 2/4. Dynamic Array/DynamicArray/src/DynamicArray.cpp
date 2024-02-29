@@ -2,7 +2,7 @@
 #include <cmath>
 #include <cstdint>
 
-namespace dinar
+namespace DynArr
 {
     template <typename Type>
     size_t DynamicArray<Type>::capacity_calc(size_t capacity)
