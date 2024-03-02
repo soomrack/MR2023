@@ -47,7 +47,7 @@ void sort_insertion(ArrayItem array[], size_t size)
 }
 
 
-/* void merge(size_t begin, size_t mid, size_t end, std::vector <ArrayItem> &array, std::vector <ArrayItem> &array_sort)
+void merge(size_t begin, size_t mid, size_t end, ArrayItem array[], ArrayItem array_sort[])
 {
     size_t l_count = begin;
     size_t r_count = mid;
@@ -61,22 +61,17 @@ void sort_insertion(ArrayItem array[], size_t size)
             r_count++;
         }
     }
-}*/
+}
 
 
 void split_array(int begin, int end, ArrayItem array[], ArrayItem array_sort[])
 {
-    int arr_size = end - begin;
+    if (end - begin <= 1) return;
 
-    if (arr_size <= 1) return;
+    split_array(begin, begin + (end - begin) / 2, array_sort, array);
+    split_array(begin + (end - begin) / 2, end, array_sort, array);
 
-    int mid = arr_size - arr_size / 2;
-    std::cout << begin << " " << mid << " " << end << std::endl;                //DEBUG
-
-    split_array(begin, mid, array_sort, array);
-    split_array(mid, end, array_sort, array);
-
-    //merge(begin, mid, end, array, array_sort);
+    merge(begin, begin + (end - begin) / 2, end, array, array_sort);
 }
 
 
@@ -163,9 +158,9 @@ void sort_heap(ArrayItem array[], size_t size)
 
 int main()
 {
-    ArrayItem a[] = {5, 4, 1, 3, 7, 3};
-    size_t a_size = 6;
-    ArrayItem b[6];
+    ArrayItem a[] = {5, 4, 1, 3, 7, 3, 9, 0};
+    size_t a_size = 8;
+    ArrayItem b[8];
     print_array(a, a_size);
     std::cout << "______________" << std::endl;
     //sort_bubble(a, a_size);
