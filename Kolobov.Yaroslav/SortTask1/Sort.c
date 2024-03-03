@@ -1,127 +1,114 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 
-typedef int MassData;
-
-struct Array {
-    size_t quantity;
-    MassData *data;
-};
-
-struct Array array_create(const size_t number_of_elements) 
+void mass_print(int array[], const int number_of_elemnts)
 {
-    struct Array A = {.quantity = number_of_elements, .data = NULL};
-
-    A.data = malloc(A.quantity * sizeof(MassData));
-
-    if (A.data == NULL) {
-        printf("Allocation error\n");
+    for (int printed_elements = 0; printed_elements < number_of_elemnts; printed_elements++) {
+        printf("%d", array[printed_elements]);
     }
-
-    return A;
+    printf("\n");
 }
 
-
-struct Array array_fill(const size_t number_of_elements, const MassData *data) 
+void bubble_sort(int array[], const int number_of_elements)
 {
-    struct Array Mass;
-    
-    Mass = array_create(number_of_elements);
-    if (Mass.data == NULL) {
-        printf("Allocation error\n");
-    }
-    memcpy(Mass.data, data, number_of_elements * sizeof(MassData));
 
-    return Mass;
-}
-
-
-void mass_print(const struct Array Mass) 
-{
-    int printed_elements;
-    
-    for (printed_elements = 0; printed_elements < Mass.quantity; ++printed_elements) {
-        printf("%i\t", Mass.data[printed_elements]);
-        fflush(stdout);
-        
+    for (int sorted_elemnts = 0; sorted_elemnts < number_of_elements - 1; ++sorted_elemnts) {
+            for (int sorted_elements = 0; sorted_elements < number_of_elements; ++sorted_elements) {
+                int buffer = array[sorted_elements];
+                
+                if (array[sorted_elements] > array[sorted_elements + 1]) {
+                    array[sorted_elements] = array[sorted_elements + 1];
+                    array[sorted_elements + 1] = buffer;
+                }
+            }
     }
 }
 
 
-struct Array bubble_sort(const struct Array mass) 
+void merge(int array[], int l_idx, int m_idx, int r_idx)
 {
-    int sorted_elements;
-    int m;
-    struct Array sorted_mass;
+    int left_array_lenght = m_idx - l_idx + 1;
+    int right_array_lenght = r_idx - m_idx;
 
-    sorted_mass = mass;
+    int* left_array;
+    int* right_array;
 
-    for (sorted_elements = 0; sorted_elements < sorted_mass.quantity - 1; ++sorted_elements) {
-        for (m = 0; m < sorted_mass.quantity - 1; ++m) {
-            int buf = sorted_mass.data[m];
-            if (sorted_mass.data[m] > sorted_mass.data[m + 1]) {
-                sorted_mass.data[m] = sorted_mass.data[m + 1];
-                sorted_mass.data[m + 1] = buf; 
-            } 
+    left_array = malloc(left_array_lenght * sizeof(int));
+    right_array = malloc(right_array_lenght * sizeof(int));
 
+    if (left_array == NULL || right_array == NULL) {
+        printf("Memory allocation error\n");
+        exit(1);
+    }
+
+    int l_arr_counter, r_arr_counter, full_arr_counter;
+
+    for (l_arr_counter = 0; l_arr_counter < left_array_lenght; l_arr_counter++) {
+        left_array[l_arr_counter] = array[l_idx + l_arr_counter];
+    }
+
+    for (r_arr_counter = 0; r_arr_counter < right_array_lenght; r_arr_counter++) {
+        right_array[r_arr_counter] = array[m_idx + 1 + r_arr_counter];
+    }
+
+    l_arr_counter = 0;
+    r_arr_counter = 0;
+    full_arr_counter = l_idx;
+
+    while (r_arr_counter < right_array_lenght && l_arr_counter < left_array_lenght) {
+        if (right_array[r_arr_counter] < left_array[l_arr_counter]) {
+            array[full_arr_counter] = right_array[r_arr_counter];
+            ++r_arr_counter;
+        } else {
+            array[full_arr_counter] = left_array[l_arr_counter];
+            ++l_arr_counter;
         }
+        ++full_arr_counter;
     }
 
-    return sorted_mass;
+    while (r_arr_counter < right_array_lenght) {
+        array[full_arr_counter] = right_array[r_arr_counter];
+        ++r_arr_counter;
+        ++full_arr_counter;
+    }
+
+    while (l_arr_counter < left_array_lenght) {
+        array[full_arr_counter] = left_array[l_arr_counter];
+        ++l_arr_counter;
+        ++full_arr_counter;
+    }
+
+    left_array = NULL;
+    right_array = NULL;
 }
 
 
-struct Array merge_sort(const struct Array mass)
+void merge_sort_recursion(int array[], int l_idx, int r_idx)
 {
+    if (l_idx < r_idx) {
 
-}
-
-
-void merge_sort(const struct Array mass)
-{
-    int l_idx = 0;
-    int r_idx = mass.quantity - 1;
     int m_idx = l_idx + (r_idx - l_idx) / 2;
 
-    struct Array tmp_left = array_create(l_idx + m_idx);
-    struct Array tmp_right = array_create(r_idx - m_idx + 1);
+    merge_sort_recursion(array, l_idx, m_idx);
+    merge_sort_recursion(array, m_idx + 1, r_idx);
 
-    for (int i = 0; i <= m_idx; ++i){
-        tmp_left.data[i] = mass.data[i];
-    }
-
-    for (int i = m_idx + 1; i <= r_idx; ++i){
-        int k = 0;
-        tmp_right.data[k] = mass.data[i];
-        ++k;
+    merge(array, l_idx, m_idx, r_idx);
     }
 }
 
-
-// 1 5 4 8 7 2
-// 1 5 4
-// 8 7 2
-
-struct Array insertion_sort()
+void merge_sort(int array[], int lenght)
 {
-
+    merge_sort_recursion(array, 0, lenght - 1);
 }
 
 
-struct Array heap_sort()
+int main()
 {
+    int mass[] = {9, 2, 6, 3, 7, 5};
 
-}
+    int size = sizeof(mass) / sizeof(int);
 
+    merge_sort(mass, size);
 
-int main(){
-    struct Array mass;
-    struct Array sorted_mass;
-    
-    mass = array_fill(5, (int[]){4, 2, 3, 1, 8});
-    sorted_mass = bubble_sort(mass);
-    mass_print(sorted_mass);
-
-    return 0;
+    mass_print(mass, size);
 }
