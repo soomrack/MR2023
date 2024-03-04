@@ -1,6 +1,7 @@
 #include <iostream>
 #include <math.h>
 #include <string.h>
+#include <string>
 
 
 typedef int ArrayItem;
@@ -42,6 +43,19 @@ private:
 };
 
 
+class dynamic_array_exception: public std::exception {
+private:
+    std::string msg;
+public:
+    dyn_array_exception(std::string msg) : msg{ msg } {}
+    std::string get_message() const { return msg; }
+};
+
+dynamic_array_exception OUT_OF_RANGE("Index is out of range\n");
+dynamic_array_exception ZERO_LENGTH("Array can't have zero length\n");
+dynamic_array_exception NULL_ARRAY("Your array i not allocated");
+
+
 dynamic_array::dynamic_array(size_t size_arr)
 {
     if (size_arr == 0) {
@@ -49,7 +63,7 @@ dynamic_array::dynamic_array(size_t size_arr)
         size = 0;
         real_size = 0;
         buf_size = 0;
-        return;
+        throw ZERO_LENGTH;
     }
 
     size = size_arr;
@@ -66,7 +80,7 @@ dynamic_array::dynamic_array(size_t size_arr, ArrayItem array[])
         size = 0;
         real_size = 0;
         buf_size = 0;
-        return;
+        throw ZERO_LENGTH;
     }
 
     size = size_arr;
@@ -86,7 +100,7 @@ dynamic_array::dynamic_array(dynamic_array& array)
         size = 0;
         real_size = 0;
         buf_size = 0;
-        return;
+        throw NULL_ARRAY;
     }
 
     size = array.size;
@@ -124,7 +138,7 @@ dynamic_array::~dynamic_array()
 
 void dynamic_array::print_array()
 {
-    if (data == nullptr) return;
+    if (data == nullptr) throw NULL_ARRAY;
 
     for(size_t idx = 0; idx < size; ++idx)
         std::cout << data[idx] << " ";
@@ -184,7 +198,7 @@ void dynamic_array::resize(size_t new_size)
 
 ArrayItem dynamic_array::get_element(size_t index)
 {
-    //if (index >= size) throw ;
+    if (index >= size) throw OUT_OF_RANGE;
 
     return this->data[index];
 }
@@ -234,6 +248,8 @@ dynamic_array& dynamic_array::operator=(dynamic_array&& array)
 
 void dynamic_array::sort_bubble()
 {
+    if (data == nullptr) throw NULL_ARRAY;
+    
     for (size_t sorted = size; sorted > 1; --sorted)
         for (size_t idx = 0; idx < sorted - 1; ++idx)
             if (data[idx] > data[idx + 1]) swap_elements(data + idx, data + idx + 1);
@@ -242,6 +258,8 @@ void dynamic_array::sort_bubble()
 
 void dynamic_array::sort_insertion()
 {
+    if (data == nullptr) throw NULL_ARRAY;
+
     for (size_t sorted = 1; sorted < size; ++sorted)
         for (size_t idx = sorted; idx > 0; --idx)
             if (data[idx] < data[idx - 1]) swap_elements(data + idx, data + idx - 1);
@@ -279,6 +297,8 @@ void dynamic_array::split_array(size_t begin, size_t end, dynamic_array sorting)
 
 void dynamic_array::sort_merge()
 {
+    if (data == nullptr) throw NULL_ARRAY;
+
     dynamic_array sorting = *this;
 
     split_array(0, size, sorting);
@@ -344,6 +364,8 @@ void dynamic_array::heap_tree(size_t sorted)
 
 void dynamic_array::sort_heap()
 {
+    if (data == nullptr) throw NULL_ARRAY;
+
     heap_tree(size);
 
     rebuild_tree(size);
