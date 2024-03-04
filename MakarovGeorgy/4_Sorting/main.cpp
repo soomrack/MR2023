@@ -47,8 +47,8 @@ void merge(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_
         right++;
     }
 
-    for (size_t i = start; i <= end; i++) {
-        vector[i] = temp[i];
+    for (size_t idx = start; idx <= end; idx++) {
+        vector[idx] = temp[idx];
     }
 }
 
