@@ -2,7 +2,7 @@
 #include <string>
 #include <cstring>
 
-#define MAX 100
+#define MAX 50
 typedef int MassItem;
 
 class Massive {
@@ -92,15 +92,17 @@ void Massive::Swap(MassItem* a, MassItem* b)
 
 void Massive::BubbleSort()
 {
-    for (size_t m = length; m > 1; m--)
-        for (size_t k = 0; k < m - 1; k++)
-            if (Mas[k] > Mas[k + 1]) Swap(&Mas[k], &Mas[k + 1]);
+    for (size_t external_idx = length; external_idx > 1; external_idx--)
+        for (size_t internal_idx = 0; internal_idx < external_idx - 1; internal_idx++)
+            if (Mas[internal_idx] > Mas[internal_idx + 1]) Swap(&Mas[internal_idx], &Mas[internal_idx + 1]);
 }
 
 void Massive::MergeSort(MassItem* mas, size_t size)
 {
     MassItem* tmp = new MassItem[getsize()];
-    MergeSort_insides(mas, tmp, size);
+    memcpy(tmp, mas, sizeof(MassItem) * size);
+    //print_array(tmp, size);
+    MergeSort_insides(tmp, mas, size);
     delete[] tmp;
 }
 
@@ -109,17 +111,17 @@ void Massive::MergeSort_insides(MassItem* mas, MassItem* tmp, size_t size)
     size_t middle = size / 2;
 
     if (size < 2) return;
+    
+    MergeSort_insides(tmp, mas, middle);
+    MergeSort_insides(tmp + middle, mas + middle, size - middle);
 
-    MergeSort_insides(mas, tmp, middle);
-    MergeSort_insides(mas + middle, tmp, size - middle);
-
-    for (size_t idx_tmp = 0, left_branch = 0, right_branch = middle; idx_tmp < size; idx_tmp++) {
-        if (right_branch >= size) tmp[idx_tmp] = mas[left_branch++];
-        else if (left_branch >= middle) tmp[idx_tmp] = mas[right_branch++];
-        else if (mas[left_branch] <= mas[right_branch]) tmp[idx_tmp] = mas[left_branch++];
-        else tmp[idx_tmp] = mas[right_branch++];
+    for (size_t idx = 0, left_branch = 0, right_branch = middle; idx < size; idx++) {
+        if (right_branch >= size) tmp[idx] = mas[left_branch++];
+        else if (left_branch >= middle) tmp[idx] = mas[right_branch++];
+        else if (mas[left_branch] <= mas[right_branch]) tmp[idx] = mas[left_branch++];
+        else tmp[idx] = mas[right_branch++];
     }
-    memcpy(mas, tmp, sizeof(MassItem) * size);
+
 }
 
 void Massive::InsertionSort(MassItem* mas, size_t size)
@@ -134,29 +136,27 @@ void Massive::InsertionSort(MassItem* mas, size_t size)
     }
 }
 
-void Massive::HeapSort(MassItem* mas, size_t size)
+void Massive::HeapCorrection(MassItem* mas, size_t size, size_t idx)
 {
-    for (int idx = size / 2 - 1; idx >= 0; idx--) {
-        HeapCorrection(mas, size, idx);
-        //print_array(mas, size);
-    }
-    for (int idx = size - 1; idx >= 0; idx--) {
-        Swap(&mas[0], &mas[idx]);
-        HeapCorrection(mas, idx, 0);
+    size_t big = idx, left = 2 * idx + 1, right = 2 * idx + 2;
+    if (left < size && mas[left] > mas[big]) big = left;
+    if (right < size && mas[right] > mas[big]) big = right;
+    if (big != idx) {
+        Swap(&mas[idx], &mas[big]);
+        HeapCorrection(mas, size, big);
         //print_array(mas, size);
     }
 }
 
-void Massive::HeapCorrection(MassItem* mas, size_t size, size_t idx)
+void Massive::HeapSort(MassItem* mas, size_t size)
 {
-    while (1){
-        size_t left = 2 * idx + 1, right = 2 * idx + 2, big = idx;
-
-        if (left < size && mas[left] > mas[idx]) big = left;
-        if (right < size && mas[right] > mas[big]) big = right;
-        if (idx == big) return;
-        Swap(&mas[idx], &mas[big]);
-        idx = big;
+    for (int idx = size / 2 - 1; idx >= 0; idx--)
+        HeapCorrection(mas, size, idx);
+    //print_array(mas, size);
+    for (int idx = size - 1; idx >= 0; idx--) {
+        Swap(&mas[0], &mas[idx]);
+        HeapCorrection(mas, idx, 0);
+        //print_array(mas, size);
     }
 }
 
