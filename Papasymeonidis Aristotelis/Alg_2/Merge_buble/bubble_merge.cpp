@@ -24,7 +24,9 @@ void merge_sort_insides(int_arr* mas, int_arr* buf_arr, size_t size)
 {
     size_t middle = size / 2;
 
-    if (size < 2) return;
+    if (size < 2){
+        return;
+    } 
     
     merge_sort_insides(buf_arr, mas, middle);
     merge_sort_insides(buf_arr + middle, mas + middle, size - middle);
@@ -73,9 +75,6 @@ void print(int *m, int n)
 int main()
 {
     int n;
-    //int arr[ARRAY_SIZE];
-
-    int_arr buf_arr[ARRAY_SIZE];
 
     //input(arr, n);
     n = 10;
