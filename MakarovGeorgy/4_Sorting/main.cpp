@@ -21,37 +21,40 @@ void bubble_sort(std::vector<int> &vector) {
 // Merge sort
 
 void merge(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_t middle, size_t end) {
-    size_t left = 0;
-    size_t right = middle + 1; 
+    size_t left = start, right = middle + 1;
+    size_t index = start;
 
-    while (start <= middle && right <= end) {
-        if (vector[start] <= vector[right]) {
-            temp[left] = vector[start];
-            start++;
+    while (left <= middle && right <= end) {
+        if (vector[left] <= vector[right]) {
+            temp[index] = vector[left];
+            left++;
         } else {
-            temp[left] = vector[right];
+            temp[index] = vector[right];
             right++;
         }
-        
-        left++;
+        index++;
     }
 
-    while (start <= middle) {
-        temp[left] = vector[start];
-        start++;
-        right++;
+    while (left <= middle) {
+        temp[index] = vector[left];
+        index++;
+        left++;
     }
 
     while (right <= end) {
-        temp[left] = vector[right];
-        left++;
+        temp[index] = vector[right];
+        index++;
         right++;
+    }
+
+    for (size_t i = start; i <= end; i++) {
+        vector[i] = temp[i];
     }
 }
 
 void merge_sort_body(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_t end){
-    while(start <= end){
-        size_t middle = (start + end) / 2;
+    if(start < end){
+        size_t middle = start + (end - start) / 2;
 
         merge_sort_body(vector, temp, start, middle);
         merge_sort_body(vector, temp, middle + 1, end);
@@ -64,7 +67,8 @@ void merge_sort(std::vector<int> &vector) {
     const size_t start = 0;
     const size_t end = vector.size() - 1;
 
-    std::vector<int> temp(vector.size());
+    std::vector<int> temp = vector;
+    
     merge_sort_body(vector, temp, start, end);
 }
 
@@ -112,13 +116,13 @@ void insertion_sort(std::vector<int> &vector) {
     for (size_t sorted = 1; sorted < vector.size(); sorted++) {
         int item = vector[sorted];
 
-        size_t idx = sorted; 
-        while ((idx != 0) && (vector[idx - 1] > item)) {
-            vector[idx] = vector[idx - 1];
+        size_t idx = sorted - 1; 
+        while ((idx + 1 != 0) && (vector[idx] > item)) {
+            vector[idx + 1] = vector[idx];
             idx--;
         }
 
-        vector[idx] = item;
+        vector[idx + 1] = item;
     }
 }
 
