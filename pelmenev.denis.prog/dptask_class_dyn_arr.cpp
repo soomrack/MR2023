@@ -147,7 +147,23 @@ ArrayItem* dynamic_array::get_data()
 
 void dynamic_array::set_element(size_t index, ArrayItem value)
 {
+    if ((index >= size) && (index < real_size)) {
+        data[index] = value;
+        buf_size = real_size - index - 1;
 
+        for (size_t idx = size; idx < index; ++idx)
+            data[idx] = 0;
+        
+        size = index + 1;
+
+        return;
+    }
+
+    if ((index > size) && (index >= real_size)) {
+        resize(index + 1);
+    }
+
+    data[index] = value;
 }
 
 
