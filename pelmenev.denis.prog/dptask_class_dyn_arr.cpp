@@ -79,6 +79,39 @@ dynamic_array::dynamic_array(size_t size_arr, ArrayItem array[])
 }
 
 
+dynamic_array::dynamic_array(dynamic_array& array)
+{
+    if (array.data == nullptr) {
+        data = nullptr;
+        size = 0;
+        real_size = 0;
+        buf_size = 0;
+        return;
+    }
+
+    size = array.size;
+    buf_size = array.buf_size;
+    real_size = array.real_size;
+
+    data = new ArrayItem[real_size];
+    memcpy(data, array.data, array.size * sizeof(ArrayItem));
+}
+
+
+dynamic_array::dynamic_array(dynamic_array&& array)
+{
+    size = array.size;
+    buf_size = array.buf_size;
+    real_size = array.real_size;
+    data = array.data;
+
+    array.size = 0;
+    array.buf_size = 0;
+    array.real_size = 0;
+    array.data = nullptr;
+}
+
+
 dynamic_array::~dynamic_array()
 {
     size = 0;
