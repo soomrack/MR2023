@@ -47,7 +47,7 @@ class dynamic_array_exception: public std::exception {
 private:
     std::string msg;
 public:
-    dyn_array_exception(std::string msg) : msg{ msg } {}
+    dynamic_array_exception(std::string msg) : msg{msg} {}
     std::string get_message() const { return msg; }
 };
 
@@ -249,7 +249,7 @@ dynamic_array& dynamic_array::operator=(dynamic_array&& array)
 void dynamic_array::sort_bubble()
 {
     if (data == nullptr) throw NULL_ARRAY;
-    
+
     for (size_t sorted = size; sorted > 1; --sorted)
         for (size_t idx = 0; idx < sorted - 1; ++idx)
             if (data[idx] > data[idx + 1]) swap_elements(data + idx, data + idx + 1);
