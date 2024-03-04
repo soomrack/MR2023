@@ -20,8 +20,7 @@ void bubble_sort(std::vector<int> &vector) {
 
 // Merge sort
 
-void merge(std::vector<int> &vector, size_t start, size_t middle, size_t end) {
-    std::vector<int> temp(vector.size());
+void merge(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_t middle, size_t end) {
     size_t left = 0, right = middle + 1; 
 
     while (start <= middle && right <= end) {
@@ -52,12 +51,13 @@ void merge(std::vector<int> &vector, size_t start, size_t middle, size_t end) {
 
 void merge_sort_body(std::vector<int> &vector, size_t start, size_t end){
     while(start <= end){
+        std::vector<int> temp(vector.size());
         size_t middle = (start + end) / 2;
 
         merge_sort_body(vector, start, middle);
         merge_sort_body(vector, middle + 1, end);
 
-        merge(vector, start, middle, end);
+        merge(vector, temp, start, middle, end);
     }
 }
 
