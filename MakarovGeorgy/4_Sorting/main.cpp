@@ -21,7 +21,8 @@ void bubble_sort(std::vector<int> &vector) {
 // Merge sort
 
 void merge(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_t middle, size_t end) {
-    size_t left = 0, right = middle + 1; 
+    size_t left = 0;
+    size_t right = middle + 1; 
 
     while (start <= middle && right <= end) {
         if (vector[start] <= vector[right]) {
@@ -31,6 +32,7 @@ void merge(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_
             temp[left] = vector[right];
             right++;
         }
+        
         left++;
     }
 
@@ -51,8 +53,8 @@ void merge_sort_body(std::vector<int> &vector, std::vector<int> &temp, size_t st
     while(start <= end){
         size_t middle = (start + end) / 2;
 
-        merge_sort_body(vector, start, middle);
-        merge_sort_body(vector, middle + 1, end);
+        merge_sort_body(vector, temp, start, middle);
+        merge_sort_body(vector, temp, middle + 1, end);
 
         merge(temp, vector, start, middle, end);
     }
@@ -63,7 +65,6 @@ void merge_sort(std::vector<int> &vector) {
     const size_t end = vector.size() - 1;
 
     std::vector<int> temp(vector.size());
-    
     merge_sort_body(vector, temp, start, end);
 }
 
@@ -111,13 +112,13 @@ void insertion_sort(std::vector<int> &vector) {
     for (size_t sorted = 1; sorted < vector.size(); sorted++) {
         int item = vector[sorted];
 
-        size_t idx = sorted - 1; 
-        while ((idx + 1 != 0) && (vector[idx] > item)) {
-            vector[idx + 1] = vector[idx];
+        size_t idx = sorted; 
+        while ((idx != 0) && (vector[idx - 1] > item)) {
+            vector[idx] = vector[idx - 1];
             idx--;
         }
 
-        vector[idx + 1] = item;
+        vector[idx] = item;
     }
 }
 
