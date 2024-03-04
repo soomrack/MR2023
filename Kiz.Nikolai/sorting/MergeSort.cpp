@@ -37,7 +37,6 @@ private:
             
     }
 
-
     void merge_sort(size_t low, size_t high) {
         if (low >= high) {return;}
         size_t mid = (low + high) / 2;

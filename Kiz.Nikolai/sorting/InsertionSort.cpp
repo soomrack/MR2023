@@ -8,12 +8,13 @@ public:
     void sort() final {
         for (size_t sorted = 1; sorted < this->sz; ++sorted) { 
             size_t temp = sorted;
-            for (size_t idx = sorted-1; idx >= 0; --idx) {
+            for (int idx = static_cast<int>(sorted-1); idx >= 0; --idx) {
                 if (this->arr[idx] > this->arr[sorted]) {
-                     this->swap(idx, sorted); 
-                     --sorted;
+                    this->swap(idx, sorted); 
+                    --sorted;
+                    continue;
                     }
-                else break;
+                break;
             }
             sorted = temp;
         }

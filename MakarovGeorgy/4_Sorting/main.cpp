@@ -25,12 +25,12 @@ void merge(std::vector<int> &vector, std::vector<int> &left, std::vector<int> &r
     size_t right_idx = 0;
 
     while (left_idx < left.size() && right_idx < right.size()) {
-        if (left.at(left_idx) < right.at(right_idx)) vector.push_back(left.at(left_idx++));
-        else vector.push_back(right.at(right_idx++));
+        if (left[left_idx] < right[right_idx]) vector.push_back(left[left_idx++]);
+        else vector.push_back(right[right_idx++]);
     }
 
-    while (left_idx < left.size()) vector.push_back(left.at(left_idx++));
-    while (right_idx < right.size()) vector.push_back(right.at(right_idx++));
+    while (left_idx < left.size()) vector.push_back(left[left_idx++]);
+    while (right_idx < right.size()) vector.push_back(right[right_idx++]);
 }
 
 void merge_sort(std::vector<int> &vector) {
