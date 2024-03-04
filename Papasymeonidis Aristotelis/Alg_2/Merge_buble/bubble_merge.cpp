@@ -20,20 +20,20 @@ void bubble_sort(T *arr, size_t size)
 }
 
 
-void merge_sort_insides(int_arr* mas, int_arr* tmp, size_t size)
+void merge_sort_insides(int_arr* mas, int_arr* buf_arr, size_t size)
 {
     size_t middle = size / 2;
 
     if (size < 2) return;
     
-    merge_sort_insides(tmp, mas, middle);
-    merge_sort_insides(tmp + middle, mas + middle, size - middle);
+    merge_sort_insides(buf_arr, mas, middle);
+    merge_sort_insides(buf_arr + middle, mas + middle, size - middle);
 
     for (size_t idx = 0, left_branch = 0, right_branch = middle; idx < size; idx++) {
-        if (right_branch >= size) tmp[idx] = mas[left_branch++];
-        else if (left_branch >= middle) tmp[idx] = mas[right_branch++];
-        else if (mas[left_branch] <= mas[right_branch]) tmp[idx] = mas[left_branch++];
-        else tmp[idx] = mas[right_branch++];
+        if (right_branch >= size) buf_arr[idx] = mas[left_branch++];
+        else if (left_branch >= middle) buf_arr[idx] = mas[right_branch++];
+        else if (mas[left_branch] <= mas[right_branch]) buf_arr[idx] = mas[left_branch++];
+        else buf_arr[idx] = mas[right_branch++];
     }
 
 }
@@ -41,11 +41,10 @@ void merge_sort_insides(int_arr* mas, int_arr* tmp, size_t size)
 
 void merge_sort(int_arr* mas, size_t size)
 {
-    int_arr* tmp = new int_arr[ARRAY_SIZE];
-    memcpy(tmp, mas, sizeof(int_arr) * size);
-    //print_array(tmp, size);
-    merge_sort_insides(tmp, mas, size);
-    delete[] tmp;
+    int_arr* buf_arr = new int_arr[ARRAY_SIZE];
+    memcpy(buf_arr, mas, sizeof(int_arr) * size);
+    merge_sort_insides(buf_arr, mas, size);
+    delete[] buf_arr;
 }
 
 
