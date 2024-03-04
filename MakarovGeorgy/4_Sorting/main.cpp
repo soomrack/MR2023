@@ -21,7 +21,7 @@ void bubble_sort(std::vector<int> &vector) {
 // Merge sort
 
 void merge(std::vector<int> &vector, size_t start, size_t middle, size_t end) {
-    std::vector<int> temp;
+    std::vector<int> temp(vector.size());
     size_t left = 0, right = middle + 1; 
 
     while (start <= middle && right <= end) {
