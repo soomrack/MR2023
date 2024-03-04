@@ -45,19 +45,16 @@ void merge(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_
         left++;
         right++;
     }
-
-    for (size_t i = start; i <= end; i++) vector[start] = temp[i - start];
 }
 
-void merge_sort_body(std::vector<int> &vector, size_t start, size_t end){
+void merge_sort_body(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_t end){
     while(start <= end){
-        std::vector<int> temp(vector.size());
         size_t middle = (start + end) / 2;
 
         merge_sort_body(vector, start, middle);
         merge_sort_body(vector, middle + 1, end);
 
-        merge(vector, temp, start, middle, end);
+        merge(temp, vector, start, middle, end);
     }
 }
 
@@ -65,7 +62,9 @@ void merge_sort(std::vector<int> &vector) {
     const size_t start = 0;
     const size_t end = vector.size() - 1;
 
-    merge_sort_body(vector, start, end);
+    std::vector<int> temp(vector.size());
+    
+    merge_sort_body(vector, temp, start, end);
 }
 
 
