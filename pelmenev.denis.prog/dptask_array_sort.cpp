@@ -16,9 +16,9 @@ void print_array(const ArrayItem array[], size_t size)
 
 void swap_elements(ArrayItem &a, ArrayItem &b)
 {
-    ArrayItem buff = a;            // через xor
-    a = b;
-    b = buff;
+    b = b ^ a;
+    a = b ^ a;
+    b = a ^ b;
 }
 
 
@@ -64,7 +64,7 @@ void merge(size_t begin, size_t mid, size_t end, ArrayItem array[], ArrayItem ar
 }
 
 
-void split_array(int begin, int end, ArrayItem array[], ArrayItem array_sort[])
+void split_array(size_t begin, size_t end, ArrayItem array[], ArrayItem array_sort[])
 {
     if (end - begin <= 1) return;
 
@@ -75,11 +75,15 @@ void split_array(int begin, int end, ArrayItem array[], ArrayItem array_sort[])
 }
 
 
-void sort_merge(ArrayItem array[], int size, ArrayItem array_sort[])
+void sort_merge(ArrayItem array[], size_t size)
 {
+    ArrayItem* array_sort;
+    array_sort = new ArrayItem[size];
     copy_array(array, array_sort, size);
 
     split_array(0, size, array, array_sort);
+
+    delete[] array_sort;
 }
 
 
@@ -112,8 +116,6 @@ void rebuild_tree(ArrayItem array[], size_t sorted)
 
 void heap_tree(ArrayItem array[], size_t size)
 {
-    do {
-
     size_t length = size;
 
     if (length % 2 == 0) {
@@ -122,10 +124,8 @@ void heap_tree(ArrayItem array[], size_t size)
 
         length--;
     }
-
-    size_t half = size / 2;
   
-    for (size_t idx = length - 1; idx >= half; idx -= 2) {
+    for (size_t idx = length - 1; idx >= 2; idx -= 2) {
         if ((array[idx] > array[(idx - 2) / 2]) || (array[idx - 1] > array[(idx - 2) / 2])) {
             if (array[idx] >= array[idx - 1])
                 swap_elements(array[idx], array[(idx - 2) / 2]);
@@ -134,17 +134,13 @@ void heap_tree(ArrayItem array[], size_t size)
         }
     }
 
-    size = size / 2;
-
-    } while (size > 2);
+    rebuild_tree(array, size);
 }
 
 
 void sort_heap(ArrayItem array[], size_t size)
 {
     heap_tree(array, size);
-
-    rebuild_tree(array, size);
 
     swap_elements(array[0], array[size - 1]);
     
@@ -165,7 +161,7 @@ int main()
     std::cout << "______________" << std::endl;
     //sort_bubble(a, a_size);
     //sort_insertion(a, a_size);
-    sort_merge(a, a_size, b);
+    sort_merge(a, a_size);
     //sort_heap(a, a_size);
     std::cout << "______________" << std::endl;
     print_array(a, a_size);
