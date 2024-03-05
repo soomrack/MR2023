@@ -55,7 +55,7 @@ public:
 
 dynamic_array_exception OUT_OF_RANGE("Index is out of range\n");
 dynamic_array_exception ZERO_LENGTH("Array can't have zero length\n");
-dynamic_array_exception NULL_ARRAY("Your array i not allocated");
+dynamic_array_exception NULL_ARRAY("Your array is not allocated");
 
 
 dynamic_array::dynamic_array(size_t size_arr)
