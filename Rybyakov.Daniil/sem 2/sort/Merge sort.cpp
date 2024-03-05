@@ -1,7 +1,9 @@
 #include <iostream>
 using namespace std;
 
-void merge(int* array, int begin, int middle, int end) {
+
+void merge(int* array, int begin, int middle, int end) 
+{
     int left = begin;
     int right = middle + 1;
 
@@ -19,7 +21,9 @@ void merge(int* array, int begin, int middle, int end) {
     }
 }
 
-void merge_sort(int* array, int begin, int end) {
+
+void merge_sort(int* array, int begin, int end) 
+{
     if (begin < end) {
         int middle = (begin + end) / 2;
         merge_sort(array, begin, middle);
@@ -28,14 +32,18 @@ void merge_sort(int* array, int begin, int end) {
     }
 }
 
-void array_print(int array_size, int* array) {
+
+void array_print(int array_size, int* array) 
+{
     for (int elem = 0; elem < array_size; ++elem) {
         cout << array[elem] << " ";
     }
     cout << "\n";
 }
 
-void initialization() {
+
+void initialization() 
+{
     int array_size = 10;
     int* array = new int[10] { 2, 4, 1, 11, 9, 7, 4, 9, 50, 20 };
 
@@ -46,6 +54,8 @@ void initialization() {
     delete[] array;
 }
 
-int main() {
+
+int main() 
+{
     initialization();
 }
