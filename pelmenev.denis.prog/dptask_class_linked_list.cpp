@@ -22,7 +22,7 @@ public:
     //~linked_list();
     size_t get_size();
     ArrayItem get_element(size_t position);
-    void swap_elements(size_t pos_one, size_t pos_two);
+    void swap_data(linked_list_item* el_one, linked_list_item* el_two);
     void push_back(ArrayItem value);
     void pop_back();
     void push_at(size_t position, ArrayItem value);
@@ -104,25 +104,8 @@ ArrayItem linked_list::get_element(size_t position)
 }
 
 
-void linked_list::swap_elements(size_t pos_one, size_t pos_two)
+void linked_list::swap_data(linked_list_item* el_one, linked_list_item* el_two)
 {
-    linked_list_item* el_one = head;
-    linked_list_item* el_two = head;
-
-    size_t counter = 0;
-
-    while (counter < pos_one) {
-        el_one = el_one->next;
-        ++counter;
-    }
-
-    counter = 0;
-
-    while (counter < pos_two) {
-        el_two = el_two->next;
-        ++counter;
-    }
-
     el_one->data = el_one->data ^ el_two->data;
     el_two->data = el_one->data ^ el_two->data;
     el_one->data = el_two->data ^ el_one->data;
@@ -159,9 +142,7 @@ void linked_list::push_at(size_t position, ArrayItem value)
     buf->next = NULL;
 
     if (position == 0) {
-        head->data = head->data ^ buf->data;
-        buf->data = head->data ^ buf->data;
-        head->data = buf->data ^ head->data;
+        swap_data(head, buf);
         buf->next = head->next;
         head->next = buf;
     } else {
@@ -206,10 +187,8 @@ void linked_list::pop_head()
     }
 
     linked_list_item* next = head->next;
-    
-    head->data = head->data ^ next->data;
-    next->data = head->data ^ next->data;
-    head->data = next->data ^ head->data;
+
+    swap_data(head, next);
 
     head->next = next->next;
     next->data = 0;
@@ -249,9 +228,20 @@ void linked_list::sort_bubble()
 {
     size_t size = get_size();
 
-    for (size_t sorted = size; sorted > 1; --sorted)
-        for (size_t idx = 0; idx < sorted - 1; ++idx)
-            if (get_element(idx) > get_element(idx + 1)) swap_elements(idx, idx + 1);
+    linked_list_item* buff;
+    linked_list_item* next;
+
+    for (size_t sorted = size; sorted > 1; --sorted) {
+        buff = head;
+        next = head->next;
+
+        for (size_t idx = 0; idx < sorted - 1; ++idx) {
+            if (buff->data > next->data) swap_data(buff, next);
+
+            buff = buff->next;
+            next = buff->next;
+        }
+    }
 }
 
 
