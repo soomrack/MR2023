@@ -171,18 +171,15 @@ void linked_list::pop_back()
 {
     if (head == NULL) throw NULL_HEAD;
 
-    linked_list_item* last = head;
+    linked_list_item* previous = head;
 
-    while (last->next != NULL)
-        last = last->next;
+    while (previous->next->next != NULL)
+        previous = previous->next;
     
-    linked_list_item* count = head;
-
-    while (count->next != last)
-        count = count->next;
+    linked_list_item* last = previous->next;
     
     last->data = 0;
-    count->next = NULL;
+    previous->next = NULL;
 }
 
 
@@ -216,10 +213,7 @@ void linked_list::pop_at(size_t position)
 
     previous = counter(position - 1);
 
-    linked_list_item* current = head;
-
-    while (previous->next != current)
-        current = current->next;
+    linked_list_item* current = previous->next;
     
     previous->next = current->next;
     current->data = 0;
@@ -267,7 +261,7 @@ int main()
     list.push_at(2, 9);
     list.print_list();
 
-    list.pop_at(2);
+    list.pop_at(4);
     list.print_list();
 
     list.push_at(1, 0);
