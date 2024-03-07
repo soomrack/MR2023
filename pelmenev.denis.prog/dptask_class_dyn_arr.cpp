@@ -266,9 +266,10 @@ void dynamic_array::sort_insertion()
     if (data == nullptr) throw NULL_ARRAY;
 
     for (size_t sorted = 1; sorted < size; ++sorted)
-        for (size_t idx = sorted; idx > 0; --idx)
+        for (size_t idx = sorted; idx > 0; --idx) {
             if (data[idx] < data[idx - 1]) swap_elements(data + idx, data + idx - 1);
             else break;
+        }
 }
 
 
