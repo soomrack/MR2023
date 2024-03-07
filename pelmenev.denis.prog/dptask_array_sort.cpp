@@ -41,9 +41,10 @@ void sort_bubble(ArrayItem array[], size_t size)
 void sort_insertion(ArrayItem array[], size_t size)
 {
     for (size_t sorted = 1; sorted < size; ++sorted)
-        for (size_t idx = sorted; idx > 0; --idx)
+        for (size_t idx = sorted; idx > 0; --idx) {
             if (array[idx] < array[idx - 1]) swap_elements(array[idx], array[idx - 1]);
             else break;
+        }
 }
 
 
