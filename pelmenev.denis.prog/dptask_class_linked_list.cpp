@@ -132,7 +132,7 @@ void linked_list::push_back(ArrayItem value)
 //position starts from zero
 void linked_list::push_at(size_t position, ArrayItem value)
 {
-    if ((head == NULL) || (position >= get_size())) {
+    if (position >= get_size()) {
         push_back(value);
         return;
     }
