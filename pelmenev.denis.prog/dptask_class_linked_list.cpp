@@ -29,6 +29,7 @@ public:
     void pop_head();
     void pop_at(size_t position);
     void print_list();
+    linked_list_item* counter(size_t position);
 public:
     void sort_bubble();
 };
@@ -72,6 +73,20 @@ void linked_list::print_list()
 }
 
 
+linked_list_item* linked_list::counter(size_t position)
+{
+    linked_list_item* before = head;
+    size_t counter = 0;
+
+    while (counter < position) {
+        before = before->next;
+        ++counter;
+    }
+
+    return before;
+}
+
+
 size_t linked_list::get_size()
 {
     if (head == NULL) throw NULL_HEAD;
@@ -92,13 +107,9 @@ ArrayItem linked_list::get_element(size_t position)
 {
     if (position >= get_size()) throw OUT_OF_RANGE;
 
-    linked_list_item* current = head;
-    size_t counter = 0;
+    linked_list_item* current;
 
-    while (counter < position) {
-        current = current->next;
-        ++counter;
-    }
+    current = counter(position);
 
     return current->data;
 }
@@ -146,13 +157,9 @@ void linked_list::push_at(size_t position, ArrayItem value)
         buf->next = head->next;
         head->next = buf;
     } else {
-        linked_list_item* previous = head;
-        size_t counter = 0;
+        linked_list_item* previous;
 
-        while (counter < position - 1) {
-            previous = previous->next;
-            ++counter;
-        }
+        previous = counter(position - 1);
         
         buf->next = previous->next;
         previous->next = buf;
@@ -205,13 +212,9 @@ void linked_list::pop_at(size_t position)
         return;
     }
 
-    linked_list_item* previous = head;
-    size_t counter = 0;
+    linked_list_item* previous;
 
-    while (counter < position - 1) {
-        previous = previous->next;
-        counter++;
-    }
+    previous = counter(position - 1);
 
     linked_list_item* current = head;
 
