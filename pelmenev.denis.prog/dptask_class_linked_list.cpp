@@ -1,5 +1,4 @@
 #include <iostream>
-#include <math.h>
 #include <string.h>
 #include <string>
 
@@ -19,17 +18,19 @@ private:
     linked_list_item* head;
 public:
     linked_list();
-    //~linked_list();
+    ~linked_list();
+    void clear();
     size_t get_size();
     ArrayItem get_element(size_t position);
     void swap_data(linked_list_item* el_one, linked_list_item* el_two);
     void push_back(ArrayItem value);
-    void pop_back();
+    ArrayItem pop_back();
     void push_at(size_t position, ArrayItem value);
-    void pop_head();
-    void pop_at(size_t position);
+    ArrayItem pop_at(size_t position);
     void print_list();
+private:
     linked_list_item* counter(size_t position);
+    ArrayItem pop_head();
 public:
     void sort_bubble();
 };
@@ -53,11 +54,22 @@ linked_list::linked_list()
 }
 
 
-/* linked_list::~linked_list()
+void linked_list::clear()
 {
-    head->data = 0;
-    head->next = NULL
-} */
+    if (head == NULL) return;
+
+    ArrayItem trash = 0;
+
+    do {
+        trash = pop_back();
+    } while (head != NULL);
+}
+
+
+linked_list::~linked_list()
+{
+    clear();
+}
 
 
 void linked_list::print_list()
@@ -167,27 +179,35 @@ void linked_list::push_at(size_t position, ArrayItem value)
 }
 
 
-void linked_list::pop_back()
+ArrayItem linked_list::pop_back()
 {
     if (head == NULL) throw NULL_HEAD;
 
-    linked_list_item* previous = head;
+    size_t size = get_size();
 
-    while (previous->next->next != NULL)
-        previous = previous->next;
-    
+    if (size == 1) {
+        return pop_head();
+    }
+
+    linked_list_item* previous = counter(size - 2);
     linked_list_item* last = previous->next;
+
+    ArrayItem pop_data = last->data;
     
     last->data = 0;
     previous->next = NULL;
+
+    return pop_data;
 }
 
 
-void linked_list::pop_head()
+ArrayItem linked_list::pop_head()
 {
+    ArrayItem pop_data = head->data;
+
     if (get_size() == 1) {
         head = NULL;
-        return;
+        return pop_data;
     }
 
     linked_list_item* next = head->next;
@@ -197,27 +217,29 @@ void linked_list::pop_head()
     head->next = next->next;
     next->data = 0;
     next->next = NULL;
+
+    return pop_data;
 }
 
 //position starts from zero
-void linked_list::pop_at(size_t position)
+ArrayItem linked_list::pop_at(size_t position)
 {
     if (position >= get_size()) throw OUT_OF_RANGE;
 
     if (position == 0) {
-        pop_head();
-        return;
+        return pop_head();
     }
 
-    linked_list_item* previous;
-
-    previous = counter(position - 1);
-
+    linked_list_item* previous = counter(position - 1);
     linked_list_item* current = previous->next;
+
+    ArrayItem pop_data = current->data;
     
     previous->next = current->next;
     current->data = 0;
     current->next = NULL;
+
+    return pop_data;
 }
 
 
@@ -256,12 +278,12 @@ int main()
 
     std::cout << "List's size is " << list.get_size() << std::endl;
 
-    list.pop_back();
+    std::cout << list.pop_back() << std::endl;
 
     list.push_at(2, 9);
     list.print_list();
 
-    list.pop_at(4);
+    std::cout << list.pop_at(4) << std::endl;
     list.print_list();
 
     list.push_at(1, 0);
