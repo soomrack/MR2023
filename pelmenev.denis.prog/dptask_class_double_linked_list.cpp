@@ -1,5 +1,4 @@
 #include <iostream>
-#include <math.h>
 #include <string.h>
 #include <string>
 
@@ -21,16 +20,19 @@ private:
     double_linked_list_item* tail;
 public:
     double_linked_list();
+    ~double_linked_list();
+    void clear();
     size_t get_size();
     ArrayItem get_element(size_t position);
     void swap_data(double_linked_list_item* el_one, double_linked_list_item* el_two);
     void push_back(ArrayItem value);
-    void pop_back();
+    ArrayItem pop_back();
     void push_at(size_t position, ArrayItem value);
-    void pop_head();
-    void pop_at(size_t position);
-    double_linked_list_item* counter(size_t position);
+    ArrayItem pop_at(size_t position);
     void print_list();
+private:
+    ArrayItem pop_head();
+    double_linked_list_item* counter(size_t position);
 public:
     void sort_bubble();
     void sort_insertion();
@@ -53,6 +55,24 @@ double_linked_list::double_linked_list()
 {
     head = NULL;
     tail = head;
+}
+
+
+void double_linked_list::clear()
+{
+    if (head == NULL) return;
+
+    ArrayItem trash = 0;
+
+    do {
+        trash = pop_back();
+    } while (head != NULL);
+}
+
+
+double_linked_list::~double_linked_list()
+{
+    clear();
 }
 
 
@@ -173,23 +193,37 @@ void double_linked_list::push_at(size_t position, ArrayItem value)
 }
 
 
-void double_linked_list::pop_back()
+ArrayItem double_linked_list::pop_back()
 {
     if (head == NULL) throw NULL_HEAD;
 
+    ArrayItem pop_data = head->data;
+
+    if (get_size() == 1) {
+        head = NULL;
+        tail = NULL;
+        return pop_data;
+    }
+
     double_linked_list_item* last = tail;
+
+    pop_data = last->data;
 
     tail = last->previous;
     last->data = 0;
     tail->next = NULL;
+
+    return pop_data;
 }
 
 
-void double_linked_list::pop_head()
+ArrayItem double_linked_list::pop_head()
 {
+    ArrayItem pop_data = head->data;
+
     if (get_size() == 1) {
         head = NULL;
-        return;
+        return pop_data;
     }
 
     double_linked_list_item* next = head->next;
@@ -201,16 +235,17 @@ void double_linked_list::pop_head()
     next->data = 0;
     next->next = NULL;
     next->previous = NULL;
+
+    return pop_data;
 }
 
 //position starts from zero
-void double_linked_list::pop_at(size_t position)
+ArrayItem double_linked_list::pop_at(size_t position)
 {
     if (position >= get_size()) throw OUT_OF_RANGE;
 
     if (position == 0) {
-        pop_head();
-        return;
+        return pop_head();
     }
 
     double_linked_list_item* current;
@@ -218,17 +253,19 @@ void double_linked_list::pop_at(size_t position)
     current = counter(position);
 
     if (current == tail) {
-        pop_back();
-        return;
+        return pop_back();
     }
 
     double_linked_list_item* before = current->previous;
+    ArrayItem pop_data = current->data;
     
     before->next = current->next;
     current->next->previous = before;
     current->data = 0;
     current->next = NULL;
     current->previous = NULL;
+
+    return pop_data;
 }
 
 
@@ -290,11 +327,11 @@ int main()
 
     std::cout << list.get_element(3) << std::endl;
 
-    list.pop_back();
+    std::cout << list.pop_back() << std::endl;
 
     list.push_at(2, 10);
 
-    list.pop_at(4);
+    std::cout << list.pop_at(4) << std::endl;
 
     list.print_list();
 
