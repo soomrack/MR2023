@@ -14,6 +14,8 @@ private:
     size_t real_size;
     size_t buf_size;
 public:
+    size_t buf_size_global = 5;
+public:
     dynamic_array(size_t size_arr);
     dynamic_array(size_t size_arr, ArrayItem array[]);
     dynamic_array(dynamic_array& array);
@@ -53,7 +55,7 @@ public:
 
 dynamic_array_exception OUT_OF_RANGE("Index is out of range\n");
 dynamic_array_exception ZERO_LENGTH("Array can't have zero length\n");
-dynamic_array_exception NULL_ARRAY("Your array i not allocated");
+dynamic_array_exception NULL_ARRAY("Your array is not allocated");
 
 
 dynamic_array::dynamic_array(size_t size_arr)
@@ -67,8 +69,8 @@ dynamic_array::dynamic_array(size_t size_arr)
     }
 
     size = size_arr;
-    real_size = size + (size_t)(ceil((double)(size * 0.15)));
-    buf_size = real_size - size;
+    buf_size = buf_size_global;
+    real_size = size + buf_size;
     data = new ArrayItem[real_size];
 }
 
@@ -84,8 +86,8 @@ dynamic_array::dynamic_array(size_t size_arr, ArrayItem array[])
     }
 
     size = size_arr;
-    real_size = size + (size_t)(ceil((double)(size * 0.15)));
-    buf_size = real_size - size;
+    buf_size = buf_size_global;
+    real_size = size + buf_size;
     data = new ArrayItem[real_size];
 
     for (size_t idx = 0; idx < size; ++idx)
@@ -115,8 +117,8 @@ dynamic_array::dynamic_array(dynamic_array& array)
 dynamic_array::dynamic_array(dynamic_array&& array)
 {
     size = array.size;
-    buf_size = array.buf_size;
     real_size = array.real_size;
+    buf_size = array.buf_size;
     data = array.data;
 
     array.size = 0;
@@ -129,8 +131,8 @@ dynamic_array::dynamic_array(dynamic_array&& array)
 dynamic_array::~dynamic_array()
 {
     size = 0;
-    buf_size = 0;
     real_size = 0;
+    buf_size = 0;
     delete[] data;
     data = nullptr;
 }
@@ -185,13 +187,16 @@ void dynamic_array::resize(size_t new_size)
 {
     ArrayItem* new_data;
     
-    real_size = new_size + (size_t)(ceil((double)(new_size * 0.15)));
-    buf_size = real_size - new_size;
+    real_size = new_size + buf_size_global;
     new_data = new ArrayItem[real_size];
 
     for (size_t idx = 0; idx < size; ++idx)
         new_data[idx] = data[idx];
     
+    for (size_t idx = size; idx < real_size; ++ idx)
+        new_data[idx] = 0;
+    
+    size = new_size;
     data = new_data;
 }
 
@@ -206,9 +211,9 @@ ArrayItem dynamic_array::get_element(size_t index)
 
 void dynamic_array::swap_elements(ArrayItem *a, ArrayItem *b)
 {
-    ArrayItem buff = *a;
-    *a = *b;
-    *b = buff;
+    *b = *b ^ *a;
+    *a = *b ^ *a;
+    *b = *a ^ *b;
 }
 
 
@@ -261,9 +266,10 @@ void dynamic_array::sort_insertion()
     if (data == nullptr) throw NULL_ARRAY;
 
     for (size_t sorted = 1; sorted < size; ++sorted)
-        for (size_t idx = sorted; idx > 0; --idx)
+        for (size_t idx = sorted; idx > 0; --idx) {
             if (data[idx] < data[idx - 1]) swap_elements(data + idx, data + idx - 1);
             else break;
+        }
 }
 
 
@@ -334,8 +340,6 @@ void dynamic_array::rebuild_tree(size_t sorted)
 
 void dynamic_array::heap_tree(size_t sorted)
 {
-    do {
-
     size_t length = sorted;
 
     if (length % 2 == 0) {
@@ -344,10 +348,8 @@ void dynamic_array::heap_tree(size_t sorted)
 
         length--;
     }
-
-    size_t half = sorted / 2;
   
-    for (size_t idx = length - 1; idx >= half; idx -= 2) {
+    for (size_t idx = length - 1; idx >= 2; idx -= 2) {
         if ((data[idx] > data[(idx - 2) / 2]) || (data[idx - 1] > data[(idx - 2) / 2])) {
             if (data[idx] >= data[idx - 1])
                 swap_elements(data + idx, data + (idx - 2) / 2);
@@ -356,9 +358,7 @@ void dynamic_array::heap_tree(size_t sorted)
         }
     }
 
-    sorted = sorted / 2;
-
-    } while (sorted> 2);
+    rebuild_tree(sorted);
 }
 
 
@@ -367,8 +367,6 @@ void dynamic_array::sort_heap()
     if (data == nullptr) throw NULL_ARRAY;
 
     heap_tree(size);
-
-    rebuild_tree(size);
 
     swap_elements(data + 0, data + size - 1);
     
@@ -392,8 +390,8 @@ int main()
 
     //array.sort_bubble();
     //array.sort_insertion();
-    //array.sort_heap();
-    array.sort_merge();
+    array.sort_heap();
+    //array.sort_merge();
 
     array.print_array();
 
