@@ -122,8 +122,44 @@ void insertion_sort(int array[], const int lenght)
 
         array[in_elements + 1] = current_element;
     }
+}
 
 
+void swap(int *a, int *b) {
+  int temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+void heapify(int array[], int lenght, int idx) {
+
+  int largest_pos = idx;
+  int left_pos = 2 * idx + 1;
+  int right_pos = 2 * idx + 2;
+
+  if (left_pos < lenght && array[left_pos] > array[largest_pos])
+    largest_pos = left_pos;
+
+  if (right_pos < lenght && array[right_pos] > array[largest_pos])
+    largest_pos = right_pos;
+
+
+  if (largest_pos != idx) {
+    swap(&array[idx], &array[largest_pos]);
+    heapify(array, lenght, largest_pos);
+  }
+}
+
+void heap_sort(int array[], int lenght) {
+
+  for (int idx = lenght / 2 - 1; idx >= 0; idx--) 
+    heapify(array, lenght, idx);   
+
+  for (int idx = lenght - 1; idx >= 0; idx--) {
+    swap(&array[0], &array[idx]);
+
+    heapify(array, idx, 0);
+  }
 }
 
 
@@ -133,7 +169,7 @@ int main()
 
     int size = sizeof(mass) / sizeof(int);
 
-    insertion_sort(mass, size);
+    heap_sort(mass, size);
 
     mass_print(mass, size);
 }
