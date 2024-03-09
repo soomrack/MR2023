@@ -94,8 +94,10 @@ void total_correct() // line search function
     time += 200;
     idx = idx + 1;
     speed = speed + 2;
+
     if (time > 5000){dead_end();}
     delay(200);
+
       if (analogRead(LIGHT_R) > BLACK || analogRead(LIGHT_L) > BLACK){break;}
       if (idx % 2 == 0){drive(speed);} else {right_turn(180);}
   }
