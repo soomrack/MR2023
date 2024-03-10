@@ -46,20 +46,18 @@ void merge(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_
         index++;
         right++;
     }
-
-    for (size_t idx = start; idx <= end; idx++) {
-        vector[idx] = temp[idx];
-    }
 }
 
-void merge_sort_body(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_t end){
-    if(start < end){
+void merge_sort_body(std::vector<int> &vector, std::vector<int> &temp, size_t start, size_t end) {
+    if (start < end) {
         size_t middle = start + (end - start) / 2;
 
         merge_sort_body(vector, temp, start, middle);
         merge_sort_body(vector, temp, middle + 1, end);
 
-        merge(temp, vector, start, middle, end);
+        merge(vector, temp, start, middle, end);
+
+        for (size_t idx = start; idx <= end; idx++) vector[idx] = temp[idx];
     }
 }
 
@@ -68,7 +66,7 @@ void merge_sort(std::vector<int> &vector) {
     const size_t end = vector.size() - 1;
 
     std::vector<int> temp = vector;
-    
+
     merge_sort_body(vector, temp, start, end);
 }
 
@@ -76,11 +74,11 @@ void merge_sort(std::vector<int> &vector) {
 
 // Heap sort
 
-void heapify(std::vector<int> &vector, size_t size, int idx) {
-    const int left = 2 * idx + 1;
-    const int right = 2 * idx + 2;
+void heapify(std::vector<int> &vector, size_t size, size_t idx) {
+    const size_t left = 2 * idx + 1;
+    const size_t right = 2 * idx + 2;
 
-    int idx_max_heap = idx;
+    size_t idx_max_heap = idx;
 
     if (left < size && vector[left] > vector[idx_max_heap])
         idx_max_heap = left;
@@ -95,13 +93,13 @@ void heapify(std::vector<int> &vector, size_t size, int idx) {
 }
 
 void heap_sort(std::vector<int> &vector) {
-    for (size_t idx = vector.size() / 2 - 1; idx >= 0; idx--) {
+    for (size_t idx = vector.size() / 2 - 1; true; idx--) {
         if (idx + 1 == 0) break;
 
         heapify(vector, vector.size(), idx);
     }
 
-    for (size_t idx = vector.size() - 1; idx > 0; idx--) {
+    for (size_t idx = vector.size() - 1; true; idx--) {
         if (idx + 1 == 0) break;
 
         std::swap(vector[0], vector[idx]);
@@ -116,7 +114,7 @@ void insertion_sort(std::vector<int> &vector) {
     for (size_t sorted = 1; sorted < vector.size(); sorted++) {
         int item = vector[sorted];
 
-        size_t idx = sorted - 1; 
+        size_t idx = sorted - 1;
         while ((idx + 1 != 0) && (vector[idx] > item)) {
             vector[idx + 1] = vector[idx];
             idx--;
