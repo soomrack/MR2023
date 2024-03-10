@@ -85,7 +85,7 @@ void search() {
         delay(2000);
         digitalWrite(PIN_BUZZER, 0);
 
-        exit(-1);
+        exit(1);
       }
             
       delay(TIME_DELAY);
@@ -93,9 +93,6 @@ void search() {
 
       delay(TIME_DELAY);
       move_forward(speedSearching);
-
-      if (speedSearching > SPEED_DEFAULT) speedSearching = SPEED_DEFAULT;
-      speedSearching += 5;
 
       delay(TIME_DELAY);
     }
