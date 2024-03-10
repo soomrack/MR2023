@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/Users/papas/YandexDisk/MR2023/MakarovGeorgy/4_Sorting/build",
+  "command": "C:\\dev\\mingw64\\bin\\clang++.exe   -g -std=gnu++17 -o CMakeFiles\\4_Sorting.dir\\main.cpp.obj -c C:\\Users\\papas\\YandexDisk\\MR2023\\MakarovGeorgy\\4_Sorting\\main.cpp",
+  "file": "C:/Users/papas/YandexDisk/MR2023/MakarovGeorgy/4_Sorting/main.cpp",
+  "output": "CMakeFiles/4_Sorting.dir/main.cpp.obj"
+}
+]
