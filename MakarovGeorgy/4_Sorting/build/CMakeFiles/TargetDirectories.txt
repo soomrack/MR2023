@@ -1,3 +1,0 @@
-C:/Users/papas/YandexDisk/MR2023/MakarovGeorgy/4_Sorting/build/CMakeFiles/4_Sorting.dir
-C:/Users/papas/YandexDisk/MR2023/MakarovGeorgy/4_Sorting/build/CMakeFiles/edit_cache.dir
-C:/Users/papas/YandexDisk/MR2023/MakarovGeorgy/4_Sorting/build/CMakeFiles/rebuild_cache.dir
