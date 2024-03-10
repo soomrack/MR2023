@@ -1,0 +1,23 @@
+[build-system]
+requires = [
+    "setuptools >= 65",
+    "wheel >= 0.38",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "augmentor"
+version = "1.0.0"
+dependencies = [
+    "numpy >= 1.26.4",
+    "pillow >= 10.2.0",
+]
+authors = [
+    { name = "Georgy Makarov", email = "makarov@paradoxical.ru" },
+]
+description = "Object detection datasets augmentation module"
+readme = "README.md"
+requires-python = ">=3.6"
+
+[project.urls]
+"Repository" = "https://gitverse.ru/makarov/augmentor"
