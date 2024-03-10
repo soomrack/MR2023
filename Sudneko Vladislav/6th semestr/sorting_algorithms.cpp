@@ -151,14 +151,14 @@ void heapify(auto& array, size_t array_size, size_t non_leaf_node) {
  * @param array          The array to be sorted.
  * @param array_size     The size of the array.
  */
-void heap_sort(auto& array, int array_size) { 
-    for (size_t non_leaf_node = floor(array_size/2) - 1; non_leaf_node >= 0; non_leaf_node--) { 
-        heapify(array, array_size, non_leaf_node); 
+void heap_sort(auto& array, size_t array_size) { 
+    for (size_t non_leaf_node = floor(array_size/2); non_leaf_node > 0; --non_leaf_node) { 
+        heapify(array, array_size, non_leaf_node - 1); 
     } 
-    for (size_t non_leaf_node = array_size - 1; non_leaf_node >= 0; non_leaf_node--) {
-        swap(array[0], array[non_leaf_node]);
-        heapify(array, non_leaf_node, 0); 
-    } 
+    for (size_t non_leaf_node = array_size; non_leaf_node > 0; --non_leaf_node) {
+        swap(array[0], array[non_leaf_node - 1]);
+        heapify(array, non_leaf_node - 1, 0); 
+    }
 }
 
 
@@ -168,21 +168,14 @@ void heap_sort(auto& array, int array_size) {
  * @param array          The array to be sorted.
  * @param array_size     The size of the array.
  */
-void insertion_sort(auto& array, size_t array_size) {
-    using temp_type = remove_reference<decltype( array[0] )>::type;
-    temp_type temp;
-    size_t index_of_element_before;
-    for (size_t index_of_current_element = 1; index_of_current_element < array_size; index_of_current_element++) {
-
-        temp =  array[index_of_current_element];
-        index_of_element_before = index_of_current_element - 1;
-
-        while ((index_of_element_before >= 0) && (array[index_of_element_before] > temp)) {
-            array[index_of_element_before + 1] = array[index_of_element_before];
-            index_of_element_before--;
+void insertion_sort(auto& array, size_t array_size)
+{
+    for (size_t index_of_current_element = 1; index_of_current_element < array_size; ++index_of_current_element)
+        for (size_t index_of_element_before = index_of_current_element; index_of_element_before > 0; --index_of_element_before) {
+            if (array[index_of_element_before - 1] > array[index_of_element_before]) 
+            swap(array[index_of_element_before - 1], array[index_of_element_before]);
+            else break;
         }
-        array[index_of_element_before+1] = temp;
-    }
 }
 
 
