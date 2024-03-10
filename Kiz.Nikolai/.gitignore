@@ -1,4 +1,4 @@
-.vscode/
+*/.vscode/
 */build/
 task0/helloworld
 # Prerequisites
