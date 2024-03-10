@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 
-void heapify(std::vector<int>& array, int size, int idx)
+void heapify(int* array, int size, int idx)
 {
     int maxInHeap = idx;
     int left = 2 * idx + 1;
@@ -20,10 +20,8 @@ void heapify(std::vector<int>& array, int size, int idx)
     }
 }
 
-void heapSort(std::vector<int>& array) 
+void heapSort(int* array, int size) 
 {
-    int size = array.size();
-
     for (int idx = size / 2 - 1; idx >= 0; idx--) {
         heapify(array, size, idx);
     }
@@ -34,7 +32,7 @@ void heapSort(std::vector<int>& array)
     }
 }
 
-void printArray(std::vector<int>& array, int size)
+void printArray(int* array, int size)
 {
     std::cout << "\nSorted array: ";
     for (int idx = 0; idx < size; idx++) {
@@ -44,10 +42,10 @@ void printArray(std::vector<int>& array, int size)
 
 void initialization()
 {
-    std::vector<int> array = { 20, 8, 7, 15, 10, 6 };
-    int size = array.size();
+    int array[] = { 20, 8, 7, 15, 10, 6 };
+    int size = std::end(array) - std::begin(array);
 
-    heapSort(array);
+    heapSort(array, size);
 
     printArray(array, size);
 }
