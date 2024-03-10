@@ -1,19 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-void merge(int arr[], int left, int mid, int right, int temp[]);
-
-void merge_sort(int *arr, int right, int left, int temp[]){
-    while(left <= right){
-        int mid = (left + right) / 2;
-
-        merge_sort(arr, left, mid, temp );
-        merge_sort(arr, mid + 1, right, temp);
-
-        merge(arr, left, mid, right, temp);
-    }
-}
-
-void merge(int arr[], int left, int mid, int right, int temp[]) {
+void merge(int arr[], int temp[], int left, int mid, int right) {
     int k = 0, right_idx = mid + 1; 
 
     while (left <= mid && right_idx <= right) {
@@ -38,23 +26,38 @@ void merge(int arr[], int left, int mid, int right, int temp[]) {
         right_idx++;
         k++;
     }
+}
 
-    for (int i = left; i <= right; i++) {
-        arr[left] = temp[i - left];
+void mergeSort(int arr[], int temp[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+
+        mergeSort(arr, temp, left, mid);
+        mergeSort(arr, temp, mid + 1, right);
+
+        merge(arr, temp, left, mid, right);
     }
 }
-void print_arr(int *arr, int size){
-    for(int i = 0; i < size; i++){
+
+void printArray(int arr[], int size) {
+    for (int i = 0; i < size; i++)
         printf("%d ", arr[i]);
-    }
     printf("\n");
 }
 
-int main(){
-    int arr[] = {};
-    int size = sizeof(arr) / sizeof(arr[0]);
-    int temp[size];
+int main() {
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int arr_size = sizeof(arr) / sizeof(arr[0]);
 
-    merge_sort(arr, size - 1, 0, temp);
-    print_arr(arr, size);
+    int *temp = (int *)malloc(arr_size * sizeof(int));
+    if (temp == NULL) {
+        printf("Ошибка выделенияя\n");
+        return 1;
+    }
+
+    mergeSort(arr, temp, 0, arr_size - 1);
+
+    printArray(arr, arr_size);
+
+    free(temp);
 }
