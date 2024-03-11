@@ -2,38 +2,44 @@
 #include <vector>
 #include <cstring>
 
-void merge(int* array, int initial, int middle, int last)
+void merge(int* array, int initial, int middle, int last, int* buff)
 {
-	int i = initial;
-	int j = middle + 1;
+	int countInFirst = middle + 1 - initial;
+	int countInSecond = last - middle;
 
-	while (i <= middle && j <= last) {
-		if (array[i] <= array[j]) {
+	memcpy(buff, &array[initial], countInFirst * sizeof(int));
+
+	int i = 0; // The element of the buff array
+	int j = middle + 1; // The element of the unsorted array
+	int k = initial; // The element of the sorted array
+
+	while (i < countInFirst && j <= last) {
+		if (buff[i] <= array[j])
+		{
+			array[k] = buff[i];
 			i++;
 		}
-		else {
-			int buff = array[j];
-			for (int k = j; k > i; k--) {
-				array[k] = array[k - 1];
-			}
-			array[i] = buff;
-
+		else
+		{
+			array[k] = array[j];
 			j++;
-			middle++;
 		}
+		k++;
 	}
+
+	memcpy(&array[k], &buff[i], (countInFirst - i) * sizeof(int));
 }
 
-void sort(int* array, int initial, int last)
+void sort(int* array, int initial, int last, int* buff)
 {
 	if (initial < last) 
 	{
 		int middle = initial + (last - initial) / 2;
 
-		sort(array, initial, middle);
-		sort(array, middle + 1, last);
+		sort(array, initial, middle, buff);
+		sort(array, middle + 1, last, buff);
 
-		merge(array, initial, middle, last);
+		merge(array, initial, middle, last, buff);
 	}
 }
 
@@ -50,7 +56,11 @@ void initialization()
 	int array[] = { 1, 11, 7, 5, 9, 10, 14, 15, 3 };
 	int size = std::end(array) - std::begin(array);
 
-	sort(array, 0, size - 1);
+	int* buff = new int[size];
+
+	sort(array, 0, size - 1, buff);
+
+	delete[] buff;
 
 	printArray(size, array);
 }
