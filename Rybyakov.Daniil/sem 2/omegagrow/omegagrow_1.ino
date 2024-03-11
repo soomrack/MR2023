@@ -15,36 +15,32 @@
 #include <TroykaDHT.h>
 DHT dht_sensor(PIN_DHT_SENSOR, DHT21);
 
-//значения будут отличаться в зависимости от типа растения
-int MIN_LUMINOSITY; // минимальная освещенность
-double MIN_AIR_TEMP; // минимальная температура воздуха
-double MAX_AIR_TEMP; // максимальная температура воздуха
-double MIN_AIR_HUMIDITY; // минимальная влажность воздуха
-double MAX_AIR_HUMIDITY; // максимальная влажность воздуха
-int MIN_GROUND_HUMIDITY; // минимальная влажность почвы
-int WATERING_TIME = 5000; // время поливки 5 секунд
 
-// глобальные переменные в которых хранится состояние 
-int HOURS; // время в часах получаемое с часов
-int MINUTES; // время в минутах получаемое с часов
-int GROUND_HUMIDITY; // FIX или OK / 1 или 0
-int LUMINOSITY; // FIX или OK / 1 или 0
-int REGULAR_VEN; // ON или OFF / 1 или 0
-int VEN; // ON или OFF / 1 или 0
-int VEN_HEAT; // ON или OFF / 1 или 0
-double AIR_TEMP; // FIX или OK / 1 или 0
-double AIR_HUMIDITY; // FIX или OK / 1 или 0
-int TIME_OF_VEN; // время в течении которого будет работать вентилятор
-int VECTOR_STATUS[9]; // вектор состояний в котором будет хранится нынешнее состояние системы для дальнейшего воздействия
-// 0-й элемент вектора: день/ночь (TIME_OF_DAY)
-// 1-й элемент вектора: освещенность (LUMINOSITY)
-// 2-й элемент вектора: влажность почвы (GROUND_HUMIDITY)
-// 3-й элемент вектора: температура (AIR_TEMP)
-// 4-й элемент вектора: влажность воздуха (AIR_HUMIDITY)
-// 5-й элемент вектора: регулярне проветривание (REGULAR_VEN)
-// 6-й элемент вектора: работа вентилятора (зависит от влажности воздуха и температуры) (VEN)
-// 7-й элемент вектора: работа нагревательного элемена (зависит от температуры и работы вентилятора) (VEN_HEAT)
-// 8-й элемент вектора: работа водяного насоса
+struct Environment  
+{
+  int time_of_day;
+  int min_luminosity; 
+  double min_air_temp; 
+  double max_air_temp; 
+  double min_air_humidity; 
+  double max_air_humidity; 
+  int min_ground_humidity; 
+  int watering_time = 5000; 
+  int hours; 
+  int minutes; 
+  int ground_humidity; // FIX или OK / 1 или 0
+  int luminosity; // FIX или OK / 1 или 0
+  int regular_ven; // ON или OFF / 1 или 0
+  int ven; // ON или OFF / 1 или 0
+  int ven_heat; // ON или OFF / 1 или 0
+  double air_temp; // FIX или OK / 1 или 0
+  double air_humidity; // FIX или OK / 1 или 0
+  int time_of_ven; // время в течении которого будет работать вентилятор
+  int water_pump;
+  // 0-й элемент вектора: день/ночь (TIME_OF_DAY)
+};
+
+Environment env;
 
 
 void setup() // включает нужные пины в необходимые режимы работы
@@ -61,34 +57,34 @@ void setup() // включает нужные пины в необходимые
 
 void plant_strawberry() // состояние среды подходящее для клубники
 {
-  MIN_LUMINOSITY = 400;
-  MIN_AIR_TEMP = 20;
-  MAX_AIR_TEMP = 30;
-  MIN_GROUND_HUMIDITY = 50;
-  MIN_AIR_HUMIDITY = 10;
-  MAX_AIR_HUMIDITY = 60;
+  env.min_luminosity = 400;
+  env.min_air_temp = 20;
+  env.max_air_temp = 30;
+  env.min_ground_humidity = 50;
+  env.min_air_humidity = 10;
+  env.max_air_humidity = 60;
 }
 
 
 void plant_cucumber() // состояние среды подходящее для огурцов
 {
-  MIN_LUMINOSITY = 200;
-  MIN_AIR_TEMP = 10;
-  MAX_AIR_TEMP = 25;
-  MIN_GROUND_HUMIDITY = 100;
-  MIN_AIR_HUMIDITY = 15;
-  MAX_AIR_HUMIDITY = 50;
+  env.min_luminosity = 200;
+  env.min_air_temp = 10;
+  env.max_air_temp = 25;
+  env.min_ground_humidity = 100;
+  env.min_air_humidity = 15;
+  env.max_air_humidity = 50;
 }
 
 
 void plant_carrot() // состояние среды подходящее для морковки
 {
-  MIN_LUMINOSITY = 250;
-  MIN_AIR_TEMP = 15;
-  MAX_AIR_TEMP = 20;
-  MIN_GROUND_HUMIDITY = 500;
-  MIN_AIR_HUMIDITY = 20;
-  MAX_AIR_HUMIDITY = 55;
+  env.min_luminosity = 250;
+  env.min_air_temp = 15;
+  env.max_air_temp = 20;
+  env.min_ground_humidity = 500;
+  env.min_air_humidity = 20;
+  env.max_air_humidity = 55;
 }
 
 
@@ -107,51 +103,51 @@ void set_plant() // устанавливает тип растения
 
 void set_time() // снятие данных с часов
 {
-  HOURS = 0;
-  MINUTES = 0;
+  env.hours = 0;
+  env.minutes = 0;
 }
 
 
 void check_day_time() // проверяет сейчас день или ночь
 {
-  if (HOURS > 6 && HOURS < 20){ // ночь будет с 20.00 до 6.00
-    VECTOR_STATUS[0] = DAY; //сейчас день
+  if (env.hours > 6 && env.hours < 20){ // ночь будет с 20.00 до 6.00
+    env.time_of_day = DAY; 
   }
   else {
-    VECTOR_STATUS[0] = NIGHT; // сейчас ночь
+    env.time_of_day = NIGHT; 
   }
 }
 
 
 void check_regular_ven() // проверяет насстало ли время регулярного проветривания
 {
-  if (VECTOR_STATUS[0] == DAY && (HOURS % 1 == 0) && (MINUTES % 10 == 0)){ // регулярное проветривание будет проходить раз в час
-    VECTOR_STATUS[5] = ON; // когда наступает время включает проветривание
+  if (env.time_of_day == DAY && (env.hours % 1 == 0) && (env.minutes % 10 == 0)){ // регулярное проветривание будет проходить раз в час
+    env.regular_ven = ON; 
   }
   else {
-    VECTOR_STATUS[5] = OFF; // когда наступает время выключает проветривание
+    env.regular_ven = OFF;
   }
 }
 
 
 void check_air_temp() // проверяет температуру воздуха
 {
-  if (AIR_TEMP < MAX_AIR_TEMP && AIR_TEMP > MIN_AIR_TEMP){ 
-    VECTOR_STATUS[3] = OK; // температура в рамках нормы
+  if (env.air_temp < env.max_air_temp && env.air_temp > env.min_air_temp){ 
+    env.air_temp = OK; 
   }
   else{
-    VECTOR_STATUS[3] = FIX; // требуется нагрев или охлаждение
+    env.air_temp = FIX; 
   }
 }
 
 
 void check_air_humidity() // проверяет влажность воздуха
 {
-  if (AIR_HUMIDITY < MAX_AIR_HUMIDITY && AIR_HUMIDITY > MIN_AIR_HUMIDITY){
-    VECTOR_STATUS[4] = OK; // влажность в рамках нормы
+  if (env.air_humidity < env.max_air_humidity && env.air_humidity > env.min_air_humidity){
+    env.air_humidity = OK;
   }
   else{
-    VECTOR_STATUS[4] = FIX; // требуется увлажнение или проветривание
+    env.air_humidity = FIX; 
   }
 }
 
@@ -177,117 +173,116 @@ void do_ven_heat(int status) // по надобности включает об�
 void do_watering(int status) // по надобности включает полив на какое-то время
 {
   digitalWrite(PIN_WATER_PUMP, status);
-  delay(WATERING_TIME);
+  delay(env.watering_time);
 }
 
 
 void time_day() // алгоритм действи если сейчас день
 {
-  if (LUMINOSITY < MIN_LUMINOSITY){ // проверка на достаточную освещенность
-    VECTOR_STATUS[1] = ON; // включаем если света недостаточно
+  if (env.luminosity < env.min_luminosity){ // проверка на достаточную освещенность
+    env.luminosity = ON; 
   }
   else{
-    VECTOR_STATUS[1] = OFF; // выключаем если света достаточно
+    env.luminosity = OFF; 
   }
 
-  if (GROUND_HUMIDITY < MIN_GROUND_HUMIDITY){ // проверка на влажность почвы
-    VECTOR_STATUS[2] = ON; // полив нужен
+  if (env.ground_humidity < env.min_ground_humidity){ // проверка на влажность почвы
+    env.ground_humidity = ON; 
   }
   else{
-    VECTOR_STATUS[2] = OFF; // полив не нужен
+    env.ground_humidity = OFF; 
   }
 
-  if (VECTOR_STATUS[5] == ON){ // проверка на работу регулярного проветривания
-    VECTOR_STATUS[6] = ON; // если регулярное проветривание работает вентилятор работает
-    if (AIR_TEMP < MIN_AIR_TEMP){ // проверка на превышение минимальной температуру
-        VECTOR_STATUS[7] = ON; // из-за холода включаем нагреватель
+  if (env.regular_ven == ON){ // проверка на работу регулярного проветривания
+    env.ven = ON; 
+    if (env.air_temp < env.min_air_temp){ // проверка на превышение минимальной температуру
+        env.ven_heat = ON; 
       }
     else{
-      VECTOR_STATUS[7] = OFF; // нагреватель выключаем для охлаждения
+      env.ven_heat = OFF; 
     }
   }
   else{ //регулярное проветривание не работает
-    if (AIR_HUMIDITY > MAX_AIR_HUMIDITY){ // проврека на превышени влажности воздуха
-      VECTOR_STATUS[6] = ON; // из-за повышенной влажности включаем вентилятор
-      if (AIR_TEMP < MIN_AIR_TEMP){ // проверка на превышение минимальной температуру
-        VECTOR_STATUS[7] = ON; // из-за холода включаем нагреватель
+    if (env.air_humidity > env.max_air_humidity){ // проврека на превышени влажности воздуха
+      env.ven = ON; 
+      if (env.air_temp < env.min_air_temp){ // проверка на превышение минимальной температуру
+        env.ven_heat = ON; 
       }
       else{
-        VECTOR_STATUS[7] = OFF; // нагреватель выключаем для охлаждения
+        env.ven_heat = OFF; 
       }
     }
-    else if (AIR_HUMIDITY < MAX_AIR_HUMIDITY && AIR_HUMIDITY > MIN_AIR_HUMIDITY){ // влажность воздуха в рамках допустимой
-      if (AIR_TEMP > MAX_AIR_TEMP){ // проверка температуры воздууха
-        VECTOR_STATUS[6] = ON; // включаем и вентилятор и нагреватель
-        VECTOR_STATUS[7] = ON;
+    else if (env.air_humidity < env.max_air_humidity && env.air_humidity > env.min_air_humidity){ // влажность воздуха в рамках допустимой
+      if (env.air_temp > env.max_air_temp){ // проверка температуры воздууха
+        env.ven = ON; 
+        env.ven_heat = ON;
       }
       else{
-        VECTOR_STATUS[6] = OFF; // выключаем и вентилятор и нагреватель
-        VECTOR_STATUS[7] = OFF;
+        env.ven = OFF; 
+        env.ven_heat = OFF;
       }
     }
     else{ // влажность воздуха ниже допустимой
-      if (VECTOR_STATUS[2] == ON){ // проверяем поливали ли уже почву
-        VECTOR_STATUS[4] = OFF; // почву уже поливали (полив не нужен)
+      if (env.ground_humidity == ON){ // проверяем поливали ли уже почву
+        env.air_humidity = OFF; 
       }
       else{
-      VECTOR_STATUS[4] = ON; // нужно полить для увелечения влажности воздуха
+      env.air_humidity = ON; 
       }
       }
     }
-    if (VECTOR_STATUS[4] == ON || VECTOR_STATUS[2] == ON){ // требуется полив либо для почвы либо для воздуха
-      VECTOR_STATUS[8] = ON; // будет активировать насос
+    if (env.air_humidity == ON || env.ground_humidity == ON){ // требуется полив либо для почвы либо для воздуха
+      env.water_pump = ON; 
     }
     else{
-      VECTOR_STATUS[8] = OFF; // почву поливатть не надо
+      env.water_pump = OFF; 
     }
 }
 
 
 void time_night() // алгоритм действи если сейчас
 {
-  VECTOR_STATUS[1] = OFF; // ночью не нужен свет
-  VECTOR_STATUS[5] = OFF; // ночью не нужно регулярное проветривание
+  env.luminosity = OFF; 
+  env.regular_ven = OFF; 
 
-  if (GROUND_HUMIDITY < MIN_GROUND_HUMIDITY){ // проверка на влажность почвы
-    VECTOR_STATUS[2] = ON; // полив нужен
+  if (env.ground_humidity < env.min_ground_humidity){ // проверка на влажность почвы
+    env.ground_humidity = ON; 
   }
   else{
-    VECTOR_STATUS[2] = OFF; // полив не нужен
+    env.ground_humidity = OFF;
   }
 
-  if (AIR_HUMIDITY > MAX_AIR_HUMIDITY){ // проврека на превышени влажности воздуха
-    VECTOR_STATUS[6] = ON; // из-за повышенной влажности включаем вентилятор
-    if (AIR_TEMP < MIN_AIR_TEMP){ // проверка на превышение минимальной температуру
-        VECTOR_STATUS[7] = ON; // из-за холода включаем нагреватель
+  if (env.air_humidity > env.max_air_humidity){ // проврека на превышени влажности воздуха
+    env.ven = ON; 
+    if (env.air_temp < env.min_air_temp){ // проверка на превышение минимальной температуру
+        env.ven_heat = ON; 
+    else{
+        env.ven_heat = OFF; 
+    }
+    }
+  else if (env.air_humidity < env.max_air_humidity && env.air_humidity > env.min_air_humidity){ // влажность воздуха в рамках допустимой
+    if (env.air_temp > env.max_air_temp){ // проверка температуры воздууха
+      env.ven = ON; 
+      env.ven_heat = ON;
     }
     else{
-        VECTOR_STATUS[7] = OFF; // нагреватель выключаем для охлаждения
-    }
-    }
-  else if (AIR_HUMIDITY < MAX_AIR_HUMIDITY && AIR_HUMIDITY > MIN_AIR_HUMIDITY){ // влажность воздуха в рамках допустимой
-    if (AIR_TEMP > MAX_AIR_TEMP){ // проверка температуры воздууха
-      VECTOR_STATUS[6] = ON; // включаем и вентилятор и нагреватель
-      VECTOR_STATUS[7] = ON;
-    }
-    else{
-      VECTOR_STATUS[6] = OFF; // выключаем и вентилятор и нагреватель
-      VECTOR_STATUS[7] = OFF;
+      env.ven = OFF; 
+      env.ven_heat = OFF;
     }
   }
   else{ // влажность воздуха ниже допустимой
-    if (VECTOR_STATUS[2] == ON){ // проверяем поливали ли уже почву
-      VECTOR_STATUS[4] = OFF; // почву уже поливали (полив не нужен)
+    if (env.ground_humidity == ON){ // проверяем поливали ли уже почву
+      env.air_humidity = OFF; 
     }
     else{
-    VECTOR_STATUS[4] = ON; // нужно полить для увелечения влажности воздуха
+    env.air_humidity = ON; 
     }
     }
-    if (VECTOR_STATUS[4] == ON || VECTOR_STATUS[2] == ON){ // требуется полив либо для почвы либо для воздуха
-      VECTOR_STATUS[8] = ON; // будет активировать насос
+    if (env.air_humidity == ON || env.ground_humidity == ON){ // требуется полив либо для почвы либо для воздуха
+      env.water_pump = ON; 
     }
     else{
-      VECTOR_STATUS[8] = OFF; // почву поливать не надо
+      env.water_pump = OFF; 
     }
 }
 
@@ -295,37 +290,37 @@ void time_night() // алгоритм действи если сейчас
 void check_status() // получение значений с датчиков
 {
   dht_sensor.read();
-  GROUND_HUMIDITY = analogRead(PIN_HUMIDITY_SENSOR);
-  LUMINOSITY = analogRead(PIN_LIGHT_SENSOR);
-  AIR_TEMP = dht_sensor.getTemperatureC();
-  AIR_HUMIDITY = dht_sensor.getHumidity();
+  env.ground_humidity = analogRead(PIN_HUMIDITY_SENSOR);
+  env.luminosity = analogRead(PIN_LIGHT_SENSOR);
+  env.air_temp = dht_sensor.getTemperatureC();
+  env.air_humidity = dht_sensor.getHumidity();
 }
 
 
 void setting_values() // проверка условий
 {
-  check_day_time(); // запись значений в вектор состояний
-  check_regular_ven(); // запись значений в вектор состояний
-  check_air_temp(); // запись значений в вектор состояний
-  check_air_humidity(); // запись значений в вектор состояний
+  check_day_time(); 
+  check_regular_ven(); 
+  check_air_temp(); 
+  check_air_humidity(); 
 
-  if (VECTOR_STATUS[0] == DAY){time_day();} // запускает программу соответствующую дню
-  else {time_night();} // запускает программу соответствующую ночи
+  if (env.time_of_day == DAY){time_day();} 
+  else {time_night();} 
 }
 
 
 void realization() // включение необходимых элеметов
 {
-  do_light(VECTOR_STATUS[1]);
-  do_ven(VECTOR_STATUS[6]);
-  do_ven_heat(VECTOR_STATUS[7]);
-  do_watering(VECTOR_STATUS[8]);
+  do_light(env.luminosity);
+  do_ven(env.ven);
+  do_ven_heat(env.ven_heat);
+  do_watering(env.water_pump);
 }
 
 
-void periodic_check() // кааждые две минуты запускает программу
+void periodic_check() // каждые две минуты запускает программу
 {
-  if (MINUTES % 2 == 0){
+  if (env.minutes % 2 == 0){
     check_status();
     setting_values();
     realization();
