@@ -1,31 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void merge(int arr[], int temp[], int left, int mid, int right) {
-    int k = 0, right_idx = mid + 1; 
+    int k = 0, right_idx = mid + 1;
 
     while (left <= mid && right_idx <= right) {
         if (arr[left] <= arr[right_idx]) {
-            temp[k] = arr[left];
-            left++;
+            temp[k++] = arr[left++];
         } else {
-            temp[k] = arr[right_idx];
-            right_idx++;
+            temp[k++] = arr[right_idx++];
         }
-        k++;
     }
 
-    while (left <= mid) {
-        temp[k] = arr[left];
-        left++;
-        k++;
+    if (left <= mid) {
+        memcpy(&temp[k], &arr[left], (mid - left + 1) * sizeof(int));
+        k += mid - left + 1;
     }
 
-    while (right_idx <= right) {
-        temp[k] = arr[right_idx];
-        right_idx++;
-        k++;
+    if (right_idx <= right) {
+        memcpy(&temp[k], &arr[right_idx], (right - right_idx + 1) * sizeof(int));
+        k += right - right_idx + 1;
     }
+
+    memcpy(&arr[0], temp, (right - left + 1) * sizeof(int));
 }
 
 void mergeSort(int arr[], int temp[], int left, int right) {
@@ -51,7 +49,7 @@ int main() {
 
     int *temp = (int *)malloc(arr_size * sizeof(int));
     if (temp == NULL) {
-        printf("Ошибка выделенияя\n");
+        printf("Ошибка выделения\n");
         return 1;
     }
 
