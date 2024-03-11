@@ -124,7 +124,7 @@ void get_sensors()  // снятие данных с датчиком
 
 void ventilation()  
 {
-  if (sens.minutes == 0){
+  if (sens.minutes == 10){
     state.regular_ven = ON;
   }
 }
@@ -216,6 +216,9 @@ void do_heat()
 void do_vent()
 {
   if (state.regular_ven == ON){
+    digitalWrite(PIN_VEN, ON);
+  }
+  else if (state.ven == ON){
     digitalWrite(PIN_VEN, ON);
   }
   else{
