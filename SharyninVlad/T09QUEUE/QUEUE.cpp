@@ -1,54 +1,34 @@
 #include <iostream>
 
-class DLinkedListItem
+class QueueItem
 {
 public:
     int data;
-    DLinkedListItem* next;
-    DLinkedListItem* prev;
+    int priopity;
+    QueueItem* next;
+    QueueItem* prev;
 };
 
-class DLinkedList {
+class Queue {
 private:
-    DLinkedListItem* head;
-    DLinkedListItem* tail;
+    QueueItem* head;
+    QueueItem* tail;
 public:
-    DLinkedList();
-    DLinkedList(const DLinkedList& L);
-    DLinkedList(DLinkedList&& L);
-    void Push(int n);
+    Queue();
+    Queue(const Queue& L);
+    Queue(Queue&& L);
+    void Push(int n, int prior);
     void Pop();
     void print();
 };
 
-
-DLinkedList::DLinkedList()
+Queue::Queue()
 {
-    head = nullptr;
-    tail = nullptr;
+    head = NULL;
+    tail = NULL;
 }
 
-
-void DLinkedList::Push(int n)
-{
-    DLinkedListItem* tmp = new DLinkedListItem;
-    tmp->data = n;
-    tmp->next = tmp->prev = nullptr;
-
-    if (head == nullptr) {
-        head = tmp;
-        tail = tmp;
-    }
-    else
-    {
-        tmp->prev = head;
-        head->next = tmp;
-        head = tmp;
-    }
-}
-
-
-DLinkedList::DLinkedList(const DLinkedList& L)
+Queue::Queue(const Queue& L)
 {
 
     if (L.head == nullptr) {
@@ -56,10 +36,11 @@ DLinkedList::DLinkedList(const DLinkedList& L)
         tail = nullptr;
         return;
     }
-    DLinkedListItem* tmp_head = nullptr;
-    for (DLinkedListItem* tmp_idx = L.head; tmp_idx != nullptr; tmp_idx = tmp_idx->prev) {
-        DLinkedListItem* tmp_list_item = new DLinkedListItem;
+    QueueItem* tmp_head = nullptr;
+    for (QueueItem* tmp_idx = L.head; tmp_idx != nullptr; tmp_idx = tmp_idx->prev) {
+        QueueItem* tmp_list_item = new QueueItem;
         tmp_list_item->data = tmp_idx->data;
+        tmp_list_item->priopity = tmp_idx->priopity;
         tmp_list_item->next = tmp_list_item->prev = nullptr;
         if (tmp_head == nullptr) {
             head = tmp_list_item;
@@ -75,7 +56,7 @@ DLinkedList::DLinkedList(const DLinkedList& L)
 }
 
 
-DLinkedList::DLinkedList(DLinkedList&& L)
+Queue::Queue(Queue&& L)
 {
     head = L.head;
     tail = L.tail;
@@ -83,11 +64,39 @@ DLinkedList::DLinkedList(DLinkedList&& L)
 }
 
 
-void DLinkedList::Pop()
+void Queue::Push(int n, int prior)
 {
+    QueueItem* tmp = new QueueItem;
+    QueueItem* tmp_idx = head;
+    tmp->data = n;
+    tmp->priopity = prior;
+    tmp->next = tmp->prev = NULL;
+
+    if (head == NULL) {
+        head = tail = tmp;
+        return;
+    }
+
+    while (prior > tmp_idx->priopity)
+        tmp_idx = tmp_idx->prev;
+
+
+    tmp->prev = tmp_idx;
+    tmp->next = tmp_idx->next;
+    if (tmp_idx->next != NULL)
+        tmp_idx->next->prev = tmp;
+    tmp_idx->next = tmp;
+    if (head->next != NULL)
+        head = head->next;
+}
+
+void Queue::Pop()
+{
+
     if (tail == nullptr) return;
 
     tail->data = 0;
+    tail->priopity = 0;
 
     if (tail->next == nullptr) {
         head = nullptr;
@@ -99,53 +108,34 @@ void DLinkedList::Pop()
     tail->prev = nullptr;
 }
 
-
-void DLinkedList::print()
+void Queue::print()
 {
-    DLinkedListItem* Tmp = head;
-    while (Tmp != nullptr)
+    QueueItem* Tmp = head;
+    while (Tmp != NULL)
     {
-        std::cout << Tmp->data << "\t";
+        std::cout << Tmp->data  << ",prior=" << Tmp->priopity << "\t";
         Tmp = Tmp->prev;
     }
     std::cout << "\n";
 }
 
-
 int main()
 {
-    DLinkedList dlist;
+    Queue list;
 
-    unsigned int choise, run = 1;
-    int number;
+    list.Push(1, 3);
+    list.print();
 
-    while (run)
-    {
-        std::cout << "choise: ";
-        std::cin >> choise;
+    list.Push(2, 2);
+    list.print();
 
-        switch (choise)
-        {
-        case 0:
-            run = 0;
-            break;
+    list.Push(3, 1);
+    list.print();
 
-        case 1:
-            std::cout << "number: ";
-            std::cin >> number;
-            dlist.Push(number);
-            break;
+    list.Push(4, 2);
+    list.print();
 
-        case 2:
-            dlist.Pop();
-            break;
-
-        default:
-            printf("wrong choise\n");
-            break;
-        }
-        dlist.print();
-    }
-
+    list.Pop();
+    list.print();
     return 0;
 }
