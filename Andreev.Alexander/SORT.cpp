@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <cstring>
 
 #define MAX 50
@@ -14,7 +15,7 @@ private:
     MassItem* Mas;
     size_t length;
 private:
-    void Merge_Sort_insides(MassItem* mas, MassItem* tmp, size_t size);
+    void Merge_sort_insides(MassItem* mas, MassItem* tmp, size_t size);
 
 public:
     void print();
@@ -25,11 +26,11 @@ public:
 
 public:
     void Swap(MassItem* a, MassItem* b);
-    void Bubble_Sort();
-    void Merge_Sort(MassItem* mas, size_t size);
-    void Insertion_Sort(MassItem* mas, size_t size);
-    void Heap_Sort(MassItem* mas, size_t size);
-    void Heap_Correction(MassItem* mas, size_t size, size_t idx);
+    void Bubble_sort();
+    void Merge_sort(MassItem* mas, size_t size);
+    void Insertion_sort(MassItem* mas, size_t size);
+    void Heap_sort(MassItem* mas, size_t size);
+    void Heap_correction(MassItem* mas, size_t size, size_t idx);
 };
 
 Massive::Massive() {
@@ -89,35 +90,39 @@ void Massive::Swap(MassItem* a, MassItem* b)
     *b = tmp;
 }
 
-void Massive::Bubble_Sort()
+void Massive::Bubble_sort()
 {
     for (size_t unsorted_idx = length; unsorted_idx > 1; unsorted_idx--)
         for (size_t current_idx = 0; current_idx < unsorted_idx - 1; current_idx++)
             if (Mas[current_idx] > Mas[current_idx + 1]) Swap(&Mas[current_idx], &Mas[current_idx + 1]);
 }
 
-void Massive::Merge_Sort(MassItem* mas, size_t size)
+void Massive::Merge_sort(MassItem* mas, size_t size)
 {
-    MassItem* tmp = new MassItem[size];
+    MassItem* tmp = new MassItem[getsize()];
     memcpy(tmp, mas, sizeof(MassItem) * size);
-    Merge_Sort_insides(tmp, mas, size);
+    Merge_sort_insides(tmp, mas, size);
     delete[] tmp;
 }
 
-void Massive::Merge_Sort_insides(MassItem* mas, MassItem* tmp, size_t size)
+void Massive::Merge_sort_insides(MassItem* mas, MassItem* tmp, size_t size)
 {
     size_t middle = size / 2;
 
     if (size < 2) return;
 
-    Merge_Sort_insides(tmp, mas, middle);
-    Merge_Sort_insides(tmp + middle, mas + middle, size - middle);
+    Merge_sort_insides(tmp, mas, middle);
+    Merge_sort_insides(tmp + middle, mas + middle, size - middle);
 
-    // Копирование данных из временного массива tmp обратно в основной массив mas
-    memcpy(mas, tmp, size * sizeof(MassItem));
+    for (size_t idx = 0, left_idx = 0, right_idx = middle; idx < size; idx++) {
+        if (right_idx >= size) tmp[idx] = mas[left_idx++];
+        else if (left_idx >= middle) tmp[idx] = mas[right_idx++];
+        else if (mas[left_idx] <= mas[right_idx]) tmp[idx] = mas[left_idx++];
+        else tmp[idx] = mas[right_idx++];
+    }
 }
 
-void Massive::Insertion_Sort(MassItem* mas, size_t size)
+void Massive::Insertion_sort(MassItem* mas, size_t size)
 {
     MassItem key;
 
@@ -129,26 +134,27 @@ void Massive::Insertion_Sort(MassItem* mas, size_t size)
     }
 }
 
-void Massive::Heap_Correction(MassItem* mas, size_t size, size_t idx)
+void Massive::Heap_correction(MassItem* mas, size_t size, size_t idx)
 {
-    size_t largest = idx, 
-           left = 2 * idx + 1, 
-           right = 2 * idx + 2;
+    size_t largest = idx,
+        left = 2 * idx + 1,
+        right = 2 * idx + 2;
+
     if (left < size && mas[left] > mas[largest]) largest = left;
     if (right < size && mas[right] > mas[largest]) largest = right;
     if (largest != idx) {
         Swap(&mas[idx], &mas[largest]);
-        Heap_Correction(mas, size, largest);
+        Heap_correction(mas, size, largest);
     }
 }
 
-void Massive::Heap_Sort(MassItem* mas, size_t size)
+void Massive::Heap_sort(MassItem* mas, size_t size)
 {
     for (int idx = size / 2 - 1; idx >= 0; idx--)
-        Heap_Correction(mas, size, idx);
+        Heap_correction(mas, size, idx);
     for (int idx = size - 1; idx >= 0; idx--) {
         Swap(&mas[0], &mas[idx]);
-        Heap_Correction(mas, idx, 0);
+        Heap_correction(mas, idx, 0);
     }
 }
 
@@ -159,28 +165,28 @@ int main(void)
     M.set();
     std::cout << "Unsorted Array: ";
     M.print();
-    M.Bubble_Sort();
+    M.Bubble_sort();
     std::cout << "Bubble Sorted Array: ";
     M.print();
 
     M.set();
     std::cout << "Unsorted Array: ";
     M.print();
-    M.Merge_Sort(M.getdata(), M.getsize());
+    M.Merge_sort(M.getdata(), M.getsize());
     std::cout << "Merge Sorted Array: ";
     M.print();
 
     M.set();
     std::cout << "Unsorted Array: ";
     M.print();
-    M.Insertion_Sort(M.getdata(), M.getsize());
+    M.Insertion_sort(M.getdata(), M.getsize());
     std::cout << "Insertion Sorted Array: ";
     M.print();
 
     M.set();
     std::cout << "Unsorted Array: ";
     M.print();
-    M.Heap_Sort(M.getdata(), M.getsize());
+    M.Heap_sort(M.getdata(), M.getsize());
     std::cout << "Heap Sorted Array: ";
     M.print();
 
