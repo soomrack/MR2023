@@ -124,7 +124,7 @@ void get_sensors()  // снятие данных с датчиком
 
 void ventilation()  
 {
-  if (sens.minutes == 10){
+  if (sens.minutes %= 10){
     state.regular_ven = ON;
   }
 }
