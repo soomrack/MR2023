@@ -94,6 +94,10 @@ void search() {
       delay(TIME_DELAY);
       move_forward(speedSearching);
 
+      
+      if (speedSearching > SPEED_DEFAULT) speedSearching = SPEED_DEFAULT;
+      speedSearching += 5;
+
       delay(TIME_DELAY);
     }
 }
