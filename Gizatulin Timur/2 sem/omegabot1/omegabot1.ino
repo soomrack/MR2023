@@ -9,20 +9,15 @@
 
 #define PIN_BUZZER 8
 
-void move_forward();
-void move_backward();
-void turn_left();
-void turn_right();
-void search();
-
 
 // Глобальные константы для настройки работы алгоритмов
-const byte SPEED_DEFAULT = 200;
+const byte SPEED_DEFAULT = 255;
 
-const int SENSOR_THRESHOLD = 800; // ~800 is tantamount to black, ~300 is tantamount to white
+const int SENSOR_THRESHOLD = 800; 
 
-const int TIME_DEL = 100;  
-const int TIME_LIM = 10000;
+const int TIME_DELAY = 100;  
+const int TIME_LIMIT = 10000; 
+
 
 void setup() {
   pinMode(PIN_SENSOR_R, INPUT);
@@ -84,7 +79,7 @@ void search() {
     int time = millis();
 
     while ((analogRead(PIN_SENSOR_R) < SENSOR_THRESHOLD) && (analogRead(PIN_SENSOR_L) < SENSOR_THRESHOLD)) {
-      if (millis() - time > TIME_LIM) {
+      if (millis() - time > TIME_LIMIT) {
         analogWrite(PIN_SPEED_R, 0);
         analogWrite(PIN_SPEED_L, 0);
 
@@ -92,18 +87,19 @@ void search() {
         delay(2000);
         digitalWrite(PIN_BUZZER, 0);
 
-        exit(-1);
+        exit(1);
       }
             
-      delay(TIME_DEL);
+      delay(TIME_DELAY);
       turn_left(speedSearching);
 
-      delay(TIME_DEL);
+      delay(TIME_DELAY);
       move_forward(speedSearching);
 
+      
       if (speedSearching > SPEED_DEFAULT) speedSearching = SPEED_DEFAULT;
       speedSearching += 5;
 
-      delay(TIME_DEL);
+      delay(TIME_DELAY);
     }
 }
