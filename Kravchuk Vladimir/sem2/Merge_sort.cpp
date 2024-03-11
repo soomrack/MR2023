@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstring>
 
-void merge(std::vector<int>& array, int initial, int middle, int last,  int* buff)
+void merge(int* array, int initial, int middle, int last, int* buff)
 {
 	int countInFirst = middle + 1 - initial;
 	int countInSecond = last - middle;
@@ -14,10 +14,12 @@ void merge(std::vector<int>& array, int initial, int middle, int last,  int* buf
 	int k = initial; // The element of the sorted array
 
 	while (i < countInFirst && j <= last) {
-		if (buff[i] <= array[j]) {
+		if (buff[i] <= array[j])
+		{
 			array[k] = buff[i];
 			i++;
-		} else 
+		}
+		else
 		{
 			array[k] = array[j];
 			j++;
@@ -28,19 +30,20 @@ void merge(std::vector<int>& array, int initial, int middle, int last,  int* buf
 	memcpy(&array[k], &buff[i], (countInFirst - i) * sizeof(int));
 }
 
-void sort(std::vector<int>& array, int initial, int last, int* buff) 
+void sort(int* array, int initial, int last, int* buff)
 {
-	if (initial < last) {
+	if (initial < last) 
+	{
 		int middle = initial + (last - initial) / 2;
 
 		sort(array, initial, middle, buff);
 		sort(array, middle + 1, last, buff);
 
-		merge(array, initial, middle, last,  buff);
+		merge(array, initial, middle, last, buff);
 	}
 }
 
-void printArray(int size, std::vector<int>& array)
+void printArray(int size, int* array)
 {
 	std::cout << "\nSorted array: ";
 	for (int idx = 0; idx < size; idx++) {
@@ -50,16 +53,16 @@ void printArray(int size, std::vector<int>& array)
 
 void initialization()
 {
-	std::vector<int> array = { 1, 11, 7, 5, 9, 10, 14 };
-	int size = array.size();
+	int array[] = { 1, 11, 7, 5, 9, 10, 14, 15, 3 };
+	int size = std::end(array) - std::begin(array);
 
 	int* buff = new int[size];
 
 	sort(array, 0, size - 1, buff);
 
-	printArray(size, array);
-
 	delete[] buff;
+
+	printArray(size, array);
 }
 
 int main() 
