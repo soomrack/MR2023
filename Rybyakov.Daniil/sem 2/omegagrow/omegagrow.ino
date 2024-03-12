@@ -134,14 +134,6 @@ void get_sensors()  // снятие данных с датчиком
   sens.luminosity = analogRead(PIN_LIGHT_SENSOR);
   sens.air_temp = dht_sensor.getTemperatureC();
   sens.air_humidity = dht_sensor.getHumidity();
-  
-  Serial.print("ошибка:                  ");
-  Serial.println(abc);
-  Serial.print("влажность воздуха:       ");
-  Serial.println(dht_sensor.getHumidity());
-  Serial.print("температура воздуха:     ");
-  Serial.println(dht_sensor.getTemperatureC());
-  Serial.println("  ");
 }
 
 
