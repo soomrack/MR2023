@@ -48,6 +48,7 @@ State state;
 Climate clim;
 Sensors sens;
 
+
 void setup()  // включает нужные пины в необходимые режимы работы
 {
   Serial.begin(9600);
@@ -134,15 +135,13 @@ void get_sensors()  // снятие данных с датчиком
   sens.air_temp = dht_sensor.getTemperatureC();
   sens.air_humidity = dht_sensor.getHumidity();
   
-  // Serial.print("влажность воздуха:     ");
-  // Serial.println(sens.air_humidity);
-  // Serial.print("температура воздуха:     ");
-  // Serial.println(sens.air_temp);
+  Serial.print("ошибка:                  ");
   Serial.println(abc);
   Serial.print("влажность воздуха:       ");
   Serial.println(dht_sensor.getHumidity());
   Serial.print("температура воздуха:     ");
   Serial.println(dht_sensor.getTemperatureC());
+  Serial.println("  ");
 }
 
 
@@ -269,18 +268,6 @@ void periodic_check()  // каждые две минуты запускает п
   ventilation();
   ground_humidity();
   light();
-
-
-  // Serial.print("влажность почвы:     ");
-  // Serial.println(sens.ground_humidity);
-  // Serial.print("освещенность:     ");
-  // Serial.println(sens.luminosity);
-  // Serial.print("влажность воздуха:     ");
-  // Serial.println(sens.air_humidity);
-  // Serial.print("температура воздуха:     ");
-  // Serial.println(sens.air_temp);
-  // Serial.println("  ");
-  // Serial.println("  ");
 
   day_night();
 
