@@ -16,18 +16,19 @@
 DHT dht_sensor(PIN_DHT_SENSOR, DHT21);
 
 struct Climate  {
-  int min_luminosity; 
+  int norm_luminosity;  // 0 - светло / 1023 - темно
   double min_air_temp; 
   double max_air_temp; 
   double min_air_humidity; 
   double max_air_humidity; 
-  int min_ground_humidity; 
+  int norm_ground_humidity; // 0 - влажно / 1023 - сухо
 }; 
 
 
 struct Sensors  {
   int hours;
   int minutes;
+  int seconds;
   int luminosity; 
   double air_temp; 
   double air_humidity; 
@@ -61,10 +62,10 @@ void setup()  // включает нужные пины в необходимы�
 
 void plant_strawberry()  // состояние среды подходящее для клубники
 {
-  clim.min_luminosity = 400;
+  clim.norm_luminosity = 400;
   clim.min_air_temp = 20;
   clim.max_air_temp = 30;
-  clim.min_ground_humidity = 50;
+  clim.norm_ground_humidity = 500;
   clim.min_air_humidity = 10;
   clim.max_air_humidity = 60;
 }
@@ -72,10 +73,10 @@ void plant_strawberry()  // состояние среды подходящее �
 
 void plant_cucumber() // состояние среды подходящее для огурцов
 {
-  clim.min_luminosity = 200;
+  clim.norm_luminosity = 200;
   clim.min_air_temp = 10;
   clim.max_air_temp = 25;
-  clim.min_ground_humidity = 100;
+  clim.norm_ground_humidity = 100;
   clim.min_air_humidity = 15;
   clim.max_air_humidity = 50;
 }
@@ -83,10 +84,10 @@ void plant_cucumber() // состояние среды подходящее дл
 
 void plant_carrot()  // состояние среды подходящее для морковки
 {
-  clim.min_luminosity = 250;
+  clim.norm_luminosity = 250;
   clim.min_air_temp = 15;
   clim.max_air_temp = 20;
-  clim.min_ground_humidity = 500;
+  clim.norm_ground_humidity = 500;
   clim.min_air_humidity = 20;
   clim.max_air_humidity = 55;
 }
@@ -107,25 +108,51 @@ void set_plant()  // устанавливает тип растения
 
 void set_time()  // снятие данных с часов
 {
-  sens.hours = 0;
-  sens.minutes = 0;
+  // sens.hours = 0;
+  // sens.minutes = 0;
+  sens.seconds = millis() / 1000;
+  if (sens.seconds == 60){
+    sens.minutes += 1;
+    sens.seconds = 0;
+  }
+  if (sens.minutes == 60){
+    sens.hours += 1;
+    sens.minutes = 0;
+  }
+  if (sens.hours == 24){
+    sens.hours = 0;
+  } 
 }
 
 
 void get_sensors()  // снятие данных с датчиком
 {
   dht_sensor.read();
+  int abc = dht_sensor.getState();
   sens.ground_humidity = analogRead(PIN_HUMIDITY_SENSOR);
   sens.luminosity = analogRead(PIN_LIGHT_SENSOR);
   sens.air_temp = dht_sensor.getTemperatureC();
   sens.air_humidity = dht_sensor.getHumidity();
+  
+  // Serial.print("влажность воздуха:     ");
+  // Serial.println(sens.air_humidity);
+  // Serial.print("температура воздуха:     ");
+  // Serial.println(sens.air_temp);
+  Serial.println(abc);
+  Serial.print("влажность воздуха:       ");
+  Serial.println(dht_sensor.getHumidity());
+  Serial.print("температура воздуха:     ");
+  Serial.println(dht_sensor.getTemperatureC());
 }
 
 
 void ventilation()  
 {
-  if (sens.minutes %= 10){
+  if (sens.minutes % 10 == 0){
     state.regular_ven = ON;
+  }
+  else {
+    state.regular_ven = OFF;
   }
 }
 
@@ -154,7 +181,7 @@ void air_humidity()
     state.pump = OFF;
   } 
   else if (sens.air_humidity < clim.min_air_humidity){
-    state.ven = ON;
+    state.ven = OFF;
     state.pump = ON;
   }
   else{
@@ -166,7 +193,7 @@ void air_humidity()
 
 void ground_humidity()
 {
-  if (sens.ground_humidity < clim.min_ground_humidity){
+  if (sens.ground_humidity >= clim.norm_ground_humidity){
     state.pump = ON;
   }
   else{
@@ -177,7 +204,7 @@ void ground_humidity()
 
 void light()
 {
-  if (sens.luminosity < clim.min_luminosity){
+  if (sens.luminosity >= clim.norm_luminosity){
     state.light = ON;
   }
   else{
@@ -188,7 +215,7 @@ void light()
 
 void day_night()
 {
-  if (sens.hours < 6 && sens.hours > 22){
+  if (sens.hours < 6 || sens.hours > 22){
     state.regular_ven = OFF;
     state.light = OFF;
   }
@@ -235,27 +262,38 @@ void do_pump()
 
 void periodic_check()  // каждые две минуты запускает программу
 {
-  if (sens.minutes % 2 == 0){
-    get_sensors();
+  get_sensors();
 
-    ventilation();
-    air_temp();
-    air_humidity();
-    ground_humidity();
-    light();
+  air_temp();
+  air_humidity();
+  ventilation();
+  ground_humidity();
+  light();
 
-    day_night();
 
-    do_light();
-    do_heat(); 
-    do_vent();   
-    do_pump();
-  }
+  // Serial.print("влажность почвы:     ");
+  // Serial.println(sens.ground_humidity);
+  // Serial.print("освещенность:     ");
+  // Serial.println(sens.luminosity);
+  // Serial.print("влажность воздуха:     ");
+  // Serial.println(sens.air_humidity);
+  // Serial.print("температура воздуха:     ");
+  // Serial.println(sens.air_temp);
+  // Serial.println("  ");
+  // Serial.println("  ");
+
+  day_night();
+
+  do_light();
+  do_vent();
+  do_heat(); 
+  do_pump();
 }
 
 
 void loop()  // главная функция
 {
+  set_plant();
   set_time();
-  periodic_check();
+  if (sens.seconds % 5 == 0){ delay(500); periodic_check(); delay(500);}
 }
