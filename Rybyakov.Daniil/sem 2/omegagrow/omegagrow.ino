@@ -42,6 +42,7 @@ struct State  {
   bool ven;
   bool pump;
   bool heat;
+  int pump_exeption;
 }; 
 
 State state;
@@ -150,15 +151,15 @@ void ventilation()
 
 void air_temp()
 {
-  if (sens.air_temp > clim.min_air_temp && sens.air_temp < clim.max_air_temp){
+  if (sens.air_temp >= clim.min_air_temp && sens.air_temp <= clim.max_air_temp){
     state.ven = OFF;
     state.heat = OFF;
   } 
-  else if (sens.air_temp < clim.min_air_temp){
+  if (sens.air_temp < clim.min_air_temp){
     state.ven = ON;
     state.heat = ON;
   }
-  else{
+  if (sens.air_temp > clim.max_air_temp){
     state.ven = ON;
     state.heat = OFF;
   }
@@ -167,15 +168,15 @@ void air_temp()
 
 void air_humidity()
 {
-  if (sens.air_humidity > clim.min_air_humidity && sens.air_humidity < clim.max_air_humidity){
+  if (sens.air_humidity >= clim.min_air_humidity && sens.air_humidity <= clim.max_air_humidity){
     state.ven = OFF;
     state.pump = OFF;
   } 
-  else if (sens.air_humidity < clim.min_air_humidity){
+  if (sens.air_humidity < clim.min_air_humidity){
     state.ven = OFF;
     state.pump = ON;
   }
-  else{
+  if (sens.air_humidity > clim.max_air_humidity){
     state.ven = ON;
     state.pump = OFF;
   }
@@ -247,7 +248,18 @@ void do_vent()
 
 void do_pump()
 {
-  digitalWrite(PIN_WATER_PUMP, state.pump);
+  if (state.pump_exeption > 5){
+    if (state.pump == ON){
+    digitalWrite(PIN_WATER_PUMP, state.pump);
+    delay(3000);
+    digitalWrite(PIN_WATER_PUMP, OFF);
+    state.pump_exeption = 0;
+    }
+    else{
+      digitalWrite(PIN_WATER_PUMP, state.pump);
+    }
+  }
+  state.pump_exeption += 1;
 }
 
 
@@ -265,7 +277,7 @@ void periodic_check()  // каждые две минуты запускает п
 
   do_light();
   do_vent();
-  do_heat(); 
+  do_heat();  // нагревание после вентиляции!!!!!!!!!!!!!!!!!!!!!!
   do_pump();
 }
 
