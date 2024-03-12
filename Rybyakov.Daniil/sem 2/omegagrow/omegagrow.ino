@@ -7,13 +7,10 @@
 #define PIN_VEN 7  // вентилятор
 #define ON 1  // включение цифровых выходов
 #define OFF 0  // выключение цифровых выходов
-#define DAY 1  // день
-#define NIGHT 0  // ночь
-#define FIX 1  // нуждается в принятии мер
-#define OK 0  // не нуждается в принятии мер
 
 #include <TroykaDHT.h>
 DHT dht_sensor(PIN_DHT_SENSOR, DHT21);
+
 
 struct Climate  {
   int norm_luminosity;  // 0 - светло / 1023 - темно
@@ -263,7 +260,7 @@ void do_pump()
 }
 
 
-void periodic_check()  // каждые две минуты запускает программу
+void periodic_check()
 {
   get_sensors();
 
