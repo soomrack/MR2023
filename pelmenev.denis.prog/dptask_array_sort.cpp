@@ -90,26 +90,25 @@ void sort_merge(ArrayItem array[], size_t size)
 
 void rebuild_tree(ArrayItem array[], size_t sorted)
 {
-    for (size_t idx = 0; idx < sorted / 2; idx++) {
-        while (2*idx + 2 <= sorted) {
-            if (2*idx + 2 == sorted ) {
-                if (array[idx] < array[2*idx + 1])
-                    swap_elements(array[idx], array[2*idx + 1]);
-                
-                idx = 2*idx + 1;
-                break;
-            }
+    size_t idx = 0;
 
-            if ((array[idx] >= array[2*idx + 1]) && (array[idx] >= array[2*idx + 2]))
-                break;
-        
-            if (array[2*idx + 1] > array[2*idx + 2]) {
+    while (2*idx + 2 <= sorted) {
+        if (2*idx + 2 == sorted ) {
+            if (array[idx] < array[2*idx + 1])
                 swap_elements(array[idx], array[2*idx + 1]);
-                idx = 2*idx + 1;
-            } else {
-                swap_elements(array[idx], array[2*idx + 2]);
-                idx = 2*idx + 2;
-            }
+            
+            break;
+        }
+
+        if ((array[idx] >= array[2*idx + 1]) && (array[idx] >= array[2*idx + 2]))
+            break;
+        
+        if (array[2*idx + 1] > array[2*idx + 2]) {
+            swap_elements(array[idx], array[2*idx + 1]);
+            idx = 2*idx + 1;
+        } else {
+            swap_elements(array[idx], array[2*idx + 2]);
+            idx = 2*idx + 2;
         }
     }
 }
@@ -117,53 +116,51 @@ void rebuild_tree(ArrayItem array[], size_t sorted)
 
 void heap_tree(ArrayItem array[], size_t size)
 {
-    size_t length = size;
+    if (size == 1) 
+        return;
+    
+    for (size_t idx = size / 2; idx > 0; idx--) {
+        if ((idx == size / 2) && (size % 2 == 0))
+            if (array[idx - 1] < array[2 * idx + 1]) {
+                swap_elements(array[idx], array[2 * idx - 1]);
+                continue;
+            } else continue;
 
-    if (length % 2 == 0) {
-        if (array[length - 1] > array[(length - 2) / 2])
-            swap_elements(array[length - 1], array[(length - 2) / 2]);
-
-        length--;
-    }
-  
-    for (size_t idx = length - 1; idx >= 2; idx -= 2) {
-        if ((array[idx] > array[(idx - 2) / 2]) || (array[idx - 1] > array[(idx - 2) / 2])) {
-            if (array[idx] >= array[idx - 1])
-                swap_elements(array[idx], array[(idx - 2) / 2]);
-            else
-                swap_elements(array[idx - 1], array[(idx - 2) / 2]);
+        if ((array[idx - 1] < array[2 * idx - 1]) || (array[idx - 1] < array[2 * idx])) {
+            if (array[2 * idx] >= array[2 * idx - 1]) {
+                swap_elements(array[idx - 1], array[2 * idx]);
+                continue;
+            } else {
+                swap_elements(array[idx - 1], array[2 * idx - 1]);
+                continue;
+            }
         }
     }
-
-    rebuild_tree(array, size);
 }
 
 
 void sort_heap(ArrayItem array[], size_t size)
 {
     heap_tree(array, size);
-
-    swap_elements(array[0], array[size - 1]);
     
-    for (size_t sorted = size - 1; sorted > 1; --sorted) {
-        rebuild_tree(array, sorted);
-
+    for (size_t sorted = size; sorted > 1; --sorted) {
         swap_elements(array[0], array[sorted - 1]);
+
+        rebuild_tree(array, sorted - 1);
     }
 }
 
 
 int main()
 {
-    ArrayItem a[] = {5, 4, 1, 3, 7, 3, 9, 0};
-    size_t a_size = 8;
-    ArrayItem b[8];
+    ArrayItem a[] = {5, 4, 1, 3, 7, 3, 9, 0, 8};
+    size_t a_size = 9;
     print_array(a, a_size);
     std::cout << "______________" << std::endl;
     //sort_bubble(a, a_size);
     //sort_insertion(a, a_size);
-    sort_merge(a, a_size);
-    //sort_heap(a, a_size);
+    //sort_merge(a, a_size);
+    sort_heap(a, a_size);
     std::cout << "______________" << std::endl;
     print_array(a, a_size);
 
