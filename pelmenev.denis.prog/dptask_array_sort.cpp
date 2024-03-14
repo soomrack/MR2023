@@ -116,16 +116,18 @@ void rebuild_tree(ArrayItem array[], size_t sorted)
 
 void heap_tree(ArrayItem array[], size_t size)
 {
-    if (size == 1) 
-        return;
-    
-    for (size_t idx = size / 2; idx > 0; idx--) {
-        if ((idx == size / 2) && (size % 2 == 0))
-            if (array[idx - 1] < array[2 * idx + 1]) {
-                swap_elements(array[idx], array[2 * idx - 1]);
-                continue;
-            } else continue;
+    if (size == 1) return;
 
+    size_t aber = 0;
+
+    if (size % 2 == 0) {
+        if (array[(size - 2) / 2] < array[size - 1])
+            swap_elements(array[(size - 2) / 2], array[size - 1]);
+
+        aber++;
+    }
+    
+    for (size_t idx = size / 2 - aber; idx > 0; idx--) {
         if ((array[idx - 1] < array[2 * idx - 1]) || (array[idx - 1] < array[2 * idx])) {
             if (array[2 * idx] >= array[2 * idx - 1]) {
                 swap_elements(array[idx - 1], array[2 * idx]);
@@ -153,8 +155,8 @@ void sort_heap(ArrayItem array[], size_t size)
 
 int main()
 {
-    ArrayItem a[] = {5, 4, 1, 3, 7, 3, 9, 0, 8};
-    size_t a_size = 9;
+    ArrayItem a[] = {5, 4, 1, 3, 7, 3, 9, 0};
+    size_t a_size = 8;
     print_array(a, a_size);
     std::cout << "______________" << std::endl;
     //sort_bubble(a, a_size);
