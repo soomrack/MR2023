@@ -13,12 +13,12 @@ DHT dht_sensor(PIN_DHT_SENSOR, DHT21);
 
 
 struct Climate  {
-  int norm_luminosity;  // 0 - светло / 1023 - темно
+  int norm_luminosity;
   double min_air_temp; 
   double max_air_temp; 
   double min_air_humidity; 
   double max_air_humidity; 
-  int norm_ground_humidity; // 0 - влажно / 1023 - сухо
+  int norm_ground_humidity;
 }; 
 
 
@@ -26,10 +26,10 @@ struct Sensors  {
   int hours;
   int minutes;
   int seconds;
-  int luminosity; 
-  double air_temp; 
-  double air_humidity; 
-  int ground_humidity;
+  int luminosity;  // 0 - светло / 1023 - темно
+  double air_temp;  // градусы
+  double air_humidity;  // проценты
+  int ground_humidity;  // 0 - влажно / 1023 - сухо
 }; 
 
 
@@ -134,7 +134,7 @@ void get_sensors()  // снятие данных с датчиком
 
 void ventilation()  
 {
-  if (sens.minutes % 10 == 0){
+  if (sens.minutes % 10 == 0){  // проветривание раз в 10 минут
     state.regular_ven = ON;
   }
   else {
@@ -257,7 +257,7 @@ void do_pump()
 }
 
 
-void periodic_check()
+void periodic_check()  // функция вызывающая проверку состояния системы
 {
   get_sensors();
 
@@ -278,7 +278,7 @@ void periodic_check()
 
 void loop()  // главная функция
 {
-  set_plant();
+  set_plant(); 
   set_time();
   if (sens.seconds % 5 == 0){ delay(500); periodic_check(); delay(500);}
 }
