@@ -108,6 +108,7 @@ void set_plant()  // устанавливает тип растения
 void set_time()  // снятие данных с часов
 {
   sens.seconds = millis() / 1000;
+
   if (sens.seconds == 60){
     sens.minutes += 1;
     sens.seconds = 0;
@@ -125,6 +126,7 @@ void set_time()  // снятие данных с часов
 void get_sensors()  // снятие данных с датчиком
 {
   dht_sensor.read();
+
   sens.ground_humidity = analogRead(PIN_HUMIDITY_SENSOR);
   sens.luminosity = analogRead(PIN_LIGHT_SENSOR);
   sens.air_temp = dht_sensor.getTemperatureC();
@@ -280,5 +282,5 @@ void loop()  // главная функция
 {
   set_plant(); 
   set_time();
-  if (sens.seconds % 5 == 0){ delay(500); periodic_check(); delay(500);}
+  if (sens.seconds % 5 == 0){ delay(800); periodic_check();}
 }
