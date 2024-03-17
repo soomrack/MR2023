@@ -49,12 +49,12 @@ cmake_ninja_workdir = /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis$ 
 
 build cmake_object_order_depends_target_din_arr: phony || CMakeFiles/din_arr.dir
 
-build CMakeFiles/din_arr.dir/din_arr.cpp.o: CXX_COMPILER__din_arr_unscanned_Debug /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis$ Aristotelis/Task5/din_arr.cpp || cmake_object_order_depends_target_din_arr
-  DEP_FILE = CMakeFiles/din_arr.dir/din_arr.cpp.o.d
+build CMakeFiles/din_arr.dir/src/din_arr.cpp.o: CXX_COMPILER__din_arr_unscanned_Debug /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis$ Aristotelis/Task5/src/din_arr.cpp || cmake_object_order_depends_target_din_arr
+  DEP_FILE = CMakeFiles/din_arr.dir/src/din_arr.cpp.o.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -I"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/Task5"
+  INCLUDES = -I"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include"
   OBJECT_DIR = CMakeFiles/din_arr.dir
-  OBJECT_FILE_DIR = CMakeFiles/din_arr.dir
+  OBJECT_FILE_DIR = CMakeFiles/din_arr.dir/src
 
 
 # =============================================================================
@@ -64,7 +64,7 @@ build CMakeFiles/din_arr.dir/din_arr.cpp.o: CXX_COMPILER__din_arr_unscanned_Debu
 #############################################
 # Link the static library libdin_arr.a
 
-build libdin_arr.a: CXX_STATIC_LIBRARY_LINKER__din_arr_Debug CMakeFiles/din_arr.dir/din_arr.cpp.o
+build libdin_arr.a: CXX_STATIC_LIBRARY_LINKER__din_arr_Debug CMakeFiles/din_arr.dir/src/din_arr.cpp.o
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = CMakeFiles/din_arr.dir
   POST_BUILD = :
@@ -81,12 +81,12 @@ build libdin_arr.a: CXX_STATIC_LIBRARY_LINKER__din_arr_Debug CMakeFiles/din_arr.
 
 build cmake_object_order_depends_target_linked_list: phony || CMakeFiles/linked_list.dir
 
-build CMakeFiles/linked_list.dir/linked_list.cpp.o: CXX_COMPILER__linked_list_unscanned_Debug /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis$ Aristotelis/Task5/linked_list.cpp || cmake_object_order_depends_target_linked_list
-  DEP_FILE = CMakeFiles/linked_list.dir/linked_list.cpp.o.d
+build CMakeFiles/linked_list.dir/src/linked_list.cpp.o: CXX_COMPILER__linked_list_unscanned_Debug /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis$ Aristotelis/Task5/src/linked_list.cpp || cmake_object_order_depends_target_linked_list
+  DEP_FILE = CMakeFiles/linked_list.dir/src/linked_list.cpp.o.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -I"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/Task5"
+  INCLUDES = -I"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include"
   OBJECT_DIR = CMakeFiles/linked_list.dir
-  OBJECT_FILE_DIR = CMakeFiles/linked_list.dir
+  OBJECT_FILE_DIR = CMakeFiles/linked_list.dir/src
 
 
 # =============================================================================
@@ -96,7 +96,7 @@ build CMakeFiles/linked_list.dir/linked_list.cpp.o: CXX_COMPILER__linked_list_un
 #############################################
 # Link the static library liblinked_list.a
 
-build liblinked_list.a: CXX_STATIC_LIBRARY_LINKER__linked_list_Debug CMakeFiles/linked_list.dir/linked_list.cpp.o
+build liblinked_list.a: CXX_STATIC_LIBRARY_LINKER__linked_list_Debug CMakeFiles/linked_list.dir/src/linked_list.cpp.o
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = CMakeFiles/linked_list.dir
   POST_BUILD = :
@@ -116,7 +116,7 @@ build cmake_object_order_depends_target_Task5: phony || cmake_object_order_depen
 build CMakeFiles/Task5.dir/main.cpp.o: CXX_COMPILER__Task5_unscanned_Debug /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis$ Aristotelis/Task5/main.cpp || cmake_object_order_depends_target_Task5
   DEP_FILE = CMakeFiles/Task5.dir/main.cpp.o.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -I"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/Task5"
+  INCLUDES = -I"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include"
   OBJECT_DIR = CMakeFiles/Task5.dir
   OBJECT_FILE_DIR = CMakeFiles/Task5.dir
 

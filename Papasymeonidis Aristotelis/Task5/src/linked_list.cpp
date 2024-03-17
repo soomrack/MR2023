@@ -18,3 +18,14 @@ void linked_list<T>::push_head(const T& value) {
     new_node->next = head;
     head = new_node;
 }
+
+
+template<typename T>
+void linked_list<T>::print() const {
+    node<T> *current = head;
+    while (current != nullptr) {
+        std::cout << current->data << " ";
+        current = current->next;
+    }
+    std::cout << std::endl;
+}
