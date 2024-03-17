@@ -73,13 +73,45 @@ build libdin_arr.a: CXX_STATIC_LIBRARY_LINKER__din_arr_Debug CMakeFiles/din_arr.
   TARGET_PDB = din_arr.a.dbg
 
 # =============================================================================
+# Object build statements for STATIC_LIBRARY target linked_list
+
+
+#############################################
+# Order-only phony target for linked_list
+
+build cmake_object_order_depends_target_linked_list: phony || CMakeFiles/linked_list.dir
+
+build CMakeFiles/linked_list.dir/linked_list.cpp.o: CXX_COMPILER__linked_list_unscanned_Debug /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis$ Aristotelis/Task5/linked_list.cpp || cmake_object_order_depends_target_linked_list
+  DEP_FILE = CMakeFiles/linked_list.dir/linked_list.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -I"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/Task5"
+  OBJECT_DIR = CMakeFiles/linked_list.dir
+  OBJECT_FILE_DIR = CMakeFiles/linked_list.dir
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target linked_list
+
+
+#############################################
+# Link the static library liblinked_list.a
+
+build liblinked_list.a: CXX_STATIC_LIBRARY_LINKER__linked_list_Debug CMakeFiles/linked_list.dir/linked_list.cpp.o
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = CMakeFiles/linked_list.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = liblinked_list.a
+  TARGET_PDB = linked_list.a.dbg
+
+# =============================================================================
 # Object build statements for EXECUTABLE target Task5
 
 
 #############################################
 # Order-only phony target for Task5
 
-build cmake_object_order_depends_target_Task5: phony || cmake_object_order_depends_target_din_arr
+build cmake_object_order_depends_target_Task5: phony || cmake_object_order_depends_target_din_arr cmake_object_order_depends_target_linked_list
 
 build CMakeFiles/Task5.dir/main.cpp.o: CXX_COMPILER__Task5_unscanned_Debug /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis$ Aristotelis/Task5/main.cpp || cmake_object_order_depends_target_Task5
   DEP_FILE = CMakeFiles/Task5.dir/main.cpp.o.d
@@ -96,9 +128,9 @@ build CMakeFiles/Task5.dir/main.cpp.o: CXX_COMPILER__Task5_unscanned_Debug /home
 #############################################
 # Link the executable Task5
 
-build Task5: CXX_EXECUTABLE_LINKER__Task5_Debug CMakeFiles/Task5.dir/main.cpp.o | libdin_arr.a || libdin_arr.a
+build Task5: CXX_EXECUTABLE_LINKER__Task5_Debug CMakeFiles/Task5.dir/main.cpp.o | libdin_arr.a liblinked_list.a || libdin_arr.a liblinked_list.a
   FLAGS = -g
-  LINK_LIBRARIES = libdin_arr.a
+  LINK_LIBRARIES = libdin_arr.a  liblinked_list.a
   OBJECT_DIR = CMakeFiles/Task5.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -133,6 +165,8 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 
 build din_arr: phony libdin_arr.a
 
+build linked_list: phony liblinked_list.a
+
 # =============================================================================
 # Folder targets.
 
@@ -141,7 +175,7 @@ build din_arr: phony libdin_arr.a
 #############################################
 # Folder: /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug
 
-build all: phony libdin_arr.a Task5
+build all: phony libdin_arr.a liblinked_list.a Task5
 
 # =============================================================================
 # Built-in targets
