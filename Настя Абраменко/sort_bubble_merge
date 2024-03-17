@@ -1,11 +1,10 @@
 #include <iostream>
 #include<cstring>
-#include <string>
 
 #define ARR_SIZE 10
-typedef int arr_type;
+int buffer[ARR_SIZE];
 
-void bubble_sort(arr_type* arr, size_t size)
+void bubble_sort(int* arr, size_t size)
 {
     for (size_t i = 0; i < size - 1; i++) {
         for (size_t j = size - 1; i < j; j--) {
@@ -16,33 +15,75 @@ void bubble_sort(arr_type* arr, size_t size)
 }
 
 
-void merge_inside(arr_type* mas_arr, arr_type* tmp_arr, size_t size)
+void merge(int* arr, int begin, int end)
 {
-    size_t middle = size / 2;
+    int first = begin;
+    int middle = begin + (end - begin) / 2;
+    int second = middle + 1;
+    int k = 0;
+    memset(buffer, 0, ARR_SIZE);
 
-    if (size < 2) {
-        return;
+    while (first <= middle && second <= end)
+    {
+        if (arr[first] <= arr[second]) {
+            buffer[k] = arr[first];
+            first++;
+        }
+        else {
+            buffer[k] = arr[second];
+            second++;
+        }
+        k++;
     }
 
-    merge_inside(tmp_arr, mas_arr, middle);
-    merge_inside(tmp_arr + middle, mas_arr + middle, size - middle);
+    while (first <= middle)
+    {
+        buffer[k] = arr[first];
+        first++;
+        k++;
+    }
 
-    for (size_t idx = 0, left_limb = 0, right_limb = middle; idx < size; idx++) {
-        if (right_limb >= size) tmp_arr[idx] = mas_arr[left_limb++];
-        else if (left_limb >= middle) tmp_arr[idx] = mas_arr[right_limb++];
-        else if (mas_arr[left_limb] <= mas_arr[right_limb]) tmp_arr[idx] = mas_arr[left_limb++];
-        else tmp_arr[idx] = mas_arr[right_limb++];
+    while (second <= end)
+    {
+        buffer[k] = arr[second];
+        second++;
+        k++;
+    }
+
+    for (first = 0; first < k; first++) {
+        arr[begin] = buffer[first];
+        begin++;
     }
 
 }
 
 
-void merge_sort(arr_type* mas_arr, size_t size)
+void merge_sort(int* arr, int left, int right)
 {
-    arr_type* tmp_arr = new int[ARR_SIZE];
-    memcpy(tmp_arr, mas_arr, sizeof(arr_type) * size);
-    merge_inside(tmp_arr, mas_arr, size);
-    delete[] tmp_arr;
+    int temp = 0;
+    if (left < right) {
+        if (right - left == 1) {
+            if (arr[left] > arr[right])
+                std::swap(arr[left], arr[right]);
+        }
+        else {
+            merge_sort(arr, left, left + (right - left) / 2);
+            merge_sort(arr, (left + (right - left) / 2) + 1, right);
+            merge(arr, left, right);
+        }
+    }
+
+}
+
+
+void input(int* m, int& n)
+{
+    std::cout << "Enter the number of array elements: ";
+    std::cin >> n;
+    for (int i = 0; i < n; ++i) {
+        std::cout << "a[" << i << "]= ";
+        std::cin >> m[i];
+    }
 }
 
 
@@ -56,18 +97,17 @@ void print(int* m, int n)
 }
 
 
+
 int main()
 {
     int n;
-
-    n = 10;
-    int arr[ARR_SIZE] = { 1, 3, 33, 3, 50, 5, 7, 6, 2, 7 };
-    std::cout << "The source array:" << std::endl;
-    print(arr, n);
-
-    //merge_sort(arr, ARR_SIZE);
-
-    bubble_sort(arr, 10);
+    int arr[ARR_SIZE];
+    input(arr, n);
+    //n = 10;
+    //int arr[ARR_SIZE] = { 1, 3, 4, 3, 2, 5, 7, 18, 2, 9 };
+    //print(arr, n);
+    //bubble_sort(arr, n);
+    merge_sort(arr, 0, n - 1);
     std::cout << "Sorted array: " << std::endl;
     print(arr, n);
 

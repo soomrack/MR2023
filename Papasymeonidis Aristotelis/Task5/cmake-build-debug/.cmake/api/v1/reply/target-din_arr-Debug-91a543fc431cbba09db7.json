@@ -3,7 +3,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "liblinked_list.a"
+			"path" : "libdin_arr.a"
 		}
 	],
 	"backtrace" : 1,
@@ -26,13 +26,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 8,
+				"line" : 7,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 14,
+				"line" : 13,
 				"parent" : 0
 			}
 		]
@@ -68,9 +68,9 @@
 			]
 		}
 	],
-	"id" : "linked_list::@6890427a1f51a3e7e1df",
-	"name" : "linked_list",
-	"nameOnDisk" : "liblinked_list.a",
+	"id" : "din_arr::@6890427a1f51a3e7e1df",
+	"name" : "din_arr",
+	"nameOnDisk" : "libdin_arr.a",
 	"paths" : 
 	{
 		"build" : ".",
@@ -97,13 +97,13 @@
 	[
 		{
 			"backtrace" : 1,
-			"path" : "linked_list.hpp",
+			"path" : "din_arr.hpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "linked_list.cpp",
+			"path" : "din_arr.cpp",
 			"sourceGroupIndex" : 1
 		}
 	],
