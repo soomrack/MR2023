@@ -12,12 +12,13 @@ int main() {
     for (size_t i = 0; i < array.get_size(); i++)
         array.set(i, int(i * i));
 
-    DynamicArray copy_array(array);
-    copy_array.resize(24, 28);
+    DynamicArray array_copied(array);
+    array_copied.resize(24, 28);
 
     array.print();
-    copy_array.print();
+    array_copied.print();
 
+    
     // Singly linked list example
     std::cout << std::endl << "Singly linked list:" << std::endl;
 
@@ -25,15 +26,16 @@ int main() {
     for (size_t i = 10; i < 17; i++)
         list.push_back(int(i - 3));
 
-    LinkedList move_list = std::move(list);
-    move_list.insert(2, -5);
-    move_list.remove(4);
-    move_list.print();
+    LinkedList list_moved = std::move(list);
+    list_moved.insert(2, -5);
+    list_moved.remove(4);
+    list_moved.print();
 
-    move_list.pop_back();
-    move_list.print();
+    list_moved.pop_back();
+    list_moved.print();
 
-    std::cout << move_list.get(3) << std::endl;
+    std::cout << list_moved.get(3) << std::endl;
+
 
     // Doubly linked list example
     std::cout << std::endl << "Doubly linked list:" << std::endl;
@@ -42,20 +44,34 @@ int main() {
     for (size_t i = 5; i < 12; i++)
         doubly_list.push_back(int((i - 3) * (i + 3)));
 
-    DoublyLinkedList copy_doubly_list(doubly_list);
-    copy_doubly_list.insert(2, -15);
-    copy_doubly_list.remove(4);
-    copy_doubly_list.print();
+    DoublyLinkedList doubly_list_copied(doubly_list);
+    doubly_list_copied.insert(2, -15);
+    doubly_list_copied.remove(4);
+    doubly_list_copied.print();
 
-    copy_doubly_list.pop_back();
-    copy_doubly_list.print();
+    doubly_list_copied.pop_back();
+    doubly_list_copied.print();
 
-    std::cout << copy_doubly_list.get(3) << std::endl;
+    std::cout << doubly_list_copied.get(3) << std::endl;
+
 
     // Stack example
     std::cout << std::endl << "Stack:" << std::endl;
 
     Stack stack;
+    for (size_t i = 0; i < 20; i++) {
+        stack.push(int(i * 2));
+        std::cout << stack.top() << "\t";
+    }
+    std::cout << std::endl;
+
+    Stack stack_moved = std::move(stack);
+    for (size_t i = 0; i < 20; i++) {
+        stack_moved.pop();
+        std::cout << stack_moved.size() << "\t";
+    }
+    std::cout << std::endl;
+
 
     // Queue example
     std::cout << std::endl << "Queue:" << std::endl;

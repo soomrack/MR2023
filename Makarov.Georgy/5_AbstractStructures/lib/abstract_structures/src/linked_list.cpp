@@ -16,7 +16,6 @@ LinkedList::LinkedList(LinkedList &&list) noexcept {
     list.size = 0;
 }
 
-
 dtype LinkedList::get(const size_t index) const {
     if (index >= size)
         throw LinkedListException("Index out of range");
@@ -29,7 +28,6 @@ dtype LinkedList::get(const size_t index) const {
     return item->data;
 }
 
-
 void LinkedList::push_back(const dtype &data) {
     LinkedListItem *item = &head;
 
@@ -40,7 +38,6 @@ void LinkedList::push_back(const dtype &data) {
 
     size++;
 }
-
 
 void LinkedList::pop_back() {
     if (size == 0)
@@ -55,7 +52,6 @@ void LinkedList::pop_back() {
 
     size--;
 }
-
 
 void LinkedList::insert(size_t index, const dtype &data) {
     if (index >= size)

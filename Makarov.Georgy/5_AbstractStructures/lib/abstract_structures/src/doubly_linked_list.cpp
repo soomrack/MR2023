@@ -54,7 +54,6 @@ void DoublyLinkedList::pop_back() {
     size--;
 }
 
-
 void DoublyLinkedList::insert(size_t index, const dtype &data) {
     if (index >= size)
         throw DoublyLinkedListException("Index out of range");
