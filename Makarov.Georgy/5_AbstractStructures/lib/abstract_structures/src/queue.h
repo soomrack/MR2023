@@ -1,7 +1,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include <iostream>
+#include <linked_list.h>
 
 class QueueException : public std::exception {
 private:
@@ -13,7 +13,42 @@ public:
 };
 
 
-class Queue {
+class Queue : LinkedList {
+public:
+    Queue() = default;
+
+    Queue(const Queue &queue) = default;
+
+    Queue(Queue &&queue) noexcept = default;
+
+    ~Queue() = default;
+
+    void enqueue(dtype item) { push_back(item); };
+
+    void dequeue() {
+        if (empty())
+            throw QueueException("Cannot dequeue from empty queue");
+
+        remove(0);
+    };
+
+    dtype front() {
+        if (empty())
+            throw QueueException("Cannot get front item from empty queue");
+
+        return get(0);
+    };
+
+    dtype back() {
+        if (empty())
+            throw QueueException("Cannot get back item from empty queue");
+
+        return get(get_size() - 1);
+    };
+
+    bool empty() { return get_size() == 0; };
+
+    size_t size() { return get_size(); };
 };
 
 #endif //QUEUE_H

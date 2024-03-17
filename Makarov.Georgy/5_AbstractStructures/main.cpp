@@ -18,7 +18,7 @@ int main() {
     array.print();
     array_copied.print();
 
-    
+
     // Singly linked list example
     std::cout << std::endl << "Singly linked list:" << std::endl;
 
@@ -77,6 +77,18 @@ int main() {
     std::cout << std::endl << "Queue:" << std::endl;
 
     Queue queue;
+    for (size_t i = 0; i < 9; i++) {
+        queue.enqueue(int(i * 3));
+        std::cout << queue.back() << "\t";
+    }
+    std::cout << std::endl;
+
+    Queue queue_copied(queue);
+    for (size_t i = 0; i < 8; i++) {
+        queue_copied.dequeue();
+        std::cout << queue_copied.front() << "\t";
+    }
+    std::cout << std::endl;
 
     return 0;
 }

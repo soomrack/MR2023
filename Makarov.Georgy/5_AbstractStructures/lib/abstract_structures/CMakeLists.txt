@@ -11,7 +11,6 @@ set(SOURCE_FILES
         src/doubly_linked_list.cpp
         src/doubly_linked_list.h
         src/stack.h
-        src/queue.cpp
         src/queue.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})

@@ -2,9 +2,6 @@
 #define STACK_H
 
 #include <linked_list.h>
-#include <iostream>
-
-typedef int dtype;
 
 class StackException : public std::exception {
 private:
