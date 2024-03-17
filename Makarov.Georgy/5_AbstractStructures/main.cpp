@@ -77,11 +77,9 @@ int main() {
     std::cout << std::endl << "Queue:" << std::endl;
 
     Queue queue;
-    for (size_t i = 0; i < 9; i++) {
-        queue.enqueue(int(i * 3));
-        std::cout << queue.back() << "\t";
-    }
-    std::cout << std::endl;
+    for (size_t i = 90; i < 99; i++)
+        queue.enqueue(int(i));
+    queue.print_queue();
 
     Queue queue_copied(queue);
     for (size_t i = 0; i < 8; i++) {
@@ -89,6 +87,12 @@ int main() {
         std::cout << queue_copied.front() << "\t";
     }
     std::cout << std::endl;
+
+    queue.enqueue(10);
+    queue.enqueue(20, 2);
+    queue.enqueue(30);
+    queue.enqueue(40, 1);
+    queue.print_queue();
 
     return 0;
 }

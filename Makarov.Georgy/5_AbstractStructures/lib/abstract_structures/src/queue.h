@@ -23,7 +23,10 @@ public:
 
     ~Queue() = default;
 
-    void enqueue(dtype item) { push_back(item); };
+    void enqueue(dtype item, size_t priority = 0) {
+        if (priority >= get_size() || priority == 0) push_back(item);
+        else insert(priority - 1, item);
+    };
 
     void dequeue() {
         if (empty())
@@ -49,6 +52,8 @@ public:
     bool empty() { return get_size() == 0; };
 
     size_t size() { return get_size(); };
+
+    void print_queue() { print(); }
 };
 
 #endif //QUEUE_H
