@@ -4,22 +4,13 @@ LinkedList::LinkedList(const LinkedList &list) {
     if (list.size == 0)
         throw LinkedListException("Cannot copy empty list"); // or return;
 
-    LinkedListItem *current = list.items.next;
-    LinkedListItem *previous = &items;
-
-    while (current != nullptr) {
-        previous->push_back(current->data);
-
-        current = current->next;
-        previous = previous->next;
-
-        size++;
-    }
+    for (size_t idx = 0; idx < list.size; idx++)
+        push_back(list.get(idx));
 }
 
 LinkedList::LinkedList(LinkedList &&list) noexcept {
-    items = list.items;
-    list.items.next = nullptr;
+    head = list.head;
+    list.head.next = nullptr;
 
     size = list.size;
     list.size = 0;
@@ -30,7 +21,7 @@ dtype LinkedList::get(const size_t index) const {
     if (index >= size)
         throw LinkedListException("Index out of range");
 
-    LinkedListItem *item = items.next;
+    LinkedListItem *item = head.next;
 
     size_t item_index = index + 1;
     while (--item_index) item = item->next;
@@ -40,7 +31,7 @@ dtype LinkedList::get(const size_t index) const {
 
 
 void LinkedList::push_back(const dtype &data) {
-    LinkedListItem *item = &items;
+    LinkedListItem *item = &head;
 
     size_t item_index = size;
     while (item_index--) item = item->next;
@@ -55,7 +46,7 @@ void LinkedList::pop_back() {
     if (size == 0)
         throw LinkedListException("Cannot pop back empty list");  // or return;
 
-    LinkedListItem *item = &items;
+    LinkedListItem *item = &head;
 
     size_t item_index = size - 1;
     while (item_index--) item = item->next;
@@ -70,7 +61,7 @@ void LinkedList::insert(size_t index, const dtype &data) {
     if (index >= size)
         throw LinkedListException("Index out of range");
 
-    LinkedListItem *item = &items;
+    LinkedListItem *item = &head;
 
     size_t item_index = index;
     while (item_index--) item = item->next;
@@ -84,7 +75,7 @@ void LinkedList::remove(size_t index) {
     if (index >= size)
         throw LinkedListException("Index out of range");
 
-    LinkedListItem *item = &items;
+    LinkedListItem *item = &head;
 
     size_t item_index = index;
     while (item_index--) item = item->next;
@@ -95,7 +86,7 @@ void LinkedList::remove(size_t index) {
 }
 
 void LinkedList::print() const {
-    for (size_t idx = 0; idx < size; ++idx)
+    for (size_t idx = 0; idx < size; idx++)
         std::cout << get(idx) << "\t";
     std::cout << std::endl;
 }

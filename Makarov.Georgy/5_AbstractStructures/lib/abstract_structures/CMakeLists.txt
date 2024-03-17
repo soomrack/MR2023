@@ -10,6 +10,8 @@ set(SOURCE_FILES
         src/linked_list.h
         src/doubly_linked_list.cpp
         src/doubly_linked_list.h
+        src/stack.h
+        src/stack.cpp
         src/queue.cpp
         src/queue.h)
 
