@@ -92,6 +92,9 @@ dynamic_array::dynamic_array(size_t size_arr, ArrayItem array[])
 
     for (size_t idx = 0; idx < size; ++idx)
         data[idx] = array[idx];
+
+    for (size_t idx = size; idx < real_size; ++ idx)
+        data[idx] = 0;
 }
 
 
@@ -185,6 +188,12 @@ void dynamic_array::set_element(size_t index, ArrayItem value)
 
 void dynamic_array::resize(size_t new_size)
 {
+    if (new_size < real_size) {
+        size = new_size;
+        buf_size = real_size - size;
+        return;
+    }
+
     ArrayItem* new_data;
     
     real_size = new_size + buf_size_global;
@@ -197,6 +206,7 @@ void dynamic_array::resize(size_t new_size)
         new_data[idx] = 0;
     
     size = new_size;
+    delete[] data;
     data = new_data;
 }
 
@@ -313,26 +323,25 @@ void dynamic_array::sort_merge()
 
 void dynamic_array::rebuild_tree(size_t sorted)
 {
-    for (size_t idx = 0; idx < sorted / 2; idx++) {
-        while (2*idx + 2 <= sorted) {
-            if (2*idx + 2 == sorted ) {
-                if (data[idx] < data[2*idx + 1])
-                    swap_elements(data + idx, data + 2*idx + 1);
-                
-                idx = 2*idx + 1;
-                break;
-            }
+    size_t idx = 0;
 
-            if ((data[idx] >= data[2*idx + 1]) && (data[idx] >= data[2*idx + 2]))
-                break;
-        
-            if (data[2*idx + 1] > data[2*idx + 2]) {
+    while (2*idx + 2 <= sorted) {
+        if (2*idx + 2 == sorted ) {
+            if (data[idx] < data[2*idx + 1])
                 swap_elements(data + idx, data + 2*idx + 1);
-                idx = 2*idx + 1;
-            } else {
-                swap_elements(data + idx, data + 2*idx + 2);
-                idx = 2*idx + 2;
-            }
+            
+            break;
+        }
+
+        if ((data[idx] >= data[2*idx + 1]) && (data[idx] >= data[2*idx + 2]))
+            break;
+        
+        if (data[2*idx + 1] > data[2*idx + 2]) {
+            swap_elements(data + idx, data + 2*idx + 1);
+            idx = 2*idx + 1;
+        } else {
+            swap_elements(data + idx, data + 2*idx + 2);
+            idx = 2*idx + 2;
         }
     }
 }
@@ -340,25 +349,28 @@ void dynamic_array::rebuild_tree(size_t sorted)
 
 void dynamic_array::heap_tree(size_t sorted)
 {
-    size_t length = sorted;
+    if (sorted == 1) return;
 
-    if (length % 2 == 0) {
-        if (data[length - 1] > data[(length - 2) / 2])
-            swap_elements(data + length - 1, data + (length - 2) / 2);
+    size_t aber = 0;
 
-        length--;
+    if (sorted % 2 == 0) {
+        if (data[(size - 2) / 2] < data[size - 1])
+            swap_elements(data + (size - 2) / 2, data + size - 1);
+        
+        aber++;
     }
-  
-    for (size_t idx = length - 1; idx >= 2; idx -= 2) {
-        if ((data[idx] > data[(idx - 2) / 2]) || (data[idx - 1] > data[(idx - 2) / 2])) {
-            if (data[idx] >= data[idx - 1])
-                swap_elements(data + idx, data + (idx - 2) / 2);
-            else
-                swap_elements(data + idx - 1, data + (idx - 2) / 2);
+
+    for (size_t idx = sorted / 2 - aber; idx > 0; idx--) {
+        if ((data[idx - 1] < data[2 * idx - 1]) || (data[idx - 1] < data[2 * idx])) {
+            if (data[2 * idx] >= data[2 * idx - 1]) {
+                swap_elements(data + idx - 1, data + 2 * idx);
+                continue;
+            } else {
+                swap_elements(data + idx - 1, data + 2 * idx - 1);
+                continue;
+            }
         }
     }
-
-    rebuild_tree(sorted);
 }
 
 
@@ -367,13 +379,11 @@ void dynamic_array::sort_heap()
     if (data == nullptr) throw NULL_ARRAY;
 
     heap_tree(size);
-
-    swap_elements(data + 0, data + size - 1);
     
-    for (size_t sorted = size - 1; sorted > 1; --sorted) {
-        rebuild_tree(sorted);
-
+    for (size_t sorted = size; sorted > 1; --sorted) {
         swap_elements(data + 0, data + sorted - 1);
+
+        rebuild_tree(sorted - 1);
     }
 }
 

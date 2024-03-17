@@ -2,38 +2,32 @@
 using namespace std;
 
 
-void merge(int* array, int begin, int middle, int end) 
+void merge(int* help_array, int* array, int array_size)
 {
-    int left = begin;
-    int right = middle + 1;
+    int middle = array_size / 2;
 
-    while (left <= middle && right <= end) {
-        if (array[left] > array[right]) {
-            int temp = array[right];
-            for (int i = right; i > left; i--) {
-                array[i] = array[i - 1];
-            }
-            array[left] = temp;
-            middle++;
-            right++;
-        }
-        left++;
+    if (array_size < 2) return;
+
+    merge(array, help_array, middle);
+    merge(array + middle, help_array + middle, array_size - middle);
+
+    for (int idx = 0, left = 0, right = middle; idx < array_size; idx++) {
+        if (right >= array_size) help_array[idx] = array[left++];
+        else if (left >= middle) help_array[idx] = array[right++];
+        else if (array[left] <= array[right]) help_array[idx] = array[left++];
+        else help_array[idx] = array[right++];
     }
 }
 
-
-void merge_sort(int* array, int begin, int end) 
+void merge_sort(int* array, int array_size)
 {
-    if (begin < end) {
-        int middle = (begin + end) / 2;
-        merge_sort(array, begin, middle);
-        merge_sort(array, middle + 1, end);
-        merge(array, begin, middle, end);
-    }
+    int* help_array = new int[array_size];
+    memcpy(help_array, array, sizeof(int) * array_size);
+    merge(help_array, array, array_size);
+    delete[] help_array;
 }
 
-
-void array_print(int array_size, int* array) 
+void array_print(int array_size, int* array)
 {
     for (int elem = 0; elem < array_size; ++elem) {
         cout << array[elem] << " ";
@@ -48,7 +42,7 @@ void initialization()
     int* array = new int[10] { 2, 4, 1, 11, 9, 7, 4, 9, 50, 20 };
 
     array_print(array_size, array);
-    merge_sort(array, 0, array_size - 1);
+    merge_sort(array, array_size);
     array_print(array_size, array);
 
     delete[] array;
