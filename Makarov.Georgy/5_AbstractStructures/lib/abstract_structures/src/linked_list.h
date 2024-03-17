@@ -29,10 +29,9 @@ public:
 };
 
 class LinkedList {
-private:
+protected:
     LinkedListItem head{0, nullptr};
     size_t size{0};
-
 public:
     LinkedList() = default;
 

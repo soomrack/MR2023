@@ -1,7 +1,7 @@
 #ifndef STACK_H
 #define STACK_H
 
-#include <iostream>
+#include <linked_list.h>
 
 class StackException : public std::exception {
 private:
@@ -13,7 +13,35 @@ public:
 };
 
 
-class Stack {
+class Stack : LinkedList {
+public:
+    Stack() = default;
+
+    Stack(const Stack &stack) = default;
+
+    Stack(Stack &&stack) noexcept = default;
+
+    ~Stack() = default;
+
+    void push(dtype item) { push_back(item); };
+
+    void pop() {
+        if (empty())
+            throw StackException("Cannot pop empty stack");
+
+        pop_back();
+    };
+
+    dtype top() {
+        if (empty())
+            throw StackException("Cannot get top value from empty stack");
+
+        return get(get_size() - 1);
+    };
+
+    bool empty() { return get_size() == 0; };
+
+    size_t size() { return get_size(); };
 };
 
 #endif //STACK_H
