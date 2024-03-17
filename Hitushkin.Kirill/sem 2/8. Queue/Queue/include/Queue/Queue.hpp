@@ -29,7 +29,7 @@ public:
     Queue();
     ~Queue();
 
-    size_t get_size();
+    size_t get_size() const;
     void push(const Type& data);
     Type pop();
 };
@@ -47,7 +47,7 @@ Queue<Type>::~Queue()
 
 
 template <typename Type>
-size_t Queue<Type>::get_size()
+size_t Queue<Type>::get_size() const
 {
     return size;
 }

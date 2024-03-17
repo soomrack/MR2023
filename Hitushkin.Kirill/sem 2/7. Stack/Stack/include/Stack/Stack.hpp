@@ -28,7 +28,7 @@ public:
     Stack();
     ~Stack();
 
-    size_t get_size();
+    size_t get_size() const;
     Type& top();
     void push(const Type& data);
     void pop();
@@ -47,7 +47,7 @@ Stack<Type>::~Stack()
 
 
 template <typename Type>
-size_t Stack<Type>::get_size()
+size_t Stack<Type>::get_size() const
 {
     return size;
 }
