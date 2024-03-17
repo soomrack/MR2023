@@ -42,7 +42,7 @@ Dynamic_array::Dynamic_array(Dynamic_array&& Arr){
 Dynamic_array::Dynamic_array(size_t real_size, Array_Item* user_data) {
     this->real_size = real_size;
     buf_size = real_size + BUFFER;
-    delete[] data;
+    data = new Array_Item[buf_size];
     memcpy(data, user_data, real_size * sizeof(Array_Item));
 }
 
