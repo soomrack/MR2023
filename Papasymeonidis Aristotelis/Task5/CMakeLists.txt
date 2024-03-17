@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 # Добавляем исходные файлы вашей библиотеки
 add_library(din_arr din_arr.hpp din_arr.cpp)
+add_library(linked_list linked_list.hpp linked_list.cpp)
 
 # Добавляем исполняемый файл и указываем, что он использует вашу библиотеку
 add_executable(Task5 main.cpp)
@@ -14,3 +15,4 @@ include_directories(Task5)
 
 # Линкуем ваш исполняемый файл с вашей библиотекой
 target_link_libraries(Task5 PRIVATE din_arr)
+target_link_libraries(Task5 PRIVATE linked_list)
