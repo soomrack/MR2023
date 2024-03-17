@@ -36,6 +36,12 @@
 				"parent" : 0
 			},
 			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 18,
+				"parent" : 0
+			},
+			{
 				"command" : 2,
 				"file" : 0,
 				"line" : 7,
@@ -55,7 +61,7 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 3,
+					"backtrace" : 4,
 					"path" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include"
 				}
 			],
@@ -81,7 +87,7 @@
 			"id" : "din_arr::@6890427a1f51a3e7e1df"
 		},
 		{
-			"backtrace" : 2,
+			"backtrace" : 3,
 			"id" : "linked_list::@6890427a1f51a3e7e1df"
 		}
 	],
@@ -104,7 +110,7 @@
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 2,
+				"backtrace" : 3,
 				"fragment" : "liblinked_list.a",
 				"role" : "libraries"
 			}
