@@ -14,5 +14,6 @@ add_library(linked_list include/linked_list/linked_list.hpp src/linked_list.cpp)
 add_executable(Task5 main.cpp)
 
 # Линкуем исполняемый файл с вашими библиотеками
-target_link_libraries(Task5 PRIVATE din_arr)
 target_link_libraries(Task5 PRIVATE linked_list)
+target_link_libraries(Task5 PRIVATE din_arr)
+

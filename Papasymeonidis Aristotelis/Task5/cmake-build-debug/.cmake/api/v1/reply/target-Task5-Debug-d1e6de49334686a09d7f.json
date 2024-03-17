@@ -83,11 +83,11 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 2,
+			"backtrace" : 3,
 			"id" : "din_arr::@6890427a1f51a3e7e1df"
 		},
 		{
-			"backtrace" : 3,
+			"backtrace" : 2,
 			"id" : "linked_list::@6890427a1f51a3e7e1df"
 		}
 	],
@@ -106,12 +106,12 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "libdin_arr.a",
+				"fragment" : "liblinked_list.a",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "liblinked_list.a",
+				"fragment" : "libdin_arr.a",
 				"role" : "libraries"
 			}
 		],

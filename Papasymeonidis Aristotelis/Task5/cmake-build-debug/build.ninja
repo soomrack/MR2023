@@ -128,9 +128,9 @@ build CMakeFiles/Task5.dir/main.cpp.o: CXX_COMPILER__Task5_unscanned_Debug /home
 #############################################
 # Link the executable Task5
 
-build Task5: CXX_EXECUTABLE_LINKER__Task5_Debug CMakeFiles/Task5.dir/main.cpp.o | libdin_arr.a liblinked_list.a || libdin_arr.a liblinked_list.a
+build Task5: CXX_EXECUTABLE_LINKER__Task5_Debug CMakeFiles/Task5.dir/main.cpp.o | liblinked_list.a libdin_arr.a || libdin_arr.a liblinked_list.a
   FLAGS = -g
-  LINK_LIBRARIES = libdin_arr.a  liblinked_list.a
+  LINK_LIBRARIES = liblinked_list.a  libdin_arr.a
   OBJECT_DIR = CMakeFiles/Task5.dir
   POST_BUILD = :
   PRE_LINK = :
