@@ -1,10 +1,5 @@
-#include "din_arr.hpp"
-#include "linked_list.hpp"
-
-
-
-
-
+#include "din_arr/din_arr.hpp"
+#include "linked_list/linked_list.hpp"
 
 
 int main(){

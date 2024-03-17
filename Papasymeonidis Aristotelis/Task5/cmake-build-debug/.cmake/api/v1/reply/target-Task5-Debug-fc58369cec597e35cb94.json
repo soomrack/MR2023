@@ -1,9 +1,8 @@
 {
-	"archive" : {},
 	"artifacts" : 
 	[
 		{
-			"path" : "liblinked_list.a"
+			"path" : "Task5"
 		}
 	],
 	"backtrace" : 1,
@@ -11,7 +10,8 @@
 	{
 		"commands" : 
 		[
-			"add_library",
+			"add_executable",
+			"target_link_libraries",
 			"include_directories"
 		],
 		"files" : 
@@ -26,13 +26,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 8,
+				"line" : 14,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 11,
+				"line" : 17,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 7,
 				"parent" : 0
 			}
 		]
@@ -49,7 +55,7 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 2,
+					"backtrace" : 3,
 					"path" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include"
 				}
 			],
@@ -64,13 +70,49 @@
 			},
 			"sourceIndexes" : 
 			[
-				1
+				0
 			]
 		}
 	],
-	"id" : "linked_list::@6890427a1f51a3e7e1df",
-	"name" : "linked_list",
-	"nameOnDisk" : "liblinked_list.a",
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "din_arr::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "linked_list::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "Task5::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "libdin_arr.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "liblinked_list.a",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "Task5",
+	"nameOnDisk" : "Task5",
 	"paths" : 
 	{
 		"build" : ".",
@@ -79,17 +121,10 @@
 	"sourceGroups" : 
 	[
 		{
-			"name" : "Header Files",
-			"sourceIndexes" : 
-			[
-				0
-			]
-		},
-		{
 			"name" : "Source Files",
 			"sourceIndexes" : 
 			[
-				1
+				0
 			]
 		}
 	],
@@ -97,15 +132,10 @@
 	[
 		{
 			"backtrace" : 1,
-			"path" : "include/linked_list/linked_list.hpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/linked_list.cpp",
-			"sourceGroupIndex" : 1
+			"path" : "main.cpp",
+			"sourceGroupIndex" : 0
 		}
 	],
-	"type" : "STATIC_LIBRARY"
+	"type" : "EXECUTABLE"
 }

@@ -2,8 +2,7 @@
 // Created by simeonidi03 on 15.03.24.
 //
 
-#include"din_arr.hpp"
-
+#include "din_arr/din_arr.hpp"
 
 
 Dynamic_array::Dynamic_array(size_t size) {

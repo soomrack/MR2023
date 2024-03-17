@@ -1,7 +1,7 @@
 //
 // Created by simeonidi03 on 17.03.24.
 //
-#include"linked_list.hpp"
+#include "linked_list/linked_list.hpp"
 
 template<typename T>
 linked_list<T>::~linked_list() {
