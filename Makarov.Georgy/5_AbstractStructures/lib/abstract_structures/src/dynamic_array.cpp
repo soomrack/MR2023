@@ -83,5 +83,5 @@ void DynamicArray::resize(size_t new_size, size_t new_buffer_size) {
 void DynamicArray::print() {
     for (size_t idx = 0; idx < size; idx++)
         std::cout << data[idx] << "\t";
-    std::cout << "\n \n";
+    std::cout << std::endl;
 }

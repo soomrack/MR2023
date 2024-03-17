@@ -1,5 +1,5 @@
-#ifndef DYNAMIC_ARRAY_HPP
-#define DYNAMIC_ARRAY_HPP
+#ifndef DYNAMIC_ARRAY_H
+#define DYNAMIC_ARRAY_H
 
 #include <iostream>
 
@@ -17,10 +17,10 @@ public:
 
 class DynamicArray {
 private:
-    size_t size{0};
-    size_t buffer_size{0};
+    size_t size;
+    size_t buffer_size;
 
-    dtype *data{nullptr};
+    dtype *data;
 
 public:
     DynamicArray(size_t size_, size_t buffer_size_);
@@ -46,4 +46,4 @@ public:
     void print();
 };
 
-#endif //DYNAMIC_ARRAY_HPP
+#endif //DYNAMIC_ARRAY_H

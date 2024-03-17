@@ -8,6 +8,8 @@ set(SOURCE_FILES
         src/dynamic_array.h
         src/linked_list.cpp
         src/linked_list.h
+        src/doubly_linked_list.cpp
+        src/doubly_linked_list.h
         src/queue.cpp
         src/queue.h)
 
