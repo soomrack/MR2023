@@ -68,9 +68,16 @@ size_t Dynamic_array::get_size() const{
 }
 
 void Dynamic_array::resize(const size_t new_size) {
-    real_size = new_size;
     buf_size = new_size + BUFFER;
-
-
+    Array_Item* new_data = new Array_Item[new_size + BUFFER];
+    if(real_size >= new_size + BUFFER) {
+        memcpy(new_data, data, (new_size + BUFFER) * sizeof(Array_Item));
+        real_size = new_size + BUFFER;
+    } else{
+        memcpy(new_data, data, real_size * sizeof(Array_Item));
+    }
+    delete data;
+    data = new_data;
+    new_data = nullptr;
 }
 
