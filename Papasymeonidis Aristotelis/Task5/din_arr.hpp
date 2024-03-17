@@ -24,6 +24,7 @@ public:
     [[nodiscard]] Array_Item* get_data() const;
     Array_Item get_element(size_t index);
     void resize(size_t new_size);
+    void print_array() const;
 
     Dynamic_array(size_t size);
     Dynamic_array(size_t real_size, size_t buffer);
