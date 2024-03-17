@@ -2,60 +2,59 @@
 #include <stdlib.h>
 #include <string.h>
 
-void merge(int arr[], int temp[], int left, int mid, int right) {
-    int k = 0, right_idx = mid + 1;
+#define ARRAY_SIZE 10
 
-    while (left <= mid && right_idx <= right) {
-        if (arr[left] <= arr[right_idx]) {
-            temp[k++] = arr[left++];
-        } else {
-            temp[k++] = arr[right_idx++];
-        }
-    }
+typedef int int_arr;
 
-    if (left <= mid) {
-        memcpy(&temp[k], &arr[left], (mid - left + 1) * sizeof(int));
-        k += mid - left + 1;
-    }
+void merge_sort(int_arr* mas, int_arr* buf_arr, size_t size) {
+    size_t middle = size / 2;
+    size_t idx = 0, left_branch = 0, right_branch = middle;
 
-    if (right_idx <= right) {
-        memcpy(&temp[k], &arr[right_idx], (right - right_idx + 1) * sizeof(int));
-        k += right - right_idx + 1;
-    }
+    if (size < 2)
+        return;
 
-    memcpy(&arr[0], temp, (right - left + 1) * sizeof(int));
-}
+    merge_sort(buf_arr, mas, middle);
+    merge_sort(buf_arr + middle, mas + middle, size - middle);
 
-void mergeSort(int arr[], int temp[], int left, int right) {
-    if (left < right) {
-        int mid = left + (right - left) / 2;
-
-        mergeSort(arr, temp, left, mid);
-        mergeSort(arr, temp, mid + 1, right);
-
-        merge(arr, temp, left, mid, right);
+    while (idx < size) {
+        if (right_branch >= size)
+            buf_arr[idx++] = mas[left_branch++];
+        else if (left_branch >= middle)
+            buf_arr[idx++] = mas[right_branch++];
+        else if (mas[left_branch] <= mas[right_branch])
+            buf_arr[idx++] = mas[left_branch++];
+        else
+            buf_arr[idx++] = mas[right_branch++];
     }
 }
 
-void printArray(int arr[], int size) {
-    for (int i = 0; i < size; i++)
-        printf("%d ", arr[i]);
+void merge(int_arr* mas, size_t size) {
+    int_arr* buf_arr = (int_arr*)malloc(ARRAY_SIZE * sizeof(int_arr));
+    if (buf_arr == NULL) {
+        printf("Memory allocation failed.\n");
+        exit(1);
+    }
+    memcpy(buf_arr, mas, size * sizeof(int_arr));
+    merge_sort(buf_arr, mas, size);
+    free(buf_arr);
+}
+
+void print(int *m, int n) {
+    for(int i = 0; i < n; i++) {
+        printf("%d ", m[i]);
+    }
     printf("\n");
 }
 
 int main() {
-    int arr[] = {1, 11, -13, 5, 6, 7};
-    int arr_size = sizeof(arr) / sizeof(arr[0]);
+    int n = 10;
+    int arr[ARRAY_SIZE] = {-9, 30, 0 , 0, 12, 11, 2, 6};
 
-    int *temp = (int *)malloc(arr_size * sizeof(int));
-    if (temp == NULL) {
-        printf("Ошибка выделения\n");
-        return 1;
-    }
+    printf("The source array:\n");
+    print(arr, n);
 
-    mergeSort(arr, temp, 0, arr_size - 1);
+    merge(arr, ARRAY_SIZE);
 
-    printArray(arr, arr_size);
-
-    free(temp);
+    printf("Sorted array:\n");
+    print(arr, n);
 }
