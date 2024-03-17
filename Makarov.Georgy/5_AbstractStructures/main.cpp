@@ -1,6 +1,7 @@
 #include <dynamic_array.h>
 #include <linked_list.h>
 #include <doubly_linked_list.h>
+#include <stack.h>
 #include <queue.h>
 
 int main() {
@@ -21,11 +22,11 @@ int main() {
     std::cout << std::endl << "Singly linked list:" << std::endl;
 
     LinkedList list;
-    for (size_t i = 5; i < 12; i++)
+    for (size_t i = 10; i < 17; i++)
         list.push_back(int(i - 3));
 
     LinkedList move_list = std::move(list);
-    move_list.insert(2, 10);
+    move_list.insert(2, -5);
     move_list.remove(4);
     move_list.print();
 
@@ -34,11 +35,27 @@ int main() {
 
     std::cout << move_list.get(3) << std::endl;
 
-
     // Doubly linked list example
     std::cout << std::endl << "Doubly linked list:" << std::endl;
 
-    DoublyLinkedList double_list;
+    DoublyLinkedList doubly_list;
+    for (size_t i = 5; i < 12; i++)
+        doubly_list.push_back(int((i - 3) * (i + 3)));
+
+    DoublyLinkedList copy_doubly_list(doubly_list);
+    copy_doubly_list.insert(2, -15);
+    copy_doubly_list.remove(4);
+    copy_doubly_list.print();
+
+    copy_doubly_list.pop_back();
+    copy_doubly_list.print();
+
+    std::cout << copy_doubly_list.get(3) << std::endl;
+
+    // Stack example
+    std::cout << std::endl << "Stack:" << std::endl;
+
+    Stack stack;
 
     // Queue example
     std::cout << std::endl << "Queue:" << std::endl;

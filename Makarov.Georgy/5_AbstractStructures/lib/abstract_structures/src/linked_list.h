@@ -2,7 +2,6 @@
 #define LINKED_LIST_H
 
 #include <iostream>
-#include <utility>
 
 typedef int dtype;
 
@@ -31,7 +30,7 @@ public:
 
 class LinkedList {
 private:
-    LinkedListItem items{0, nullptr};
+    LinkedListItem head{0, nullptr};
     size_t size{0};
 
 public:
@@ -41,7 +40,7 @@ public:
 
     LinkedList(LinkedList &&list) noexcept;
 
-    ~LinkedList() { while (size--) items.pop_back(); };
+    ~LinkedList() { while (size--) head.pop_back(); };
 
     [[nodiscard]] size_t get_size() const { return size; };
 
