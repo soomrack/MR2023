@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(libabstract)
+project(abstract_structures)
 
 set(SOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
