@@ -23,9 +23,9 @@ public:
 
     ~Queue() = default;
 
-    void enqueue(dtype item, size_t priority = 0) {
-        if (priority >= get_size() || priority == 0) push_back(item);
-        else insert(priority - 1, item);
+    void enqueue(dtype item, size_t priority = 20) {
+        if (priority >= get_size() || empty()) push_back(item);
+        else insert(priority, item);
     };
 
     void dequeue() {
