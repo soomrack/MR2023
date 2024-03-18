@@ -14,9 +14,9 @@ void print_arr(int* m, int size)
 
 void bubble_sort(int* array, int array_size)
 {
-    for (int sorted = 0; sorted < array_size; sorted++)
+    for (int unsorted = 0; unsorted < array_size; unsorted++)
     {
-        for (int item = 0; item < array_size - sorted - 1; item++) 
+        for (int item = 0; item < array_size - unsorted - 1; item++) 
         {
             if (array[item] > array[item + 1])
             {
