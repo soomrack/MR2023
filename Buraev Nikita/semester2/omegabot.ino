@@ -29,7 +29,6 @@ const int IDLE_SPEED = 110;
 const int SPEED = 225;
 int MAX_DIF = 300;
 
-bool IS_ON = false;
 float SENSORS_BALANCING;
 
 
@@ -246,9 +245,8 @@ void proceed(int mode){
 void loop() {
   CURRENT_MODE = 0;
   
-  if (IS_ON){
-    proceed(CURRENT_MODE);
-  }
+  proceed(CURRENT_MODE);
+  
   else{
     digitalWrite(6,LOW);
     digitalWrite(5,LOW);
