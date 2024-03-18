@@ -2,15 +2,19 @@
 
 using namespace std;
 
-void Swap(int* A, int* B)
+void print_arr(int* m, int size)
 {
-    int tmp = *A;
-    *A = *B;
-    *B = tmp;
+    for (int i = 0; i < size; i++)
+    {
+        cout << m[i] << " ";
+    }
+
+    cout << endl;
 }
 
-
-void heapify(int* arr, int size, int idx) {
+//build heapify
+void heapify(int* arr, int size, int idx)
+{
     int largest = idx;
     int left = 2 * idx + 1;
     int right = 2 * idx + 2;
@@ -24,7 +28,7 @@ void heapify(int* arr, int size, int idx) {
     }
 
     if (largest != idx) {
-        Swap(&arr[idx], &arr[largest]);
+        swap(arr[idx], arr[largest]);
         heapify(arr, size, idx);
     }
 }
@@ -36,31 +40,22 @@ void heap_sort(int* arr, int size)
     {
         heapify(arr, size, idx);
     }
-    // Извлекаем элементы из дерева в порядке убывания по индексу
+    // Извлекаем максимальные элементы из дерева в порядке убывания по индексу
     for (int idx = size - 1; idx > 0; idx--)
     {
-        Swap(&arr[0], &arr[idx]);
+        swap(arr[0], arr[idx]);
 
         heapify(arr, idx, 0);
     }
 }
 
-void print_arr(int* m, int size)
-{
-    for (int i = 0; i < size; i++)
-    {
-        cout << m[i] << " ";
-    }
-
-    cout << endl;
-}
-
 int main()
 {
     int size = 5;
-    int* arr = new int[5] { 8, 4, 1, 11, 20 };
+    int* arr = new int[5] { 8, 4, 1, 5, 20 };
     print_arr(arr, size);
     heap_sort(arr, size);
+    print_arr(arr, size);
     delete[] arr;
     return 0;
 }
