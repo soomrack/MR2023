@@ -371,6 +371,8 @@ void dynamic_array::heap_tree(size_t sorted)
             }
         }
     }
+
+    rebuild_tree(sorted);
 }
 
 
