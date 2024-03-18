@@ -31,6 +31,7 @@ public:
 class LinkedList {
 protected:
     LinkedListItem head{0, nullptr};
+    LinkedListItem *tail{&head};
     size_t size{0};
 public:
     LinkedList() = default;

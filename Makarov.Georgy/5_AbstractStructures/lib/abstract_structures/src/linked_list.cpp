@@ -1,8 +1,10 @@
 #include "linked_list.h"
 
+#include "../../../../../../../../../../usr/include/stdlib.h"
+
 LinkedList::LinkedList(const LinkedList &list) {
     if (list.size == 0)
-        throw LinkedListException("Cannot copy empty list"); // or return;
+        return;
 
     for (size_t idx = 0; idx < list.size; idx++)
         push_back(list.get(idx));
@@ -29,19 +31,15 @@ dtype LinkedList::get(const size_t index) const {
 }
 
 void LinkedList::push_back(const dtype &data) {
-    LinkedListItem *item = &head;
-
-    size_t item_index = size;
-    while (item_index--) item = item->next;
-
-    item->push_back(data);
+    tail->push_back(data);
+    tail = tail->next;
 
     size++;
 }
 
 void LinkedList::pop_back() {
     if (size == 0)
-        throw LinkedListException("Cannot pop back empty list");  // or return;
+        return;
 
     LinkedListItem *item = &head;
 
