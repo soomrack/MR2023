@@ -35,8 +35,8 @@ void LinkedList::push_back(const dtype &data) {
     size++;
 }
 
-void LinkedList::push_back_priority(const dtype &data, size_t priority = 20) {
-    LinkedListItem *new_item = new LinkedListItem(data, priority);
+void LinkedList::push_back_priority(const dtype &data, size_t priority) {
+    LinkedListItem *new_item = new LinkedListItem(data, nullptr, priority);
 
     if (head == nullptr) {
         head = new_item;
@@ -77,29 +77,26 @@ void LinkedList::insert(size_t index, const dtype &data) {
     size++;
 }
 
-void LinkedList::insert_priority(size_t index, const dtype &data, size_t priority = 20) {
+void LinkedList::insert_priority(size_t index, const dtype &data, size_t priority) {
     if (index > size)
         throw LinkedListException("Index out of range");
 
-    LinkedListItem *new_item = new LinkedListItem(data, priority);
+    LinkedListItem *new_item = new LinkedListItem(data, nullptr, priority);
 
     if (index == 0) {
         new_item->next = head;
         head = new_item;
-        if (tail == nullptr)
-            tail = new_item;
     } else {
         LinkedListItem *current = head;
-        for (size_t i = 0; i < index - 1; i++) {
-            current = current->next;
-        }
+
+        size_t item_index = index;
+        for (item_index--) current = current->next;
 
         new_item->next = current->next;
         current->next = new_item;
-
-        if (current == tail)
-            tail = new_item;
     }
+    
+    if (current == tail) tail = new_item;
 
     size++;
 }
