@@ -244,11 +244,5 @@ void proceed(int mode){
 
 void loop() {
   CURRENT_MODE = 0;
-  
   proceed(CURRENT_MODE);
-  
-  else{
-    digitalWrite(6,LOW);
-    digitalWrite(5,LOW);
-  }
 }
