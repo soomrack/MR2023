@@ -1,0 +1,150 @@
+#include <iostream>
+#include<cstring>
+#include <string>
+
+#define ARR_SIZE 10
+
+typedef int arr_type;
+
+enum type { less, greater };
+
+
+void bubble_sort(arr_type* arr, size_t size)
+{
+    for (size_t i = 0; i < size - 1; i++) {
+        for (size_t j = size - 1; i < j; j--) {
+            if (arr[j] < arr[j - 1])
+                std::swap(arr[j], arr[j - 1]);
+        }
+    }
+}
+
+
+void merge_inside(arr_type* mas_arr, arr_type* tmp_arr, size_t size)
+{
+    size_t mid = size / 2;
+
+    if (size < 2) {
+        return;
+    }
+
+    merge_inside(tmp_arr, mas_arr, mid);
+    merge_inside(tmp_arr + mid, mas_arr + mid, size - mid);
+
+    for (size_t idx = 0, left_limb = 0, right_limb = mid; idx < size; idx++) {
+        if (right_limb >= size) tmp_arr[idx] = mas_arr[left_limb++];
+        else if (left_limb >= mid) tmp_arr[idx] = mas_arr[right_limb++];
+        else if (mas_arr[left_limb] <= mas_arr[right_limb]) tmp_arr[idx] = mas_arr[left_limb++];
+        else tmp_arr[idx] = mas_arr[right_limb++];
+    }
+}
+
+
+void merge_sort(arr_type* mas_arr, size_t size)
+{
+    arr_type* tmp_arr = new int[ARR_SIZE];
+    memcpy(tmp_arr, mas_arr, sizeof(arr_type) * size);
+    merge_inside(tmp_arr, mas_arr, size);
+    delete[] tmp_arr;
+}
+
+
+void fix_heap(arr_type arr[], int size_of_heap, int idx)
+{
+    int largest = idx;
+
+    int left = 2 * idx + 1;
+    int right = 2 * idx + 2;
+
+    if (left < size_of_heap && arr[left] > arr[largest]) {
+        largest = left;
+    }
+
+    if (right < size_of_heap && arr[right] > arr[largest]) {
+        largest = right;
+    }
+
+    if (largest != idx) {
+        std::swap(arr[idx], arr[largest]);
+        fix_heap(arr, size_of_heap, largest);
+    }
+}
+
+
+void heap_sort(arr_type arr[], int size_of_heap)
+{
+    for (int idx = size_of_heap / 2 - 1; idx >= 0; idx--) {
+        fix_heap(arr, size_of_heap, idx);
+    }
+
+    for (int idx = size_of_heap - 1; idx > 0; idx--) {
+        std::swap(arr[0], arr[idx]);
+        fix_heap(arr, idx, 0);
+
+    }
+
+}
+
+
+bool predicate(arr_type left, arr_type right, type key) {
+    switch (key)
+    {
+    case less:
+        return left < right ? true : false;
+        break;
+
+    case greater:
+        return left > right ? true : false;
+        break;
+
+    }
+}
+
+void insert_sort(arr_type* arr, type kind, size_t number) {
+    for (size_t j = 1; j < number; j++)
+    {
+        arr_type buf_var = arr[j];
+        int already_sorted = j - 1;
+
+        while (already_sorted >= 0 && predicate(arr[already_sorted], buf_var, kind))
+        {
+            arr[already_sorted + 1] = arr[already_sorted];
+            already_sorted--;
+        }
+        arr[++already_sorted] = buf_var;
+
+    }
+}
+
+
+void print(int* m, int n)
+{
+    for (int i = 0; i < n; i++) {
+        std::cout << m[i] << " ";
+    }
+
+    std::cout << std::endl;
+}
+
+
+int main()
+{
+    int n;
+
+    n = 10;
+    int arr[ARR_SIZE] = { 1, 3, 33, 3, 50, 5, 7, 6, 2, 7 };
+    print(arr, n);
+
+    //merge_sort(arr, ARR_SIZE);
+
+    //bubble_sort(arr, 10);
+
+    insert_sort(arr, less, ARR_SIZE);
+
+    //heap_sort(arr, n);
+
+    std::cout << "Sorted array: " << std::endl;
+    print(arr, n);
+
+    return 0;
+}
