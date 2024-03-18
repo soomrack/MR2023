@@ -16,7 +16,7 @@ void bubble_sort(int* array, int array_size)
 {
     for (int sorted = 0; sorted < array_size; sorted++)
     {
-        for (int item = 0; item < array_size -sorted - 1; item++) 
+        for (int item = 0; item < array_size - sorted - 1; item++) 
         {
             if (array[item] > array[item + 1])
             {
@@ -24,7 +24,6 @@ void bubble_sort(int* array, int array_size)
             }
         }
      }
-    print_arr(array, array_size);
 }
 
 
@@ -43,7 +42,6 @@ void insertion_sort(int* array, int array_size)
         }
         array[back_idx + 1] = key;
     }
-  print_arr(array, array_size);
 }
 
 
@@ -53,11 +51,15 @@ int main()
 
     int arr_size = 5;
     int* arr = new int[5] { 8, 4, 1, -5, 3 };
+    print_arr(arr, arr_size);
     bubble_sort(arr, arr_size);
+    print_arr(arr, arr_size);
     delete[] arr;
 
     int* arr1 = new int[5] { 8, 4, 1, 11, 30};
+    print_arr(arr, arr_size);
     insertion_sort(arr1, arr_size);
+    print_arr(arr, arr_size);
     delete[] arr1;
 
     return 0;
