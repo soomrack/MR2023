@@ -11,8 +11,21 @@
 #define border_temperature 28
 #define border_light 20
 #define border_humidity 30
+#define delay_humidity 30
+
+int start_hours = 0;
 
 OneWire ds(temperature_pin);
+
+unsigned long minutes_from_start()
+{
+  return (unsigned long)millis() / 60000;
+}
+
+int time_hour()
+{
+  return (int)(start_hours + minutes_from_start() / 60) % 24;
+}
 
 void print_info(float temperature, int light, int humidity)
 {
@@ -56,6 +69,22 @@ float temperature_sens() {
   return (((data[1] << 8) | data[0]) * 0.0625);
 }
 
+
+void start_time()
+{
+  int time_enter = 0;
+  Serial.print("hours:");
+  while(time_enter == 0)
+  {
+    if (Serial.available()) {
+      start_hours = Serial.parseInt();
+      Serial.println(start_hours);
+      time_enter = 1;
+    }
+  }
+}
+
+
 void setup() {
   pinMode(humidity_sensor_pin, INPUT_PULLUP);
   pinMode(pompa_pin, OUTPUT);
@@ -70,37 +99,41 @@ void setup() {
   digitalWrite(fan_pin, 1);
 
   Serial.begin(9600);
+  Serial.setTimeout(50);
+  start_time();
 }
 
 void loop() {
 
-  int humidity, light;
+  int humidity, light, hours;
+  unsigned long time_humidity = 0;
   float temperature;
 
   temperature = temperature_sens();
   light = light_sens();
   humidity = humidity_sens();
 
+  hours = time_hour();
+  Serial.println(hours);
   print_info(temperature, light, humidity);
 
-  if (temperature > border_temperature)
+  if (temperature > border_temperature || (hours > 17 && hours < 18))
     digitalWrite(fan_pin, 0);
   else 
     digitalWrite(fan_pin, 1);
 
-  if (humidity < border_humidity)
+  if (humidity < border_humidity && minutes_from_start() - time_humidity > delay_humidity)
   {
     digitalWrite(pompa_pin, 0);
     delay(2000);  
     digitalWrite(pompa_pin, 1);
+    time_humidity = minutes_from_start();
   }
   else 
     digitalWrite(pompa_pin, 1);
 
-  if (light < border_light)
+  if (light < border_light && hours > 12 && hours < 24)
     digitalWrite(light_pin, 1);
   else
     digitalWrite(light_pin, 0);
-
-  delay(5000);
 }

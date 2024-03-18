@@ -1,8 +1,9 @@
 {
+	"archive" : {},
 	"artifacts" : 
 	[
 		{
-			"path" : "Task5"
+			"path" : "libdin_arr.a"
 		}
 	],
 	"backtrace" : 1,
@@ -10,8 +11,7 @@
 	{
 		"commands" : 
 		[
-			"add_executable",
-			"target_link_libraries",
+			"add_library",
 			"include_directories"
 		],
 		"files" : 
@@ -32,13 +32,7 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 16,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 13,
+				"line" : 7,
 				"parent" : 0
 			}
 		]
@@ -55,8 +49,8 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 3,
-					"path" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/Task5"
+					"backtrace" : 2,
+					"path" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include"
 				}
 			],
 			"language" : "CXX",
@@ -70,40 +64,13 @@
 			},
 			"sourceIndexes" : 
 			[
-				0
+				1
 			]
 		}
 	],
-	"dependencies" : 
-	[
-		{
-			"backtrace" : 2,
-			"id" : "din_arr::@6890427a1f51a3e7e1df"
-		}
-	],
-	"id" : "Task5::@6890427a1f51a3e7e1df",
-	"link" : 
-	{
-		"commandFragments" : 
-		[
-			{
-				"fragment" : "-g",
-				"role" : "flags"
-			},
-			{
-				"fragment" : "",
-				"role" : "flags"
-			},
-			{
-				"backtrace" : 2,
-				"fragment" : "libdin_arr.a",
-				"role" : "libraries"
-			}
-		],
-		"language" : "CXX"
-	},
-	"name" : "Task5",
-	"nameOnDisk" : "Task5",
+	"id" : "din_arr::@6890427a1f51a3e7e1df",
+	"name" : "din_arr",
+	"nameOnDisk" : "libdin_arr.a",
 	"paths" : 
 	{
 		"build" : ".",
@@ -112,10 +79,17 @@
 	"sourceGroups" : 
 	[
 		{
-			"name" : "Source Files",
+			"name" : "Header Files",
 			"sourceIndexes" : 
 			[
 				0
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				1
 			]
 		}
 	],
@@ -123,10 +97,15 @@
 	[
 		{
 			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "main.cpp",
+			"path" : "include/din_arr/din_arr.hpp",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/din_arr.cpp",
+			"sourceGroupIndex" : 1
 		}
 	],
-	"type" : "EXECUTABLE"
+	"type" : "STATIC_LIBRARY"
 }

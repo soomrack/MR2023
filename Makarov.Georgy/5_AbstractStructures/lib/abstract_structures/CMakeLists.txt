@@ -10,7 +10,7 @@ set(SOURCE_FILES
         src/linked_list.h
         src/doubly_linked_list.cpp
         src/doubly_linked_list.h
-        src/queue.cpp
+        src/stack.h
         src/queue.h)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
