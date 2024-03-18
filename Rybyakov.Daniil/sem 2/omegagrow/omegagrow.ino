@@ -37,9 +37,9 @@ struct Sensors  {
 
 
 struct State  {
-  int ven_time;
-  int watering_time;
-  int last_watering;
+  long long int ven_time;
+  long long int watering_time;
+  long long int last_watering;
   bool regular_ven;
   bool light;
   bool ven;
@@ -262,7 +262,7 @@ void do_vent()
 
 void do_pump()
 { 
-  if (state.last_watering > 10 * 1000){  // секунды
+  if (state.last_watering > (300000)){  // секунды
     if (state.pump == ON){
       digitalWrite(PIN_WATER_PUMP, state.pump);
       state.watering_time += PROGRAMM_CHECK_TIME * 1000;
