@@ -18,11 +18,12 @@ class LinkedListItem {
 public:
     dtype data;
     LinkedListItem *next;
-    size_t priority {20};
+    size_t priority;
 
     LinkedListItem() = delete;
 
-    LinkedListItem(const dtype &data_, LinkedListItem *next_) : data{data_}, next{next_} {};
+    LinkedListItem(const dtype &data_, LinkedListItem *next_) : data{data_}, next{next_}, priority{20} {};
+    LinkedListItem(const dtype &data_, LinkedListItem *next_, size_t priority) : data{data_}, next{next_}, priority{priority_} {};
 
     void push_back(const dtype &data_) { next = new LinkedListItem(data_, next); };
 
