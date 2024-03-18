@@ -36,7 +36,6 @@ float SENSORS_BALANCING;
 void setup() {
   Serial.begin(9600);
   SENSORS_BALANCING =(analogRead(PIN_SENS_L) - analogRead(PIN_SENS_R));
-  CURRENT_MODE = 0;
 }
 
 
@@ -242,4 +241,16 @@ void run_motor(int val_l, int val_r){
 
 void proceed(int mode){
   (*actions[mode])();
+}
+
+void loop() {
+  CURRENT_MODE = 0;
+  
+  if (IS_ON){
+    proceed(CURRENT_MODE);
+  }
+  else{
+    digitalWrite(6,LOW);
+    digitalWrite(5,LOW);
+  }
 }
