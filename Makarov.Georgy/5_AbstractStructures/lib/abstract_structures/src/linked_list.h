@@ -18,6 +18,7 @@ class LinkedListItem {
 public:
     dtype data;
     LinkedListItem *next;
+    size_t priority {20};
 
     LinkedListItem() = delete;
 
@@ -48,9 +49,13 @@ public:
 
     void push_back(const dtype &item);
 
+    void push_back_priority(const dtype &item, size_t priority);
+
     void pop_back();
 
     void insert(size_t index, const dtype &item);
+
+    void insert_priority(size_t index, const dtype &item, size_t priority);
 
     void remove(size_t index);
 
