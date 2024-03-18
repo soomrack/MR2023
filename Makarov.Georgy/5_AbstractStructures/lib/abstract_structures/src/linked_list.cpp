@@ -1,7 +1,5 @@
 #include "linked_list.h"
 
-#include "../../../../../../../../../../usr/include/stdlib.h"
-
 LinkedList::LinkedList(const LinkedList &list) {
     if (list.size == 0)
         return;
@@ -37,6 +35,20 @@ void LinkedList::push_back(const dtype &data) {
     size++;
 }
 
+void LinkedList::push_back_priority(const dtype &data, size_t priority = 20) {
+    LinkedListItem *new_item = new LinkedListItem(data, priority);
+
+    if (head == nullptr) {
+        head = new_item;
+        tail = new_item;
+    } else {
+        tail->next = new_item;
+        tail = new_item;
+    }
+
+    size++;
+}
+
 void LinkedList::pop_back() {
     if (size == 0)
         return;
@@ -63,6 +75,33 @@ void LinkedList::insert(size_t index, const dtype &data) {
     item->push_back(data);
 
     size++;
+}
+
+void LinkedList::insert_priority(size_t index, const dtype &data, size_t priority = 20) {
+    if (index > size)
+        throw LinkedListException("Index out of range");
+
+    LinkedListItem *new_item = new LinkedListItem(data, priority);
+
+    if (index == 0) {
+        new_item->next = head;
+        head = new_item;
+        if (tail == nullptr)
+            tail = new_item;
+    } else {
+        LinkedListItem *current = head;
+        for (size_t i = 0; i < index - 1; i++) {
+            current = current->next;
+        }
+
+        new_item->next = current->next;
+        current->next = new_item;
+
+        if (current == tail)
+            tail = new_item;
+    }
+
+    size++;
 }
 
 void LinkedList::remove(size_t index) {
