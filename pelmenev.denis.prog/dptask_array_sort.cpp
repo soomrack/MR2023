@@ -138,6 +138,8 @@ void heap_tree(ArrayItem array[], size_t size)
             }
         }
     }
+
+    rebuild_tree(array, size);
 }
 
 
@@ -155,8 +157,8 @@ void sort_heap(ArrayItem array[], size_t size)
 
 int main()
 {
-    ArrayItem a[] = {5, 4, 1, 3, 7, 3, 9, 0};
-    size_t a_size = 8;
+    ArrayItem a[] = {5, 4, 1, 3, 7, 3, 9, 0, 20, 16, 135, 0, 1010, 2, 9, 18};
+    size_t a_size = 16;
     print_array(a, a_size);
     std::cout << "______________" << std::endl;
     //sort_bubble(a, a_size);
