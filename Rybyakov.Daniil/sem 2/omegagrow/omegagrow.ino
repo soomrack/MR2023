@@ -11,6 +11,7 @@
 #include <TroykaDHT.h>
 DHT dht_sensor(PIN_DHT_SENSOR, DHT21);
 
+int PROGRAMM_CHECK_TIME = 1; // период проверки программы в секундах
 
 struct Climate  {
   int norm_luminosity;
@@ -19,6 +20,8 @@ struct Climate  {
   double min_air_humidity; 
   double max_air_humidity; 
   int norm_ground_humidity;
+  int watering_time;
+  int ven_time;
 }; 
 
 
@@ -34,12 +37,14 @@ struct Sensors  {
 
 
 struct State  {
+  int ven_time;
+  int watering_time;
+  int last_watering;
   bool regular_ven;
   bool light;
   bool ven;
   bool pump;
   bool heat;
-  int pump_exeption;
 }; 
 
 State state;
@@ -67,6 +72,8 @@ void plant_strawberry()  // состояние среды подходящее �
   clim.norm_ground_humidity = 500;
   clim.min_air_humidity = 10;
   clim.max_air_humidity = 60;
+  clim.watering_time = 5000;
+  clim.ven_time = 2 * 60 * 1000;
 }
 
 
@@ -78,6 +85,8 @@ void plant_cucumber() // состояние среды подходящее дл
   clim.norm_ground_humidity = 100;
   clim.min_air_humidity = 15;
   clim.max_air_humidity = 50;
+  clim.watering_time = 5000;
+  clim.ven_time = 2 * 60 * 1000;
 }
 
 
@@ -89,6 +98,8 @@ void plant_carrot()  // состояние среды подходящее дл�
   clim.norm_ground_humidity = 500;
   clim.min_air_humidity = 20;
   clim.max_air_humidity = 55;
+  clim.watering_time = 5000;
+  clim.ven_time = 2 * 60 * 1000;
 }
 
 
@@ -136,11 +147,18 @@ void get_sensors()  // снятие данных с датчиком
 
 void ventilation()  
 {
-  if (sens.minutes % 10 == 0){  // проветривание раз в 10 минут
+  state.ven_time += PROGRAMM_CHECK_TIME * 1000;
+  if (sens.minutes % 10 == 0){ 
     state.regular_ven = ON;
+    state.ven_time = 0;
   }
   else {
-    state.regular_ven = OFF;
+    if (state.ven_time > clim.ven_time){
+      state.regular_ven = OFF;
+    }
+    else{
+      state.regular_ven = ON;
+    }
   }
 }
 
@@ -243,19 +261,22 @@ void do_vent()
 
 
 void do_pump()
-{
-  if (state.pump_exeption > 5){
+{ 
+  if (state.last_watering > 10 * 1000){  // секунды
     if (state.pump == ON){
-    digitalWrite(PIN_WATER_PUMP, state.pump);
-    delay(3000);
-    digitalWrite(PIN_WATER_PUMP, OFF);
-    state.pump_exeption = 0;
+      digitalWrite(PIN_WATER_PUMP, state.pump);
+      state.watering_time += PROGRAMM_CHECK_TIME * 1000;
+      if (state.watering_time > clim.watering_time){
+        digitalWrite(PIN_WATER_PUMP, OFF);
+        state.watering_time = 0;
+        state.last_watering = 0;
+      } 
     }
     else{
       digitalWrite(PIN_WATER_PUMP, state.pump);
     }
   }
-  state.pump_exeption += 1;
+  state.last_watering += PROGRAMM_CHECK_TIME * 1000;
 }
 
 
@@ -269,7 +290,7 @@ void periodic_check()  // функция вызывающая проверку �
   ground_humidity();
   light();
 
-  day_night();
+  //day_night();
 
   do_light();
   do_vent();
@@ -282,5 +303,5 @@ void loop()  // главная функция
 {
   set_plant(); 
   set_time();
-  if (sens.seconds % 5 == 0){ delay(800); periodic_check();}
+  if (sens.seconds % PROGRAMM_CHECK_TIME == 0){ delay(800); periodic_check();}
 }
