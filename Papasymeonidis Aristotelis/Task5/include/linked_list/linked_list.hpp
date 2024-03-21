@@ -14,17 +14,77 @@ public:
     node(const T& data) : data(data), next(nullptr) {}
 };
 
+
 template<typename T>
 class linked_list {
 private:
     node<T>* head;
+    //node<T>* current_ptr;
 public:
     linked_list() : head(nullptr) {}
     ~linked_list();
 
     void push_head(const T& value);
+    void pop_first();
+    void pop_head();
+    void pop_element(size_t index);
     void print() const;
 };
+
+template<typename T>
+linked_list<T>::~linked_list() {
+    while (head != nullptr) {
+        node<T>* del_node_ptr = head;
+        head = head->next;
+        delete del_node_ptr;
+    }
+}
+
+template<typename T>
+void linked_list<T>::push_head(const T& value) {
+    node<T>* new_node = new node<T>(value);
+    new_node->next = head;
+    head = new_node;
+}
+
+
+template<typename T>
+void linked_list<T>::print() const {
+    node<T> *current = head;
+    while (current != nullptr) {
+        std::cout << current->data << " ";
+        current = current->next;
+    }
+    std::cout << std::endl;
+}
+
+template<typename T>
+void linked_list<T>::pop_first() {
+    node<T>*next_ptr = head->next;
+    delete[] head;
+    head = next_ptr;
+}
+
+
+template<typename T>
+void linked_list<T>::pop_element(size_t index){
+    node<T>*next_ptr = head->next;
+    delete[] head;
+    head = next_ptr;
+}
+
+template<typename T>
+void linked_list<T>::pop_element(size_t index){
+    // node<T>* current_ptr = head;
+    // for(size_t current_idx = 0; current_idx <= index; ++current_idx) {
+    //      current_ptr = current_ptr->next;
+    //  }
+    //  if(head->next != nullptr) {
+    //      node<T>*next_ptr = head->next;
+    //  }
+    //  delete[] head;
+    //  head = next_ptr;
+}
 
 
 #endif //LINKED_LIST_HPP
