@@ -92,6 +92,7 @@ int main() {
     queue.enqueue(20, 2);
     queue.enqueue(30);
     queue.enqueue(40, 1);
+    queue.enqueue(50, 2);
     queue.print_queue();
 
     return 0;

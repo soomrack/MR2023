@@ -1,7 +1,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include <linked_list.h>
+#include <priority_linked_list.h>
 
 class QueueException : public std::exception {
 private:
@@ -13,7 +13,7 @@ public:
 };
 
 
-class Queue : LinkedList {
+class Queue : PriorityLinkedList {
 public:
     Queue() = default;
 
@@ -24,8 +24,9 @@ public:
     ~Queue() = default;
 
     void enqueue(dtype item, size_t priority = 20) {
-        if (priority >= get_size() || empty()) push_back(item);
-        else insert(priority, item);
+        if (priority >= 20) push_back(item);
+
+        push_priority(item, priority);
     };
 
     void dequeue() {
@@ -39,14 +40,14 @@ public:
         if (empty())
             throw QueueException("Cannot get front item from empty queue");
 
-        return get(0);
+        return get_item(0);
     };
 
     dtype back() {
         if (empty())
             throw QueueException("Cannot get back item from empty queue");
 
-        return get(get_size() - 1);
+        return get_item(get_size() - 1);
     };
 
     bool empty() { return get_size() == 0; };
