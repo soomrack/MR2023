@@ -55,14 +55,14 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu++2a -fdiagnostics-color=always"
+					"fragment" : "-g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -fcolor-diagnostics"
 				}
 			],
 			"includes" : 
 			[
 				{
 					"backtrace" : 4,
-					"path" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include"
+					"path" : "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include"
 				}
 			],
 			"language" : "CXX",
@@ -83,12 +83,12 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 2,
-			"id" : "linked_list::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 3,
 			"id" : "din_arr::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "linked_list::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "Task5::@6890427a1f51a3e7e1df",

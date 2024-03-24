@@ -67,7 +67,7 @@ void linked_list<T>::pop_first() {
 
 
 template<typename T>
-void linked_list<T>::pop_element(size_t index){
+void linked_list<T>::pop_head(){
     node<T>*next_ptr = head->next;
     delete[] head;
     head = next_ptr;
@@ -75,15 +75,21 @@ void linked_list<T>::pop_element(size_t index){
 
 template<typename T>
 void linked_list<T>::pop_element(size_t index){
-    // node<T>* current_ptr = head;
-    // for(size_t current_idx = 0; current_idx <= index; ++current_idx) {
-    //      current_ptr = current_ptr->next;
-    //  }
-    //  if(head->next != nullptr) {
-    //      node<T>*next_ptr = head->next;
-    //  }
-    //  delete[] head;
-    //  head = next_ptr;
+    if(index == 0) {
+        pop_head();
+        return;
+    }
+    node<T>* current_ptr = head;
+    for(size_t current_idx = 1; current_idx < index; ++current_idx) {
+        current_ptr = current_ptr->next;
+     }
+    if(current_ptr->next->next != nullptr) {
+        node<T>*next_ptr = current_ptr->next;
+        current_ptr->next = current_ptr->next->next;
+        delete[] next_ptr;
+    }else {
+        std::cout<<"Error! This element is the last one"<<std::endl;
+     }
 }
 
 

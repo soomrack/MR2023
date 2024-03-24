@@ -1,2 +1,2 @@
-/usr/bin/ar qc libdin_arr.a CMakeFiles/din_arr.dir/src/din_arr.cpp.o
-/usr/bin/ranlib libdin_arr.a
+/Library/Developer/CommandLineTools/usr/bin/ar qc libdin_arr.a CMakeFiles/din_arr.dir/src/din_arr.cpp.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libdin_arr.a

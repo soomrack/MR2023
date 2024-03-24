@@ -13,10 +13,11 @@ int main(){
     list.push_head(3);
     list.push_head(5);
     list.push_head(7);
-
+    list.push_head(10);
     list.print();
 
-    list.pop_head();
+    //list.pop_head();
+    list.pop_element(3);
     list.print();
 
 
