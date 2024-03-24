@@ -17,7 +17,7 @@ int main(){
     list.print();
 
     //list.pop_head();
-    list.pop_element(3);
+    list.push_element(3,100);
     list.print();
 
 
