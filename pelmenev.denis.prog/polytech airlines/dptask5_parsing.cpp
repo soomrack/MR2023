@@ -7,7 +7,10 @@
 std::ifstream DATAFILE;
 std::ofstream LOGFILE;
 
+
 //номера необходимых параметров из каждой строки
+//DISTANCE, AIR_TIME, AIRLINE_ID, UNIQUE_CARRIER_NAME, ORIGIN_CITY_NAME,
+//ORIGIN_STATE_NM, ORIGIN_COUNTRY_NAME, DEST_CITY_NAME, DEST_STATE_NM, DEST_COUNTRY_NAME
 std::vector <int> VALUES = {7, 9, 11, 12, 23, 26, 28, 34, 37, 39};
 
 
