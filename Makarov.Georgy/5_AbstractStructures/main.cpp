@@ -42,7 +42,7 @@ int main() {
 
     DoublyLinkedList doubly_list;
     for (size_t i = 5; i < 12; i++)
-        doubly_list.push_back(int((i - 3) * (i + 3)));
+        doubly_list.push_head(int((i - 3) * (i + 3)));
 
     DoublyLinkedList doubly_list_copied(doubly_list);
     doubly_list_copied.insert(2, -15);
