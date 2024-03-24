@@ -3,3 +3,4 @@ build
 venv
 *.exe
 data.*
+latex
