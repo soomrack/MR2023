@@ -7,6 +7,7 @@
 std::ifstream DATAFILE;
 std::ofstream LOGFILE;
 
+//номера необходимых параметров из каждой строки
 std::vector <int> VALUES = {7, 9, 11, 12, 23, 26, 28, 34, 37, 39};
 
 
@@ -15,7 +16,7 @@ public:
     std::vector <std::string> line;
 };
 
-
+//инициализация файлов
 int init_file_system(const char sourse_file[])
 {
     DATAFILE.open(sourse_file);
@@ -35,7 +36,7 @@ int init_file_system(const char sourse_file[])
     return 1;
 }
 
-
+//возвращение строки в случае ковычек
 std::string get_string_on_quote(std::string par_str, size_t &index)
 {
     std::string str_fnl;
@@ -54,7 +55,7 @@ std::string get_string_on_quote(std::string par_str, size_t &index)
     return str_fnl;
 }
 
-
+//возвращение строки от запятой до запятой
 std::string get_string(std::string par_str, size_t &index)
 {
     if (par_str[index] == '"') {
@@ -77,7 +78,7 @@ std::string get_string(std::string par_str, size_t &index)
     return str_fnl;
 }
 
-
+//пропуск строки в случае ковычек
 void skip_string_on_quote(std::string par_str, size_t &index)
 {
     while (par_str[index] != '"' || par_str[index + 1] != '"') {
@@ -89,7 +90,7 @@ void skip_string_on_quote(std::string par_str, size_t &index)
     index += 3;
 }
 
-
+//пропуск строки от запятой до запятой
 void skip_string(std::string par_str, size_t &index)
 {
     if (par_str[index] == '"') {
@@ -109,7 +110,7 @@ void skip_string(std::string par_str, size_t &index)
     index++;
 }
 
-
+//проверка счётчика на соотвествие номерам нужных параметров
 int check_value(int counter)
 {
     for (int idx = 0; idx < VALUES.size(); ++idx)
@@ -118,7 +119,7 @@ int check_value(int counter)
     return 0;
 }
 
-
+//запись строк в файл
 void write_to_file(record string)
 {
     for (size_t idx = 0; idx < string.line.size(); ++idx) {
@@ -135,7 +136,7 @@ void write_to_file(record string)
     std::cout << std::endl; */
 }
 
-
+//формирование первой строки с описанием параметров
 void form_head_string(std::string par_str, record &rec)
 {
     int counter = 0;
@@ -157,7 +158,7 @@ void form_head_string(std::string par_str, record &rec)
     }
 }
 
-
+//формирование остальных строк
 void form_string(std::string par_str, record &rec)
 {
     int counter = 0;
@@ -179,7 +180,7 @@ void form_string(std::string par_str, record &rec)
     }
 }
 
-
+//основная функция, формирующая логфайл
 void get_parameters()
 {
     record rec;
