@@ -18,7 +18,9 @@ struct Conditions
  double min_air_temperature;
  double max_air_temperature;
  double min_air_humidity;
- double max_air_humidity;  
+ double max_air_humidity;
+ int watering_time;
+int watering_interval; // minutes
 };
 
  
@@ -53,8 +55,33 @@ struct Time
 
 State state;
 Sensors sensors;
-Conditions conditions;
+Conditions conditions ;
 Time time;
+
+void plant_carrot()  // состояние среды подходящее для морковки
+{
+ conditions.normal_luminocity = 400;
+ conditions.normal_soil_humidity = 500;
+ conditions.min_air_temperature = 20;
+ conditions.max_air_temperature = 30;
+ conditions.min_air_humidity = 10;
+ conditions.max_air_humidity = 60 ;
+ conditions.watering_time = 3;
+ conditions.watering_interval = 2;
+}
+
+
+void set_plant()  // устанавливает тип растения
+{
+  int plant_type = 1;
+
+  switch(plant_type){
+    case 1: plant_carrot(); break;
+
+    default: Serial.println("недопустимы тип");
+  }
+}
+
 
 void init()
 { 
@@ -147,18 +174,21 @@ void do_fan()
   if (state.fan_ventilation == 1 || state.fan_temperature == 1 || 
       state.fan_humidity_air == 1 || state.fan_humidity_soil == 1) {
         digitalWrite(FAN, HIGH);
-  } else {
-    digitalWrite(FAN, LOW);
+        return;
   }
+    digitalWrite(FAN, LOW);
 } 
 
 
 void do_pump()
 {
-  if ((state.pump_humidity_air == 1 || state.pump_humidity_soil == 1)) {
-    long long int time_input= millis();
-    while ((millis() / 1000) - time_input / 1000 >= 4) { 
+  static int previous_watering;
+
+  if ((state.pump_humidity_air == 1 || state.pump_humidity_soil == 1 && (time.minutes - previous_watering >= conditions.watering_interval))) {
+    long long int watering_start = millis();
+    while ((millis() / 1000) - watering_start / 1000 < conditions.watering_time) {
       digitalWrite(WATER_PUMP, HIGH);
+      previous_watering = time.minutes;
     }
   }
   digitalWrite(WATER_PUMP, LOW);
@@ -190,7 +220,6 @@ void sensors_read()
   sensors.soil_humidity = analogRead(SOIL_MOISTURE_SENSOR);
   sensors.air_humidity = dht_sensor.getHumidity();
   sensors.air_temp = dht_sensor.getTemperatureC();
-  ventilation();
 }
 
 
@@ -218,6 +247,7 @@ void cycle()
     air_humidity();
     air_temp();
     soil_humidity();
+    ventilation();
 
 
     do_fan();
@@ -237,3 +267,4 @@ void setup() {
 void loop() { 
   cycle();
 }
+
