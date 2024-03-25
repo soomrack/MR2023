@@ -49,10 +49,10 @@ void AIR_function(unsigned long delay, float min_temp, float max_temp){
   dht.read();
   float temp;
   float hum_air;
-  unsigned long int read_time_d = 0;
+  unsigned long int read_time_dht = 0;
 
-  temp = dht.temC();
-  hum_air = dht.hum();
+  temp = dht.tem;
+  hum_air = dht.hum;
   
   digitalWrite(HEAT_PIN, LOW);
   digitalWrite(FAN_PIN, LOW); 
