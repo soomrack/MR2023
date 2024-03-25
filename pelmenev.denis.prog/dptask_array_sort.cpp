@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include <cstdlib>
 
 
 typedef int ArrayItem;
@@ -88,83 +89,55 @@ void sort_merge(ArrayItem array[], size_t size)
 }
 
 
-void rebuild_tree(ArrayItem array[], size_t sorted)
-{
-    size_t idx = 0;
+void heap_tree(ArrayItem array[], size_t size, int index) {
+	int max = index;
+	int left = 2 * index + 1;
+	int right = 2 * index + 2; 
 
-    while (2*idx + 2 <= sorted) {
-        if (2*idx + 2 == sorted ) {
-            if (array[idx] < array[2*idx + 1])
-                swap_elements(array[idx], array[2*idx + 1]);
-            
-            break;
-        }
+	if (left < size && array[left] > array[max]) max = left;
 
-        if ((array[idx] >= array[2*idx + 1]) && (array[idx] >= array[2*idx + 2]))
-            break;
-        
-        if (array[2*idx + 1] > array[2*idx + 2]) {
-            swap_elements(array[idx], array[2*idx + 1]);
-            idx = 2*idx + 1;
-        } else {
-            swap_elements(array[idx], array[2*idx + 2]);
-            idx = 2*idx + 2;
-        }
-    }
-}
+	if (right < size && array[right] > array[max]) max = right;
 
+	if (max != index) {
+		swap_elements(array[index], array[max]);
 
-void heap_tree(ArrayItem array[], size_t size)
-{
-    if (size == 1) return;
-
-    size_t aber = 0;
-
-    if (size % 2 == 0) {
-        if (array[(size - 2) / 2] < array[size - 1])
-            swap_elements(array[(size - 2) / 2], array[size - 1]);
-
-        aber++;
-    }
-    
-    for (size_t idx = size / 2 - aber; idx > 0; idx--) {
-        if ((array[idx - 1] < array[2 * idx - 1]) || (array[idx - 1] < array[2 * idx])) {
-            if (array[2 * idx] >= array[2 * idx - 1]) {
-                swap_elements(array[idx - 1], array[2 * idx]);
-                continue;
-            } else {
-                swap_elements(array[idx - 1], array[2 * idx - 1]);
-                continue;
-            }
-        }
-    }
-
-    rebuild_tree(array, size);
+		heap_tree(array, size, max);
+	}
 }
 
 
 void sort_heap(ArrayItem array[], size_t size)
 {
-    heap_tree(array, size);
-    
-    for (size_t sorted = size; sorted > 1; --sorted) {
-        swap_elements(array[0], array[sorted - 1]);
+	for (int idx = size / 2 - 1; idx >= 0; idx--)
+		heap_tree(array, size, idx);
 
-        rebuild_tree(array, sorted - 1);
-    }
+	for (int idx = size - 1; idx > 0; idx--) {
+		swap_elements(array[0], array[idx]);
+
+		heap_tree(array, idx, 0);
+	}
 }
 
 
 int main()
 {
-    ArrayItem a[] = {5, 4, 1, 3, 7, 3, 9, 0, 20, 16, 135, 0, 1010, 2, 9, 18};
-    size_t a_size = 16;
+    size_t a_size = 10;
+    ArrayItem* a;
+    a = new ArrayItem[a_size];
+
+    for (size_t i = 0; i < a_size; i++) {
+        a[i] = std::rand();
+    }
+
     print_array(a, a_size);
     std::cout << "______________" << std::endl;
+
     //sort_bubble(a, a_size);
     //sort_insertion(a, a_size);
     //sort_merge(a, a_size);
+
     sort_heap(a, a_size);
+
     std::cout << "______________" << std::endl;
     print_array(a, a_size);
 

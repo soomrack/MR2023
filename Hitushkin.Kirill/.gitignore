@@ -2,3 +2,5 @@ build
 .vscode
 venv
 *.exe
+data.*
+latex

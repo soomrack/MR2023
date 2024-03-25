@@ -43,6 +43,10 @@ public:
 
     void pop_back();
 
+    void push_head(const dtype &item);
+
+    void pop_head();
+
     void insert(size_t index, const dtype &item);
 
     void remove(size_t index);
