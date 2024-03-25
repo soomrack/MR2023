@@ -121,17 +121,15 @@ float temperature_sens() {
   ds.write(0xCC);
   ds.write(0x44);
 
-  if (sensors.sec_from_start - sensors.time_for_delay_temp > 1) {
-    ds.reset();
-    ds.write(0xCC);
-    ds.write(0xBE);
+  delay(1000);
+  ds.reset();
+  ds.write(0xCC);
+  ds.write(0xBE);
 
-    data[0] = ds.read();
-    data[1] = ds.read();
-    sensors.time_for_delay_temp = sensors.sec_from_start;
+  data[0] = ds.read();
+  data[1] = ds.read();
 
-    return (((data[1] << 8) | data[0]) * 0.0625);
-  }
+  return (((data[1] << 8) | data[0]) * 0.0625);
 }
 
 
@@ -154,7 +152,7 @@ void do_fan() {
 void do_pump() {
   if (state.pump == ON) {
     sensors.time_for_delay_pump = sensors.sec_from_start;
-    while (sensors.time_for_delay_pump - sensors.sec_from_start < 2) 
+    while (sensors.sec_from_start - sensors.time_for_delay_pump < 2) 
       digitalWrite(pompa_pin, 0);
     sensors.time_of_water_hour = sensors.hours;
     sensors.time_of_water_minute = sensors.minutes;
