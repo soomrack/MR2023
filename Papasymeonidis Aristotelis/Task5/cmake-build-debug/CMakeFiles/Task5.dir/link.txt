@@ -1,1 +1,1 @@
-/Library/Developer/CommandLineTools/usr/bin/c++ -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/Task5.dir/main.cpp.o -o Task5  liblinked_list.a libdin_arr.a 
+/usr/bin/c++ -g CMakeFiles/Task5.dir/main.cpp.o -o Task5  liblinked_list.a libdin_arr.a 

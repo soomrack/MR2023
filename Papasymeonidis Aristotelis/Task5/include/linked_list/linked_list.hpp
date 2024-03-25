@@ -2,9 +2,11 @@
 // Created by simeonidi03 on 17.03.24.
 //
 
+#include <iostream>
+
+
 #ifndef LINKED_LIST_HPP
 #define LINKED_LIST_HPP
-#include <iostream>
 
 template<typename T>
 class node {

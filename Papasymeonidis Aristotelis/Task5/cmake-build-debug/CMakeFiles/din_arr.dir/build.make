@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = "/Users/simeonidi03/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake"
+CMAKE_COMMAND = /home/simeonidi03/.local/share/JetBrains/Toolbox/apps/clion-nova/bin/cmake/linux/x64/bin/cmake
 
 # The command to remove a file.
-RM = "/Users/simeonidi03/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -E rm -f
+RM = /home/simeonidi03/.local/share/JetBrains/Toolbox/apps/clion-nova/bin/cmake/linux/x64/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5"
+CMAKE_SOURCE_DIR = "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug"
+CMAKE_BINARY_DIR = "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug"
 
 # Include any dependencies generated for this target.
 include CMakeFiles/din_arr.dir/depend.make
@@ -70,18 +70,18 @@ include CMakeFiles/din_arr.dir/progress.make
 include CMakeFiles/din_arr.dir/flags.make
 
 CMakeFiles/din_arr.dir/src/din_arr.cpp.o: CMakeFiles/din_arr.dir/flags.make
-CMakeFiles/din_arr.dir/src/din_arr.cpp.o: /Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/src/din_arr.cpp
+CMakeFiles/din_arr.dir/src/din_arr.cpp.o: /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/src/din_arr.cpp
 CMakeFiles/din_arr.dir/src/din_arr.cpp.o: CMakeFiles/din_arr.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/din_arr.dir/src/din_arr.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/din_arr.dir/src/din_arr.cpp.o -MF CMakeFiles/din_arr.dir/src/din_arr.cpp.o.d -o CMakeFiles/din_arr.dir/src/din_arr.cpp.o -c "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/din_arr.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/din_arr.dir/src/din_arr.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/din_arr.dir/src/din_arr.cpp.o -MF CMakeFiles/din_arr.dir/src/din_arr.cpp.o.d -o CMakeFiles/din_arr.dir/src/din_arr.cpp.o -c "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/din_arr.cpp"
 
 CMakeFiles/din_arr.dir/src/din_arr.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/din_arr.dir/src/din_arr.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/din_arr.cpp" > CMakeFiles/din_arr.dir/src/din_arr.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/din_arr.cpp" > CMakeFiles/din_arr.dir/src/din_arr.cpp.i
 
 CMakeFiles/din_arr.dir/src/din_arr.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/din_arr.dir/src/din_arr.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/din_arr.cpp" -o CMakeFiles/din_arr.dir/src/din_arr.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/din_arr.cpp" -o CMakeFiles/din_arr.dir/src/din_arr.cpp.s
 
 # Object files for target din_arr
 din_arr_OBJECTS = \
@@ -93,7 +93,7 @@ din_arr_EXTERNAL_OBJECTS =
 libdin_arr.a: CMakeFiles/din_arr.dir/src/din_arr.cpp.o
 libdin_arr.a: CMakeFiles/din_arr.dir/build.make
 libdin_arr.a: CMakeFiles/din_arr.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libdin_arr.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libdin_arr.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/din_arr.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/din_arr.dir/link.txt --verbose=$(VERBOSE)
 
@@ -106,6 +106,6 @@ CMakeFiles/din_arr.dir/clean:
 .PHONY : CMakeFiles/din_arr.dir/clean
 
 CMakeFiles/din_arr.dir/depend:
-	cd "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5" "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5" "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug" "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug" "/Users/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles/din_arr.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5" "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5" "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug" "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug" "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles/din_arr.dir/DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : CMakeFiles/din_arr.dir/depend
 
