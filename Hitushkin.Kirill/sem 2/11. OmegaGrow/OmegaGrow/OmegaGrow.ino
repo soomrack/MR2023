@@ -47,6 +47,20 @@ struct {
 } State;
 
 
+const ClimateType TestClimate = {
+    .norm_luminosity = 400,
+    .min_air_temp = 20,
+    .max_air_temp = 30,
+    .min_air_humidity = 10,
+    .max_air_humidity = 60,
+    .norm_ground_humidity = 600,
+    .watering_time = 30ul * 1000ul,
+    .watering_duration = 10ul *1000ul,
+    .ven_time = 30ul * 1000ul,
+    .ven_duration = 10ul *1000ul
+};
+
+
 const ClimateType StrawberryClimate = {
     .norm_luminosity = 400,
     .min_air_temp = 20,
@@ -99,7 +113,7 @@ void setup() {
     pinMode(PIN_FAN_HEAT, OUTPUT);
     pinMode(PIN_FAN, OUTPUT);
 
-    Climate = CucumberClimate;
+    Climate = TestClimate;
 }
 
 
@@ -123,32 +137,98 @@ void sensors_update()  // снятие данных с датчиком
             Serial.println("Sensor not c1nected");
             break;
     }
+
+    Serial.print("Himidity: ");
+    Serial.print(Sensors.ground_humidity);
+    Serial.print("; Luminosity: ");
+    Serial.print(Sensors.luminosity);
+    Serial.print("; air_temp: ");
+    Serial.print(Sensors.air_temp);
+    Serial.print("; air_humidity: ");
+    Serial.print(Sensors.air_humidity);
+    Serial.print("\n");
 }
 
 
-void state_update()
+void update_pump()
 {
-    State.heat = Sensors.air_temp < Climate.min_air_temp;
-    State.light = Sensors.luminosity < Climate.norm_luminosity;
-    
-    State.ven = State.heat || Sensors.air_temp > Climate.max_air_temp || Sensors.air_humidity > Climate.max_air_humidity;
-    if (State.ven || (millis() - State.last_ven_time - Climate.ven_time) > Climate.ven_duration)
-        State.last_ven_time = millis();
-    State.ven |= (millis() - State.last_ven_time) > Climate.ven_time;
-
-    State.pump = Sensors.air_humidity < Climate.min_air_humidity || Sensors.ground_humidity < Climate.norm_ground_humidity;
+    State.pump = Sensors.air_humidity < Climate.min_air_humidity || Sensors.ground_humidity > Climate.norm_ground_humidity;
     if (State.pump || (millis() - State.last_watering_time - Climate.watering_duration) > Climate.watering_duration)
         State.last_watering_time = millis();
     State.pump |= (millis() - State.last_watering_time) > Climate.watering_time;
 }
 
 
-void write_state()
+void update_venv()
+{
+    State.ven = State.heat || Sensors.air_temp > Climate.max_air_temp || Sensors.air_humidity > Climate.max_air_humidity;
+    if (State.ven || (millis() - State.last_ven_time - Climate.ven_time) > Climate.ven_duration)
+        State.last_ven_time = millis();
+    State.ven |= (millis() - State.last_ven_time) > Climate.ven_time;
+}
+
+
+void update_light()
+{
+    State.light = Sensors.luminosity > Climate.norm_luminosity;
+}
+
+
+void update_heat()
+{
+    State.heat = Sensors.air_temp < Climate.min_air_temp;
+}
+
+
+void state_update()
+{
+    update_heat();
+    update_light();
+    update_venv();
+    update_pump();
+
+    Serial.print("light: ");
+    Serial.print(State.light);
+    Serial.print("; heat: ");
+    Serial.print(State.heat);
+    Serial.print("; ven: ");
+    Serial.print(State.ven);
+    Serial.print("; pump: ");
+    Serial.print(State.pump);
+    Serial.print("\n");
+}
+
+
+void do_light()
 {
     digitalWrite(PIN_LIGHT, State.light);
+}
+
+
+void do_heat()
+{
     digitalWrite(PIN_FAN_HEAT, State.heat);
+}
+
+
+void do_ven()
+{
     digitalWrite(PIN_FAN, State.ven);
+}
+
+
+void do_pump()
+{
     digitalWrite(PIN_WATER_PUMP, State.pump);
+}
+
+
+void write_state()
+{
+    do_light();
+    do_heat();
+    do_ven();
+    do_pump();
 }
 
 

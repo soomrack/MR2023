@@ -5,7 +5,10 @@
 #include <algorithm>
 #include <unordered_set>
 #include <limits>
+#include <chrono>
 #include "Graph/Graph.hpp"
+
+using namespace std::chrono;
 
 
 inline void parse_line(std::stringstream& line_stream, graph::Graph& graph) 
@@ -128,19 +131,13 @@ int main()
     std::ifstream datafile;
     datafile.open("../data.csv");
 
-    std::ofstream logfile;
-    logfile.open("../logfile.txt");
-    
-    if (!logfile.is_open()) {
-        std::cerr << "Couldn't open logfile" << std::endl;
-        return 0;
-    }
-
     if (!datafile.is_open()) {
         std::cerr << "Couldn't open datafile" << std::endl;
         return 0;
     }
     
+    auto start = high_resolution_clock::now();
+
     graph::Graph city_graph;
     city_graph.reserve(526832);
     
@@ -152,10 +149,12 @@ int main()
         parse_line(line_stream, city_graph);
     }
 
-    datafile.close();
-    logfile.close();
+    auto stop = high_resolution_clock::now();
 
-    std::cout << "Read success!" << '\n';
+    datafile.close();
+
+    auto duration = duration_cast<milliseconds>(stop - start);
+    std::cout << "Read success! Time: " << duration.count() << " ms" << '\n';
 
     for(graph::CityID city: find_path(city_graph, 1025702, 1410702)) {
         std::cout << "ID: " << city << " Name: " << city_graph[city].city_name 
