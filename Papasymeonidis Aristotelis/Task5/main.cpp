@@ -20,17 +20,17 @@ int main(){
     list.push_element(3,100);
     list.print();
 
-    PriorityQueue pq;
-    pq.push(Task("task1", 5));
-    pq.push(Task("task2", 1));
-    pq.push(Task("task3", 3));
-
-    while (!pq.isEmpty()) {
-        Task task = pq.pop();
-        std::cout << "Task: " << task.name << ", Priority: " << task.priority << std::endl;
-    }
-
-
+    // PriorityQueue pq;
+    // pq.push(Task("task1", 5));
+    // pq.push(Task("task2", 1));
+    // pq.push(Task("task3", 3));
+    //
+    // while (!pq.isEmpty()) {
+    //     Task task = pq.pop();
+    //     std::cout << "Task: " << task.name << ", Priority: " << task.priority << std::endl;
+    // }
+    //
+    //
 
 
 
