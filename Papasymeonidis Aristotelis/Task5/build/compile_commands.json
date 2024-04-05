@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/build",
+  "command": "/usr/bin/c++  -I\"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include\" -g -std=gnu++2a -o CMakeFiles/din_arr.dir/src/din_arr.cpp.o -c \"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/din_arr.cpp\"",
+  "file": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/din_arr.cpp"
+},
+{
+  "directory": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/build",
+  "command": "/usr/bin/c++  -I\"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include\" -g -std=gnu++2a -o CMakeFiles/linked_list.dir/src/linked_list.cpp.o -c \"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/linked_list.cpp\"",
+  "file": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/linked_list.cpp"
+},
+{
+  "directory": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/build",
+  "command": "/usr/bin/c++  -I\"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include\" -g -std=gnu++2a -o CMakeFiles/Task5.dir/main.cpp.o -c \"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/main.cpp\"",
+  "file": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/main.cpp"
+}
+]
