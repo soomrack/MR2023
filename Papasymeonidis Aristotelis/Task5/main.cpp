@@ -1,6 +1,7 @@
 #include "din_arr/din_arr.hpp"
 #include "linked_list/linked_list.hpp"
 #include "queue/queue.hpp"
+#include <iostream>
 
 
 int main(){
@@ -31,9 +32,8 @@ int main(){
     // }
     //
     //
-    queue<string> queue_atart;
-    queue_atart.push_node_queue()
-
+    queue<int> queue_atart;
+    queue_atart.push_node_queue(23, 3);
 
     return 0;
 }

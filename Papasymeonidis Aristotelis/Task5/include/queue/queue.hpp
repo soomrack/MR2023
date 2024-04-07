@@ -1,7 +1,6 @@
 //
 // Created by simeonidi03 on 25/3/24.
 //
-#include"string"
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 
@@ -57,6 +56,7 @@ void queue<T>::push_node_queue(const T& value, const int priority)
     head = new_node;
     queue_node<T>* current_node = head;  
     queue_node<T>* previously = head;  
+    
     do
     {
         if(current_node->priority > current_node->next->priority){
@@ -66,7 +66,8 @@ void queue<T>::push_node_queue(const T& value, const int priority)
             previously = head; 
         }
 
-    } while (current_node->next != nullptr || current_node->priority > current_node->next->priority){
+    } while (current_node->next != nullptr || current_node->priority > current_node->next->priority)
+    {
         previously->next = current_node->next;
         current_node -> next = current_node -> next -> next;
         previously = previously->next;
@@ -109,7 +110,7 @@ void queue<T>::pop_element(size_t index){
         pop_head();
         return;
     }
-    nqueue_node<T>* current_ptr = head;
+    queue_node<T>* current_ptr = head;
     for(size_t current_idx = 1; current_idx < index; ++current_idx) {
         current_ptr = current_ptr->next;
      }
