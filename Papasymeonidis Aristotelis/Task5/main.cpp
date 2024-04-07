@@ -31,7 +31,8 @@ int main(){
     // }
     //
     //
-
+    queue<string> queue_atart;
+    queue_atart.push_node_queue()
 
 
     return 0;

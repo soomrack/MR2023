@@ -1,7 +1,7 @@
 //
 // Created by simeonidi03 on 25/3/24.
 //
-
+#include"string"
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 
@@ -28,7 +28,7 @@ private:
     queue() : head(nullptr) {}
     ~queue();
 
-    void push_node_queue(const T& value);
+    void push_node_queue(const T& value, const int priority);
     void pop_first();
     void pop_head();
     void pop_element(size_t index);
@@ -46,15 +46,14 @@ queue<T>::~queue() {
 }
 
 template<typename T>
-void queue<T>::sort(){
-
-}
-
-
-template<typename T>
-void queue<T>::push_node_queue(const T& value) {
-    queue_node<T>* new_node = new node<T>(value);
-    new_node->next = head;
+void queue<T>::push_node_queue(const T& value, const int priority) 
+{
+    queue_node<T>* new_node = new queue_node<T>(priority, value, nullptr);
+    if (head == nullptr) {
+        head = new_node;
+        first = new_node;
+    } else {
+ new_node->next = head;
     head = new_node;
     queue_node<T>* current_node = head;  
     queue_node<T>* previously = head;  
@@ -67,15 +66,14 @@ void queue<T>::push_node_queue(const T& value) {
             previously = head; 
         }
 
-    } while (current_node->priority > current_node->next->priority){
-        previously = 
+    } while (current_node->next != nullptr || current_node->priority > current_node->next->priority){
+        previously->next = current_node->next;
+        current_node -> next = current_node -> next -> next;
+        previously = previously->next;
     }
-    
-    while (current_node->priority > current_node->next->priority)
-    {
-
-    }
-    
+   }
+   
+        
 }
 
 
