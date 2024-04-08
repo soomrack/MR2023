@@ -83,61 +83,55 @@ void heap_sort(int* array, int size)
     }
 }
 
-void merge_sort(int* array, int size)
+void merge_Sort(int* arr, int size)
 {
-    int* temp_array = new int[size];
-    
-    int* sorted_array = temp_array;
-    int* output_array = array;
-    
-    for (int block_size = 1; block_size < size; block_size *= 2)
+    int mid = size / 2;
+    if (size % 2 == 1)
+        mid++;
+    int s = 1;
+    int* arr1 = new int[size];
+    int step;
+    while (s < size)
     {
-        for (int block_idx = 0; block_idx < size; block_idx += 2 * block_size)
+        step = s;
+        int path1_i = 0;
+        int path2_i = mid;
+        int res_i = 0;
+        while (step <= mid)
         {
-            int left_idx = 0;
-            int right_idx = 0;
-
-            int left_border = block_idx;
-            int mid_border = block_idx + block_size;
-            int right_border = block_idx + 2 * block_size;
-            
-            right_border = (right_border < size) ? right_border : size;
-
-            while (left_border + left_idx < mid_border && mid_border + right_idx < right_border)
+            while ((path1_i < step) && (path2_i < size) && (path2_i < (mid + step))) 
             {
-                if (output_array[left_border + left_idx] < output_array[mid_border + right_idx])
+                if (arr[path1_i] < arr[path2_i])
                 {
-                    sorted_array[left_border + left_idx + right_idx] = output_array[left_border + left_idx];
-                    left_idx++;
+                    arr1[res_i] = arr[path1_i];
+                    path1_i++; res_i++;
                 }
-                else
-                {
-                    sorted_array[left_border + left_idx + right_idx] = output_array[mid_border + right_idx];
-                    right_idx++;
+                else {
+                    arr1[res_i] = arr[path2_i];
+                    path2_i++; res_i++;
                 }
             }
-
-            while (left_border + left_idx < mid_border)
+            while (path1_i < step)
             {
-                sorted_array[left_border + left_idx + right_idx] = output_array[left_border + left_idx];
-                left_idx++;
+                arr1[res_i] = arr[path1_i];
+                path1_i++; res_i++;
             }
-
-            while (mid_border + right_idx < right_border)
+            while ((path2_i < (mid + step)) && (path2_i < size))
             {
-                sorted_array[left_border + left_idx + right_idx] = output_array[mid_border + right_idx];
-                right_idx++;
+                arr1[res_i] = arr[path2_i];
+                path2_i++; res_i++;
             }
+            step = step + s;
         }
+      
+        s = s * 2;
 
-        std::swap(output_array, sorted_array);
+        for (int i = 0; i < size; i++)
+            arr[i] = arr1[i];
     }
 
-    if (output_array != array) 
-    {
-        std::swap(output_array, sorted_array);
-        memcpy(output_array, sorted_array, size * sizeof(int));
-    }
+    delete[] arr1;
+}
 
     delete[] temp_array;
 }
