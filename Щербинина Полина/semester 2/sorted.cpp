@@ -5,7 +5,7 @@ void swap(int* array, const int one, const int two)
     array[two] = tmp;
 }
 
-void bubble_sort(int* array, int size)
+void bubble_sort(int array[], int size)
 {
     for (int sorted_size = 0; sorted_size + 1 < size; sorted_size++)
     {
@@ -18,6 +18,7 @@ void bubble_sort(int* array, int size)
         }
     }
 }
+
 
 void insertion_sort(int* array, const int size)
 {
