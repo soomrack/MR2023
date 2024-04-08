@@ -37,36 +37,33 @@ void insertion_sort(int* array, const int size)
     }
 }
 
-void heapify(int* array, int index, int size)
-{  
-    int index_ = index;
+
+void heapify(int arr[], int n, int i) {
+  int largest = i;
+  int left = 2 * i + 1;
+  int right = 2 * i + 2;
+
+  if (left < n && arr[left] > arr[largest])
+    largest = left;
+  
+  if (right < n && arr[right] > arr[largest])
+    largest = right;
+
+  if (largest != i) {
+    swap(arr[i], arr[largest]);
+    heapify(arr, n, largest);
+  }
+}
+
+void heapSort(int arr[], int n) {
+  for (int i = n / 2 - 1; i >= 0; i--)
+    heapify(arr, n, i);
+
+  for (int i = n - 1; i >= 0; i--) {
+    swap(arr[0], arr[i]);
     
-    while ( true )
-    {
-        int left = 2 * index_ + 1;
-        int right = 2 * index_ + 2;
-        int largest = index_;
-
-        if (left < size && array[left] > array[largest]) 
-        {
-            largest = left;
-        }
-
-        if (right < size && array[right] > array[largest])
-        {
-            largest = right;
-        }
-
-        if (largest == index_) 
-        {
-            break;
-        }
-
-        int temp = array[index_];
-        array[index_] = array[largest];
-        array[largest] = temp;
-        index_ = largest;
-    }
+  heapify(arr, i, 0);
+  }
 }
 
 void heap_sort(int* array, int size)
