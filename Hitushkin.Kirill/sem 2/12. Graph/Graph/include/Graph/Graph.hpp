@@ -32,8 +32,8 @@ public:
 
     std::unordered_map<CityID, Distance>& get_adjacent_nodes(const CityID& node);
 
-    void del_link(const CityID& origin, const CityID& link);
-    void add_link(const CityID& origin, const CityID& link, const Distance& cost);
+    void del_link(const CityID& origin, const CityID& dest);
+    void add_link(const CityID& origin, const CityID& dest, const Distance& cost);
 
     std::stack<CityID> find_path(const CityID& start_point, const CityID& end_point);
     typedef std::tuple<CityID, Distance, CityID> PointTuple;

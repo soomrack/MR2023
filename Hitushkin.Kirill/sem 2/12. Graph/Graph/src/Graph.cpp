@@ -57,24 +57,24 @@ void Graph::init_node(const CityID& key)
 }
 
 
-void Graph::del_link(const CityID& origin, const CityID& link)
+void Graph::del_link(const CityID& origin, const CityID& dest)
 {
     if (!node_map.count(origin)) init_node(origin);
 
-    if (!node_map[origin].reachable.count(link)) 
-        throw GraphException(__FILE__, __LINE__, "This link does not exist");
+    if (!node_map[origin].reachable.count(dest)) 
+        throw GraphException(__FILE__, __LINE__, "This dest does not exist");
 
-    node_map[origin].reachable.erase(link);
+    node_map[origin].reachable.erase(dest);
 }
 
 
-void Graph::add_link(const CityID& node, const CityID& link, const Distance& distance)
+void Graph::add_link(const CityID& node, const CityID& dest, const Distance& distance)
 {
     if (!node_map.count(node)) init_node(node);
 
     Node& node_ptr = node_map[node];
-    if (!node_ptr.reachable.count(link) || node_ptr.reachable[link] > distance) 
-        node_ptr.reachable[link] = distance;
+    if (!node_ptr.reachable.count(dest) || node_ptr.reachable[dest] > distance) 
+        node_ptr.reachable[dest] = distance;
 }
 
 std::stack<CityID> Graph::find_path(const CityID& start_point, const CityID& goal_point)
