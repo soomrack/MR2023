@@ -1,7 +1,5 @@
 #include "linked_list.h"
 
-#include "../../../../../../../../../../usr/include/stdlib.h"
-
 LinkedList::LinkedList(const LinkedList &list) {
     if (list.size == 0)
         return;
@@ -18,7 +16,7 @@ LinkedList::LinkedList(LinkedList &&list) noexcept {
     list.size = 0;
 }
 
-dtype LinkedList::get(const size_t index) const {
+dtype LinkedList::get(size_t index) const {
     if (index >= size)
         throw LinkedListException("Index out of range");
 

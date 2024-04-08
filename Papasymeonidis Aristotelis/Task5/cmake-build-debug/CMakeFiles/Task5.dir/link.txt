@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/Task5.dir/main.cpp.o -o Task5  liblinked_list.a libdin_arr.a 

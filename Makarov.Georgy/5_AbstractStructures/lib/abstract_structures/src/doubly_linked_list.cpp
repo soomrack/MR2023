@@ -54,6 +54,28 @@ void DoublyLinkedList::pop_back() {
     size--;
 }
 
+void DoublyLinkedList::push_head(const dtype &data) {
+    DoublyLinkedListItem *item_next = head.next;
+
+    head.next = new DoublyLinkedListItem{data, item_next, &head};
+    item_next->prev = head.next;
+
+    size++;
+}
+
+void DoublyLinkedList::pop_head() {
+    if (size == 0) return;
+
+    DoublyLinkedListItem *item_next = head.next;
+
+    item_next->next->prev = &head;
+    head.next = item_next->next;
+
+    delete item_next;
+
+    size--;
+}
+
 void DoublyLinkedList::insert(size_t index, const dtype &data) {
     if (index >= size)
         throw DoublyLinkedListException("Index out of range");
