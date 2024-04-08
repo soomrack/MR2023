@@ -23,18 +23,22 @@ Node& Graph::operator[](const CityID& key)
 }
 
 
-std::vector<CityID> Graph::build_path(const CityID& goal_node)
+std::stack<CityID> Graph::build_path(const CityID& goal_node)
 {
-    std::vector<CityID> path = { goal_node };
+    std::stack<CityID> path;
+    path.push(goal_node);
 
-    CityID city_idx = goal_node;
-    auto node = node_map.find(city_idx);
+    CityID point = goal_node;
 
-    while (city_idx != node->second.previous)
+    while (true)
     {
-        city_idx = node->second.previous;
-        path.push_back(city_idx);
-        node = node_map.find(city_idx);
+        const Node& node = node_map[point];
+
+        if (point == node.previous) break;
+
+        point = node.previous;
+        
+        path.push(point);
     }
     
     return path;
@@ -53,14 +57,14 @@ void Graph::init_node(const CityID& key)
 }
 
 
-void Graph::del_link(const CityID& node, const CityID& link)
+void Graph::del_link(const CityID& origin, const CityID& link)
 {
-    if (!node_map.count(node)) init_node(node);
+    if (!node_map.count(origin)) init_node(origin);
 
-    if (!node_map[node].reachable.count(link)) 
+    if (!node_map[origin].reachable.count(link)) 
         throw GraphException(__FILE__, __LINE__, "This link does not exist");
 
-    node_map[node].reachable.erase(link);
+    node_map[origin].reachable.erase(link);
 }
 
 
@@ -71,6 +75,71 @@ void Graph::add_link(const CityID& node, const CityID& link, const Distance& dis
     Node& node_ptr = node_map[node];
     if (!node_ptr.reachable.count(link) || node_ptr.reachable[link] > distance) 
         node_ptr.reachable[link] = distance;
+}
+
+std::stack<CityID> Graph::find_path(const CityID& start_point, const CityID& goal_point)
+{
+    init_node(start_point);
+    // previous_ == this_point - stopping condition for build_path
+    node_map[start_point].previous = start_point;
+
+    auto comp = [](const PointTuple& pt1, const PointTuple& pt2)
+    { 
+        return std::get<1>(pt1) > std::get<1>(pt2); 
+    };
+    // PointTuple = {node, cost, previous_node}
+    std::priority_queue<PointTuple, std::vector<PointTuple>, decltype(comp)> reachable(comp);
+    reachable.push(std::make_tuple(start_point, 0, start_point));
+    std::unordered_set<CityID> explored;
+    
+    while (!reachable.empty()) 
+    {
+        CityID node_point = std::get<0>(reachable.top());
+        CityID previous_node_point = std::get<2>(reachable.top());
+        reachable.pop();
+
+        Node& node = node_map[node_point];
+        Node& previous_node = node_map[previous_node_point];
+        
+        Distance new_cost;
+        try
+        {
+            new_cost = previous_node.distance + previous_node.reachable.at(node_point);
+        }
+        catch(const std::exception& e)
+        {
+            new_cost = previous_node.distance;
+        }
+
+        if (explored.count(node_point)) {
+            if (node.distance > new_cost) {
+                // TODO costs update
+                node.distance = new_cost;
+                node.previous = previous_node_point;
+            };
+            continue;
+        }
+        explored.insert(node_point);
+
+        node.distance = new_cost;
+        node.previous = previous_node_point;
+
+        // If we just got to the goal node, build and return the path
+        if (node_point == goal_point)
+            return build_path(goal_point);
+
+        // Where can we get from here that we haven't explored before?
+        for (const auto& [adjacent, adjacent_path_cost]: node.reachable) 
+        {
+            if (explored.count(adjacent)) continue;
+            init_node(adjacent);
+            reachable.push(std::make_tuple(adjacent,
+                node.distance + adjacent_path_cost, node_point));    
+        }
+    }
+
+    // If we get here, no path was found
+    return std::stack<CityID> {};
 }
 
 }
