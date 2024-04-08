@@ -1,41 +1,35 @@
 #include <iostream>
+#include <stdexcept>
 
-class LinkedListItem
-{
+class LinkedListItem {
 public:
     int data;
     LinkedListItem* next;
 };
 
-
 class LinkedList {
-    private:
-        LinkedListItem* head;
-        LinkedListItem* walk_head;
-    public:
-        LinkedList();
-        LinkedList(const LinkedList& L);
-        LinkedList(LinkedList&& L);
-        void Push(int n);
-        void Pop();
-        void print();
-        void walk_next();
-        void return_to_first();
-        void add_next(int n);
-        void del_next();
+private:
+    LinkedListItem* head;
+    LinkedListItem* walk_head;
+public:
+    LinkedList();
+    LinkedList(const LinkedList& L);
+    LinkedList(LinkedList&& L);
+    ~LinkedList(); // Добавим деструктор для освобождения памяти
+    void Push(int n);
+    int Pop();
+    void print();
+    bool walk_next();
+    void add_next(int n);
+    void del_next();
 };
 
-
-LinkedList::LinkedList()
-{
+LinkedList::LinkedList() {
     head = nullptr;
     walk_head = nullptr;
 }
 
-
-LinkedList::LinkedList(const LinkedList& L)
-{
-
+LinkedList::LinkedList(const LinkedList& L) {
     if (L.head == nullptr) {
         head = nullptr;
         walk_head = nullptr;
@@ -53,83 +47,73 @@ LinkedList::LinkedList(const LinkedList& L)
         else {
             tmp_head->next = tmp_item;
             tmp_head = tmp_item;
-        }  
+        }
     }
     walk_head = head;
 }
 
-
-LinkedList::LinkedList(LinkedList&& L)
-{
+LinkedList::LinkedList(LinkedList&& L) {
     head = L.head;
     walk_head = head;
     L.head = nullptr;
 }
 
+LinkedList::~LinkedList() {
+    LinkedListItem* current = head;
+    while (current != nullptr) {
+        LinkedListItem* next = current->next;
+        delete current;
+        current = next;
+    }
+}
 
-void LinkedList::Push(int n)
-{
+void LinkedList::Push(int n) {
     LinkedListItem* tmp = new LinkedListItem;
     tmp->data = n;
     tmp->next = nullptr;
 
     if (head == nullptr) head = tmp;
-    else
-    {
+    else {
         tmp->next = head;
         head = tmp;
     }
     walk_head = head;
 }
 
-
-void LinkedList::Pop()
-{
+int LinkedList::Pop() {
     if (head != nullptr) {
-        head->data = 0;
+        int popped_value = head->data;
+        LinkedListItem* tmp = head;
         head = head->next;
         walk_head = head;
+        delete tmp;
+        return popped_value;
+    }
+    else {
+        throw std::runtime_error("List is empty");
     }
 }
 
-
-void LinkedList::print()
-{
+void LinkedList::print() {
     LinkedListItem* Tmp = head;
-    while (Tmp != nullptr)
-    {
+    while (Tmp != nullptr) {
         std::cout << Tmp->data << "\t";
         Tmp = Tmp->next;
     }
     std::cout << "\n";
 }
 
-
-void LinkedList::walk_next()
-{
+bool LinkedList::walk_next() {
     if (walk_head->next != nullptr) {
-        std::cout << "before: " << walk_head->data << "\t";
         walk_head = walk_head->next;
-        std::cout << "now: " << walk_head->data << "\t";
-        if (walk_head->next == nullptr)
-            std::cout << "next: " << "nullptr" << "\t";
-        else 
-            std::cout << "next: " << walk_head->next->data << "\t";
+        return true; // Успешное перемещение
     }
-    else
-        std::cout << "end" << "\t";
-    std::cout << "\n";
+    else {
+        return false; // Достигнут конец списка
+    }
 }
 
-
-void LinkedList::return_to_first() 
-{
-    walk_head = head;
-}
-
-
-void LinkedList::add_next(int n)
-{
+void LinkedList::add_next(int n) {
     LinkedListItem* tmp = new LinkedListItem;
     tmp->data = n;
     tmp->next = nullptr;
@@ -144,37 +128,38 @@ void LinkedList::add_next(int n)
     }
 }
 
-void LinkedList::del_next()
-{
+void LinkedList::del_next() {
     if (walk_head->next != nullptr) {
         walk_head->next->data = 0;
         walk_head->next = walk_head->next->next;
-    }    
+    }
 }
 
-
-int main()
-{
+int main() {
     LinkedList list;
     unsigned int choise, run = 1;
     int number;
-    while (run)
-    {
-        std::cout << "choise: ";
+    while (run) {
+        std::cout << "выбор: ";
         std::cin >> choise;
 
-        switch (choise)
-        {
+        switch (choise) {
         case 0:
             run = 0;
             break;
 
         case 1:
-            list.Pop();
+            try {
+                int popped_value = list.Pop();
+                std::cout << "Извлечено: " << popped_value << std::endl;
+            }
+            catch (const std::runtime_error& e) {
+                std::cout << e.what() << std::endl;
+            }
             break;
 
         case 2:
-            std::cout << "number: ";
+            std::cout << "число: ";
             std::cin >> number;
             list.Push(number);
             break;
@@ -184,24 +169,27 @@ int main()
             break;
 
         case 4:
-            list.walk_next();
+            if (!list.walk_next()) {
+                std::cout << "Достигнут конец списка" << std::endl;
+            }
             break;
 
         case 5:
-            list.return_to_first();
+            list.walk_head = list.head; // Сброс walk_head на head
             break;
 
         case 6:
-            std::cout << "number: ";
+            std::cout << "число: ";
             std::cin >> number;
             list.add_next(number);
             break;
+
         case 7:
             list.del_next();
             break;
-        
+
         default:
-            printf("wrong choise\n");
+            printf("неправильный выбор\n");
             break;
         }
         list.print();

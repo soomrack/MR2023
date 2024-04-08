@@ -1,182 +1,198 @@
 #include <iostream>
-#include <string>
-#include <cstring>
+#include <stdexcept>
 
-class Dynamic_array {
-private:
-    int* data;
-    size_t size;
-    size_t buffer_size;
-
+class LinkedListItem {
 public:
-    Dynamic_array();
-    Dynamic_array(size_t length, size_t buffer);
-    ~Dynamic_array();
-    Dynamic_array(const Dynamic_array& Arr);
-    Dynamic_array(Dynamic_array&& Arr);
-
-public:
-    size_t get_size();
-    int* get_data();
-    void set_random_array(); // Измененное название метода
-    void set_element(size_t index, int value);
-    void print_array();
-    int get_element(size_t index);
-    void resize(size_t new_size, size_t buffer);
-    void set_zero();
-    void set_zero(size_t left, size_t right);
+    int data;
+    LinkedListItem* next;
 };
 
+class LinkedList {
+private:
+    LinkedListItem* head;
+    LinkedListItem* walk_head;
+public:
+    LinkedList();
+    LinkedList(const LinkedList& L);
+    LinkedList(LinkedList&& L);
+    ~LinkedList(); // Добавим деструктор для освобождения памяти
+    void Push(int n);
+    int Pop();
+    void print();
+    bool walk_next();
+    void add_next(int n);
+    void del_next();
+};
 
-Dynamic_array::Dynamic_array() : size(0), buffer_size(0), data(nullptr) {}
-
-Dynamic_array::Dynamic_array(const Dynamic_array& Arr)
-{
-    size = Arr.size;
-    buffer_size = Arr.buffer_size;
-
-    data = new int[size + buffer_size];
-    memcpy(data, Arr.data, sizeof(int) * size);
+LinkedList::LinkedList() {
+    head = nullptr;
+    walk_head = nullptr;
 }
 
-
-Dynamic_array::Dynamic_array(Dynamic_array&& Arr)
-{
-    size = Arr.size;
-    buffer_size = Arr.buffer_size;
-    Arr.size = 0;
-    Arr.buffer_size = 0;
-
-    data = Arr.data;
-    Arr.data = nullptr;
+LinkedList::LinkedList(const LinkedList& L) {
+    if (L.head == nullptr) {
+        head = nullptr;
+        walk_head = nullptr;
+        return;
+    }
+    LinkedListItem* tmp_head = nullptr;
+    for (LinkedListItem* tmp_idx = L.head; tmp_idx != nullptr; tmp_idx = tmp_idx->next) {
+        LinkedListItem* tmp_item = new LinkedListItem;
+        tmp_item->data = tmp_idx->data;
+        tmp_item->next = nullptr;
+        if (tmp_head == nullptr) {
+            head = tmp_item;
+            tmp_head = tmp_item;
+        }
+        else {
+            tmp_head->next = tmp_item;
+            tmp_head = tmp_item;
+        }
+    }
+    walk_head = head;
 }
 
+LinkedList::LinkedList(LinkedList&& L) {
+    head = L.head;
+    walk_head = head;
+    L.head = nullptr;
+}
 
-Dynamic_array::Dynamic_array(size_t length, size_t buffer) {
-    if (length == 0 || buffer == 0) {
-        std::cerr << "Error: length and buffer must be greater than 0. Using default values (length = 1, buffer = 1)." << std::endl;
-        size = 1;
-        buffer_size = 1;
+LinkedList::~LinkedList() {
+    LinkedListItem* current = head;
+    while (current != nullptr) {
+        LinkedListItem* next = current->next;
+        delete current;
+        current = next;
+    }
+}
+
+void LinkedList::Push(int n) {
+    LinkedListItem* tmp = new LinkedListItem;
+    tmp->data = n;
+    tmp->next = nullptr;
+
+    if (head == nullptr) head = tmp;
+    else {
+        tmp->next = head;
+        head = tmp;
+    }
+    walk_head = head;
+}
+
+int LinkedList::Pop() {
+    if (head != nullptr) {
+        int popped_value = head->data;
+        LinkedListItem* tmp = head;
+        head = head->next;
+        walk_head = head;
+        delete tmp;
+        return popped_value;
     }
     else {
-        size = length;
-        buffer_size = buffer;
+        throw std::runtime_error("List is empty");
     }
-    data = new int[size + buffer_size];
 }
 
-
-Dynamic_array::~Dynamic_array() {
-    delete[] data;
-}
-
-
-size_t Dynamic_array::get_size()
-{
-    return size;
-}
-
-
-int* Dynamic_array::get_data()
-{
-    return data;
-}
-
-
-void Dynamic_array::set_random_array() // Измененное название метода
-{
-    for (size_t idx = 0; idx < size; idx++)
-        data[idx] = rand() % 100;
-}
-
-
-void Dynamic_array::set_zero()
-{
-    for (size_t idx = 0; idx < size; idx++)
-        data[idx] = 0;
-}
-
-
-void Dynamic_array::set_zero(size_t left, size_t right)
-{
-    for (size_t index = left; index <= right; index++)
-        data[index] = 0;
-}
-
-
-void Dynamic_array::set_element(size_t index, int value)
-{
-    if (index >= size + buffer_size) {
-        std::cout << "Wrong choice\n\n";
-        return;
+void LinkedList::print() {
+    LinkedListItem* Tmp = head;
+    while (Tmp != nullptr) {
+        std::cout << Tmp->data << "\t";
+        Tmp = Tmp->next;
     }
-    if (index >= size && index < size + buffer_size) {
-        set_zero(size, index);
-        buffer_size = size + buffer_size - index - 1;
-        size = index + 1;
+    std::cout << "\n";
+}
+
+bool LinkedList::walk_next() {
+    if (walk_head->next != nullptr) {
+        walk_head = walk_head->next;
+        return true; // Успешное перемещение
     }
-    data[index] = value;
-}
-
-
-void Dynamic_array::print_array()
-{
-    for (size_t idx = 0; idx < size; idx++)
-        std::cout << data[idx] << "\t";
-    std::cout << "\n \n";
-}
-
-
-int Dynamic_array::get_element(size_t index)
-{
-    if (index >= size) {
-        std::cout << "Wrong choice\n\n";
-        return NAN;
+    else {
+        return false; // Достигнут конец списка
     }
-    else
-        return data[index];
 }
 
+void LinkedList::add_next(int n) {
+    LinkedListItem* tmp = new LinkedListItem;
+    tmp->data = n;
+    tmp->next = nullptr;
 
-void Dynamic_array::resize(size_t new_size, size_t new_buffer)
-{
-    if (new_size + new_buffer <= size + buffer_size) {
-        if (new_size < size)
-            set_zero(new_size, new_buffer);
-        size = new_size;
-        buffer_size = new_buffer;
-        return;
+    if (head == nullptr) {
+        head = tmp;
+        walk_head = head;
     }
-
-    int* tmp = new int[new_size + new_buffer];
-    memcpy(tmp, data, size * sizeof(int));
-
-    delete[] data;
-    data = tmp;
-    set_zero(size, new_size - 1);
-    size = new_size;
-    buffer_size = new_buffer;
+    else {
+        tmp->next = walk_head->next;
+        walk_head->next = tmp;
+    }
 }
 
+void LinkedList::del_next() {
+    if (walk_head->next != nullptr) {
+        walk_head->next->data = 0;
+        walk_head->next = walk_head->next->next;
+    }
+}
 
-int main(void)
-{
-    Dynamic_array Arr(10, 5);
+int main() {
+    LinkedList list;
+    unsigned int choise, run = 1;
+    int number;
+    while (run) {
+        std::cout << "выбор: ";
+        std::cin >> choise;
 
-    Arr.set_random_array(); // Измененный вызов метода
-    Arr.print_array();
+        switch (choise) {
+        case 0:
+            run = 0;
+            break;
 
-    Arr.set_element(8, 4);
-    Arr.print_array();
+        case 1:
+            try {
+                int popped_value = list.Pop();
+                std::cout << "Извлечено: " << popped_value << std::endl;
+            }
+            catch (const std::runtime_error& e) {
+                std::cout << e.what() << std::endl;
+            }
+            break;
 
-    std::cout << Arr.get_element(6) << "\n";
-    Arr.print_array();
+        case 2:
+            std::cout << "число: ";
+            std::cin >> number;
+            list.Push(number);
+            break;
 
-    Arr.resize(20, 6);
-    Arr.print_array();
+        case 3:
+            list.print();
+            break;
 
-    // Testing with zero values
-    Dynamic_array Arr2(0, 0);
+        case 4:
+            if (!list.walk_next()) {
+                std::cout << "Достигнут конец списка" << std::endl;
+            }
+            break;
 
+        case 5:
+            list.walk_head = list.head; // Сброс walk_head на head
+            break;
+
+        case 6:
+            std::cout << "число: ";
+            std::cin >> number;
+            list.add_next(number);
+            break;
+
+        case 7:
+            list.del_next();
+            break;
+
+        default:
+            printf("неправильный выбор\n");
+            break;
+        }
+        list.print();
+    }
     return 0;
 }
