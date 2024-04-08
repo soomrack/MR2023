@@ -1,20 +1,30 @@
-//
-// Created by simeonidi03 on 17.03.24.
-//
-
 #include <iostream>
 
 
 #ifndef LINKED_LIST_HPP
 #define LINKED_LIST_HPP
 
+class ContainerException : public std::exception
+{
+private:
+    std::string message;
+
+public:
+    ContainerException(std::string msg) : message(msg.c_str()) {}
+    std::string what() { return message; }
+};
+
+ContainerException ERRONEOUS_MESSAGE("erroneous message");
+ContainerException WRONG_CONDITIONS("wrong_conditions");
+ContainerException NO_MEMORY_ALLOCATED("no_memory_allocated");
+
 template<typename T>
 class node {
 public:
     T data;
     node<T>* next;
-    node(const T& data) : data(data), next(nullptr) {}
-    node(const T& data, node<T>* next) : data(data), next(next) {}
+    node(const T& data) : data{data}, next{nullptr} {}
+    node(const T& data, node<T>* next) : data{data}, next(next) {}
 };
 
 
@@ -22,18 +32,21 @@ template<typename T>
 class linked_list {
 private:
     node<T>* head;
-    //node<T>* current_ptr;
+
+
 public:
-    linked_list() : head(nullptr) {}
+    linked_list() : head{nullptr} {}
     ~linked_list();
 
+
+public:
     void push_head(const T& value);
-    void pop_first();
-    void pop_head();
+    node<T>* pop_head();
     void pop_element(size_t index);
     void print() const;
     void push_element(size_t index, const T& value);
 };
+
 
 template<typename T>
 linked_list<T>::~linked_list() {
@@ -43,6 +56,7 @@ linked_list<T>::~linked_list() {
         delete del_node_ptr;
     }
 }
+
 
 template<typename T>
 void linked_list<T>::push_head(const T& value) {
@@ -62,16 +76,9 @@ void linked_list<T>::print() const {
     std::cout << std::endl;
 }
 
-template<typename T>
-void linked_list<T>::pop_first() {
-    node<T>*next_ptr = head->next;
-    delete[] head;
-    head = next_ptr;
-}
-
 
 template<typename T>
-void linked_list<T>::pop_head(){
+node<T>* linked_list<T>::pop_head(){
     node<T>*next_ptr = head->next;
     delete[] head;
     head = next_ptr;
@@ -105,10 +112,7 @@ void linked_list<T>::push_element(size_t index, const T& value) {
 
     node<T>* current_ptr = head;
     for(size_t current_idx = 1; current_idx < index - 1; ++current_idx) {
-        if(current_ptr == nullptr) {
-            std::cerr << "Index out of bounds" << std::endl;
-            return;
-        }
+        if(current_ptr == nullptr) throw ContainerException("Index out of bounds");
         current_ptr = current_ptr->next;
     }
 
@@ -116,7 +120,7 @@ void linked_list<T>::push_element(size_t index, const T& value) {
         node<T>* next_ptr = new node<T>{value, current_ptr->next};
         current_ptr->next = next_ptr;
     } else {
-        std::cout << "Unknown error" << std::endl;
+         throw ContainerException("Unknown error");
     }
 }
 

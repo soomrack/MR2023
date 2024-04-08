@@ -45,5 +45,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/din_arr.dir/DependInfo.cmake"
   "CMakeFiles/linked_list.dir/DependInfo.cmake"
+  "CMakeFiles/stack_overflow.dir/DependInfo.cmake"
   "CMakeFiles/Task5.dir/DependInfo.cmake"
   )

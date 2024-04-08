@@ -5,16 +5,17 @@
 #include "din_arr/din_arr.hpp"
 
 
-Dynamic_array::Dynamic_array(size_t size) {
-    real_size = size;
-    buf_size = size + BUFFER;
+Dynamic_array::Dynamic_array(): real_size{50}, buf_size{50 + buffer} {
     data = new Array_Item[buf_size];
 }
 
 
-Dynamic_array::Dynamic_array(size_t real_size, size_t buffer) {
-    this->real_size = real_size;
-    buf_size = buffer;
+Dynamic_array::Dynamic_array(size_t size): real_size{size}, buf_size{size + buffer} {
+    data = new Array_Item[buf_size];
+}
+
+
+Dynamic_array::Dynamic_array(size_t real_size, size_t buffer): real_size{real_size}, buf_size{buffer}{
     data = new Array_Item[buf_size];
 }
 
@@ -22,6 +23,7 @@ Dynamic_array::Dynamic_array(size_t real_size, size_t buffer) {
 Dynamic_array::Dynamic_array(const Dynamic_array& Arr){
     this->real_size = Arr.real_size;
     this->buf_size = Arr.buf_size;
+    if(buf_size == 0) throw ContainerException("Cannot use dynamic array with size 0");
     this->data = new Array_Item[buf_size];
     std::memcpy(data, Arr.data, sizeof(Arr.data));
 }
@@ -38,24 +40,14 @@ Dynamic_array::Dynamic_array(Dynamic_array&& Arr){
 }
 
 
-Dynamic_array::Dynamic_array(size_t real_size, Array_Item* user_data) {
-    this->real_size = real_size;
-    buf_size = real_size + BUFFER;
+Dynamic_array::Dynamic_array(size_t real_size, Array_Item* user_data): real_size{real_size}, buf_size{real_size + buffer}{
     data = new Array_Item[buf_size];
     memcpy(data, user_data, real_size * sizeof(Array_Item));
 }
 
 
-Array_Item* Dynamic_array::get_data() const{
-    return data;
-}
-
-
 Array_Item Dynamic_array::get_element(const size_t index) {
-    if(index >= real_size) {
-        std::cout<<"array has not value with this index"<<std::endl;
-        return 0;
-    }
+    if(index >= real_size) throw ContainerException("array has not value with this index");
     return data[index];
 }
 
@@ -64,12 +56,13 @@ size_t Dynamic_array::get_size() const{
     return real_size;
 }
 
-void Dynamic_array::resize(const size_t new_size) {
-    buf_size = new_size + BUFFER;
-    Array_Item* new_data = new Array_Item[new_size + BUFFER];
-    if(real_size >= new_size + BUFFER) {
-        memcpy(new_data, data, (new_size + BUFFER) * sizeof(Array_Item));
-        real_size = new_size + BUFFER;
+
+void Dynamic_array::resize(const size_t new_size){
+    buf_size = new_size + buffer;
+    Array_Item* new_data = new Array_Item[new_size + buffer];
+    if(real_size >= new_size + buffer) {
+        memcpy(new_data, data, (new_size + buffer) * sizeof(Array_Item));
+        real_size = new_size + buffer;
     } else{
         memcpy(new_data, data, real_size * sizeof(Array_Item));
     }
@@ -78,11 +71,9 @@ void Dynamic_array::resize(const size_t new_size) {
     new_data = nullptr;
 }
 
+
 void Dynamic_array::set_element(size_t index, Array_Item value){
-    if(index > buf_size - 1) {
-        std::cout<<"error_message: dinamic array was overflowing! please resize it"<<std::endl;
-        return;
-    }
+    if(index > buf_size - 1) throw ContainerException("Cannot use dynamic array with size 0");
 
     if(index > real_size - 1) {
         data[real_size] = value;
@@ -96,6 +87,7 @@ void Dynamic_array::set_element(size_t index, Array_Item value){
     data[index] = value;
 }
 
+
 void Dynamic_array::print_array() const {
     std::cout << "Array contents: ";
     for (size_t i = 0; i < real_size; ++i) {
@@ -103,6 +95,7 @@ void Dynamic_array::print_array() const {
     }
     std::cout << std::endl;
 }
+
 
 Dynamic_array::~Dynamic_array() {
     real_size = 0;
