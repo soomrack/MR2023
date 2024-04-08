@@ -20,8 +20,8 @@ public:
 template<typename T>
 class queue{
 private:
-    node<T>* head;
-    node<T>* first;
+    queue_node<T>* head;
+    queue_node<T>* first;
     
     public:
     queue() : head(nullptr) {}
