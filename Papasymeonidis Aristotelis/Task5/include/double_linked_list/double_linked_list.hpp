@@ -20,6 +20,7 @@ template<typename T>
 class double_linked_list {
 private:
     node<T>* head;
+    node<T>* tail;
     //node<T>* current_ptr;
 public:
     double_linked_list() : head(nullptr) {}
@@ -34,7 +35,7 @@ public:
 };
 
 template<typename T>
-double_linked_list<T>::~linked_list() {
+double_linked_list<T>::~double_linked_list() {
     while (head != nullptr) {
         node<T>* del_node_ptr = head;
         head = head->next;
