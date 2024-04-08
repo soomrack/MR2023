@@ -1,7 +1,7 @@
 #include <iostream>
+#include <stdexcept>
 
-class QueueItem
-{
+class QueueItem {
 public:
     int data;
     int priopity;
@@ -17,20 +17,18 @@ public:
     Queue();
     Queue(const Queue& L);
     Queue(Queue&& L);
+    ~Queue();
     void Push(int n, int prior);
-    void Pop();
+    int Pop();
     void print();
 };
 
-Queue::Queue()
-{
-    head = NULL;
-    tail = NULL;
+Queue::Queue() {
+    head = nullptr;
+    tail = nullptr;
 }
 
-Queue::Queue(const Queue& L)
-{
-
+Queue::Queue(const Queue& L) {
     if (L.head == nullptr) {
         head = nullptr;
         tail = nullptr;
@@ -55,72 +53,85 @@ Queue::Queue(const Queue& L)
     tail = tmp_head;
 }
 
-
-Queue::Queue(Queue&& L)
-{
+Queue::Queue(Queue&& L) {
     head = L.head;
     tail = L.tail;
     L.head = L.tail = nullptr;
 }
 
+Queue::~Queue() {
+    QueueItem* current = head;
+    while (current != nullptr) {
+        QueueItem* next = current->next;
+        delete current;
+        current = next;
+    }
+}
 
-void Queue::Push(int n, int prior)
-{
+void Queue::Push(int n, int prior) {
     QueueItem* tmp = new QueueItem;
-    QueueItem* tmp_idx = head;
     tmp->data = n;
     tmp->priopity = prior;
-    tmp->next = tmp->prev = NULL;
+    tmp->next = tmp->prev = nullptr;
 
-    if (head == NULL) {
+    if (head == nullptr) {
         head = tail = tmp;
         return;
     }
 
-    while (prior > tmp_idx->priopity)
-        tmp_idx = tmp_idx->prev;
-
-
-    tmp->prev = tmp_idx;
-    tmp->next = tmp_idx->next;
-    if (tmp_idx->next != NULL)
-        tmp_idx->next->prev = tmp;
-    tmp_idx->next = tmp;
-    if (head->next != NULL)
-        head = head->next;
-}
-
-void Queue::Pop()
-{
-
-    if (tail == nullptr) return;
-
-    tail->data = 0;
-    tail->priopity = 0;
-
-    if (tail->next == nullptr) {
-        head = nullptr;
-        tail = nullptr;
+    if (prior < head->priopity) {
+        tmp->next = head;
+        head->prev = tmp;
+        head = tmp;
         return;
     }
 
-    tail = tail->next;
-    tail->prev = nullptr;
+    QueueItem* tmp_idx = head;
+    while (tmp_idx->next != nullptr && prior >= tmp_idx->next->priopity) {
+        tmp_idx = tmp_idx->next;
+    }
+    tmp->next = tmp_idx->next;
+    tmp->prev = tmp_idx;
+    if (tmp_idx->next != nullptr)
+        tmp_idx->next->prev = tmp;
+    tmp_idx->next = tmp;
+
+    if (tmp_idx == tail)
+        tail = tmp;
 }
 
-void Queue::print()
-{
+int Queue::Pop() {
+    if (tail == nullptr) {
+        throw std::runtime_error("Queue is empty");
+    }
+
+    int popped_data = tail->data;
+
+    if (tail->next == nullptr) {
+        delete tail;
+        head = nullptr;
+        tail = nullptr;
+        return popped_data;
+    }
+
+    QueueItem* tmp = tail;
+    tail = tail->next;
+    tail->prev = nullptr;
+    delete tmp;
+
+    return popped_data;
+}
+
+void Queue::print() {
     QueueItem* Tmp = head;
-    while (Tmp != NULL)
-    {
-        std::cout << Tmp->data  << ",prior=" << Tmp->priopity << "\t";
+    while (Tmp != nullptr) {
+        std::cout << Tmp->data << ",prior=" << Tmp->priopity << "\t";
         Tmp = Tmp->prev;
     }
     std::cout << "\n";
 }
 
-int main()
-{
+int main() {
     Queue list;
 
     list.Push(1, 3);
@@ -135,7 +146,9 @@ int main()
     list.Push(4, 2);
     list.print();
 
-    list.Pop();
+    int popped_value = list.Pop();
+    std::cout << "Popped value: " << popped_value << std::endl;
     list.print();
+
     return 0;
 }
