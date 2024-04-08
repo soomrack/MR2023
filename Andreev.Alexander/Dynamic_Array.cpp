@@ -2,15 +2,14 @@
 #include <string>
 #include <cstring>
 
-typedef int ArrayItem;
-
 class Dynamic_array {
 private:
-    ArrayItem* data;
+    int* data;
     size_t size;
     size_t buffer_size;
 
 public:
+    Dynamic_array();
     Dynamic_array(size_t length, size_t buffer);
     ~Dynamic_array();
     Dynamic_array(const Dynamic_array& Arr);
@@ -18,25 +17,26 @@ public:
 
 public:
     size_t get_size();
-    ArrayItem* get_data();
-    void set_array();
-    void set_element(size_t index, ArrayItem value);
+    int* get_data();
+    void set_random_array(); // Измененное название метода
+    void set_element(size_t index, int value);
     void print_array();
-    ArrayItem get_element(size_t index);
+    int get_element(size_t index);
     void resize(size_t new_size, size_t buffer);
     void set_zero();
     void set_zero(size_t left, size_t right);
 };
 
 
+Dynamic_array::Dynamic_array() : size(0), buffer_size(0), data(nullptr) {}
+
 Dynamic_array::Dynamic_array(const Dynamic_array& Arr)
 {
     size = Arr.size;
     buffer_size = Arr.buffer_size;
 
-    delete[] data;
-    data = new ArrayItem[size + buffer_size];
-    memcpy(data, Arr.data, sizeof(ArrayItem) * size);
+    data = new int[size + buffer_size];
+    memcpy(data, Arr.data, sizeof(int) * size);
 }
 
 
@@ -47,22 +47,26 @@ Dynamic_array::Dynamic_array(Dynamic_array&& Arr)
     Arr.size = 0;
     Arr.buffer_size = 0;
 
-    delete[] data;
     data = Arr.data;
     Arr.data = nullptr;
 }
 
 
 Dynamic_array::Dynamic_array(size_t length, size_t buffer) {
-    size = length;
-    buffer_size = buffer;
-    data = new ArrayItem[size + buffer_size];
+    if (length == 0 || buffer == 0) {
+        std::cerr << "Error: length and buffer must be greater than 0. Using default values (length = 1, buffer = 1)." << std::endl;
+        size = 1;
+        buffer_size = 1;
+    }
+    else {
+        size = length;
+        buffer_size = buffer;
+    }
+    data = new int[size + buffer_size];
 }
 
 
 Dynamic_array::~Dynamic_array() {
-    size = 0;
-    buffer_size = 0;
     delete[] data;
 }
 
@@ -73,16 +77,16 @@ size_t Dynamic_array::get_size()
 }
 
 
-ArrayItem* Dynamic_array::get_data()
+int* Dynamic_array::get_data()
 {
     return data;
 }
 
 
-void Dynamic_array::set_array()
+void Dynamic_array::set_random_array() // Измененное название метода
 {
     for (size_t idx = 0; idx < size; idx++)
-        data[idx] = (ArrayItem)(rand() % 100);
+        data[idx] = rand() % 100;
 }
 
 
@@ -100,17 +104,17 @@ void Dynamic_array::set_zero(size_t left, size_t right)
 }
 
 
-void Dynamic_array::set_element(size_t index, ArrayItem value)
+void Dynamic_array::set_element(size_t index, int value)
 {
     if (index >= size + buffer_size) {
-        std::cout << "Wrong choise\n\n";
+        std::cout << "Wrong choice\n\n";
         return;
     }
     if (index >= size && index < size + buffer_size) {
         set_zero(size, index);
         buffer_size = size + buffer_size - index - 1;
-        size = index + 1;        
-    }        
+        size = index + 1;
+    }
     data[index] = value;
 }
 
@@ -123,10 +127,10 @@ void Dynamic_array::print_array()
 }
 
 
-ArrayItem Dynamic_array::get_element(size_t index)
+int Dynamic_array::get_element(size_t index)
 {
     if (index >= size) {
-        std::cout << "Wrong choise\n\n";
+        std::cout << "Wrong choice\n\n";
         return NAN;
     }
     else
@@ -144,8 +148,8 @@ void Dynamic_array::resize(size_t new_size, size_t new_buffer)
         return;
     }
 
-    ArrayItem* tmp = new ArrayItem[new_size + new_buffer];
-    memcpy(tmp, data, size * sizeof(ArrayItem));
+    int* tmp = new int[new_size + new_buffer];
+    memcpy(tmp, data, size * sizeof(int));
 
     delete[] data;
     data = tmp;
@@ -158,8 +162,8 @@ void Dynamic_array::resize(size_t new_size, size_t new_buffer)
 int main(void)
 {
     Dynamic_array Arr(10, 5);
-    
-    Arr.set_array();
+
+    Arr.set_random_array(); // Измененный вызов метода
     Arr.print_array();
 
     Arr.set_element(8, 4);
@@ -171,5 +175,8 @@ int main(void)
     Arr.resize(20, 6);
     Arr.print_array();
 
-    return 1;
+    // Testing with zero values
+    Dynamic_array Arr2(0, 0);
+
+    return 0;
 }
