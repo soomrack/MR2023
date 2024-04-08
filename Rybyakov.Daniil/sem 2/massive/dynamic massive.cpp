@@ -64,11 +64,13 @@ void DynamicArray::append(int value) {
 
 
 void DynamicArray::resize(int new_size) {
-    int* new_data = new int[new_size];
-    memcpy(new_data, data, size * sizeof(int));
-    delete[] data;
-    data = new_data;
-    bufer = new_size;
+    if (new_size > bufer + size) {
+        int* new_data = new int[new_size];
+        memcpy(new_data, data, size * sizeof(int));
+        delete[] data;
+        data = new_data;
+        bufer = new_size;
+    }
 }
 
 
