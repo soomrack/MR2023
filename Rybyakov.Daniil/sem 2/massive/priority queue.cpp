@@ -2,8 +2,7 @@
 
 
 class Node {
-private:
-    friend class queue;
+public:
     int val;
     Node* next;
 public:
@@ -25,11 +24,9 @@ public:
 };
 
 
-class Exception : public std::domain_error
-{
+class Exception : public std::domain_error {
 public:
-    Exception(const char* const message) : std::domain_error(message)
-    {}
+    Exception(const char* const message) : std::domain_error(message) {}
 };
 
 
@@ -43,14 +40,21 @@ bool queue::is_empty() {
 
 void queue::push(int val) {
     Node* el = new Node(val);
-    if (is_empty()) {
+    if (is_empty() || val < head->val) {
+        el->next = head;
         head = el;
-        tail = el;
-        return;
     }
-    tail->next = el;
-    tail = el;
-
+    else {
+        Node* curr = head;
+        while (curr->next != nullptr && val >= curr->next->val) {
+            curr = curr->next;
+        }
+        el->next = curr->next;
+        curr->next = el;
+        if (el->next == nullptr) {
+            tail = el;
+        }
+    }
 }
 
 
@@ -75,15 +79,18 @@ int queue::pop() {
 }
 
 
-int main()
-{
+int main() {
     queue A;
-    A.push(1);
-    std::cout << "is empty?" << A.is_empty() << std::endl;
-    A.push(2);
-    A.print();
     A.push(3);
-    A.pop();
+    A.push(1);
+    A.push(5);
+    A.push(2);
+
     A.print();
+
+    while (!A.is_empty()) {
+        std::cout << A.pop() << std::endl;
+    }
+
     return 0;
 }
