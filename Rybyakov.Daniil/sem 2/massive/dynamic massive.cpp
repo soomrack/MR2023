@@ -71,6 +71,10 @@ void DynamicArray::resize(int new_size) {
         data = new_data;
         bufer = new_size;
     }
+    else {
+        size += 1;
+        bufer -= 1;
+    }
 }
 
 
