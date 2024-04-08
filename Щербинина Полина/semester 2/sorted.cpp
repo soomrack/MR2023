@@ -1,3 +1,6 @@
+#include <iostream>
+using namespace std;
+
 void swap(int* array, const int one, const int two)
 {
     int tmp = array[one];
