@@ -3,7 +3,6 @@ using namespace std;
 
 typedef int Data;
 
-
 class Node {
 public:
     Data data;
@@ -15,55 +14,29 @@ public:
     Node(const Data data, const Node* next = nullptr);
 public:
     Node* get_next() { return next; }
-    void add_next(Node* node, const Data value);
-    void delete_next();
 };
+
 Node::Node(const Data data, const Node* next) {
     this->data = data;
     this->next = const_cast<Node*>(next);
 }
 
-
 class List {
-
 private:
     Node* head;
 public:
-    List() { head = nullptr; }
+    List() : head{ nullptr } {}
     ~List() { clear(); }
 public:
     void add_head(const Data value);
     void delete_head();
-    Node* get_head() { return head; };
+    Data get_head_data();
     void clear();
 };
-
-
-void Node::add_next(Node* node, const Data value) {
-    if (node == nullptr) {
-        return;
-    }
-    node->next = new Node(value, node->next);
-}
-
-
-void Node::delete_next() {
-    Node* temp = next;
-    if (temp->next == nullptr) {
-        next = nullptr;
-    }
-    else {
-        Node* temp2 = temp->next;
-        next = temp2;
-    }
-    delete temp;
-}
-
 
 void List::add_head(const Data value) {
     head = new Node(value, head);
 }
-
 
 void List::delete_head() {
     if (head == nullptr) {
@@ -74,6 +47,14 @@ void List::delete_head() {
     delete temp;
 }
 
+Data List::get_head_data() {
+    if (head != nullptr) {
+        return head->data;
+    }
+    else {
+        return Data();
+    }
+}
 
 void List::clear() {
     while (head != nullptr) {
@@ -81,16 +62,19 @@ void List::clear() {
         head = head->next;
         delete temp;
     }
-    head = nullptr;
 }
-
 
 int main() {
     List list;
     list.add_head(5);
     list.add_head(22);
     list.add_head(8);
+
+    Data headData = list.get_head_data();
+    cout <<  headData << endl;
+
     list.delete_head();
     list.clear();
+
     return 0;
 }
