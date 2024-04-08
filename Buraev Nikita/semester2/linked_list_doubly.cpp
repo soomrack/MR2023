@@ -14,14 +14,18 @@ public:
 class List {
 private:
     Node* head;
+    Node* tail;
 
 public:
-    List() : head(nullptr) {}
+    List() : head(nullptr), tail(nullptr) {}
     ~List() { clear(); }
 
     void addHead(Data value);
+    void addTail(Data value);
     void deleteHead();
+    void deleteTail();
     Node* getHead() const { return head; }
+    Node* getTail() const { return tail; }
     void clear();
 };
 
@@ -31,6 +35,20 @@ void List::addHead(Data value) {
         head->prev = newHead;
     }
     head = newHead;
+    if (tail == nullptr) {
+        tail = newHead;
+    }
+}
+
+void List::addTail(Data value) {
+    Node* newTail = new Node(value, nullptr, tail);
+    if (tail != nullptr) {
+        tail->next = newTail;
+    }
+    tail = newTail;
+    if (head == nullptr) {
+        head = newTail;
+    }
 }
 
 void List::deleteHead() {
@@ -39,6 +57,20 @@ void List::deleteHead() {
     head = head->next;
     if (head != nullptr) {
         head->prev = nullptr;
+    } else {
+        tail = nullptr;
+    }
+    delete temp;
+}
+
+void List::deleteTail() {
+    if (tail == nullptr) return;
+    Node* temp = tail;
+    tail = tail->prev;
+    if (tail != nullptr) {
+        tail->next = nullptr;
+    } else {
+        head = nullptr;
     }
     delete temp;
 }
@@ -49,6 +81,7 @@ void List::clear() {
         head = head->next;
         delete temp;
     }
+    tail = nullptr;
 }
 
 int main() {
@@ -56,7 +89,9 @@ int main() {
     list.addHead(5);
     list.addHead(22);
     list.addHead(8);
+    list.addTail(10);
     list.deleteHead();
+    list.deleteTail();
     list.clear();
     return 0;
 }
