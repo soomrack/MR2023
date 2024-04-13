@@ -67,7 +67,7 @@ template <typename T>
 void queue<T>::print() const {
     queue_node<T>* current = head;
     while (current) {
-        std::cout << current->data << " (Priority: " << current->priority << ") ";
+        std::cout << current->data << " (Priority: " << current->priority << ") "<<std::endl;
         current = current->next;
     }
     std::cout << std::endl;
