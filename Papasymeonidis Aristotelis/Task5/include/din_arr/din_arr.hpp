@@ -11,7 +11,15 @@ typedef int Array_Item;
 #ifndef DIN_ARR_HPP
 #define DIN_ARR_HPP
 
-#include"container_exception/container_exception.hpp"
+class DynamicArrayException : public std::exception
+{
+private:
+    std::string message;
+
+public:
+    DynamicArrayException(std::string msg) : message(msg.c_str()) {}
+    std::string what() { return message; }
+};
 
 class Dynamic_array{
 private:

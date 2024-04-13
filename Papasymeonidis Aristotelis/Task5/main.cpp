@@ -38,10 +38,9 @@ int main(){
     }catch (ContainerException error)
     {
         std::cerr << error.what() << std::endl;
-        
     } catch (...) {
         std::cerr << "Some other exception\n";
         return 1;
-
+    }
     return 0;
 }

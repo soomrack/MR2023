@@ -199,8 +199,8 @@ CMakeFiles/Task5.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/8/tr1/poly_hermite.tcc \
   /usr/include/c++/8/tr1/poly_laguerre.tcc \
   /usr/include/c++/8/tr1/riemann_zeta.tcc \
-  ../include/container_exception/container_exception.hpp \
   ../include/linked_list/linked_list.hpp \
+  ../include/container_exception/container_exception.hpp \
   ../include/queue/queue.hpp
 
 
