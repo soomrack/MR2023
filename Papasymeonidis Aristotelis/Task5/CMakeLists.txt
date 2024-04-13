@@ -9,7 +9,7 @@ include_directories(include)
 # Добавляем исходные файлы вашей библиотеки
 add_library(din_arr include/din_arr/din_arr.hpp src/din_arr.cpp)
 add_library(linked_list include/linked_list/linked_list.hpp src/linked_list.cpp)
-add_library(stack_overflow include/stack_overflow/stack_overflow.hpp)
+add_library(container_exception include/container_exception/container_exception.hpp src/container_exception.cpp)
 
 # Добавляем исполняемый файл
 add_executable(Task5 main.cpp

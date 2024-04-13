@@ -143,17 +143,17 @@ linked_list/fast:
 .PHONY : linked_list/fast
 
 #=============================================================================
-# Target rules for targets named stack_overflow
+# Target rules for targets named container_exception
 
 # Build rule for target.
-stack_overflow: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 stack_overflow
-.PHONY : stack_overflow
+container_exception: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 container_exception
+.PHONY : container_exception
 
 # fast build rule for target.
-stack_overflow/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/stack_overflow.dir/build.make CMakeFiles/stack_overflow.dir/build
-.PHONY : stack_overflow/fast
+container_exception/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/container_exception.dir/build.make CMakeFiles/container_exception.dir/build
+.PHONY : container_exception/fast
 
 #=============================================================================
 # Target rules for targets named Task5
@@ -191,6 +191,30 @@ main.s: main.cpp.s
 main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Task5.dir/build.make CMakeFiles/Task5.dir/main.cpp.s
 .PHONY : main.cpp.s
+
+src/container_exception.o: src/container_exception.cpp.o
+.PHONY : src/container_exception.o
+
+# target to build an object file
+src/container_exception.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/container_exception.dir/build.make CMakeFiles/container_exception.dir/src/container_exception.cpp.o
+.PHONY : src/container_exception.cpp.o
+
+src/container_exception.i: src/container_exception.cpp.i
+.PHONY : src/container_exception.i
+
+# target to preprocess a source file
+src/container_exception.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/container_exception.dir/build.make CMakeFiles/container_exception.dir/src/container_exception.cpp.i
+.PHONY : src/container_exception.cpp.i
+
+src/container_exception.s: src/container_exception.cpp.s
+.PHONY : src/container_exception.s
+
+# target to generate assembly for a file
+src/container_exception.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/container_exception.dir/build.make CMakeFiles/container_exception.dir/src/container_exception.cpp.s
+.PHONY : src/container_exception.cpp.s
 
 src/din_arr.o: src/din_arr.cpp.o
 .PHONY : src/din_arr.o
@@ -249,12 +273,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Task5"
+	@echo "... container_exception"
 	@echo "... din_arr"
 	@echo "... linked_list"
-	@echo "... stack_overflow"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/container_exception.o"
+	@echo "... src/container_exception.i"
+	@echo "... src/container_exception.s"
 	@echo "... src/din_arr.o"
 	@echo "... src/din_arr.i"
 	@echo "... src/din_arr.s"

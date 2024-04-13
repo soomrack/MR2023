@@ -45,9 +45,9 @@ queue<T>::~queue() {
 
 template<typename T>
 void queue<T>::sort(queue_node<T>* previously, queue_node<T>* current){
-    head = current_node->next;
-    head->next = current_node;
-    current_node -> next = current_node -> next -> next;
+    head = current->next;
+    head->next = current;
+    current->next = current->next->next;
     previously = head; 
 }
 
@@ -65,13 +65,12 @@ void queue<T>::push_node_queue(const T& value, const int priority)
         queue_node<T>* current_node = head;  
         queue_node<T>* previously = head;  
     
-        do
-        {
-            if(current_node->priority > current_node->next->priority) sort(previously, current_node);
-        } while (current_node->next != nullptr || current_node->priority > current_node->next->priority){
-        previously->next = current_node->next;
-        current_node -> next = current_node -> next -> next;
-        previously = previously->next;
+        if(current_node->priority > current_node->next->priority) sort(previously, current_node);
+        
+        while (current_node->next != nullptr || current_node->priority > current_node->next->priority){
+            previously->next = current_node->next;
+            current_node -> next = current_node -> next -> next;
+            previously = previously->next;
         }
     }  
 }
@@ -90,7 +89,7 @@ queue_node<T>* queue<T>::pop_first_queue(){
         delete[] first->next;
         first->next = nullptr;
     }
-    first = current;
+    first = current_node;
 
     return first->next;
 }

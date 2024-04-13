@@ -5,35 +5,43 @@
 
 
 int main(){
-    int data[5] = {3, 2, 3, 4, 5};
-    Dynamic_array arr1(5, data);
-    arr1.set_element(0,0);
-    std::cout<<arr1.get_element(0);
-    std::cout<<std::endl;
+    try {
+        int data[5] = {3, 2, 3, 4, 5};
+        Dynamic_array arr1(5, data);
+        arr1.set_element(0,0);
+        std::cout<<arr1.get_element(0);
+        std::cout<<std::endl;
 
-    linked_list<int> list;
-    list.push_head(3);
-    list.push_head(5);
-    list.push_head(7);
-    list.push_head(10);
-    list.print();
-    //list.pop_head();
-    list.push_element(3,100);
-    list.print();
+        linked_list<int> list;
+        list.push_head(3);
+        list.push_head(5);
+        list.push_head(7);
+        list.push_head(10);
+        list.print();
+        //list.pop_head();
+        list.push_element(3,100);
+        list.print();
 
-    // PriorityQueue pq;
-    // pq.push(Task("task1", 5));
-    // pq.push(Task("task2", 1));
-    // pq.push(Task("task3", 3));
-    //
-    // while (!pq.isEmpty()) {
-    //     Task task = pq.pop();
-    //     std::cout << "Task: " << task.name << ", Priority: " << task.priority << std::endl;
-    // }
-    //
-    //
-    queue<int> queue_atart;
-    queue_atart.push_node_queue(23, 3);
+        // PriorityQueue pq;
+        // pq.push(Task("task1", 5));
+        // pq.push(Task("task2", 1));
+        // pq.push(Task("task3", 3));
+        //
+        // while (!pq.isEmpty()) {
+        //     Task task = pq.pop();
+        //     std::cout << "Task: " << task.name << ", Priority: " << task.priority << std::endl;
+        // }
+        //
+        //
+        queue<int> queue_atart;
+        queue_atart.push_node_queue(23, 3);
+    }catch (ContainerException error)
+    {
+        std::cerr << error.what() << std::endl;
+        
+    } catch (...) {
+        std::cerr << "Some other exception\n";
+        return 1;
 
     return 0;
 }

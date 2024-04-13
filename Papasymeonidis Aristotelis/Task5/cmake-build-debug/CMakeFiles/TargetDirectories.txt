@@ -1,5 +1,0 @@
-/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles/din_arr.dir
-/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles/linked_list.dir
-/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles/Task5.dir
-/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -11,20 +11,7 @@ typedef int Array_Item;
 #ifndef DIN_ARR_HPP
 #define DIN_ARR_HPP
 
-class ContainerException : public std::exception
-{
-private:
-    std::string message;
-
-public:
-    ContainerException(std::string msg) : message(msg.c_str()) {}
-    std::string what() { return message; }
-};
-
-ContainerException ERRONEOUS_MESSAGE("erroneous message");
-ContainerException WRONG_CONDITIONS("wrong_conditions");
-ContainerException NO_MEMORY_ALLOCATED("no_memory_allocated");
-
+#include"container_exception/container_exception.hpp"
 
 class Dynamic_array{
 private:

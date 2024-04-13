@@ -2,8 +2,12 @@
 // Created by simeonidi03 on 3/25/24.
 //
 
+
 #ifndef DOUBLE_LINKED_LIST_HPP
 #define DOUBLE_LINKED_LIST_HPP
+
+#include"container_exception/container_exception.hpp"
+
 template<typename T>
 class node {
 public:
@@ -34,6 +38,7 @@ public:
     void push_element(size_t index, const T& value);
 };
 
+
 template<typename T>
 double_linked_list<T>::~double_linked_list() {
     while (head != nullptr) {
@@ -42,6 +47,7 @@ double_linked_list<T>::~double_linked_list() {
         delete del_node_ptr;
     }
 }
+
 
 template<typename T>
 void double_linked_list<T>::push_head(const T& value) {
@@ -62,6 +68,7 @@ void double_linked_list<T>::print() const {
     std::cout << std::endl;
 }
 
+
 template<typename T>
 void double_linked_list<T>::pop_first() {
     node<T>*next_ptr = head->next;
@@ -77,6 +84,7 @@ void double_linked_list<T>::pop_head(){
     delete[] head;
     head = next_ptr;
 }
+
 
 template<typename T>
 void double_linked_list<T>::pop_element(size_t index){
@@ -97,6 +105,7 @@ void double_linked_list<T>::pop_element(size_t index){
         std::cout<<"Error! This element is the last one"<<std::endl;
      }
 }
+
 
 template<typename T>
 void double_linked_list<T>::push_element(size_t index, const T& value) {
