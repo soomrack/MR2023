@@ -18,29 +18,22 @@ int main(){
         list.push_head(7);
         list.push_head(10);
         list.print();
-        //list.pop_head();
+        list.pop_head();
         list.push_element(3,100);
         list.print();
-
-        // PriorityQueue pq;
-        // pq.push(Task("task1", 5));
-        // pq.push(Task("task2", 1));
-        // pq.push(Task("task3", 3));
-        //
-        // while (!pq.isEmpty()) {
-        //     Task task = pq.pop();
-        //     std::cout << "Task: " << task.name << ", Priority: " << task.priority << std::endl;
-        // }
-        //
-        //
+        
         queue<int> queue_atart;
         queue_atart.push_node_queue(23, 3);
+        queue_atart.print();
+
+
     }catch (ContainerException error)
     {
         std::cerr << error.what() << std::endl;
-    } catch (...) {
-        std::cerr << "Some other exception\n";
-        return 1;
     }
+    // } catch (...) {
+    //     std::cerr << "Some other exception\n";
+    //     return 1;
+    // }
     return 0;
 }
