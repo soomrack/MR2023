@@ -29,13 +29,20 @@ struct Flights
 };
 
 
-struct Vertex
+class Vertex
 {
+public:
     string city_name;
     int city_id;
     int weight;
     int marker;
+    int airline_id;
     //Vertex* previous_vertex;
+public:
+    Vertex();
+    ~Vertex();
+    void clear();
+    void print();
 };
 
 
@@ -52,15 +59,47 @@ struct AdjencencyList
 };
 
 
-void print_one_flight(OneFlight flight)
+void Vertex::clear()
 {
-    cout << flight.air_time << endl;
-    cout << flight.airline_id << endl;
-    cout << flight.unique_carrier_name << endl;
-    cout << flight.origin_sity_market_id << endl;
-    cout << flight.origin_city_name << endl;
-    cout << flight.dest_sity_market_id << endl;
-    cout << flight.dest_city_name << endl;
+    city_id = 0;
+    city_name = " ";
+    weight = 0;
+    marker = 0;
+    airline_id = 0;
+}
+
+
+Vertex::Vertex()
+{
+    clear();
+}
+
+
+Vertex::~Vertex()
+{
+    clear();
+}
+
+
+void Vertex::print()
+{
+    cout << city_name << "  ";
+    cout << city_id << " ";
+    cout << airline_id << " ";
+    cout << weight << " ";
+    cout << marker << endl;
+}
+
+
+void print_adjencency_list(AdjencencyList list)
+{
+    for (size_t city = 0; city < list.number_of_cities; city++) {
+        for (size_t line = 0; line < list.list[city].line.size(); line++) {
+            cout << list.list[city].line[line].city_name << "  ";
+        }
+
+        cout << endl;
+    }
 }
 
 
@@ -156,6 +195,7 @@ void list_set_link(Vertex &vertex, Flights flights, size_t idx)
     vertex.city_id = flights.flight[idx].dest_sity_market_id;
     vertex.city_name = flights.flight[idx].dest_city_name;
     vertex.weight = flights.flight[idx].air_time;
+    vertex.airline_id = flights.flight[idx].airline_id;
 }
 
 
@@ -165,6 +205,8 @@ void list_set_new_city(Vertex &vertex, Edges &line, Flights flights, size_t idx)
     line.line.push_back(vertex);
     list_set_link(vertex, flights, idx);
     line.line.push_back(vertex);
+
+    vertex.clear();
 }
 
 
@@ -175,20 +217,27 @@ struct AdjencencyList get_list(Flights flights)
     Edges line;
 
     list_set_new_city(vertex, line, flights, 0);
-
     fnl_list.list.push_back(line);
     fnl_list.number_of_cities++;
+
+    int new_city_marker;
 
     for (size_t idx = 1; idx < flights.number_of_flights; idx++) {
         line.line.clear();
 
+        new_city_marker = 1;
+
         for (size_t city = 0; city < fnl_list.number_of_cities; city++) {
-            if (flights.flight[idx].origin_sity_market_id == fnl_list.list[idx].line[0].city_id) {
+            if (flights.flight[idx].origin_sity_market_id == fnl_list.list[city].line[0].city_id) {
                 list_set_link(vertex, flights, idx);
                 fnl_list.list[city].line.push_back(vertex);
+                vertex.clear();
+                new_city_marker = 0;
                 break;
             }
+        }
 
+        if (new_city_marker == 1) {
             list_set_new_city(vertex, line, flights, idx);
 
             fnl_list.list.push_back(line);
@@ -218,4 +267,5 @@ int main()
 
     cout << flights.number_of_flights << endl;
     cout << list.number_of_cities << endl;
+    print_adjencency_list(list);
 }
