@@ -1,226 +1,87 @@
 #include <iostream>
-using namespace std;
 
-#define COMPARATION_CONST 0.0001
-
-class Dynamic_array{
-protected:
-    unsigned int size;
+class DynamicArray {
+private:
+    int* data;
+    size_t size;
+    size_t size_allocated;
 
 public:
-    double* data;
-
-    Dynamic_array();
-    Dynamic_array(const unsigned int size_);
-    Dynamic_array(const Dynamic_array &x);
-    Dynamic_array(Dynamic_array &&x);
-    ~Dynamic_array();
-
-    Dynamic_array& operator=(const Dynamic_array& x);
-
-    void push_back(double el);
-    void pop_back();
-    unsigned int contain(double el);
-    void del(double el);
-    void remove(double el);
-    void clear();
-
-    void shrink(unsigned int size_ch);
-    void expand(unsigned int size_ch);
-
-    unsigned int length();
-    void output();
-
+    size_t bufer;
+    DynamicArray();
+    ~DynamicArray();
+    explicit DynamicArray(size_t size , size_t buffer);
+    int get_elem(size_t index) const;
+    void set_elem(size_t index, int value);
+    void add(int value);
+    void resize(size_t new_size);
 };
 
 
-Dynamic_array::Dynamic_array(){
-    size = 0;
-    data = nullptr;
+DynamicArray::DynamicArray(): size(0), bufer(1), data (nullptr) {
 }
 
-Dynamic_array::Dynamic_array(const unsigned int size_){
-    size = size_;
-    data = new double[size];
+DynamicArray::DynamicArray(size_t size, size_t bufer): size(size), bufer(bufer) {
+    size_allocated = size + bufer;
+    data = new int[size_allocated];
 }
 
-Dynamic_array::Dynamic_array(const Dynamic_array &x){
-    size = x.size;
-    data = new double[size];
-
-    for(unsigned int el = 0;el < size;el++){
-        data[el] = x.data[el];
-    }
-}
-
-Dynamic_array::Dynamic_array(Dynamic_array &&x){
-    size = x.size;
-    data = x.data;
-
-    x.size = NULL;
-    x.data = nullptr;
-}
-
-Dynamic_array::~Dynamic_array(){
+DynamicArray::~DynamicArray() {
     delete[] data;
-    data = nullptr;
-    size = NULL;
 }
 
-Dynamic_array &Dynamic_array::operator=(const Dynamic_array &x) {
-    if (this != &x){
-        if (!data) delete[] data;
-
-        size = x.size;
-        data = new double [size];
-        for(unsigned int el = 0;el < size; el++){
-            data[el] = x.data[el];
-        }
+int DynamicArray::get_elem(size_t index) const {
+  if (index >= 0 && index < size) {
+        return data[index];
     }
-    return *this;
+    else 
+    {
+        std::cout << "Error\n";
+        return 0;
+    }
 }
 
-void Dynamic_array::push_back(double el) {
-    double *temp = new double[size + 1];
-    for(unsigned int elm = 0;elm < size; elm++){
-        temp[elm] = data[elm];
-    }
+void DynamicArray::set_elem(size_t index, int value){
+    data[index] = value;
+}
 
+void DynamicArray::add(int value){
+    if (size == bufer) {
+        resize(bufer + 1);
+    }
+    data[size++] = value;
+}
+
+void DynamicArray::resize(size_t new_size){
+    if (new_size <= bufer)
+    {
+        bufer = new_size;
+        return;
+    }
+    int* new_data = new int[new_size];
+    for (size_t i = 0; i < size; i++)
+    {
+        new_data[i] = data[i];
+    }
     delete[] data;
-    temp[size++] = el;
-    data = temp;
-    temp = nullptr;
+    data = new_data;
+    bufer = new_size;
 }
 
-void Dynamic_array::pop_back() {
-    double *temp = new double[size - 1];
-    for(unsigned int el = 0;el < size--; el++){
-        temp[el] = data[el];
-    }
+int main()
+{
+    DynamicArray arr(0,3);
+    arr.set_elem(2, 5);
+    std::cout << arr.get_elem(2) << std::endl;
 
-    delete[] data;
-    data = temp;
-    temp = nullptr;
-}
+    arr.add(22);
+    arr.add(3);
+    arr.add(128);
 
-/*Searches for an element, 
- return the position (index + 1) if found*/
-unsigned int Dynamic_array::contain(double el) {  
-    for(unsigned int elm = 0;elm < size; elm++){
-        if (abs(data[elm] - el) < COMPARATION_CONST){
-            return elm + 1;
-        }
-    }
-    return 0;
-}
+    arr.resize(5);
 
-//Attempts to delete an element
-void Dynamic_array::del(double el) {
-    unsigned int pointer = contain(el);
-    if (pointer){
-        data[pointer - 1] = 0.0;
-    }
-}
+    arr.add(33);
+    arr.add(28);
 
-
-void Dynamic_array::remove(double el) {
-    unsigned int pointer = contain(el);
-    if (pointer == 0) return;
-
-    double *temp = new double[size - 1];
-
-    for(unsigned int elm = 0;elm < pointer - 1; elm++){
-        temp[elm] = data[elm];
-    }
-    for(unsigned int elm = pointer;elm < size; elm++){
-        temp[elm - 1] = data[elm];
-    }
-
-    delete[] data;
-    data = temp;
-    temp = nullptr;
-    size--;
-}
-
-void Dynamic_array::clear() {
-    delete[] data;
-    data = nullptr;
-    size = NULL;
-}
-
-
-//expand the size of the array to size_ch
-void Dynamic_array::shrink(unsigned int size_ch) {
-    if (size_ch >= size) return;
-    double *temp = new double[size_ch];
-    for(unsigned int el = 0;el < size_ch; el++){
-        temp[el] = data[el];
-    }
-
-    delete[] data;
-    data = temp;
-    size = size_ch;
-    temp = nullptr;
-}
-
-//expand the size of the array to size_ch
-void Dynamic_array::expand(unsigned int size_ch) {
-    if (size_ch <= size) return;
-    double *temp = new double[size_ch];
-    for(unsigned int el = 0;el < size; el++){
-        temp[el] = data[el];
-    }
-
-    delete[] data;
-    data = temp;
-    size = size_ch;
-    temp = nullptr;
-}
-
-unsigned int Dynamic_array::length(){
-    return size;
-}
-
-void Dynamic_array::output() {
-    cout << "Length is: "<< size << endl;
-
-    if (size > 0){
-        for(unsigned int el = 0;el < size;el++){
-            cout << data[el] << endl;
-        }
-
-        cout << "\n";
-        cout << "\n";
-    }
-
-}
-
-int main() {
-    Dynamic_array A;
-    Dynamic_array B(10);
-
-    for(unsigned int el = 0;el < 10;el++){
-        B.data[el] = rand() % 50;
-    }
-
-    B.data[0] = 11.1;
-    B.push_back(15.1);
-    B.data[3] = 7.7;
-
-    A.output();
-    B.output();
-
-    B.remove(11.1);
-    B.remove(15.1);
-    B.remove(7.7);
-    B.output();
-
-    B.pop_back();
-    B.expand(10);
-    B.shrink(9);
-    B.output();
-
-    B.clear();
-    B.output();
     return 0;
 }
