@@ -50,11 +50,8 @@ void DynamicArray::add(int value){
 }
 
 void DynamicArray::resize(size_t new_size){
-    if (new_size <= bufer)
-    {
-        bufer = new_size;
-        return;
-    }
+    if (new_size <= size_allocated) 
+    size_allocated = new_size + bufer;
     int* new_data = new int[new_size];
     for (size_t i = 0; i < size; i++)
     {
