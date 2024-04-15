@@ -35,7 +35,7 @@ List::List() {
 }
 
 
-void List::push_tail(int value)  // Добавление элемента в конец списка
+void List::push_tail(int value) 
 {
     Node* temp = new Node;
     temp->data = value;

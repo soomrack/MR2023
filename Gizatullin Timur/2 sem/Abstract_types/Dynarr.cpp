@@ -42,8 +42,9 @@ int DynamicArray::get_elem(size_t index) const {
 }
 
 void DynamicArray::set_elem(size_t index, int value){
+    if (size < index) return;
     data[index] = value;
-}
+    }
 
 void DynamicArray::add(int value){
     if (size == bufer) {
