@@ -10,10 +10,6 @@ tg/inst/git/vk - simeonidi03
 #include <vector>
 #include <sstream>
 
-using namespace std;
-
-void print_flights(vector<Flight>& Flights);
-void Write_to_file(ofstream& logfile, vector<Flight>& Flights);
 
 class Flight
 {
@@ -58,9 +54,15 @@ void Flight::print(){
 }
 
 
-void print_flights(vector<Flight>& Flights){
+void print_flights(std::vector<Flight>& Flights){
 
     for (auto flight : Flights) {
         flight.print();
     }
+}
+
+int main(){
+
+
+    return 0;
 }

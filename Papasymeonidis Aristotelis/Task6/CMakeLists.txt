@@ -1,23 +1,15 @@
-cmake_minimum_required(VERSION 3.22.1)
-project(Task6)
+cmake_minimum_required(VERSION 3.22.1) # Установка минимальной требуемой версии CMake
 
+project(Task6) # Название вашего проекта
+
+# Установка стандарта C++17
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Добавляем путь к директориям с заголовочными файлами
-#include_directories(include)
+# Добавление исполняемого файла
+# Предполагается, что весь код находится в файле main.cpp
+add_executable(Task6 parsing.cpp)
 
-# Добавляем исходные файлы вашей библиотеки
-# add_library(din_arr include/din_arr/din_arr.hpp src/din_arr.cpp)
-# add_library(linked_list include/linked_list/linked_list.hpp src/linked_list.cpp)
-#add_library(container_exception include/container_exception/container_exception.hpp src/container_exception.cpp)
-
-# Добавляем исполняемый файл
-add_executable(Task6 main.cpp)
-#       include/queue/queue.hpp
-#        include/double_linked_list/double_linked_list.hpp
-#        include/stack_overflow/stack_overflow.hpp)
-
-# Линкуем исполняемый файл с вашими библиотеками
-#target_link_libraries(Task5 PRIVATE linked_list)
-#target_link_libraries(Task5 PRIVATE din_arr)
-
+# Если у вас есть другие .cpp файлы, например, flight.cpp, где реализованы методы класса Flight,
+# их также нужно добавить в список исходников:
+# add_executable(FlightInfo main.cpp flight.cpp)
