@@ -63,6 +63,6 @@ void print_flights(std::vector<Flight>& Flights){
 
 int main(){
 
-
+std::cout<<"start project: 14/04/2024\n";
     return 0;
 }

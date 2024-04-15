@@ -73,15 +73,15 @@ CMakeFiles/Task6.dir/parsing.cpp.o: CMakeFiles/Task6.dir/flags.make
 CMakeFiles/Task6.dir/parsing.cpp.o: ../parsing.cpp
 CMakeFiles/Task6.dir/parsing.cpp.o: CMakeFiles/Task6.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Task6.dir/parsing.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Task6.dir/parsing.cpp.o -MF CMakeFiles/Task6.dir/parsing.cpp.o.d -o CMakeFiles/Task6.dir/parsing.cpp.o -c "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/parsing.cpp"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Task6.dir/parsing.cpp.o -MF CMakeFiles/Task6.dir/parsing.cpp.o.d -o CMakeFiles/Task6.dir/parsing.cpp.o -c "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/parsing.cpp"
 
 CMakeFiles/Task6.dir/parsing.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Task6.dir/parsing.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/parsing.cpp" > CMakeFiles/Task6.dir/parsing.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/parsing.cpp" > CMakeFiles/Task6.dir/parsing.cpp.i
 
 CMakeFiles/Task6.dir/parsing.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Task6.dir/parsing.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/parsing.cpp" -o CMakeFiles/Task6.dir/parsing.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/parsing.cpp" -o CMakeFiles/Task6.dir/parsing.cpp.s
 
 # Object files for target Task6
 Task6_OBJECTS = \

@@ -6,21 +6,21 @@
 
 int main(){
     try {
-        // int data[5] = {3, 2, 3, 4, 5};
-        // Dynamic_array arr1(5, data);
-        // arr1.set_element(0,0);
-        // std::cout<<arr1.get_element(0);
-        // std::cout<<std::endl;
+        int data[5] = {3, 2, 3, 4, 5};
+        Dynamic_array arr1(5, data);
+        arr1.set_element(0,0);
+        std::cout<<arr1.get_element(0);
+        std::cout<<std::endl;
 
-        linked_list<int> list;
-        list.push_head(3);
-        list.push_head(5);
-        list.push_head(7);
-        list.push_head(10);
-        list.print();
-        list.pop_head();
-        list.push_element(3,100);
-        list.print();
+        // linked_list<int> list;
+        // list.push_head(3);
+        // list.push_head(5);
+        // list.push_head(7);
+        // list.push_head(10);
+        // list.print();
+        // list.pop_head();
+        // list.push_element(3,100);
+        // list.print();
         
         // queue<int> queue_atart;
         // queue_atart.push(23, 9);
