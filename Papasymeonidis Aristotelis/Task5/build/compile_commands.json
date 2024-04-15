@@ -11,6 +11,11 @@
 },
 {
   "directory": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/build",
+  "command": "/usr/bin/c++  -I\"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include\" -g -std=gnu++2a -o CMakeFiles/container_exception.dir/src/container_exception.cpp.o -c \"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/container_exception.cpp\"",
+  "file": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/src/container_exception.cpp"
+},
+{
+  "directory": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/build",
   "command": "/usr/bin/c++  -I\"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include\" -g -std=gnu++2a -o CMakeFiles/Task5.dir/main.cpp.o -c \"/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/main.cpp\"",
   "file": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/main.cpp"
 }

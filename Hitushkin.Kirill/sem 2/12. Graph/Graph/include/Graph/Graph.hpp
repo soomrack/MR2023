@@ -6,7 +6,9 @@
 
 #include <unordered_map>
 #include <vector>
-
+#include <stack>
+#include <queue>
+#include <unordered_set>
 
 namespace graph
 {
@@ -24,14 +26,17 @@ public:
 
     Node& operator[](const CityID& key);
 
-    std::vector<CityID> build_path(const CityID& goal_node);
+    std::stack<CityID> build_path(const CityID& goal_node);
 
     void init_node(const CityID& point);
 
     std::unordered_map<CityID, Distance>& get_adjacent_nodes(const CityID& node);
 
-    void del_link(const CityID& node, const CityID& link);
-    void add_link(const CityID& node, const CityID& link, const Distance& cost);
+    void del_link(const CityID& origin, const CityID& dest);
+    void add_link(const CityID& origin, const CityID& dest, const Distance& cost);
+
+    std::stack<CityID> find_path(const CityID& start_point, const CityID& end_point);
+    typedef std::tuple<CityID, Distance, CityID> PointTuple;
 };
 
 }

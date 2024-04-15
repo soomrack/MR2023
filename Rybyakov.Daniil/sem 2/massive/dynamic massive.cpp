@@ -10,12 +10,12 @@ private:
 public:
 
     DynamicArray();
-    DynamicArray(int bufer);
+    DynamicArray(size_t size, int start_bufer);
     ~DynamicArray();
 
     int get_elem(int index);
     void set_elem(int index, int value);
-    void add(int value);
+    void append(int value);
 
     void resize(int new_size);
 
@@ -29,9 +29,7 @@ DynamicArray::DynamicArray() {
 }
 
 
-DynamicArray::DynamicArray(int start_bufer) {
-    bufer = start_bufer;
-    size = 0;
+DynamicArray::DynamicArray(size_t size, int start_bufer) : size{ size }, bufer { start_bufer } {
     data = new int[bufer];
 }
 
@@ -42,7 +40,13 @@ DynamicArray::~DynamicArray() {
 
 
 int DynamicArray::get_elem(int index) {
-    return data[index];
+    if (index >= 0 && index < size) {
+        return data[index];
+    }
+    else {
+        std::cerr << "Error: Index out of bounds\n";
+        return -1;
+    }
 }
 
 
@@ -51,38 +55,42 @@ void DynamicArray::set_elem(int index, int value) {
 }
 
 
-void DynamicArray::add(int value) {
+void DynamicArray::append(int value) {
     if (size == bufer) {
-        resize(bufer + 5);
+        resize(bufer + 1);
     }
     data[size++] = value;
 }
 
 
 void DynamicArray::resize(int new_size) {
-    int* new_data = new int[new_size];
-    for (int i = 0; i < size; i++) {
-        new_data[i] = data[i];
+    if (new_size > bufer + size) {
+        int* new_data = new int[new_size];
+        memcpy(new_data, data, size * sizeof(int));
+        delete[] data;
+        data = new_data;
+        bufer = new_size;
     }
-    delete[] data;
-    data = new_data;
-    bufer = new_size;
+    else {
+        size += 1;
+        bufer -= 1;
+    }
 }
 
 
 int main() {
-    DynamicArray arr(3);
+    DynamicArray arr(3, 3);
     arr.set_elem(2, 5);
     std::cout << arr.get_elem(2) << std::endl;
 
-    arr.add(22);
-    arr.add(3);
-    arr.add(128);
+    arr.append(22);
+    arr.append(3);
+    arr.append(128);
 
     arr.resize(5);
 
-    arr.add(33);
-    arr.add(28);
+    arr.append(33);
+    arr.append(28);
 
     return 0;
 }

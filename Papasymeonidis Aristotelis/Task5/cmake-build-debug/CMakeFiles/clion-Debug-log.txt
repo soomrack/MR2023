@@ -9,5 +9,7 @@ CMake Deprecation Warning:
 
 
 -- Configuring done (0.0s)
+CMake Error: Cannot determine link language for target "stack_overflow".
+CMake Error: CMake can not determine linker language for target: stack_overflow
 -- Generating done (0.0s)
--- Build files have been written to: /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug
+CMake Generate step failed.  Build files cannot be regenerated correctly.

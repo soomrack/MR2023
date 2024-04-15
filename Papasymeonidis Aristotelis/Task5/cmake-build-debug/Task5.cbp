@@ -113,6 +113,54 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="stack_overflow">
+				<Option output="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/libstack_overflow.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include"/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/cmake-build-debug/Makefile&quot;  VERBOSE=1 stack_overflow"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="stack_overflow/fast">
+				<Option output="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/libstack_overflow.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include"/>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/cmake-build-debug/Makefile&quot;  VERBOSE=1 stack_overflow/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis\ Aristotelis/Task5/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="Task5">
 				<Option output="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug/Task5" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/cmake-build-debug"/>
@@ -192,6 +240,10 @@
 			<Option target="linked_list"/>
 		</Unit>
 		<Unit filename="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include/queue/queue.hpp">
+			<Option target="Task5"/>
+		</Unit>
+		<Unit filename="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/include/stack_overflow/stack_overflow.hpp">
+			<Option target="stack_overflow"/>
 			<Option target="Task5"/>
 		</Unit>
 		<Unit filename="/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task5/main.cpp">

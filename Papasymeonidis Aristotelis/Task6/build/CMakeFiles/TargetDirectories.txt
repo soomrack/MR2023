@@ -1,0 +1,3 @@
+/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/build/CMakeFiles/Task6.dir
+/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/build/CMakeFiles/edit_cache.dir
+/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/build/CMakeFiles/rebuild_cache.dir

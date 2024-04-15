@@ -7,7 +7,7 @@ private:
     int val;
     Node* next;
 public:
-    Node(int _val) : val(_val), next(nullptr) {}
+    Node(int val) : val(val), next(nullptr) {}
 };
 
 
@@ -19,7 +19,7 @@ public:
     queue() : head(nullptr), tail(nullptr) {}
 
     bool is_empty();
-    void push(int _val);
+    void push(int val);
     void print();
     int pop();
 };
@@ -41,8 +41,8 @@ bool queue::is_empty() {
 }
 
 
-void queue::push(int _val) {
-    Node* el = new Node(_val);
+void queue::push(int val) {
+    Node* el = new Node(val);
     if (is_empty()) {
         head = el;
         tail = el;

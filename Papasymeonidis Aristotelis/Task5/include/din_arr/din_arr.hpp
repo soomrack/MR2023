@@ -5,27 +5,43 @@
 #include<cstring>
 #include<cmath>
 
-#define BUFFER 10
-#define BUFFER_PER 15
 
 typedef int Array_Item;
 
 #ifndef DIN_ARR_HPP
 #define DIN_ARR_HPP
+
+class DynamicArrayException : public std::exception
+{
+private:
+    std::string message;
+
+public:
+    DynamicArrayException(std::string msg) : message(msg.c_str()) {}
+    std::string what() { return message; }
+};
+
 class Dynamic_array{
 private:
     Array_Item* data;
     size_t real_size;
     size_t buf_size;
 
+
 public:
+    size_t buffer = 10;
+    size_t bufer_per = 15;
+    size_t standart_size = 50;
+
     [[nodiscard]] size_t get_size() const;
     void set_element(size_t index, Array_Item value);
-    [[nodiscard]] Array_Item* get_data() const;
     Array_Item get_element(size_t index);
     void resize(size_t new_size);
     void print_array() const;
 
+
+public:
+    Dynamic_array();
     Dynamic_array(size_t size);
     Dynamic_array(size_t real_size, size_t buffer);
     ~Dynamic_array();

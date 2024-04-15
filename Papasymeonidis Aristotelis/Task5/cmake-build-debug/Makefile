@@ -143,6 +143,19 @@ linked_list/fast:
 .PHONY : linked_list/fast
 
 #=============================================================================
+# Target rules for targets named stack_overflow
+
+# Build rule for target.
+stack_overflow: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 stack_overflow
+.PHONY : stack_overflow
+
+# fast build rule for target.
+stack_overflow/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/stack_overflow.dir/build.make CMakeFiles/stack_overflow.dir/build
+.PHONY : stack_overflow/fast
+
+#=============================================================================
 # Target rules for targets named Task5
 
 # Build rule for target.
@@ -238,6 +251,7 @@ help:
 	@echo "... Task5"
 	@echo "... din_arr"
 	@echo "... linked_list"
+	@echo "... stack_overflow"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

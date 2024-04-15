@@ -4,56 +4,63 @@
 
 #ifndef DOUBLE_LINKED_LIST_HPP
 #define DOUBLE_LINKED_LIST_HPP
+
+#include <iostream> 
+#include "container_exception/container_exception.hpp" 
+
 template<typename T>
 class node {
 public:
-    node<T>* preview;
+    node<T>* preview; 
     T data;
     node<T>* next;
-    node(const T& data) : preview(nullptr), data(data), next(nullptr) {}
-    node(const T& data, node<T>* next) : preview(nullptr), data(data), next(next) {}
-    node(const node<T>* preview, const T& data, const node<T>* next) : preview(preview), data(data), next(nullptr) {}
-};
 
+    node(const T& data, node<T>* prev = nullptr, node<T>* next = nullptr) 
+        : data(data), preview(prev), next(next) {}
+};
 
 template<typename T>
 class double_linked_list {
 private:
     node<T>* head;
-    //node<T>* current_ptr;
+    node<T>* tail;
+
 public:
-    double_linked_list() : head(nullptr) {}
+    double_linked_list() : head(nullptr), tail(nullptr) {}
     ~double_linked_list();
 
     void push_head(const T& value);
-    void pop_first();
-    void pop_head();
+    T pop_first();
+    T pop_head();
     void pop_element(size_t index);
     void print() const;
     void push_element(size_t index, const T& value);
 };
 
 template<typename T>
-double_linked_list<T>::~linked_list() {
+double_linked_list<T>::~double_linked_list() {
     while (head != nullptr) {
-        node<T>* del_node_ptr = head;
+        node<T>* del_node = head;
         head = head->next;
-        delete del_node_ptr;
+        delete del_node;
     }
+    tail = nullptr; 
 }
 
 template<typename T>
 void double_linked_list<T>::push_head(const T& value) {
-    node<T>* new_node = new node<T>(value);
-    new_node->next = head;
-    head->preview = new_node;
+    node<T>* new_node = new node<T>(value, nullptr, head);
+    if (head == nullptr) {
+        tail = new_node;
+    } else {
+        head->preview = new_node;
+    }
     head = new_node;
 }
 
-
 template<typename T>
 void double_linked_list<T>::print() const {
-    node<T> *current = head;
+    node<T>* current = head;
     while (current != nullptr) {
         std::cout << current->data << " ";
         current = current->next;
@@ -62,71 +69,68 @@ void double_linked_list<T>::print() const {
 }
 
 template<typename T>
-void double_linked_list<T>::pop_first() {
-    node<T>*next_ptr = head->next;
-    next_ptr->preview = nullptr;
-    delete[] head;
-    head = next_ptr;
+T double_linked_list<T>::pop_first() {
+    if (head == nullptr) throw container_exception("Empty list!");
+    T data = head->data;
+    node<T>* to_delete = head;
+    head = head->next;
+    if (head == nullptr) {
+        tail = nullptr;
+    } else {
+        head->preview = nullptr;
+    }
+    delete to_delete;
+    return data;
 }
 
-
 template<typename T>
-void double_linked_list<T>::pop_head(){
-    node<T>*next_ptr = head->next;
-    delete[] head;
-    head = next_ptr;
+T double_linked_list<T>::pop_head() {
+    return pop_first(); 
 }
 
 template<typename T>
-void double_linked_list<T>::pop_element(size_t index){
-    if(index == 0) {
+void double_linked_list<T>::pop_element(size_t index) {
+    if (index == 0) {
         pop_head();
         return;
     }
-    node<T>* current_ptr = head;
-    for(size_t current_idx = 1; current_idx < index; ++current_idx) {
-        current_ptr = current_ptr->next;
-     }
-    if(current_ptr->next->next != nullptr) {
-        node<T>*next_ptr = current_ptr->next;
-        current_ptr->next = current_ptr->next->next;
-        current_ptr->next->preview = current_ptr;
-        delete[] next_ptr;
-    }else {
-        std::cout<<"Error! This element is the last one"<<std::endl;
-     }
+    node<T>* current = head;
+    for (size_t i = 0; i < index; ++i) {
+        if (current == nullptr) throw container_exception("Index out of bounds");
+        current = current->next;
+    }
+    node<T>* to_delete = current;
+    if (to_delete == nullptr) throw container_exception("Index out of bounds");
+
+    if (to_delete->next != nullptr) to_delete->next->preview = to_delete->preview;
+    if (to_delete->preview != nullptr) to_delete->preview->next = to_delete->next;
+
+    if (to_delete == tail) tail = to_delete->preview;
+    if (to_delete == head) head = to_delete->next;
+
+    delete to_delete;
 }
 
 template<typename T>
 void double_linked_list<T>::push_element(size_t index, const T& value) {
-    if(index == 0) {
+    if (index == 0) {
         push_head(value);
         return;
     }
-
-    node<T>* current_ptr = head;
-    for(size_t current_idx = 1; current_idx < index - 1; ++current_idx) {
-        if(current_ptr == nullptr) {
-            std::cerr << "Index out of bounds" << std::endl;
-            return;
-        }
-        current_ptr = current_ptr->next;
+    node<T>* current = head;
+    for (size_t i = 0; i < index - 1; ++i) {
+        if (current == nullptr) throw container_exception("Index out of bounds");
+        current = current->next;
     }
-
-    if(current_ptr != nullptr) {
-        node<T>* next_ptr = new node<T>{current_ptr, value, current_ptr->next};
-        current_ptr->next = next_ptr;
+    if (current == tail) {
+        node<T>* new_node = new node<T>(value, tail, nullptr);
+        tail->next = new_node;
+        tail = new_node;
     } else {
-        std::cout << "Unknown error" << std::endl;
+        node<T>* new_node = new node<T>(value, current, current->next);
+        if (current->next != nullptr) current->next->preview = new_node;
+        current->next = new_node;
     }
 }
 
-
-
-
-
-
-
-
-
-#endif //DOUBLE_LINKED_LIST_HPP
+#endif // DOUBLE_LINKED_LIST_HPP

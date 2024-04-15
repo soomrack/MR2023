@@ -26,18 +26,21 @@ public:
 };
 
 
-DynamicArray::DynamicArray() {
+DynamicArray::DynamicArray() 
+{
     arr = nullptr;
     size = 0;
 }
 
 
-DynamicArray::~DynamicArray() {
+DynamicArray::~DynamicArray() 
+{
     delete[] arr;
 }
 
 
-void DynamicArray::fillRandom(int n) {
+void DynamicArray::fillRandom(int n) 
+{
     srand(time(nullptr));
     arr = new int[n];
 
@@ -49,7 +52,8 @@ void DynamicArray::fillRandom(int n) {
 }
 
 
-void DynamicArray::add(int value, int index) {
+void DynamicArray::add(int value, int index) 
+{
     int* temp = new int[size + 1]; 
 
     for (int i = 0; i < index; i++) {
@@ -68,7 +72,8 @@ void DynamicArray::add(int value, int index) {
 }
 
 
-void DynamicArray::remove(int index) {
+void DynamicArray::remove(int index) 
+{
     int* temp = new int[size - 1]; 
 
     for (int i = 0; i < index; i++) {
@@ -85,7 +90,8 @@ void DynamicArray::remove(int index) {
 }
 
 
-void DynamicArray::print() {
+void DynamicArray::print() 
+{
     for (int i = 0; i < size; i++) {
         std::cout << arr[i] << " ";
     }
@@ -94,7 +100,8 @@ void DynamicArray::print() {
 }
 
 
-void DynamicArray::resize(int n) {
+void DynamicArray::resize(int n) 
+{
     int* temp = new int[n];
     int minSize = (size < n) ? size : n;
 
@@ -108,14 +115,16 @@ void DynamicArray::resize(int n) {
 }
 
 
-void DynamicArray::clear() {
+void DynamicArray::clear() 
+{
     delete[] arr;
     arr = nullptr;
     size = 0;
 }
 
 
-int main() {
+int main() 
+{
     DynamicArray arr;
     arr.fillRandom(10);
     arr.print();
