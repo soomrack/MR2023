@@ -4,7 +4,7 @@
 class Node {
 private:
     friend class Queue;
-    int val;
+    size_t val;
     Node* next;
 
 public:
@@ -32,13 +32,9 @@ public:
 
 const QueueException emptyQueue("Queue is empty");
 
-bool Queue::isEmpty() const {
-    return head == nullptr;
-}
-
 void Queue::push(int _val) {
     Node* el = new Node(_val);
-    if (isEmpty()) {
+    if (head == nullptr) {
         head = tail = el;
         return;
     }
@@ -47,7 +43,7 @@ void Queue::push(int _val) {
 }
 
 void Queue::print() const {
-    if (isEmpty()) return;
+    if (head == nullptr) return;
     Node* el = head;
     while (el) {
         std::cout << el->val << " ";
@@ -57,7 +53,7 @@ void Queue::print() const {
 }
 
 int Queue::pop() {
-    if (isEmpty()) throw emptyQueue;
+    if (head == nullptr) throw emptyQueue;
     Node* el = head;
     int headVal = el->val;
     head = el->next;
