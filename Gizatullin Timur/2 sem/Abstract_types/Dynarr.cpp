@@ -48,9 +48,7 @@ void DynamicArray::set_elem(size_t index, int value){
 }
 
 void DynamicArray::add(int value){
-    if (size == bufer) {
-        resize(size++);
-    }
+    resize(size++);
     data[size++] = value;
 }
 
