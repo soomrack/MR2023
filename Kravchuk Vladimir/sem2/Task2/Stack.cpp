@@ -19,8 +19,8 @@ public:
     Stack(Stack&& transfer);
     ~Stack();
     void push(int value);
-    void pop();
     void print();
+    Element* pop();
     int top();
     bool empty() const;
 };
@@ -69,15 +69,15 @@ void Stack::push(int value) {
 }
 
 
-void Stack::pop() {
+Element* Stack::pop() {
     if (empty()) {
         cout << "Stack is empty\n" << endl;
-        return;
+        return nullptr;
     }
     else {
         Element* deleted = topPointer;
         topPointer = topPointer->pointer;
-        delete deleted;
+        return  deleted;
     }
 }
 
