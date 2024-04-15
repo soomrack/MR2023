@@ -7,7 +7,8 @@
 using namespace std;
 
 
-struct Flight {
+class Flight {
+public:
     double time;
 
     double carrier_id;
@@ -19,12 +20,16 @@ struct Flight {
     double city_to_id;
     string city_to;
 
-    Flight(double AIR_TIME, double AIRLINE_ID, string UNIQUE_CARRIER_NAME, double ORIGIN_CITY_MARKET_ID, string ORIGIN_CITY, double DEST_CITY_MARKET_ID, string DEST_CITY);
+    Flight(double AIR_TIME, double AIRLINE_ID, string UNIQUE_CARRIER_NAME, 
+           double ORIGIN_CITY_MARKET_ID, string ORIGIN_CITY, double DEST_CITY_MARKET_ID, 
+           string DEST_CITY);
     void display();
 };
 
 
-Flight::Flight(double AIR_TIME, double AIRLINE_ID, string UNIQUE_CARRIER_NAME, double ORIGIN_CITY_MARKET_ID, string ORIGIN_CITY, double DEST_CITY_MARKET_ID, string DEST_CITY)
+Flight::Flight(double AIR_TIME, double AIRLINE_ID, string UNIQUE_CARRIER_NAME, 
+               double ORIGIN_CITY_MARKET_ID, string ORIGIN_CITY, double DEST_CITY_MARKET_ID, 
+               string DEST_CITY)
 {
     time = AIR_TIME;
     carrier_id = AIRLINE_ID;
