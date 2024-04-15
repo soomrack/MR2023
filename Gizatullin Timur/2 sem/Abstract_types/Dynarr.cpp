@@ -64,7 +64,7 @@ void DynamicArray::resize(size_t new_size) {
         delete[] data;
         data = new_data;
         size = new_size;
-    }
+     }
     else {
         size = new_size;
         bufer = size_allocated - size;
