@@ -7,9 +7,11 @@
 #define ATAD_SENSOR 2  // датчик температуры и влажности воздуха
 #define HEAT_VENT 4  // нагреватель вентилтора 
 #define VENTILATION 7  // вентилятор
+#define WATER 3 //время полива
 
 
 DHT dht(ATAD_SENSOR, DHT21);
+
 
 struct Climate {
   int min_light;
@@ -18,6 +20,7 @@ struct Climate {
   double min_humidity;
   double max_humidity;
   int min_soil_humidity;
+  int max_soil_humidity;
 };
 
 
@@ -36,6 +39,7 @@ struct State  {
   bool pump;
   bool heat;
   bool day;
+  int water_time;
 }; 
 
 struct Time
@@ -57,9 +61,10 @@ Time time;
 void plant_raspberry()  // состояние среды подходящее для малины
 {
   clim.min_light = 250;
-  clim.min_temp = 20;
+  clim.min_temp = 40;
   clim.max_temp = 50;
   clim.min_soil_humidity = 20;
+  clim.max_soil_humidity = 120;
   clim.min_humidity = 10;
   clim.max_humidity = 60;
 }
@@ -68,9 +73,10 @@ void plant_raspberry()  // состояние среды подходящее д
 void plant_cabbage()       // состояние среды подходящее для капусты
 { 
   clim.min_light = 300;
-  clim.min_temp = 15;
+  clim.min_temp = 40;
   clim.max_temp = 45;
   clim.min_soil_humidity = 70;
+  clim.max_soil_humidity = 260;
   clim.min_humidity = 15;
   clim.max_humidity = 80;
 }
@@ -79,9 +85,10 @@ void plant_cabbage()       // состояние среды подходящее
 void plant_watermelon()  // состояние среды подходящее для арбуза
 {
 clim.min_light = 450;
-  clim.min_temp = 20;
+  clim.min_temp = 40;
   clim.max_temp = 60;
-  clim.min_soil_humidity = 340;
+  clim.min_soil_humidity = 140;
+  clim.max_soil_humidity = 420;
   clim.min_humidity = 65;
   clim.max_humidity = 90;
 }
@@ -121,40 +128,42 @@ void ventilation()
   }
 }
 
-
 void air_temp()
 {
-  if (sens.temperature >= clim.min_temp && sens.temperature < clim.max_temp){
-    state.ven = 0;
-    state.heat = 0;
-  } 
-  else if (sens.temperature < clim.min_temp){
+  if (sens.temperature >= clim.min_temp && sens.temperature <= clim.max_temp) {
     state.ven = 1;
     state.heat = 1;
   }
-  else{
-    state.ven = 1;
+
+  if (sens.temperature < clim.min_temp) {
+    state.ven = 0;
     state.heat = 0;
+  }
+
+  if (sens.temperature > clim.max_temp) {
+    state.ven = 0;
+    state.heat = 1;
   }
 }
 
 
 void air_humidity()
 {
-  if (sens.humidity > clim.min_humidity && sens.humidity < clim.max_humidity){
-    state.ven = 0;
+  if (sens.humidity >= clim.min_humidity && sens.humidity <= clim.max_humidity) {
+    state.ven = 1;
     state.pump = 0;
-  } 
-  else if (sens.humidity < clim.min_humidity){
+  }
+
+  if (sens.humidity < clim.min_humidity) {
     state.ven = 1;
     state.pump = 1;
   }
-  else{
-    state.ven = 1;
+
+  if (sens.humidity > clim.max_humidity) {
+    state.ven = 0;
     state.pump = 0;
   }
 }
-
 
 void ground_humidity()
 {
@@ -169,7 +178,7 @@ void ground_humidity()
 
 void light()
 {
-  if (sens.light < clim.min_light){
+  if (sens.light > clim.min_light){
     state.light = 1;
   }
   else{
@@ -180,9 +189,9 @@ void light()
 void do_light()
 {
   if(state.light == 1){
-    digitalWrite(LED_STRIP, HIGH);
+    digitalWrite(LED_STRIP, 1);
   } else {
-    digitalWrite(LED_STRIP, LOW);
+    digitalWrite(LED_STRIP, 0);
   }
 }
 
@@ -193,15 +202,6 @@ void time_counter()
   time.min = millis() / (1000 * 60) - time.hours * 60;
   time.sec = millis()/(1000*60) - time.min*60;
 }
-
-void day_night()
-{
-  if (time.hours < 6 && time.hours > 22){
-    state.ven = 0;
-    state.light = 0;
-  }
-}
-
 
 
 void do_heat()
@@ -226,14 +226,23 @@ void do_vent()
   }
 }
 
+// bool work_time(){
+
+// }
 
 void do_pump()
 {
-  digitalWrite(WATER_PUMP, state.pump);
+  if(state.pump == 1){
+    int water_start = millis();
+    while((millis() / 1000) - water_start / 1000 < WATER){
+      digitalWrite(WATER_PUMP, 1);
+    }
+  } 
+   digitalWrite(WATER_PUMP, 0);
 }
 
 
-void periodic_check()  // каждые  запускает программу
+void periodic_check()  // каждые 10 секунд запускает программу
 {
   time_counter();
   if (time.sec % 10 == 0){
@@ -243,12 +252,12 @@ void periodic_check()  // каждые  запускает программу
     air_humidity();
     ground_humidity();
     light();
-    day_night();
 
     do_light();
     do_heat(); 
     do_vent();   
     do_pump();
+    printf(sens.light);
   }
 }
 
@@ -264,5 +273,7 @@ void setup()  // включает нужные пины в необходимы�
 }
 
 void loop() {
+  set_plant();
   periodic_check();
+  set_time();
 }
