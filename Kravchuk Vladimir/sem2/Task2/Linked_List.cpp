@@ -16,8 +16,8 @@ private:
 public:
     LinkedList();
     ~LinkedList();
-    void add(int element);
-    void deleteElement();
+    void addHead(int element);
+    void delHead();
     void doubling();
     void ListPrint();
 };
@@ -37,14 +37,14 @@ LinkedList::~LinkedList() {
 }
 
 
-void LinkedList::add(int value) {
+void LinkedList::addHead(int value) {
     Element* NewElement = new Element(value);
     NewElement->pointer = topPointer;
     topPointer = NewElement;
 }
 
 
-void LinkedList::deleteElement() {
+void LinkedList::delHead() {
     if (topPointer == nullptr) {
         return;
     }
@@ -76,11 +76,11 @@ void LinkedList::doubling() {
 int main()
 {
     LinkedList List;
-    List.add(3);
-    List.add(3);
-    List.add(4);
-    List.add(3);
-    List.deleteElement();
+    List.addHead(3);
+    List.addHead(3);
+    List.addHead(4);
+    List.addHead(3);
+    List.delHead();
     List.ListPrint();
     List.doubling();
     List.ListPrint();
