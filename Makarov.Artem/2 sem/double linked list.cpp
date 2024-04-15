@@ -1,5 +1,5 @@
 ﻿#include <iostream>
-using namespace std;
+
 
 typedef int Data;
 
@@ -31,7 +31,8 @@ public:
     void clear();
 };
 
-void List::add_head(const Data value) {
+void List::add_head(const Data value) 
+{
     if (head == nullptr) {
         head = tail = new Node(value);
     }
@@ -42,7 +43,8 @@ void List::add_head(const Data value) {
     }
 }
 
-void List::add_tail(const Data value) {
+void List::add_tail(const Data value) 
+{
     if (tail == nullptr) {
         head = tail = new Node(value);
     }
@@ -53,7 +55,8 @@ void List::add_tail(const Data value) {
     }
 }
 
-void List::delete_head() {
+void List::delete_head() 
+{
     if (head == nullptr) {
         return;
     }
@@ -68,7 +71,8 @@ void List::delete_head() {
     delete temp;
 }
 
-void List::delete_tail() {
+void List::delete_tail() 
+{
     if (tail == nullptr) {
         return;
     }
@@ -83,7 +87,8 @@ void List::delete_tail() {
     delete temp;
 }
 
-Data List::get_head_data() {
+Data List::get_head_data() 
+{
     if (head != nullptr) {
         return head->data;
     }
@@ -92,7 +97,8 @@ Data List::get_head_data() {
     }
 }
 
-Data List::get_tail_data() {
+Data List::get_tail_data() 
+{
     if (tail != nullptr) {
         return tail->data;
     }
@@ -101,12 +107,14 @@ Data List::get_tail_data() {
     }
 }
 
-void List::clear() {
+void List::clear() 
+{
     while (head != nullptr) {
         Node* temp = head;
         head = head->next;
         delete temp;
     }
+
     tail = nullptr;
 }
 
