@@ -6,11 +6,11 @@
 
 int main(){
     try {
-        int data[5] = {3, 2, 3, 4, 5};
-        Dynamic_array arr1(5, data);
-        arr1.set_element(0,0);
-        std::cout<<arr1.get_element(0);
-        std::cout<<std::endl;
+        // int data[5] = {3, 2, 3, 4, 5};
+        // Dynamic_array arr1(5, data);
+        // arr1.set_element(0,0);
+        // std::cout<<arr1.get_element(0);
+        // std::cout<<std::endl;
 
         linked_list<int> list;
         list.push_head(3);
@@ -22,11 +22,11 @@ int main(){
         list.push_element(3,100);
         list.print();
         
-        queue<int> queue_atart;
-        queue_atart.push(23, 9);
-        queue_atart.push(24, 9);
-        queue_atart.push(25, 10);
-        queue_atart.print();
+        // queue<int> queue_atart;
+        // queue_atart.push(23, 9);
+        // queue_atart.push(24, 9);
+        // queue_atart.push(25, 10);
+        // queue_atart.print();
 
     }catch (ContainerException error)
     {

@@ -74,9 +74,17 @@ void double_linked_list<T>::print() const {
 
 template<typename T>
 T double_linked_list<T>::pop_first() {
-    node<T>*next_ptr = head->next;
-    next_ptr->preview = nullptr;
+    if(tail == nullptr){ throw container_exception("Empty list!");}
+    node<T>*next_ptr = tail->preview;
     T pop_data = head->data;
+
+    if(tail->preview == nullptr){
+        head = nullptr;
+        tail = nullptr;
+        return pop_data;
+    }
+
+    next_ptr->next = nullptr;
     delete[] head;
     head = next_ptr;
     return pop_data;
@@ -85,8 +93,17 @@ T double_linked_list<T>::pop_first() {
 
 template<typename T>
 T double_linked_list<T>::pop_head(){
+    if(head == nullptr){ throw container_exception("Empty list!"); }
     node<T>*next_ptr = head->next;
+    next_ptr->preview = nullptr;
     T pop_data = head->data;
+
+    if(head->next == nullptr){
+        head = nullptr;
+        tail = nullptr;
+        return pop_data;
+    }
+
     delete[] head;
     head = next_ptr;
     return pop_data;
