@@ -23,6 +23,7 @@ DynamicArray::DynamicArray(): size(0), bufer(1), data (nullptr) {
 
 DynamicArray::DynamicArray(size_t size, size_t bufer): size(size), bufer(bufer) {
     size_allocated = size + bufer;
+    if (size_allocated = 0 ) return;
     data = new int[size_allocated];
 }
 
