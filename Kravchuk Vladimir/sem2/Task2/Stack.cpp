@@ -22,7 +22,7 @@ public:
     void print();
     Element* pop();
     int top();
-    bool empty() const;
+    bool is_empty() const;
 };
 
 
@@ -30,7 +30,7 @@ Stack::Stack() : topPointer(nullptr) {}
 
 
 Stack::Stack(const Stack& copy) : topPointer(nullptr) {
-    if (copy.empty()) {
+    if (copy.is_empty()) {
         return;
     }
 
@@ -46,7 +46,7 @@ Stack::Stack(const Stack& copy) : topPointer(nullptr) {
 
 
 Stack::Stack(Stack&& transfer) : topPointer(nullptr) {
-    if (transfer.empty()) {
+    if (transfer.is_empty()) {
         return;
     }
 
@@ -56,7 +56,7 @@ Stack::Stack(Stack&& transfer) : topPointer(nullptr) {
 
 
 Stack::~Stack() {
-    while (!empty()) {
+    while (!is_empty()) {
         pop();
     }
 }
@@ -70,7 +70,7 @@ void Stack::push(int value) {
 
 
 Element* Stack::pop() {
-    if (empty()) {
+    if (is_empty()) {
         cout << "Stack is empty\n" << endl;
         return nullptr;
     }
@@ -93,7 +93,7 @@ void Stack::print() {
 
 
 int Stack::top() {
-    if (empty()) {
+    if (is_empty()) {
         cout << "Stack is empty\n" << endl;
         return 0;
     }
@@ -101,7 +101,7 @@ int Stack::top() {
 }
 
 
-bool Stack::empty() const {
+bool Stack::is_empty() const {
     return topPointer == nullptr;
 }
 
