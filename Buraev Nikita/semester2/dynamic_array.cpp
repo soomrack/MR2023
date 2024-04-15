@@ -2,65 +2,61 @@
 
 class DynamicArray {
 private:
-    int* data;
-    size_t size;
-    size_t buffer;
+    int* buffer; //memory space dynamically allocated
+    int size; //number of elements currently in use
+    int allocatedSize; //size of the memory space allocated (buffer)
 
 public:
     DynamicArray();
-    explicit DynamicArray(size_t buffer);
+    explicit DynamicArray(int initialAllocatedSize);
     ~DynamicArray();
 
-    int getElem(size_t index) const;
-    void setElem(size_t index, int value);
+    int getElem(int index) const;
+    void setElem(int index, int value);
     void add(int value);
 
-    void resize(size_t new_size);
+    void resize(int newSize);
 };
 
 DynamicArray::DynamicArray() {
-    buffer = 1;
+    allocatedSize = 1;
     size = 0;
-    data = new int[buffer];
+    buffer = new int[allocatedSize];
 }
 
-DynamicArray::DynamicArray(size_t start_buffer) {
-    buffer = start_buffer;
+DynamicArray::DynamicArray(int initialAllocatedSize) {
+    allocatedSize = initialAllocatedSize;
     size = 0;
-    data = new int[buffer];
+    buffer = new int[allocatedSize];
 }
 
 DynamicArray::~DynamicArray() {
-    delete[] data;
+    delete[] buffer;
 }
 
-int DynamicArray::getElem(size_t index) const {
-    return data[index];
+int DynamicArray::getElem(int index) const {
+    return buffer[index];
 }
 
-void DynamicArray::setElem(size_t index, int value) {
-    data[index] = value;
+void DynamicArray::setElem(int index, int value) {
+    buffer[index] = value;
 }
 
 void DynamicArray::add(int value) {
-    if (size == buffer) {
-        resize(buffer + 1);
+    if (size == allocatedSize) {
+        resize(allocatedSize + 5);
     }
-    data[size++] = value;
+    buffer[size++] = value;
 }
 
-void DynamicArray::resize(size_t new_size) {
-    if (new_size <= buffer) {
-        buffer = new_size;
-        return;
+void DynamicArray::resize(int newSize) {
+    int* newBuffer = new int[newSize];
+    for (int i = 0; i < size; i++) {
+        newBuffer[i] = buffer[i];
     }
-    int* new_data = new int[new_size];
-    for (size_t i = 0; i < size; i++) {
-        new_data[i] = data[i];
-    }
-    delete[] data;
-    data = new_data;
-    buffer = new_size;
+    delete[] buffer;
+    buffer = newBuffer;
+    allocatedSize = newSize;
 }
 
 int main() {
