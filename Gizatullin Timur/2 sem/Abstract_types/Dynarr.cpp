@@ -23,8 +23,12 @@ DynamicArray::DynamicArray(): size(0), bufer(1), data (nullptr) {
 
 DynamicArray::DynamicArray(size_t size, size_t bufer): size(size), bufer(bufer) {
     size_allocated = size + bufer;
-    if (size_allocated = 0 )  data = nullptr;;
+    if (size_allocated = 0){
+     data = nullptr;
+    }
+    else {
     data = new int[size_allocated];
+    }
 }
 
 DynamicArray::~DynamicArray() {
@@ -35,6 +39,7 @@ int DynamicArray::get_elem(size_t index) const {
   if (index < size) {
         return data[index];
     }
+    return 0;
 }
     
 void DynamicArray::set_elem(size_t index, int value){
@@ -44,22 +49,26 @@ void DynamicArray::set_elem(size_t index, int value){
 
 void DynamicArray::add(int value){
     if (size == bufer) {
-        resize(bufer ++);
+        resize(size++);
     }
     data[size++] = value;
 }
 
-void DynamicArray::resize(size_t new_size){
-    if (new_size <= size_allocated) 
-    size_allocated = new_size + bufer;
-    int* new_data = new int[new_size];
-    for (size_t i = 0; i < size; i++)
-    {
-        new_data[i] = data[i];
+void DynamicArray::resize(size_t new_size) {
+    if (new_size > size_allocated)
+     {
+        size_allocated = new_size + bufer;
+        int* new_data = new int[size_allocated];
+        for (size_t i = 0; i < size; i++){
+            new_data[i] = data[i];}
+        delete[] data;
+        data = new_data;
+        size = new_size;
     }
-    delete[] data;
-    data = new_data;
-    bufer = new_size;
+    else {
+        size = new_size;
+        bufer = size_allocated - size;
+    }
 }
 
 int main()
