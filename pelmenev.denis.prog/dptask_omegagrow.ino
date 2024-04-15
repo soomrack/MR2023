@@ -69,20 +69,20 @@ void setup()
 
 void plant()
 {
-  clim.norm_luminosity = 400;
-  clim.min_air_temp = 20;
+  clim.norm_luminosity = 700;
+  clim.min_air_temp = 15;
   clim.max_air_temp = 30;
-  clim.norm_soil_humidity = 500;
-  clim.min_air_humidity = 10;
-  clim.max_air_humidity = 60;
+  clim.norm_soil_humidity = 90;
+  clim.min_air_humidity = 99;
+  clim.max_air_humidity = 100;
   clim.watering_time = 5000;
-  clim.ven_time = 120000;
+  clim.ven_time = 60000;
 }
 
 
 void set_time()
 {
-  sens.seconds = millis() / 1000;
+  sens.seconds = millis() / 100;
 
   if (sens.seconds == 60) {
     sens.minutes += 1;
@@ -123,7 +123,7 @@ void ventilation()
 {
   state.ven_time += PROGRAMM_CHECK_TIME * 1000;
 
-  if (sens.minutes % 10 == 0) { 
+  if (sens.minutes % 4 == 0) { 
     state.regular_ven = ON;
     state.ven_time = 0;
   } else {
@@ -176,7 +176,7 @@ void air_humidity()
 
 void soil_humidity()
 {
-  if (sens.soil_humidity >= clim.norm_soil_humidity) {
+  if (sens.soil_humidity < clim.norm_soil_humidity) {
     state.pump = ON;
   } else {
     state.pump = OFF;
@@ -234,7 +234,7 @@ void do_vent()
 
 void do_pump()
 { 
-  if (state.last_watering > 300000) {
+  if (state.last_watering > 60000) {
     if (state.pump == ON) {
       digitalWrite(PIN_WATER_PUMP, state.pump);
       state.watering_time += PROGRAMM_CHECK_TIME * 1000;
@@ -281,4 +281,10 @@ void loop()
     delay(800);
     periodic_check();
   }
+  /* 
+  digitalWrite(PIN_LIGHT, HIGH);
+  digitalWrite(PIN_VEN, HIGH);
+  digitalWrite(PIN_VEN_HEAT, HIGH);
+  digitalWrite(PIN_WATER_PUMP, HIGH);
+  delay(1000); */
 }
