@@ -19,7 +19,7 @@ public:
 };
 
 DynamicArray::DynamicArray() {
-    allocatedSize = 5;
+    allocatedSize = 1;
     size = 0;
     buffer = new int[allocatedSize];
 }
