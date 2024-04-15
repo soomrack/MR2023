@@ -1,1 +1,1 @@
-/usr/bin/g++ CMakeFiles/Task6.dir/parsing.cpp.o -o Task6 
+/usr/bin/g++ -g CMakeFiles/Task6.dir/parsing.cpp.o -o Task6 

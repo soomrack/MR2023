@@ -39,11 +39,11 @@
 			[
 				{
 					"name" : "HELPSTRING",
-					"value" : "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..."
+					"value" : "No help, variable specified on the command line."
 				}
 			],
 			"type" : "STRING",
-			"value" : ""
+			"value" : "Debug"
 		},
 		{
 			"name" : "CMAKE_CACHEFILE_DIR",
@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/build"
+			"value" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -514,16 +514,12 @@
 			"properties" : 
 			[
 				{
-					"name" : "ADVANCED",
-					"value" : "1"
-				},
-				{
 					"name" : "HELPSTRING",
-					"value" : "Enable/Disable output of compile commands during generation."
+					"value" : "No help, variable specified on the command line."
 				}
 			],
 			"type" : "BOOL",
-			"value" : ""
+			"value" : "TRUE"
 		},
 		{
 			"name" : "CMAKE_EXTRA_GENERATOR",
@@ -595,7 +591,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6"
+			"value" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1131,7 +1127,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/build"
+			"value" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/build"
 		},
 		{
 			"name" : "Task6_IS_TOP_LEVEL",
@@ -1155,7 +1151,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6"
+			"value" : "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6"
 		}
 	],
 	"kind" : "cache",

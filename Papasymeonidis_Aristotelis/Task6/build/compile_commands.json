@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/build",
+  "command": "/usr/bin/g++   -g -std=gnu++2a -o CMakeFiles/Task6.dir/parsing.cpp.o -c /home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/parsing.cpp",
+  "file": "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/parsing.cpp"
+}
+]

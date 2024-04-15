@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis Aristotelis/Task6/parsing.cpp" "CMakeFiles/Task6.dir/parsing.cpp.o" "gcc" "CMakeFiles/Task6.dir/parsing.cpp.o.d"
+  "/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/parsing.cpp" "CMakeFiles/Task6.dir/parsing.cpp.o" "gcc" "CMakeFiles/Task6.dir/parsing.cpp.o.d"
   )
 
 # Targets to which this target links.
