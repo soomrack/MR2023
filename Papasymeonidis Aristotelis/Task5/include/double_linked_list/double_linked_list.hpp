@@ -27,12 +27,12 @@ private:
     node<T>* tail;
     //node<T>* current_ptr;
 public:
-    double_linked_list() : head(nullptr) {}
+    double_linked_list() : head(nullptr) tail(nullptr){}
     ~double_linked_list();
 
     void push_head(const T& value);
-    void pop_first();
-    void pop_head();
+    T pop_first();
+    T pop_head();
     void pop_element(size_t index);
     void print() const;
     void push_element(size_t index, const T& value);
@@ -52,9 +52,12 @@ double_linked_list<T>::~double_linked_list() {
 template<typename T>
 void double_linked_list<T>::push_head(const T& value) {
     node<T>* new_node = new node<T>(value);
+    if(head == nullptr && tail == nullptr) {
+        tail = new_node;
+    }
+    head = new_node;
     new_node->next = head;
     head->preview = new_node;
-    head = new_node;
 }
 
 
@@ -70,19 +73,23 @@ void double_linked_list<T>::print() const {
 
 
 template<typename T>
-void double_linked_list<T>::pop_first() {
+T double_linked_list<T>::pop_first() {
     node<T>*next_ptr = head->next;
     next_ptr->preview = nullptr;
+    T pop_data = head->data;
     delete[] head;
     head = next_ptr;
+    return pop_data;
 }
 
 
 template<typename T>
-void double_linked_list<T>::pop_head(){
+T double_linked_list<T>::pop_head(){
     node<T>*next_ptr = head->next;
+    T pop_data = head->data;
     delete[] head;
     head = next_ptr;
+    return pop_data;
 }
 
 
