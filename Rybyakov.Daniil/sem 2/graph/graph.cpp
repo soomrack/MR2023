@@ -19,17 +19,17 @@ public:
     int vertex;
     int dist;
     bool operator<(const Neighbor& other) const {
-        return dist > other.dist; 
+        return dist > other.dist;
     }
 };
 
 
-void Dijkstra(int start, int end, const vector<vector<int>>& fl_table)
+void deikstra(int start, int end, const vector<vector<int>>& fl_table)
 {
-    int table_size = fl_table.size(); 
-    vector<Vertex> Verts(table_size); 
-    vector<int> stack_to_go; 
-    priority_queue<Neighbor> queue; 
+    int table_size = fl_table.size();
+    vector<Vertex> Verts(table_size);
+    vector<int> stack_to_go;
+    priority_queue<Neighbor> queue;
 
     queue.push({ start, 0 });
     Verts[start].dist_from_start = 0;
@@ -39,9 +39,9 @@ void Dijkstra(int start, int end, const vector<vector<int>>& fl_table)
         int current_dist = queue.top().dist;
         queue.pop();
 
-        for (int neighbor = 0; neighbor < table_size; ++neighbor)
-            if (fl_table[current_vertex][neighbor] != INT_MAX)
-                stack_to_go.push_back(neighbor);
+        for (int neighbor = 0; neighbor < table_size; ++neighbor) {
+            if (fl_table[current_vertex][neighbor] != INT_MAX) { stack_to_go.push_back(neighbor); }
+        }
 
         for (int neighbor : stack_to_go) {
             int new_dist = current_dist + fl_table[current_vertex][neighbor];
@@ -55,11 +55,11 @@ void Dijkstra(int start, int end, const vector<vector<int>>& fl_table)
     }
 
 
-    if (Verts[end].dist_from_start == INT_MAX)
-        cout << "No path found" << endl;
+    if (Verts[end].dist_from_start == INT_MAX) { cout << "No path found" << endl; }
     else {
         cout << "Shortest path: ";
         vector<int> path;
+
         for (int idx_vert = end; idx_vert != start; idx_vert = Verts[idx_vert].prev_vert)
             cout << idx_vert << " " << "<-" << " ";
         cout << start << endl;
@@ -68,14 +68,15 @@ void Dijkstra(int start, int end, const vector<vector<int>>& fl_table)
 }
 
 
-void print_flight_table(const std::vector<std::vector<int>>& flight_table)
+void print_flight_table(const vector<vector<int>>& flight_table)
 {
     int table_size = flight_table.size();
+
     for (int i = 0; i < table_size; ++i) {
         cout << i << "  ";
         for (int j = 0; j < table_size; ++j) {
-            if (flight_table[i][j] == INT_MAX) std::cout << "INF ";
-            else cout << flight_table[i][j] << "   ";
+            if (flight_table[i][j] == INT_MAX) { cout << "INF "; }
+            else { cout << flight_table[i][j] << "   "; }
         }
     }
 }
@@ -91,7 +92,7 @@ void filling_table(vector<vector<int>>& flight_table)
         return;
     }
 
-    std::string txtline;
+    string txtline;
     while (not datafile.eof()) {
         getline(datafile, txtline);
         stringstream inputString(txtline);
@@ -108,12 +109,8 @@ void filling_table(vector<vector<int>>& flight_table)
         getline(inputString, tempString, '\t');
         time = atoi(tempString.c_str());
 
-        //cout << str << "\t" << col << "\t" << time << endl;
-
-        if (flight_table[str][col] > time)
-            flight_table[str][col] = time;
+        if (flight_table[str][col] > time) { flight_table[str][col] = time; }
     }
-    //print_flight_table(flight_table);
 }
 
 
@@ -127,24 +124,19 @@ int main()
 
     filling_table(flight_table);
 
-    while (run)
-    {
-        cout << "choise: ";
+    while (run){
+        cout << "to start press 1: ";
         cin >> choise;
 
-        switch (choise)
-        {
+        switch (choise){
         case 0:
             run = 0;
             break;
         case 1:
-            cout << "start: ";
-            cin >> start;
-            cout << "end: ";
-            cin >> end;
-            Dijkstra(start, end, flight_table);
+            cout << "start: ";   cin >> start;
+            cout << "end: ";     cin >> end;
+            deikstra(start, end, flight_table);
             break;
         }
     }
-    return 0;
 }
