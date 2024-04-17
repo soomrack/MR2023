@@ -8,102 +8,157 @@
 using namespace std;
 
 ifstream NEW_DATAFILE;
+ofstream GRAPH_FILE;
 
 
-struct OneFlight
+class Airline
 {
+public:
     int air_time;
-    int airline_id;
-    string unique_carrier_name;
     int origin_sity_market_id;
     string origin_city_name;
     int dest_sity_market_id;
     string dest_city_name;
+public:
+    Airline();
+    ~Airline();
+    void clear();
 };
 
 
-struct Flights
+class City
 {
-    vector <OneFlight> flight;
-    size_t number_of_flights = 0;
+public:
+    int id;
+    string name;
+    vector <Airline> airlines;
+public:
+    City();
+    ~City();
+    void clear();
 };
 
 
-class Vertex
+class Graph 
 {
+private:
+    vector <City> cities;
+    int number_of_cities;
 public:
-    string city_name;
-    int city_id;
-    int weight;
-    int marker;
-    int airline_id;
-    //Vertex* previous_vertex;
-public:
-    Vertex();
-    ~Vertex();
+    Graph();
+    ~Graph();
+    bool open_files(string data_file, string graph_file);
+    void form_graph();
     void clear();
     void print();
+private:
+    void new_city(string txtline, Airline airline);
+    Airline get_airline(string txtline);
+    string get_string(string par_str, size_t &index);
+    string get_string_on_quote(string par_str, size_t &index);
 };
 
 
-struct Edges
-{
-    vector <Vertex> line;
-};
-
-
-struct AdjencencyList
-{
-    size_t number_of_cities = 0;
-    vector <Edges> list;
-};
-
-
-void Vertex::clear()
-{
-    city_id = 0;
-    city_name = " ";
-    weight = 0;
-    marker = 0;
-    airline_id = 0;
-}
-
-
-Vertex::Vertex()
+Graph::Graph()
 {
     clear();
 }
 
 
-Vertex::~Vertex()
+Graph::~Graph()
 {
     clear();
 }
 
 
-void Vertex::print()
+void Graph::clear()
 {
-    cout << city_name << "  ";
-    cout << city_id << " ";
-    cout << airline_id << " ";
-    cout << weight << " ";
-    cout << marker << endl;
+    cities.clear();
+    number_of_cities = 0;
 }
 
 
-void print_adjencency_list(AdjencencyList list)
+City::City()
 {
-    for (size_t city = 0; city < list.number_of_cities; city++) {
-        for (size_t line = 0; line < list.list[city].line.size(); line++) {
-            cout << list.list[city].line[line].city_name << "  ";
+    clear();
+}
+
+
+City::~City()
+{
+    clear();
+}
+
+
+void City::clear()
+{
+    id = 0;
+    name = " ";
+    airlines.clear();
+}
+
+
+Airline::Airline()
+{
+    clear();
+}
+
+
+Airline::~Airline()
+{
+    clear();
+}
+
+
+void Airline::clear()
+{
+    air_time = 0;
+    origin_city_name = " ";
+    origin_sity_market_id = 0;
+    dest_city_name = " ";
+    dest_sity_market_id = 0;
+}
+
+
+bool Graph::open_files(string data_file, string graph_file)
+{
+    NEW_DATAFILE.open(data_file);
+    GRAPH_FILE.open(graph_file);
+
+    if (!NEW_DATAFILE.is_open()) {
+        cout << "Couldn't open datafile\n";
+        return true;
+    }
+
+    if (!GRAPH_FILE.is_open()) {
+        cout << "Couldn't open list_file\n";
+        return true;
+    }
+
+    cout << "New Datafile is opened" << endl;
+
+    return false;
+}
+
+
+void Graph::print()
+{
+    GRAPH_FILE << "Number of cities: " << number_of_cities << endl;
+    GRAPH_FILE << "  " << endl;
+
+    for (size_t city = 0; city < number_of_cities; city++) {
+        GRAPH_FILE << cities[city].name << "  ";
+
+        for (size_t line = 0; line < cities[city].airlines.size(); line++) {
+            GRAPH_FILE << cities[city].airlines[line].dest_city_name << "  ";
         }
 
-        cout << endl;
+        GRAPH_FILE << endl;
     }
 }
 
 
-string get_string_on_quote(string par_str, size_t &index)
+string Graph::get_string_on_quote(string par_str, size_t &index)
 {
     string str_fnl;
 
@@ -120,7 +175,7 @@ string get_string_on_quote(string par_str, size_t &index)
 }
 
 
-string get_string(string par_str, size_t &index)
+string Graph::get_string(string par_str, size_t &index)
 {
     if (par_str[index] == '"') {
         index++;
@@ -143,14 +198,12 @@ string get_string(string par_str, size_t &index)
 }
 
 
-struct OneFlight get_one_flight(string txtline)
+Airline Graph::get_airline(string txtline)
 {
-    OneFlight flight;
+    Airline flight;
     size_t idx = 0;
 
     flight.air_time = stoi(get_string(txtline, idx));
-    flight.airline_id = stoi(get_string(txtline, idx));
-    flight.unique_carrier_name = get_string(txtline, idx);
     flight.origin_sity_market_id = stoi(get_string(txtline, idx));
     flight.origin_city_name = get_string(txtline, idx);
     flight.dest_sity_market_id = stoi(get_string(txtline, idx));
@@ -160,112 +213,61 @@ struct OneFlight get_one_flight(string txtline)
 }
 
 
-struct Flights get_flights()
+void Graph::new_city(string txtline, Airline airline)
 {
-    Flights flights;
-    OneFlight one_flight;
+    City city;
 
+    city.id = airline.origin_sity_market_id;
+    city.name = airline.origin_city_name;
+    city.airlines.push_back(airline);
+
+    cities.push_back(city);
+    number_of_cities++;
+}
+
+
+void Graph::form_graph()
+{
+    Airline airline;
+    Graph graph;
     string txtline;
 
+    getline(NEW_DATAFILE, txtline);
+    getline(NEW_DATAFILE, txtline);
+
+    airline = get_airline(txtline);
+    new_city(txtline, airline);
+
     while (!NEW_DATAFILE.eof()) {
+        airline.clear();
+
         getline(NEW_DATAFILE, txtline);
 
-        if (txtline[0] == 'A') continue;
+        airline = get_airline(txtline);
 
-        one_flight = get_one_flight(txtline);
-
-        flights.flight.push_back(one_flight);
-
-        flights.number_of_flights++;
-    }
-
-    return flights;
-}
-
-
-void list_set_vertex(Vertex &vertex, Flights flights, size_t idx)
-{
-    vertex.city_id = flights.flight[idx].origin_sity_market_id;
-    vertex.city_name = flights.flight[idx].origin_city_name;
-}
-
-
-void list_set_link(Vertex &vertex, Flights flights, size_t idx)
-{
-    vertex.city_id = flights.flight[idx].dest_sity_market_id;
-    vertex.city_name = flights.flight[idx].dest_city_name;
-    vertex.weight = flights.flight[idx].air_time;
-    vertex.airline_id = flights.flight[idx].airline_id;
-}
-
-
-void list_set_new_city(Vertex &vertex, Edges &line, Flights flights, size_t idx)
-{
-    list_set_vertex(vertex, flights, idx);
-    line.line.push_back(vertex);
-    list_set_link(vertex, flights, idx);
-    line.line.push_back(vertex);
-
-    vertex.clear();
-}
-
-
-struct AdjencencyList get_list(Flights flights)
-{
-    AdjencencyList fnl_list;
-    Vertex vertex;
-    Edges line;
-
-    list_set_new_city(vertex, line, flights, 0);
-    fnl_list.list.push_back(line);
-    fnl_list.number_of_cities++;
-
-    int new_city_marker;
-
-    for (size_t idx = 1; idx < flights.number_of_flights; idx++) {
-        line.line.clear();
-
-        new_city_marker = 1;
-
-        for (size_t city = 0; city < fnl_list.number_of_cities; city++) {
-            if (flights.flight[idx].origin_sity_market_id == fnl_list.list[city].line[0].city_id) {
-                list_set_link(vertex, flights, idx);
-                fnl_list.list[city].line.push_back(vertex);
-                vertex.clear();
-                new_city_marker = 0;
+        for (size_t idx = 0; idx < number_of_cities; idx++) {
+            if (airline.origin_sity_market_id == cities[idx].id) {
+                cities[idx].airlines.push_back(airline);
+                airline.clear();
                 break;
             }
         }
 
-        if (new_city_marker == 1) {
-            list_set_new_city(vertex, line, flights, idx);
+        if (airline.air_time == 0) continue;
 
-            fnl_list.list.push_back(line);
-            fnl_list.number_of_cities++;
-        }
+        new_city(txtline, airline);
     }
-
-    return fnl_list;
 }
 
 
 int main()
 {
-    NEW_DATAFILE.open("log_test.txt");
+    Graph graph;
 
-    if (!NEW_DATAFILE.is_open()) {
-        cout << "Couldn't open datafile\n";
-        return 0;
-    }
+    if (graph.open_files("logfile.txt", "adj_list.txt")) return 0;
 
-    cout << "New Datafile is opened" << endl;
-
-    Flights flights = get_flights();
-    AdjencencyList list = get_list(flights);
+    graph.form_graph();
+    graph.print();
 
     NEW_DATAFILE.close();
-
-    cout << flights.number_of_flights << endl;
-    cout << list.number_of_cities << endl;
-    print_adjencency_list(list);
 }
