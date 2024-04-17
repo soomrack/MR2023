@@ -5,20 +5,21 @@
 #include <stdlib.h>
 
 
-using namespace std;
+//using namespace std;
 
-ifstream NEW_DATAFILE;
-ofstream GRAPH_FILE;
+std::ifstream NEW_DATAFILE;
+std::ofstream GRAPH_FILE;
 
 
 class Airline
 {
 public:
     int air_time;
+    int airline_id;
     int origin_sity_market_id;
-    string origin_city_name;
+    std::string origin_city_name;
     int dest_sity_market_id;
-    string dest_city_name;
+    std::string dest_city_name;
 public:
     Airline();
     ~Airline();
@@ -30,8 +31,8 @@ class City
 {
 public:
     int id;
-    string name;
-    vector <Airline> airlines;
+    std::string name;
+    std::vector <Airline> airlines;
 public:
     City();
     ~City();
@@ -42,20 +43,21 @@ public:
 class Graph 
 {
 private:
-    vector <City> cities;
+    std::vector <City> cities;
     int number_of_cities;
 public:
     Graph();
     ~Graph();
-    bool open_files(string data_file, string graph_file);
+    bool open_files(std::string data_file, std::string graph_file);
     void form_graph();
     void clear();
     void print();
 private:
-    void new_city(string txtline, Airline airline);
-    Airline get_airline(string txtline);
-    string get_string(string par_str, size_t &index);
-    string get_string_on_quote(string par_str, size_t &index);
+    void new_city(std::string txtline, Airline airline);
+    void check_airline_id(Airline &airline, size_t idx);
+    Airline get_airline(std::string txtline);
+    std::string get_string(std::string par_str, size_t &index);
+    std::string get_string_on_quote(std::string par_str, size_t &index);
 };
 
 
@@ -120,22 +122,22 @@ void Airline::clear()
 }
 
 
-bool Graph::open_files(string data_file, string graph_file)
+bool Graph::open_files(std::string data_file, std::string graph_file)
 {
     NEW_DATAFILE.open(data_file);
     GRAPH_FILE.open(graph_file);
 
     if (!NEW_DATAFILE.is_open()) {
-        cout << "Couldn't open datafile\n";
+        std::cout << "Couldn't open datafile\n";
         return true;
     }
 
     if (!GRAPH_FILE.is_open()) {
-        cout << "Couldn't open list_file\n";
+        std::cout << "Couldn't open list_file\n";
         return true;
     }
 
-    cout << "New Datafile is opened" << endl;
+    std::cout << "New Datafile is opened" << std::endl;
 
     return false;
 }
@@ -143,8 +145,8 @@ bool Graph::open_files(string data_file, string graph_file)
 
 void Graph::print()
 {
-    GRAPH_FILE << "Number of cities: " << number_of_cities << endl;
-    GRAPH_FILE << "  " << endl;
+    GRAPH_FILE << "Number of cities: " << number_of_cities << std::endl;
+    GRAPH_FILE << "  " << std::endl;
 
     for (size_t city = 0; city < number_of_cities; city++) {
         GRAPH_FILE << cities[city].name << "  ";
@@ -153,14 +155,14 @@ void Graph::print()
             GRAPH_FILE << cities[city].airlines[line].dest_city_name << "  ";
         }
 
-        GRAPH_FILE << endl;
+        GRAPH_FILE << std::endl;
     }
 }
 
 
-string Graph::get_string_on_quote(string par_str, size_t &index)
+std::string Graph::get_string_on_quote(std::string par_str, size_t &index)
 {
-    string str_fnl;
+    std::string str_fnl;
 
     while (par_str[index] != '"') {
         str_fnl += par_str[index];
@@ -175,7 +177,7 @@ string Graph::get_string_on_quote(string par_str, size_t &index)
 }
 
 
-string Graph::get_string(string par_str, size_t &index)
+std::string Graph::get_string(std::string par_str, size_t &index)
 {
     if (par_str[index] == '"') {
         index++;
@@ -183,7 +185,7 @@ string Graph::get_string(string par_str, size_t &index)
         return get_string_on_quote(par_str, index);
     }
 
-    string str_fnl;
+    std::string str_fnl;
 
     while (par_str[index] != ',') {
         str_fnl += par_str[index];
@@ -198,22 +200,23 @@ string Graph::get_string(string par_str, size_t &index)
 }
 
 
-Airline Graph::get_airline(string txtline)
+Airline Graph::get_airline(std::string txtline)
 {
     Airline flight;
     size_t idx = 0;
 
-    flight.air_time = stoi(get_string(txtline, idx));
-    flight.origin_sity_market_id = stoi(get_string(txtline, idx));
+    flight.air_time = std::stoi(get_string(txtline, idx));
+    flight.airline_id = std::stoi(get_string(txtline, idx));
+    flight.origin_sity_market_id = std::stoi(get_string(txtline, idx));
     flight.origin_city_name = get_string(txtline, idx);
-    flight.dest_sity_market_id = stoi(get_string(txtline, idx));
+    flight.dest_sity_market_id = std::stoi(get_string(txtline, idx));
     flight.dest_city_name = get_string(txtline, idx);
 
     return flight;
 }
 
 
-void Graph::new_city(string txtline, Airline airline)
+void Graph::new_city(std::string txtline, Airline airline)
 {
     City city;
 
@@ -226,11 +229,22 @@ void Graph::new_city(string txtline, Airline airline)
 }
 
 
+void Graph::check_airline_id(Airline &airline, size_t idx)
+{
+    for (size_t line = 0; line < cities[idx].airlines.size(); ++line) {
+        if (airline.dest_sity_market_id == cities[idx].airlines[line].dest_sity_market_id &&
+        airline.airline_id == cities[idx].airlines[line].airline_id) {
+            airline.clear();
+        }
+    }
+}
+
+
 void Graph::form_graph()
 {
     Airline airline;
     Graph graph;
-    string txtline;
+    std::string txtline;
 
     getline(NEW_DATAFILE, txtline);
     getline(NEW_DATAFILE, txtline);
@@ -247,6 +261,10 @@ void Graph::form_graph()
 
         for (size_t idx = 0; idx < number_of_cities; idx++) {
             if (airline.origin_sity_market_id == cities[idx].id) {
+                check_airline_id(airline, idx);
+
+                if (airline.air_time == 0) break;
+
                 cities[idx].airlines.push_back(airline);
                 airline.clear();
                 break;
@@ -264,10 +282,12 @@ int main()
 {
     Graph graph;
 
-    if (graph.open_files("logfile.txt", "adj_list.txt")) return 0;
+    if (graph.open_files("log_test.txt", "adj_list.txt")) return 0;
 
     graph.form_graph();
     graph.print();
 
     NEW_DATAFILE.close();
+
+    std::cout << "Datafile is closed" << std::endl;
 }
