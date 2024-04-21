@@ -1,4 +1,5 @@
-﻿#include "CustomArrays.h"
+#include "CustomArrays.h"
+
 
 namespace CustomArrays {
 template <typename T>
@@ -9,6 +10,7 @@ DynamicArray<T>::DynamicArray() {
 	data = new T[free];
 }
 
+
 template <typename T>
 DynamicArray<T>::DynamicArray(const T array[], const size_t size)
 	: size(size) {
@@ -18,6 +20,7 @@ DynamicArray<T>::DynamicArray(const T array[], const size_t size)
 	memcpy(data, array, sizeof(T) * size);
 }
 
+
 template <typename T>
 DynamicArray<T>::DynamicArray(const std::initializer_list<T>& array, const size_t size)
 	: size(size) {
@@ -26,12 +29,14 @@ DynamicArray<T>::DynamicArray(const std::initializer_list<T>& array, const size_
 	std::copy(array.begin(), array.end(), data);
 }
 
+
 template <typename T>
 DynamicArray<T>::DynamicArray(const std::initializer_list<T>& array, const size_t size, const size_t buffer)
 	: size(size), free(buffer), buffer(buffer) {
 	data = new T[size + buffer];
 	std::copy(array.begin(), array.end(), data);
 }
+
 
 template <typename T>
 DynamicArray<T>::DynamicArray(const DynamicArray<T>& other) {
@@ -41,15 +46,18 @@ DynamicArray<T>::DynamicArray(const DynamicArray<T>& other) {
 	memcpy(data, other.data, sizeof(T) * size);
 }
 
+
 template <typename T>
 DynamicArray<T>::~DynamicArray() {
 	delete[] data;
 }
 
+
 template <typename T>
 void DynamicArray<T>::set_buffer(size_t buffer) {
 	this->buffer = buffer;
 }
+
 
 template <typename T>
 void DynamicArray<T>::resize() {
@@ -59,6 +67,7 @@ void DynamicArray<T>::resize() {
 	data = new_data;
 	free = free + buffer;
 }
+
 
 template <typename T>
 void DynamicArray<T>::push_back(T element) {
@@ -70,6 +79,7 @@ void DynamicArray<T>::push_back(T element) {
 	free--;
 }
 
+
 template <typename T>
 void DynamicArray<T>::pop_back() {
 	if (size == 0) {
@@ -79,6 +89,7 @@ void DynamicArray<T>::pop_back() {
 	size--;
 	free++;
 }
+
 
 template <typename T>
 void DynamicArray<T>::insert(T element, size_t idx) {
@@ -96,6 +107,7 @@ void DynamicArray<T>::insert(T element, size_t idx) {
 	free--;
 }
 
+
 template <typename T>
 void DynamicArray<T>::erase() {
 	memset(data, 0, sizeof(T) * (size));
@@ -103,10 +115,12 @@ void DynamicArray<T>::erase() {
 	size = 0;
 }
 
+
 template <typename T>
 T DynamicArray<T>::operator[](size_t idx) {
 	return data[idx];
 }
+
 
 template <typename T>
 void DynamicArray<T>::print_array() {
@@ -122,16 +136,19 @@ void DynamicArray<T>::print_array() {
 	}
 }
 
+
 template <typename T>
 LinkedList<T>::LinkedList() {
 	head = nullptr;
 	size = 0;
 }
 
+
 template <typename T>
 LinkedList<T>::~LinkedList() {
 	clear();
 }
+
 
 template <typename T>
 void LinkedList<T>::clear() {
@@ -145,15 +162,18 @@ void LinkedList<T>::clear() {
 	size = 0;
 }
 
+
 template <typename T>
 size_t LinkedList<T>::get_size() {
 	return size;
 }
 
+
 template <typename T>
 bool LinkedList<T>::is_empty() {
 	return size == 0;
 }
+
 
 template <typename T>
 void LinkedList<T>::push_front(T value) {
@@ -162,6 +182,7 @@ void LinkedList<T>::push_front(T value) {
 	head = newNode;
 	size++;
 }
+
 
 template <typename T>
 void LinkedList<T>::insert(T value, size_t index) {
@@ -189,6 +210,7 @@ void LinkedList<T>::insert(T value, size_t index) {
 	size++;
 }
 
+
 template <typename T>
 void LinkedList<T>::push_back(T value) {
 	Node<T>* newNode = new Node<T>(value);
@@ -206,6 +228,7 @@ void LinkedList<T>::push_back(T value) {
 	size++;
 }
 
+
 template <typename T>
 void LinkedList<T>::print_list() {
 	Node<T>* current = head;
@@ -215,6 +238,7 @@ void LinkedList<T>::print_list() {
 	}
 	std::cout << "nullptr" << std::endl;
 }
+
 
 template <typename T>
 T LinkedList<T>::pop_front() {
@@ -230,6 +254,7 @@ T LinkedList<T>::pop_front() {
 
 	return poppedValue;
 }
+
 
 template <typename T>
 T LinkedList<T>::pop_back() {
@@ -255,6 +280,7 @@ T LinkedList<T>::pop_back() {
 	return poppedValue;
 }
 
+
 template <typename T>
 DoubleLinkedList<T>::DoubleLinkedList() {
 	head = nullptr;
@@ -262,10 +288,12 @@ DoubleLinkedList<T>::DoubleLinkedList() {
 	size = 0;
 }
 
+
 template <typename T>
 DoubleLinkedList<T>::~DoubleLinkedList() {
 	clear();
 }
+
 
 template <typename T>
 void DoubleLinkedList<T>::clear() {
@@ -281,15 +309,18 @@ void DoubleLinkedList<T>::clear() {
 	size = 0;
 }
 
+
 template <typename T>
 size_t DoubleLinkedList<T>::get_size() {
 	return size;
 }
 
+
 template <typename T>
 bool DoubleLinkedList<T>::is_empty() {
 	return size == 0;
 }
+
 
 template <typename T>
 void DoubleLinkedList<T>::push_front(T value) {
@@ -307,6 +338,7 @@ void DoubleLinkedList<T>::push_front(T value) {
 	size++;
 }
 
+
 template <typename T>
 void DoubleLinkedList<T>::push_back(T value) {
 	Node<T>* newNode = new Node<T>(value);
@@ -322,6 +354,7 @@ void DoubleLinkedList<T>::push_back(T value) {
 
 	size++;
 }
+
 
 template <typename T>
 T DoubleLinkedList<T>::pop_front() {
@@ -346,6 +379,7 @@ T DoubleLinkedList<T>::pop_front() {
 	return poppedValue;
 }
 
+
 template <typename T>
 T DoubleLinkedList<T>::pop_back() {
 	if (is_empty()) {
@@ -369,6 +403,7 @@ T DoubleLinkedList<T>::pop_back() {
 	return poppedValue;
 }
 
+
 template <typename T>
 void DoubleLinkedList<T>::print_list() {
 	Node<T>* current = head;
@@ -378,6 +413,7 @@ void DoubleLinkedList<T>::print_list() {
 	}
 	std::cout << "nullptr" << std::endl;
 }
+
 
 template <typename T>
 void DoubleLinkedList<T>::insert(T value, size_t index) {
@@ -410,37 +446,145 @@ void DoubleLinkedList<T>::insert(T value, size_t index) {
 	size++;
 }
 
+
+template <typename T>
+Stack<T>::Stack() {
+	head = nullptr;
+	size = 0;
+}
+
+
+template <typename T>
+Stack<T>::~Stack() {
+	clear();
+}
+
+
+template <typename T>
+bool Stack<T>::is_empty() {
+	return size == 0;
+}
+
+
 template <typename T>
 T Stack<T>::pop() {
-	if (this->is_empty()) {
+	if (is_empty()) {
 		throw std::runtime_error("Error: Stack is empty!");
 	}
-	return this->pop_front();
+
+	Node<T>* temp = head;
+	T		 poppedValue = temp->data;
+	head = head->next;
+	delete temp;
+	size--;
+
+	return poppedValue;
 }
+
 
 template <typename T>
 void Stack<T>::push(T value) {
-	this->push_front(value);
+	Node<T>* newNode = new Node<T>(value);
+	newNode->next = head;
+	head = newNode;
+	size++;
 }
+
 
 template <typename T>
 T Stack<T>::top() {
-	if (this->is_empty()) {
+	if (is_empty()) {
 		throw std::runtime_error("Error: Stack is empty!");
 	}
-	return this->head->data;
+	return head->data;
 }
+
 
 template <typename T>
 size_t Stack<T>::get_size() {
-	return this->get_size();
+	return size;
+}
+
+
+template <typename T>
+void Stack<T>::clear() {
+	Node<T>* current = head;
+	while (current != nullptr) {
+		Node<T>* temp = current;
+		current = current->next;
+		delete temp;
+	}
+	head = nullptr;
+	size = 0;
+}
+
+
+template <typename T>
+void Queue<T>::enqueue(T value) {
+    Node<T>* newNode = new Node<T>(value);
+    if (end == nullptr) {
+        front = end = newNode;
+    } else {
+        end->next = newNode;
+        end = newNode;
+    }
+    size++;
+}
+
+template <typename T>
+T Queue<T>::dequeue() {
+    if (is_empty()) {
+        throw std::runtime_error("Error: Queue is empty!");
+    }
+
+    Node<T>* temp = front;
+    T dequeuedValue = temp->data;
+    front = front->next;
+    if (front == nullptr) {
+        end = nullptr;
+    }
+    delete temp;
+    size--;
+
+    return dequeuedValue;
+}
+
+template <typename T>
+T Queue<T>::front_element() {
+    if (is_empty()) {
+        throw std::runtime_error("Error: Queue is empty!");
+    }
+    return front->data;
+}
+
+template <typename T>
+size_t Queue<T>::get_size() {
+    return size;
+}
+
+template <typename T>
+bool Queue<T>::is_empty() {
+    return size == 0;
+}
+
+template <typename T>
+void Queue<T>::clear() {
+    Node<T>* current = front;
+    while (current != nullptr) {
+        Node<T>* temp = current;
+        current = current->next;
+        delete temp;
+    }
+    front = end = nullptr;
+    size = 0;
 }
 
 } // namespace CustomArrays
 
+
 int main() {
 
-	CustomArrays::Stack<int>* stack = new CustomArrays::Stack<int>();
+	CustomArrays::Queue<int>* queue = new CustomArrays::Queue<int>();
 
 	return 0;
 }
