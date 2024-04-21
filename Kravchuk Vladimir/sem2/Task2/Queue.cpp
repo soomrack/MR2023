@@ -56,12 +56,13 @@ int Queue::pop() {
     }
     else {
         Element* deleted = top_pointer;
+        int deleted_data = deleted->data;
         top_pointer = top_pointer->previous;
-        top_pointer->next = nullptr;
-        /*if (top_pointer != nullptr) {
+        if (top_pointer != nullptr) {
             top_pointer->next = nullptr;
-        }*/
-        return deleted->data;
+        }
+        delete[] deleted;
+        return deleted_data;
     }
 }
 
