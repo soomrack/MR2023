@@ -9,11 +9,11 @@
 
 struct Flight {
     double air_time;
-    double airline_id;
+    uint16_t airline_id;
     std::string unique_carrier_name;
-    double origin_city_market_id;
+    uint16_t origin_city_market_id;
+    uint16_t dest_city_market_id;
     std::string origin_city;
-    double dest_city_market_id;
     std::string dest_city;
 };
 
@@ -29,7 +29,7 @@ public:
 class Parser {
 private:
     std::vector<Flight> flights;
-    uint64_t size;
+    size_t size;
 public:
     void parse(const std::string &file);
 
