@@ -49,11 +49,11 @@ int LinkedList::del_head() {
     if (top_pointer == nullptr) {
         return NAN;
     }
-    Element* buf = top_pointer;
-    int buf_data = buf->data;
+    Element* deleted = top_pointer;
+    int deleted_data = deleted->data;
     top_pointer = top_pointer->pointer;
-    delete[] buf;
-    return buf_data;
+    delete[] deleted;
+    return deleted_data;
 }
 
 
