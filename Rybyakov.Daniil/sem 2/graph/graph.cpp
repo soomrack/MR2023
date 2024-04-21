@@ -114,21 +114,20 @@ void filling_table(vector<vector<int>>& flight_table)
 }
 
 
-int main()
-{
+void init() {
     int table_size = 40 * 1000;
     int start, end;
-    unsigned int choise, run = 1;
+    unsigned int state, run = 1;
 
     vector<vector<int>> flight_table(table_size, vector<int>(table_size, INT_MAX));
 
     filling_table(flight_table);
 
-    while (run){
+    while (run) {
         cout << "to start press 1: ";
-        cin >> choise;
+        cin >> state;
 
-        switch (choise){
+        switch (state) {
         case 0:
             run = 0;
             break;
@@ -139,4 +138,10 @@ int main()
             break;
         }
     }
+}
+
+
+int main()
+{
+    init();
 }
