@@ -90,15 +90,27 @@ void source_file_is_open(std::ifstream& datafile){
     }
 }
 
+
+void target_file_is_open(std::ofstream& datafile){
+    if(datafile.is_open()){
+        std::cerr<<"File is open"<<std::endl;
+    }else{
+        std::cerr<<"File is not open"<<std::endl;
+    }
+}
+
 int main(){
     std::ifstream datafile("/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/dataterm.csv");
     std::ofstream logfile("new_data.txt");
     source_file_is_open(datafile);
+    target_file_is_open(logfile);
 
     std::vector<Flight> Flights;
     std::string line;
 
-    while(not datafile.eof()){
+
+//закончился ли исходный файл
+    while(!datafile.eof()){
 
     }
 
