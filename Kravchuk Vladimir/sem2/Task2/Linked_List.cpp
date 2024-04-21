@@ -11,51 +11,54 @@ struct Element {
 
 class LinkedList {
 private:
-    Element* topPointer;
+    Element* top_pointer;
 
 public:
     LinkedList();
     ~LinkedList();
-    void addHead(int element);
-    void delHead();
+    void add_head(int element);
+    int del_head();
     void doubling();
-    void ListPrint();
+    void List_print();
+    int get_head_element();
 };
 
 
-LinkedList::LinkedList() : topPointer(nullptr) {}
+LinkedList::LinkedList() : top_pointer(nullptr) {}
 
 
 LinkedList::~LinkedList() {
-    Element* deleted = topPointer;
+    Element* deleted = top_pointer;
     while (deleted != nullptr) {
         Element* pointer = deleted->pointer;
         delete deleted;
         deleted = pointer;
     }
-    topPointer = nullptr;
+    top_pointer = nullptr;
 }
 
 
-void LinkedList::addHead(int value) {
-    Element* NewElement = new Element(value);
-    NewElement->pointer = topPointer;
-    topPointer = NewElement;
+void LinkedList::add_head(int value) {
+    Element* New_Element = new Element(value);
+    New_Element->pointer = top_pointer;
+    top_pointer = New_Element;
 }
 
 
-void LinkedList::delHead() {
-    if (topPointer == nullptr) {
-        return;
+int LinkedList::del_head() {
+    if (top_pointer == nullptr) {
+        return NAN;
     }
-    Element* buf = topPointer;
-    topPointer = topPointer->pointer;
+    Element* buf = top_pointer;
+    int buf_data = buf->data;
+    top_pointer = top_pointer->pointer;
     delete[] buf;
+    return buf_data;
 }
 
 
-void LinkedList::ListPrint() {
-    Element* buf = topPointer;
+void LinkedList::List_print() {
+    Element* buf = top_pointer;
     while (buf != nullptr) {
         cout << buf->data << "\t";
         cout << "\n";
@@ -65,7 +68,7 @@ void LinkedList::ListPrint() {
 
 
 void LinkedList::doubling() {
-    Element* buf = topPointer;
+    Element* buf = top_pointer;
     while (buf != nullptr) {
         buf->data *= 2;
         buf = buf->pointer;
@@ -73,17 +76,28 @@ void LinkedList::doubling() {
 }
 
 
+int LinkedList::get_head_element() {
+    if (top_pointer != nullptr) {
+        return top_pointer->data;
+    }
+    else {
+        return NAN;
+    }
+}
+
+
 int main()
 {
     LinkedList List;
-    List.addHead(3);
-    List.addHead(3);
-    List.addHead(4);
-    List.addHead(3);
-    List.delHead();
-    List.ListPrint();
+    List.add_head(3);
+    List.add_head(3);
+    List.add_head(4);
+    List.add_head(3);
+    List.del_head();
+    List.List_print();
     List.doubling();
-    List.ListPrint();
+    List.List_print();
+    List.get_head_element();
 
     return 0;
 }
