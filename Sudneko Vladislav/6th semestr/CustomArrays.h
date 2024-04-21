@@ -1,9 +1,7 @@
-﻿#pragma once
-
-#include <iostream>
-
 #ifndef DYNAMIC_ARRAY
 #define DYNAMIC_ARRAY
+
+#include <iostream>
 
 namespace CustomArrays {
 template <typename T>
@@ -38,13 +36,13 @@ private:
 template <typename T>
 class LinkedList {
 private:
-	template <typename T>
+	template <typename U>
 	class Node {
 	public:
-		T	  data;
+		U	  data;
 		Node* next;
 
-		Node(T value) {
+		Node(U value) {
 			data = value;
 			next = nullptr;
 		}
@@ -71,14 +69,14 @@ public:
 template <typename T>
 class DoubleLinkedList {
 private:
-	template <typename T>
+	template <typename U>
 	class Node {
 	public:
-		T	  data;
+		U	  data;
 		Node* next;
 		Node* prev;
 
-		Node(T value) {
+		Node(U value) {
 			data = value;
 			next = nullptr;
 			prev = nullptr;
@@ -105,14 +103,59 @@ public:
 };
 
 template <typename T>
-class Stack : private LinkedList<T> {
+class Stack {
+
+	template <typename U>
+	class Node {
+	public:
+		U	  data;
+		Node* next;
+
+		Node(U value) : data(value), next(nullptr) {}
+	};
+
+	Node<T>* head;
+	size_t	 size;
+
 public:
+	Stack();
+	~Stack();
+
 	void   push(T);
 	T pop();
 	T top();
 	size_t get_size();
+	bool   is_empty();
+	void   clear();
 };
 
+
+template <typename T>
+class Queue {
+    template <typename U>
+    class Node {
+    public:
+        U data;
+        Node* next;
+
+        Node(U value) : data(value), next(nullptr) {}
+    };
+
+    Node<T>* front;
+    Node<T>* end;
+    size_t size;
+
+public:
+    Queue() : front(nullptr), end(nullptr), size(0) {}
+    ~Queue() { clear(); }
+
+    void enqueue(T);
+    T dequeue();
+    T front_element();
+    size_t get_size();
+    bool is_empty();
+    void clear();
+};
 
 } // namespace CustomArrays
 
