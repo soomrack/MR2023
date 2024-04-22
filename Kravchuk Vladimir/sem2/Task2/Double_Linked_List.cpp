@@ -20,7 +20,6 @@ public:
     ~DoubleLinkedList();
     void add_head(int element);
     void add_tail(int element);
-    void doubling();
     void list_print();
     void list_print_reverse();
     int del_head();
@@ -90,16 +89,6 @@ void DoubleLinkedList::list_print_reverse() {
 }
 
 
-void DoubleLinkedList::doubling() {
-    Element* buf = head;
-    while (buf != nullptr) {
-        buf->data *= 2;
-        buf = buf->next;
-    }
-}
-
-
-
 int DoubleLinkedList::del_head() {
     if (head == nullptr) {
         return INT_MAX;
@@ -158,7 +147,6 @@ int main()
     List.del_head();
     List.del_tail();
     List.list_print();
-    List.doubling();
     List.list_print_reverse();
     List.get_head_element();
 
