@@ -1,163 +1,102 @@
-#include <cstdint>
 #include <iostream>
 
 
-class Exception : std::exception {
-private:
-    std::string message;
+class Node 
+{
 public:
-    explicit Exception(std::string _message) { message = std::move(_message); };
-
-
-    std::string getMessage() const { return message; };
+    int value;
+    Node* next;
+public:
+    Node(int val) : value(val), next(nullptr) {}
 };
 
 
-template<typename T>
-class PriorityQueue;
-
-
-template<typename T>
-class Node {
-    friend class PriorityQueue<T>;
-
-
+class queue 
+{
 private:
-    T data;
-    uint64_t priority;
-    Node<T>* next;
-    Node<T>* prev;
+    Node* head;
+    Node* tail;
 public:
-    Node(T _object, uint64_t _priority);
-};
-
-
-template<typename T>
-class PriorityQueue {
-private:
-    uint64_t size;
-    Node<T>* head;
-    Node<T>* tail;
-
-public:
-    PriorityQueue();
+    queue() : head(nullptr), tail(nullptr) {}
 
     bool isEmpty();
-    void push(T object, uint64_t priority);
-    T pop();
+    void push(int val);
     void print();
-    uint64_t getSize();
+    int pop();
 };
 
 
-template<typename T>
-Node<T>::Node(T _object, uint64_t _priority) {
-    data = _object;
-    priority = _priority;
-    next = nullptr;
-    prev = nullptr;
+class Exception : public std::domain_error 
+{
+public:
+    Exception(const char* const message) : std::domain_error(message) {}
+};
+
+
+Exception empty("Queue is empty");
+
+
+bool queue::isEmpty() 
+{
+    return head == nullptr;
 }
 
 
-template<typename T>
-PriorityQueue<T>::PriorityQueue() {
-    size = 0;
-    head = nullptr;
-    tail = nullptr;
-}
-
-
-template<typename T>
-bool PriorityQueue<T>::isEmpty() {
-    return size == 0;
-}
-
-
-template<typename T>
-void PriorityQueue<T>::push(T object, uint64_t priority) {
-    auto* new_node = new Node<T>(object, priority);
-
-    if (isEmpty()) {
-        head = new_node;
-        tail = new_node;
-        size++;
-        return;
+void queue::push(int val) 
+{
+    Node* element = new Node(val);
+    if (isEmpty() || val < head->value) 
+    {
+        element->next = head;
+        head = element;
     }
-
-    Node<T>* node = head;
-
-    while (node) {
-        if (node->priority < new_node->priority) {
-            new_node->next = node;
-            if (head == node) {
-                head = new_node;
-                node->prev = head;
-            }
-            else {
-                node->prev->next = new_node;
-                new_node->prev = node->prev;
-                node->prev = new_node;
-            }
-            size++;
-            return;
+    else 
+    {
+        Node* current = head;
+        while (current->next != nullptr && val >= current->next->value) 
+        {
+            current = current->next;
         }
-        if (node->next != nullptr) {
-            node = node->next;
-            continue;
+        element->next = current->next;
+        current->next = element;
+        if (element->next == nullptr) 
+        {
+            tail = element;
         }
-        break;
     }
-
-    tail->next = new_node;
-    new_node->prev = tail;
-    tail = new_node;
-    size++;
 }
 
 
-template<typename T>
-T PriorityQueue<T>::pop() {
-    if (isEmpty()) {
-        throw Exception("error: queue is empty");
+void queue::print() 
+{
+    if (isEmpty()) return;
+    Node* element = head;
+    while (element) {
+        std::cout << element->value << " ";
+        element = element->next;
     }
-    size--;
-    T data = head->data;
-    head = head->next;
-    return data;
+    std::cout << std::endl;
 }
 
 
-template<typename T>
-void PriorityQueue<T>::print() {
-    if (isEmpty()) {
-        return;
-    }
-    std::cout << "[";
-    Node<T>* node = head;
-    while (node != tail) {
-        std::cout << node->data << ", ";
-        node = node->next;
-    }
-    std::cout << tail->data << "]" << std::endl;
+int queue::pop() 
+{
+    if (isEmpty()) throw empty;
+    Node* element = head;
+    int head_val = element->value;
+    head = element->next;
+    delete element;
+    return head_val;
 }
 
 
-template<typename T>
-uint64_t PriorityQueue<T>::getSize() {
-    return size;
-}
-
-int main() {
-    PriorityQueue<int> A;
-    A.push(0, 0);
-    A.push(1, 1);
-    A.push(2, 5);
-    A.push(3, 2);
-    A.push(4, 0);
-    A.push(5, 5);
-    A.print();
-
-    A.pop();
+int main() 
+{
+    queue A;
+    A.push(4);
+    A.push(5);
+    A.push(1);
+    A.push(15);
     A.print();
 
     return 0;
