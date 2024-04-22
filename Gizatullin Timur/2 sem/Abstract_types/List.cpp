@@ -13,7 +13,7 @@ private:
     Node* tail;
 
 public:
-    List();
+    List() : head(nullptr), tail(nullptr) {}
     ~List() {clear_list();}
     void push_tail(int value);
     void display();
@@ -23,13 +23,6 @@ public:
     void delete_position(int pos);
     void clear_list();
 };
-
-
-List::List() {
-    head = nullptr;
-    tail = nullptr;
-}
-
 
 void List::push_tail(int value) 
 {
