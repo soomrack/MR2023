@@ -18,15 +18,15 @@ public:
 	T get_head_data();
 	T get_tail_data();
 
-	void pop_front();
+	T pop_front();
 	void clear();
 	void push_back(T data);
 	void push_front(T data);
-	void pop_back();
+	T pop_back();
 	void insert(T value, int idx);
 	void removeAt(const int idx);
 
-	int GetSize() { return Size; };
+	int GetSize() { return size; };
 
 	T& operator[](const int idx);
 
@@ -46,14 +46,14 @@ private:
 			this->pPrev = pPrev;
 		}
 	};
-	int Size;
+	int size;
 	Node<T>* head, * tail;
 };
 
 template<typename T>
 LinkedList<T>::LinkedList()
 {
-	Size = 0;
+	size = 0;
 	head = nullptr;
 	tail = nullptr;
 }
@@ -75,7 +75,7 @@ void LinkedList<T>::add_head(const T value)
 		head->pPrev = new Node<T>(value, head);
 		head = head->pPrev;
 	}
-	Size++;
+	size++;
 }
 
 template<typename T>
@@ -89,7 +89,7 @@ void LinkedList<T>::add_tail(const T value)
 		tail->pNext = new Node<T>(value, nullptr, tail);
 		tail = tail->pNext;
 	}
-	Size++;
+	size++;
 }
 
 template<typename T>
@@ -107,7 +107,7 @@ void LinkedList<T>::delete_head()
 		tail = nullptr;
 	}
 	delete tmp;
-	Size--;
+	size--;
 }
 
 template<typename T>
@@ -125,7 +125,7 @@ void LinkedList<T>::delete_tail()
 		head = nullptr;
 	}
 	delete tmp;
-	Size--;
+	size--;
 }
 
 template<typename T>
@@ -147,23 +147,27 @@ T LinkedList<T>::get_tail_data()
 }
 
 template<typename T>
-void LinkedList<T>::pop_front()
+T LinkedList<T>::pop_front()
 {
+	T tmp_value = head->data;
 	Node<T>* tmp = head;
-	head = head->pNext; if (head != nullptr) {
+	head = head->pNext;
+	if (head != nullptr) {
 		head->pPrev = nullptr;
 	}
 	else {
 		tail = nullptr;
 	}
 	delete tmp;
-	Size--;
+	size--;
+
+	return(tmp_value);
 }
 
 template<typename T>
 void LinkedList<T>::clear()
 {
-	while (Size) {
+	while (size) {
 		pop_front();
 	}
 }
@@ -177,16 +181,12 @@ void LinkedList<T>::push_back(T data)
 	}
 	else
 	{
-		Node<T>* current = this->head;
-
-		while (current->pNext != nullptr) {
-			current = current->pNext;
-		}
+		Node<T>* current = this->tail;
 
 		current->pNext = new Node<T>(data, nullptr, current);
 		tail = current->pNext;
 	}
-	Size++;
+	size++;
 }
 
 template<typename T>
@@ -199,13 +199,16 @@ void LinkedList<T>::push_front(T data)
 	else {
 		tail = head;
 	}
-	Size++;
+	size++;
 }
 
 template<typename T>
-void LinkedList<T>::pop_back()
+T LinkedList<T>::pop_back()
 {
-	removeAt(Size--);
+	T tmp_value = tail->data;
+	removeAt(size--);
+
+	return(tmp_value);
 }
 
 template<typename T>
@@ -229,7 +232,7 @@ void LinkedList<T>::insert(T value, int idx)
 
 		previous->pNext = new_node;
 
-		Size++;
+		size++;
 	}
 }
 
@@ -256,7 +259,7 @@ void LinkedList<T>::removeAt(const int idx)
 
 		delete toDelete;
 
-		Size--;
+		size--;
 	}
 }
 
