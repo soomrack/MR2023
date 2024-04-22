@@ -177,6 +177,18 @@ void DijkstraResult::clear()
 }
 
 
+void DijkstraResult::print()
+{
+    std::cout << "Total air time: " << total_air_time << std::endl;
+
+    std::cout << route[0].origin_city_name << std::endl;
+
+    for (size_t idx = 0; idx < route.size(); ++idx) {
+        std::cout << route[idx].dest_sity_market_id << std::endl;
+    }
+}
+
+
 bool Graph::open_files(const char data_file[], const char graph_file[])
 {
     NEW_DATAFILE.open(data_file);
@@ -442,6 +454,7 @@ DijkstraResult Graph::find_way(const int origin, const int destination)
     while (!ways.empty()) {
         result.route.push_back(ways[0]);
         result.total_air_time += ways[0].air_time;
+        ways.erase(ways.begin());
 
         search_city(ways, result.route[count].origin_sity_market_id, result.total_air_time);
 
@@ -449,6 +462,10 @@ DijkstraResult Graph::find_way(const int origin, const int destination)
 
         count++;
     }
+
+    result.clear();
+
+    std::cout << "The route is not found" << std::endl;
 
     return result;
 }
