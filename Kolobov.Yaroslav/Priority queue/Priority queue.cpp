@@ -27,7 +27,7 @@ public:
     bool is_full();
     unsigned int size_engaged(); 
     void push(T value);
-    void pop();
+    T pop();
     void print_queue();
 };
 
@@ -88,12 +88,15 @@ void Queue<T>::push(T value)
 }
 
 template <typename T>
-void Queue<T>::pop() {
+T Queue<T>::pop() {
     if (is_empty()) throw ISEMPTY;
-    values[tail_idx] = NULL;
-    if (tail_idx == size - 1) tail_idx = 0;
-    else ++tail_idx;
+    T value = values[head_idx];
+    values[head_idx] = NULL;
+    head_idx = (head_idx + 1) % size; //Place head to the next empty slot
+   
+    return value;
 }
+
 
 template <typename T>
 void Queue<T>::print_queue() {
