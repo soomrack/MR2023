@@ -11,54 +11,53 @@ struct Element {
 
 class LinkedList {
 private:
-    Element* top_pointer;
+    Element* head;
 
 public:
     LinkedList();
     ~LinkedList();
     void add_head(int element);
     int del_head();
-    void doubling();
     void List_print();
     int get_head_element();
 };
 
 
-LinkedList::LinkedList() : top_pointer(nullptr) {}
+LinkedList::LinkedList() : head(nullptr) {}
 
 
 LinkedList::~LinkedList() {
-    Element* deleted = top_pointer;
+    Element* deleted = head;
     while (deleted != nullptr) {
         Element* pointer = deleted->pointer;
         delete deleted;
         deleted = pointer;
     }
-    top_pointer = nullptr;
+    head = nullptr;
 }
 
 
 void LinkedList::add_head(int value) {
     Element* New_Element = new Element(value);
-    New_Element->pointer = top_pointer;
-    top_pointer = New_Element;
+    New_Element->pointer = head;
+    head = New_Element;
 }
 
 
 int LinkedList::del_head() {
-    if (top_pointer == nullptr) {
+    if (head == nullptr) {
         return NAN;
     }
-    Element* deleted = top_pointer;
+    Element* deleted = head;
     int deleted_data = deleted->data;
-    top_pointer = top_pointer->pointer;
+    head = head->pointer;
     delete[] deleted;
     return deleted_data;
 }
 
 
 void LinkedList::List_print() {
-    Element* buf = top_pointer;
+    Element* buf = head;
     while (buf != nullptr) {
         cout << buf->data << "\t";
         cout << "\n";
@@ -67,21 +66,12 @@ void LinkedList::List_print() {
 }
 
 
-void LinkedList::doubling() {
-    Element* buf = top_pointer;
-    while (buf != nullptr) {
-        buf->data *= 2;
-        buf = buf->pointer;
-    }
-}
-
-
 int LinkedList::get_head_element() {
-    if (top_pointer != nullptr) {
-        return top_pointer->data;
+    if (head != nullptr) {
+        return head->data;
     }
     else {
-        return NAN;
+        return INT_MAX;
     }
 }
 
