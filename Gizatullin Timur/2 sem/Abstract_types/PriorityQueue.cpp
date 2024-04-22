@@ -18,6 +18,7 @@ private:
     Node* tail;
 public:
     queue() : head(nullptr), tail(nullptr) {}
+    ~queue() {};
 
     bool is_empty();
     void push(int val);
@@ -35,6 +36,14 @@ public:
 
 Exception empty("Queue is empty");
 
+queue::~queue() {
+  while (head) {
+    Node* temp = head;
+    head = head->next;
+    delete temp;
+  }
+  tail = nullptr;
+}
 
 bool queue::is_empty() 
 {
