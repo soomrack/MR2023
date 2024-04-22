@@ -15,7 +15,7 @@
 DHT dht_sensor(PIN_DHT_SENSOR, DHT21);
 
 
-int PROGRAMM_CHECK_TIME = 1;
+int PROGRAMM_CHECK_TIME = 10;
 int TIME_SET = 0;
 
 
