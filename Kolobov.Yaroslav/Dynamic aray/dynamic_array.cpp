@@ -4,23 +4,24 @@
 using namespace std;
 
 class Dynamic_array {
-	private:
-		int* array_data;
-		size_t size;
-		size_t buffer;
+private:
+	int* array_data;
+	size_t size;
+	size_t buffer;
+	size_t size_allocated;
 
-	public:
-		Dynamic_array();
-		Dynamic_array(size_t lenght, size_t buffer_size);
-		Dynamic_array(int* data);
-		~Dynamic_array();
-	
-	public:
-		int get_element(int idx);
-		void set_element(int idx, int element);
-		void resize(int new_size, int new_buffer);
-		void append(int value);
-		void print_array();
+public:
+	Dynamic_array();
+	Dynamic_array(size_t lenght, size_t buffer_size);
+	Dynamic_array(int* data);
+	~Dynamic_array();
+
+public:
+	int get_element(int idx);
+	void set_element(int idx, int element);
+	void resize(int new_size);
+	void append(int value);
+	void print_array();
 };
 
 
@@ -37,11 +38,12 @@ Dynamic_array::Dynamic_array(size_t lenght, size_t buffer_size)
 {
 	size = lenght;
 	buffer = buffer_size;
+	size_allocated = size + buffer_size;
 
-	array_data = new int[(size + buffer)];
+	array_data = new int[(size_allocated)];
 }
 
-Dynamic_array::Dynamic_array(int* data) 
+Dynamic_array::Dynamic_array(int* data)
 {
 	size = sizeof(data) / sizeof(int);
 	buffer = 5;
@@ -84,15 +86,14 @@ void Dynamic_array::set_element(int idx, int element)
 }
 
 
-void Dynamic_array::resize(int new_size, int new_buffer)
+void Dynamic_array::resize(int new_size)
 {
-	if ((new_size + new_buffer) > (size + buffer)) {
-
-		int* new_data = new int[(new_size + new_buffer)];
+	if (new_size > (size_allocated)) {
+		size_allocated = new_size + buffer;
+		int* new_data = new int[size_allocated];
 		memcpy(new_data, array_data, size * sizeof(int));
 
 		size = new_size;
-		buffer = new_buffer;
 
 		delete[] array_data;
 		array_data = new_data;
@@ -101,13 +102,14 @@ void Dynamic_array::resize(int new_size, int new_buffer)
 	}
 	else
 	{
-		std::cerr << "New array is smaller than previous\n";
+		buffer -= new_size - size;
+		size = new_size;
 	}
 }
 
 
 void Dynamic_array::append(int value)
-{	
+{
 	resize(size + 1, buffer + 1);
 
 	array_data[size - 1] = value;
