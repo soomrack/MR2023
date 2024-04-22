@@ -21,6 +21,7 @@ public:
 	void erase();
 	void set_buffer(size_t);
 	void print_array();
+        void resize(int);
 
 	T operator[](size_t);
 
@@ -29,8 +30,6 @@ private:
 	size_t size;
 	size_t buffer;
 	size_t free;
-
-	void resize();
 };
 
 template <typename T>

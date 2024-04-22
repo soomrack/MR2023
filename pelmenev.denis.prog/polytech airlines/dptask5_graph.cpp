@@ -5,8 +5,6 @@
 #include <stdlib.h>
 
 
-//using namespace std;
-
 std::ifstream NEW_DATAFILE;
 std::ofstream GRAPH_FILE;
 
@@ -16,7 +14,6 @@ class Airline
 public:
     int air_time;
     int airline_id;
-    //int flag;
     int origin_sity_market_id;
     std::string origin_city_name;
     int dest_sity_market_id;
@@ -75,7 +72,7 @@ private:
     Airline get_airline(std::string txtline);
 private:
     void add_ways(std::vector <Airline> &ways, City point, int current_time);
-    void search_city(std::vector <Airline> &ways, const int city_id, int current_time);
+    int search_city(std::vector <Airline> &ways, const int city_id, int current_time);
     bool check_destination(std::vector <Airline> &ways, City point, size_t line, size_t size);
     void check_points(std::vector <Airline> &ways, City point, size_t line, size_t size, int current_time);
 private:
@@ -426,14 +423,16 @@ void Graph::add_ways(std::vector <Airline> &ways, City point, int current_time)
 }
 
 
-void Graph::search_city(std::vector <Airline> &ways, const int city_id, int current_time)
+int Graph::search_city(std::vector <Airline> &ways, const int city_id, int current_time)
 {
     for (size_t city = 0; city < number_of_cities; ++city) {
         if (city_id == cities[city].id) {
             add_ways(ways, cities[city], current_time);
-            return;
+            return 1;
         }
     }
+
+    return 0;
 }
 
 
@@ -442,7 +441,9 @@ DijkstraResult Graph::find_way(const int origin, const int destination)
     DijkstraResult result;
     std::vector <Airline> ways;
 
-    search_city(ways, origin, 0);
+    int mark;
+
+    mark = search_city(ways, origin, 0);
 
     if (ways.empty()) {
         std::cout << "Invalid City ID" << std::endl;
@@ -456,7 +457,12 @@ DijkstraResult Graph::find_way(const int origin, const int destination)
         result.total_air_time += ways[0].air_time;
         ways.erase(ways.begin());
 
-        search_city(ways, result.route[count].origin_sity_market_id, result.total_air_time);
+        mark = search_city(ways, result.route[count].origin_sity_market_id, result.total_air_time);
+
+        if (mark == 0) {
+            result.route.erase(result.route.end() - 1);
+            continue;
+        }
 
         if (result.route[count].dest_sity_market_id == destination) return result;
 

@@ -4,12 +4,13 @@ using namespace std;
 
 class DynamicArray {
 private:
-    int* array;
+    int* data;
     size_t size;
-    size_t container;
+    size_t buf;
 
 public:
-    DynamicArray(size_t length);
+    DynamicArray();
+    DynamicArray(size_t size, size_t start_bufer);
     ~DynamicArray();
     void resize(size_t new_size);
     void add(int element);
@@ -20,41 +21,49 @@ public:
 };
 
 
-DynamicArray::DynamicArray(size_t length) : size{ 0 }, container { length } {
-    if (length == 0) {
-        array = nullptr;
-    }
-    array = new int[container];
+DynamicArray::DynamicArray() {
+    buf = 5;
+    size = 0;
+    data = new int[buf];
+}
+
+
+DynamicArray::DynamicArray(size_t size, size_t start_bufer) : size{ size }, buf{ start_bufer } {
+    data = new int[buf];
 }
 
 
 DynamicArray::~DynamicArray() {
-    delete[] array;
-    array = nullptr;
+    delete[] data;
 }
 
 
 void DynamicArray::resize(size_t new_size) {
-    if (new_size > container) {
-        container = new_size;
-        int* new_array = new int[container];
-        memcpy(new_array, array, size * sizeof(int));
-        delete[] array;
-        array = new_array;
+    if (new_size > buf + size) {
+        int* new_data = new int[new_size];
+        memcpy(new_data, data, size * sizeof(int));
+        delete[] data;
+        data = new_data;
+        buf = new_size;
+    }
+    else {
+        size += 1;
+        buf -= 1;
     }
 }
 
 
 void DynamicArray::add(int element) {
-    resize(size + 1);
-    array[size] = element;
-    size += 1;
+    if (size == buf) {
+        resize(buf + 1);
+    }
+    data[size++] = element;
 }
 
 
 void DynamicArray::set_element(size_t idx, int element) {
     if (idx < size) {
-        array[idx] = element;
+        data[idx] = element;
     }
     else {
         cout << "The index of the element is invalid\n";
@@ -64,7 +73,7 @@ void DynamicArray::set_element(size_t idx, int element) {
 
 void DynamicArray::array_print() {
     for (size_t idx = 0; idx < size; idx++) {
-        cout << array[idx] << "\t";
+        cout << data[idx] << "\t";
     }
     cout << "\n";
 }
@@ -72,11 +81,11 @@ void DynamicArray::array_print() {
 
 int DynamicArray::get_element(size_t idx) {
     if (idx < size) {
-        return array[idx];
+        return data[idx];
     }
     else {
         cout << "The index of the element is invalid\n";
-        return NAN;
+        return INT_MAX;
     }
 }
 
@@ -88,13 +97,13 @@ size_t DynamicArray::get_size() {
 
 int main()
 {
-    DynamicArray array(4);
+    DynamicArray array(3,3);
+    array.set_element(2, 5);
     array.add(2);
     array.add(3);
     array.add(4);
-    array.add(6);
     array.array_print();
-    array.get_element(-4);
+    //array.get_element(-4);
 
     return 0;
 }

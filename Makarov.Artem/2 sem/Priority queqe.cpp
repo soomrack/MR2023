@@ -53,7 +53,7 @@ void queue::push(int val)
     else 
     {
         Node* current = head;
-        while (current->next != nullptr && val >= current->next->value) 
+        while (current->next != nullptr && val > current->next->value) 
         {
             current = current->next;
         }
