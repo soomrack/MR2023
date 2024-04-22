@@ -87,54 +87,6 @@ void setPlantConditions(int lightThreshold, double minTemperature,
 }
 
 
-void readCustomPlantConditions() {
-  // Read custom plant conditions from file
-  // Example format:
-  // LightThreshold 400
-  // MinTemperature 20
-  // MaxTemperature 30
-  // MinAirHumidity 50
-  // MaxAirHumidity 80
-  // SoilHumidityThreshold 500
-  // WateringDuration 5000
-  // VentilationDuration 120000
-  File file = SD.open("custom_plant.txt");
-  if (file) {
-    while (file.available()) {
-      String line = file.readStringUntil('\n');
-      line.trim();
-
-      int spaceIndex = line.indexOf(' ');
-      if (spaceIndex != -1) {
-        String parameter = line.substring(0, spaceIndex);
-        String valueStr = line.substring(spaceIndex + 1);
-
-        if (parameter.equals("LightThreshold")) {
-          plantConditions.lightThreshold = valueStr.toInt();
-        } else if (parameter.equals("MinTemperature")) {
-          plantConditions.minTemperature = valueStr.toDouble();
-        } else if (parameter.equals("MaxTemperature")) {
-          plantConditions.maxTemperature = valueStr.toDouble();
-        } else if (parameter.equals("MinAirHumidity")) {
-          plantConditions.minAirHumidity = valueStr.toDouble();
-        } else if (parameter.equals("MaxAirHumidity")) {
-          plantConditions.maxAirHumidity = valueStr.toDouble();
-        } else if (parameter.equals("SoilHumidityThreshold")) {
-          plantConditions.soilHumidityThreshold = valueStr.toInt();
-        } else if (parameter.equals("WateringDuration")) {
-          plantConditions.wateringDuration = valueStr.toInt();
-        } else if (parameter.equals("VentilationDuration")) {
-          plantConditions.ventilationDuration = valueStr.toInt();
-        } else {
-          Serial.println("Unknown parameter: " + parameter);
-        }
-      }
-    }
-    file.close();
-  } else {
-    Serial.println("Error opening custom_plant.txt");
-  }
-}
 
 
 void setPlantType(int plantType) {
@@ -149,13 +101,12 @@ void setPlantType(int plantType) {
       setPlantConditions(250, 15, 20, 70, 85, 400, 4500, 150000);
       break;  // Carrot
     case 4:
-      readCustomPlantConditions();
-      break;  // Custom plant from file
+      setPlantConditions(250, 15, 20, 70, 85, 400, 1000, 1000);
+      break; // For test
     default:
       Serial.println("Invalid plant type");
   }
 }
-
 
 void readTime() {
   sensorValues.seconds = millis() / 1000;
