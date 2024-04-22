@@ -21,7 +21,6 @@ public:
     void delete_head();
     void delete_tail();
     void delete_position(int pos);
-    void fill_withrandom();
     void clear_list();
 };
 
@@ -106,15 +105,6 @@ void List::delete_position(int pos) {
     }
     previous->next = current->next;
 }
-
-void List::fill_withrandom() {
-    srand(time(0));
-    for (int el = 0; el < 5; el++)
-    {
-        push_tail(rand() % 20);
-    }
-}
-
 
 void List::clear_list()
 {
