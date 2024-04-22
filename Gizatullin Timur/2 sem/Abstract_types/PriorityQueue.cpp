@@ -5,9 +5,10 @@ class Node
 {
 public:
     int value;
+    int priority;
     Node* next;
 public:
-    Node(int val) : value(val), next(nullptr) {}
+    Node(int val, int priority) : value(val), next(nullptr), priority(priority) {}
 };
 
 
@@ -17,14 +18,14 @@ private:
     Node* head;
     Node* tail;
 public:
-    queue() : head{nullptr}, tail{nullptr} {}
-    ~queue() {};
+    queue() : head{nullptr}, tail{nullptr} {};
 
     bool is_empty();
-    void push(int val);
+    void push(int val, int priority);
     void print();
     int pop();
 };
+
 
 class Exception : public std::domain_error 
 {
@@ -34,50 +35,29 @@ public:
 
 Exception empty("Queue is empty");
 
-queue::~queue() {
-  while (head) {
-    Node* temp = head;
-    head = head->next;
-    delete temp;
-  }
-  tail = nullptr;
-}
-
 bool queue::is_empty() 
 {
     return head == nullptr;
+
 }
 
-
-void queue::push(int val) {
-    Node* element = new Node(val);
-    if (is_empty() || val < head->value) {
-        element->next = head;
-        head = element;
-        } 
-    else {
-        Node* current = head;
-        while (current->next != nullptr && val >= current->next->value)
-        {
+void queue::push(int val, int priority) {
+    Node* newNode = new Node(val, priority);
+    if (is_empty() || priority < tail->priority)
+    {
+        newNode->next = tail;
+        tail = newNode;
+    }
+    else
+    {
+        Node* current = tail;
+        while (current->next != nullptr && current->next->priority < priority) {
             current = current->next;
         }
-
-    if (val == current->value) {
-        Node* temp = current->next;
-        current->next = element;
-        element->next = temp;
-    } 
-    else {
-        element->next = current->next;
-        current->next = element;
+        newNode->next = current->next;
+        current->next = newNode;
     }
-
-    if (element->next == nullptr) {
-        tail = element;
-    }
-  }
 }
-
 
 void queue::print() 
 {
@@ -108,11 +88,6 @@ int queue::pop()
 int main() 
 {
     queue A;
-    A.push(4);
-    A.push(5);
-    A.push(1);
-    A.push(15);
-    A.print();
 
     return 0;
 }
