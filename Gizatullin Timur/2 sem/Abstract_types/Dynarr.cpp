@@ -35,14 +35,14 @@ DynamicArray::~DynamicArray() {
 }
 
 int DynamicArray::get_elem(size_t index) const {
-  if (index >= size) {
+  if (index < size) {
         return data[index];
     }
     return 0;
 }
     
 void DynamicArray::set_elem(size_t index, int value){
-    if (size <= index) return;
+    if (size < index) return;
     data[index] = value;
 }
 
