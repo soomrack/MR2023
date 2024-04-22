@@ -17,7 +17,6 @@ public:
     void resize(size_t new_size);
 };
 
-
 DynamicArray::DynamicArray(): size{0}, bufer{1}, data {nullptr} {
 }
 
