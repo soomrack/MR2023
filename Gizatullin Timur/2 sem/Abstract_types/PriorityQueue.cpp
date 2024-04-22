@@ -43,7 +43,12 @@ bool queue::is_empty()
 
 void queue::push(int val, int priority) {
     Node* newNode = new Node(val, priority);
-    if (is_empty() || priority < tail->priority)
+    if (head == nullptr)
+    {
+        head = newNode;
+    }
+
+    if (priority < newNode->next->priority)
     {
         newNode->next = tail;
         tail = newNode;
@@ -89,5 +94,9 @@ int main()
 {
     queue A;
 
+    A.push(5,10);
+    A.push(10,1);
+    A.push(6,2);
+    A.print();
     return 0;
 }
