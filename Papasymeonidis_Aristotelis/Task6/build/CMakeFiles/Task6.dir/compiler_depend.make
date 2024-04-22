@@ -184,10 +184,51 @@ CMakeFiles/Task6.dir/parsing.cpp.o: ../parsing.cpp \
   /usr/include/c++/8/bits/stl_bvector.h \
   /usr/include/c++/8/bits/vector.tcc \
   /usr/include/c++/8/sstream \
-  /usr/include/c++/8/bits/sstream.tcc
+  /usr/include/c++/8/bits/sstream.tcc \
+  /usr/include/c++/8/queue \
+  /usr/include/c++/8/deque \
+  /usr/include/c++/8/bits/stl_deque.h \
+  /usr/include/c++/8/bits/deque.tcc \
+  /usr/include/c++/8/bits/stl_heap.h \
+  /usr/include/c++/8/bits/stl_queue.h \
+  /usr/include/c++/8/bits/uses_allocator.h \
+  /usr/include/c++/8/climits \
+  /usr/lib/gcc/x86_64-linux-gnu/8/include-fixed/limits.h \
+  /usr/lib/gcc/x86_64-linux-gnu/8/include-fixed/syslimits.h \
+  /usr/include/limits.h \
+  /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+  /usr/include/linux/limits.h \
+  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/uio_lim.h
 
+
+/usr/include/linux/limits.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix1_lim.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed/syslimits.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed/limits.h:
+
+/usr/include/c++/8/climits:
+
+/usr/include/c++/8/bits/uses_allocator.h:
+
+/usr/include/c++/8/bits/stl_deque.h:
+
+/usr/include/c++/8/deque:
+
+/usr/include/c++/8/queue:
+
+/usr/include/c++/8/bits/stl_heap.h:
 
 /usr/include/c++/8/bits/sstream.tcc:
+
+/usr/include/c++/8/bits/stl_queue.h:
+
+/usr/include/c++/8/bits/deque.tcc:
 
 /usr/include/c++/8/bits/vector.tcc:
 
@@ -233,6 +274,8 @@ CMakeFiles/Task6.dir/parsing.cpp.o: ../parsing.cpp \
 
 /usr/include/c++/8/bits/stl_iterator_base_types.h:
 
+/usr/include/limits.h:
+
 /usr/include/stdint.h:
 
 /usr/include/c++/8/backward/binders.h:
@@ -261,6 +304,8 @@ CMakeFiles/Task6.dir/parsing.cpp.o: ../parsing.cpp \
 
 /usr/include/c++/8/ext/string_conversions.h:
 
+/usr/include/x86_64-linux-gnu/bits/local_lim.h:
+
 /usr/include/c++/8/sstream:
 
 /usr/include/c++/8/iosfwd:
@@ -278,6 +323,8 @@ CMakeFiles/Task6.dir/parsing.cpp.o: ../parsing.cpp \
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
 
 /usr/include/x86_64-linux-gnu/gnu/stubs.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
 
 /usr/include/wctype.h:
 
@@ -387,6 +434,8 @@ CMakeFiles/Task6.dir/parsing.cpp.o: ../parsing.cpp \
 
 /usr/include/c++/8/ext/new_allocator.h:
 
+/usr/include/x86_64-linux-gnu/bits/uio_lim.h:
+
 /usr/lib/gcc/x86_64-linux-gnu/8/include/stddef.h:
 
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
@@ -464,6 +513,8 @@ CMakeFiles/Task6.dir/parsing.cpp.o: ../parsing.cpp \
 /usr/include/x86_64-linux-gnu/c++/8/bits/c++allocator.h:
 
 /usr/include/c++/8/bits/cxxabi_forced.h:
+
+/usr/include/x86_64-linux-gnu/bits/xopen_lim.h:
 
 /usr/include/c++/8/bits/stl_function.h:
 
