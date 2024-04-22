@@ -60,19 +60,24 @@ void DynamicArray<T>::set_buffer(size_t buffer) {
 
 
 template <typename T>
-void DynamicArray<T>::resize() {
-	T* new_data = new T[size + free + buffer];
-	memcpy(new_data, data, sizeof(T) * size);
-	delete[] data;
-	data = new_data;
-	free = free + buffer;
+void DynamicArray<T>::resize(int new_size) {
+	if (new_size > bufer + size) {
+	    T* new_data = new T[new_size];
+	    memcpy(new_data, data, sizeof(T) * size);
+            delete[] data;
+	    data = new_data;
+	    free = free + buffer;
+	} else {
+           size++;
+	   buffer--;
+	}	
 }
 
 
 template <typename T>
 void DynamicArray<T>::push_back(T element) {
 	if (free == 0) {
-		resize();
+		resize(size + buffer + 1);
 	}
 	data[size] = element;
 	size++;
@@ -98,7 +103,7 @@ void DynamicArray<T>::insert(T element, size_t idx) {
 	}
 
 	if (free == 0) {
-		resize();
+		resize(size + buffer + 1);
 	}
 
 	memcpy(&data[idx + 1], &data[idx], sizeof(T) * (size - idx));
