@@ -100,9 +100,8 @@ void target_file_is_open(std::ofstream& datafile){
 }
 
 
-void parsing(){
-    std::ifstream datafile("/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/dataterm.csv");
-    std::ofstream logfile("new_data.txt");
+void parsing(std::ifstream& datafile, std::ofstream& logfile){
+
     source_file_is_open(datafile);
     target_file_is_open(logfile);
 
@@ -169,7 +168,9 @@ void parsing(){
 }
 
 int main(){
-    parsing();
-    
+    std::ifstream datafile("/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/dataterm.csv");
+    std::ofstream logfile("new_data.txt");
+    parsing(datafile, logfile);
+
     return 0;
 }
