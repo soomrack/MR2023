@@ -26,13 +26,11 @@ public:
     int pop();
 };
 
-
 class Exception : public std::domain_error 
 {
 public:
     Exception(const char* const message) : std::domain_error(message) {}
 };
-
 
 Exception empty("Queue is empty");
 
