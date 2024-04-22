@@ -51,7 +51,6 @@ void DoubleLinkedList::add_head(int value) {
     }
     else {
         New_Element->next = top_pointer;
-        New_Element->previous = nullptr;
         top_pointer->previous = New_Element;
         top_pointer = New_Element;
     }
@@ -64,7 +63,6 @@ void DoubleLinkedList::add_tail(int value) {
         bottom_pointer = top_pointer = New_Element;
     }
     else {
-        New_Element->next = nullptr;
         New_Element->previous = bottom_pointer;
         bottom_pointer->next = New_Element;
         bottom_pointer = New_Element;
