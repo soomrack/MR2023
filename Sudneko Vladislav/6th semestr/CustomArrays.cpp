@@ -65,10 +65,11 @@ void DynamicArray<T>::resize(int new_size) {
 	    T* new_data = new T[new_size + buffer];
 	    memcpy(new_data, data, sizeof(T) * size);
             delete[] data;
+            size = new_size;
 	    data = new_data;
-	    free = buffer + 1;
+	    free = buffer;
 	} else {
-           size++;
+           size = new_size;
 	   free--;
 	}	
 }
@@ -77,7 +78,7 @@ void DynamicArray<T>::resize(int new_size) {
 template <typename T>
 void DynamicArray<T>::push_back(T element) {
 	resize(size + 1);
-	data[size] = element;
+	data[size--] = element;
 }
 
 
