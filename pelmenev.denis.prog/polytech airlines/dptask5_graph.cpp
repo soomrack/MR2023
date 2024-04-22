@@ -376,7 +376,10 @@ void Graph::check_points(std::vector <Airline> &ways, City point, size_t line, s
 {
     for (size_t idx = 0; idx < size; ++idx) {
         if (point.airlines[line].dest_sity_market_id == ways[idx].dest_sity_market_id) {
-            if ()
+            if (point.airlines[line].air_time + current_time < ways[idx].air_time) {
+                ways[idx] = point.airlines[line];
+                return;
+            }
         }
     }
 }
@@ -399,9 +402,10 @@ void Graph::add_ways(std::vector <Airline> &ways, City point, int current_time)
     for (size_t line = 0; line < point.airlines.size(); ++line) {
         if (check_destination(ways, point, line, size)) continue;
 
-        if (check_points(ways, point, line, size)) {}
+        check_points(ways, point, line, size, current_time);
 
         ways.insert(ways.begin(), point.airlines[line]);
+        ways[0].air_time += current_time;
 
         heap_tree(ways, ways.size(), 0);
     }
@@ -412,7 +416,7 @@ void Graph::search_city(std::vector <Airline> &ways, const int city_id, int curr
 {
     for (size_t city = 0; city < number_of_cities; ++city) {
         if (city_id == cities[city].id) {
-            add_ways(ways, cities[city]);
+            add_ways(ways, cities[city], current_time);
             return;
         }
     }
@@ -424,18 +428,24 @@ DijkstraResult Graph::find_way(const int origin, const int destination)
     DijkstraResult result;
     std::vector <Airline> ways;
 
-    search_city(ways, origin);
+    search_city(ways, origin, 0);
 
     if (ways.empty()) {
         std::cout << "Invalid City ID" << std::endl;
         return result;
     }
 
+    size_t count = 0;
+
     while (!ways.empty()) {
         result.route.push_back(ways[0]);
         result.total_air_time += ways[0].air_time;
 
-        search_city(ways, result.route[0].)
+        search_city(ways, result.route[count].origin_sity_market_id, result.total_air_time);
+
+        
+
+        count++;
     }
 
     return result;
