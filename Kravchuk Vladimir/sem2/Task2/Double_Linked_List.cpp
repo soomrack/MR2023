@@ -12,8 +12,8 @@ struct Element {
 
 class DoubleLinkedList {
 private:
-    Element* top_pointer;
-    Element* bottom_pointer;
+    Element* head;
+    Element* tail;
 
 public:
     DoubleLinkedList();
@@ -30,48 +30,48 @@ public:
 };
 
 
-DoubleLinkedList::DoubleLinkedList() : top_pointer(nullptr), bottom_pointer(nullptr){}
+DoubleLinkedList::DoubleLinkedList() : head(nullptr), tail(nullptr){}
 
 
 DoubleLinkedList::~DoubleLinkedList() {
-    Element* deleted = top_pointer;
+    Element* deleted = head;
     while (deleted != nullptr) {
         Element* next = deleted->next;
         delete deleted;
         deleted = next;
     }
-    bottom_pointer = nullptr;
+    tail = nullptr;
 }
 
 
 void DoubleLinkedList::add_head(int value) {
     Element* New_Element = new Element(value);
-    if (top_pointer == nullptr) {
-        top_pointer = bottom_pointer = New_Element;
+    if (head == nullptr) {
+        head = tail = New_Element;
     }
     else {
-        New_Element->next = top_pointer;
-        top_pointer->previous = New_Element;
-        top_pointer = New_Element;
+        New_Element->next = head;
+        head->previous = New_Element;
+        head = New_Element;
     }
 }
 
 
 void DoubleLinkedList::add_tail(int value) {
     Element* New_Element = new Element(value);
-    if (bottom_pointer == nullptr) {
-        bottom_pointer = top_pointer = New_Element;
+    if (tail == nullptr) {
+        tail = head = New_Element;
     }
     else {
-        New_Element->previous = bottom_pointer;
-        bottom_pointer->next = New_Element;
-        bottom_pointer = New_Element;
+        New_Element->previous = tail;
+        tail->next = New_Element;
+        tail = New_Element;
     }
 }
 
 
 void DoubleLinkedList::list_print() {
-    Element* buf = top_pointer;
+    Element* buf = head;
     while (buf != nullptr) {
         cout << buf->data << "\t";
         cout << "\n";
@@ -81,7 +81,7 @@ void DoubleLinkedList::list_print() {
 
 
 void DoubleLinkedList::list_print_reverse() {
-    Element* buf = bottom_pointer;
+    Element* buf = tail;
     while (buf != nullptr) {
         cout << buf->data << "\t";
         cout << "\n";
@@ -91,7 +91,7 @@ void DoubleLinkedList::list_print_reverse() {
 
 
 void DoubleLinkedList::doubling() {
-    Element* buf = top_pointer;
+    Element* buf = head;
     while (buf != nullptr) {
         buf->data *= 2;
         buf = buf->next;
@@ -101,51 +101,48 @@ void DoubleLinkedList::doubling() {
 
 
 int DoubleLinkedList::del_head() {
-    if (top_pointer == nullptr) {
-        return NAN;
+    if (head == nullptr) {
+        return INT_MAX;
     }
-    else {
-        Element* deleted = top_pointer;
-        int deleted_data = deleted->data;
-        top_pointer = top_pointer->next;
-        top_pointer->previous = nullptr;
-        delete[] deleted;
-        return deleted_data;
-    }
+    
+    Element* deleted = head;
+    int deleted_data = deleted->data;
+    head = head->next;
+    head->previous = nullptr;
+    delete[] deleted;
+    return deleted_data;
 }
 
 
 int DoubleLinkedList::del_tail() {
-    if (bottom_pointer == nullptr) {
-        return NAN;
+    if (tail == nullptr) {
+        return INT_MAX;
     }
-    else {
-        Element* deleted = bottom_pointer;
-        int deleted_data = deleted->data;
-        bottom_pointer = bottom_pointer->previous;
-        bottom_pointer->next = nullptr;
-        delete[] deleted;
-        return deleted_data;
-    }
+    Element* deleted = tail;
+    int deleted_data = deleted->data;
+    tail = tail->previous;
+    tail->next = nullptr;
+    delete[] deleted;
+    return deleted_data;
 }
 
 
 int DoubleLinkedList::get_head_element() {
-    if (top_pointer != nullptr) {
-        return top_pointer->data;
+    if (head != nullptr) {
+        return head->data;
     }
     else {
-        return NAN;
+        return INT_MAX;
     }
 }
 
 
 int DoubleLinkedList::get_bottom_element() {
-    if (bottom_pointer != nullptr) {
-        return bottom_pointer->data;
+    if (tail != nullptr) {
+        return tail->data;
     }
     else {
-        return NAN;
+        return INT_MAX;
     }
 }
 
