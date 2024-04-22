@@ -46,7 +46,7 @@ void LinkedList::add_head(int value) {
 
 int LinkedList::del_head() {
     if (head == nullptr) {
-        return NAN;
+        return INT_MAX;
     }
     Element* deleted = head;
     int deleted_data = deleted->data;
@@ -85,7 +85,6 @@ int main()
     List.add_head(3);
     List.del_head();
     List.List_print();
-    List.doubling();
     List.List_print();
     List.get_head_element();
 
