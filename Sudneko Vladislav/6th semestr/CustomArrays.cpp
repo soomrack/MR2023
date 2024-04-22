@@ -69,8 +69,8 @@ void DynamicArray<T>::resize(int new_size) {
 	    data = new_data;
 	    free = buffer;
 	} else {
-           size = new_size;
-	   free--;
+	   free = size + free - new_size;
+	   size = new_size;
 	}	
 }
 

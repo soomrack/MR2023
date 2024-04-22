@@ -41,11 +41,12 @@ DynamicArray::~DynamicArray() {
 
 void DynamicArray::resize(size_t new_size) {
     if (new_size > size_allocated) {
-        int* new_data = new int[new_size];
+        size_allocated = new_size + buf;
+        int* new_data = new int[size_allocated];
         memcpy(new_data, data, size * sizeof(int));
         delete[] data;
         data = new_data;
-        size_allocated = new_size + buf;
+        size = new_size;
     }
     else {
         size += 1;
