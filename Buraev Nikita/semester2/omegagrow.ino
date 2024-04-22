@@ -16,6 +16,7 @@ DHT dht_sensor(PIN_DHT_SENSOR, DHT21);
 
 
 int PROGRAMM_CHECK_TIME = 1;
+int TIME_SET = 0;
 
 
 struct Climate {
@@ -68,6 +69,9 @@ void setup()
   pinMode(PIN_DHT_SENSOR, INPUT);
   pinMode(PIN_HEAT, OUTPUT);
   pinMode(PIN_FAN, OUTPUT);
+
+  Serial.println("Set current time in only hours format, for example 16:34 will be 16: ");
+  Serial.write(TIME_SET);
 }
 
 
@@ -84,7 +88,7 @@ void plant()
 }
 
 
-void set_time()
+void custom_clock()
 {
   se.seconds = millis() / 100;
 
@@ -98,6 +102,8 @@ void set_time()
     se.minutes = 0;
   }
 
+  se.hours = TIME_SET;
+  
   if (se.hours == 24) {
     se.hours = 0;
   } 
@@ -279,7 +285,7 @@ void periodic_check()
 void loop()
 {
   plant();
-  set_time();
+  custom_clock();
 
   if (se.seconds % PROGRAMM_CHECK_TIME == 0) { 
     delay(800);
