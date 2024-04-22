@@ -142,4 +142,8 @@ CMakeFiles/Task6.dir/parsing.cpp.o: \
  /usr/include/c++/8/bits/stl_relops.h \
  /usr/include/c++/8/bits/stl_vector.h \
  /usr/include/c++/8/bits/stl_bvector.h /usr/include/c++/8/bits/vector.tcc \
- /usr/include/c++/8/sstream /usr/include/c++/8/bits/sstream.tcc
+ /usr/include/c++/8/sstream /usr/include/c++/8/bits/sstream.tcc \
+ /usr/include/c++/8/queue /usr/include/c++/8/deque \
+ /usr/include/c++/8/bits/stl_deque.h /usr/include/c++/8/bits/deque.tcc \
+ /usr/include/c++/8/bits/stl_heap.h /usr/include/c++/8/bits/stl_queue.h \
+ /usr/include/c++/8/bits/uses_allocator.h

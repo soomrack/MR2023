@@ -9,7 +9,22 @@ tg/inst/git/vk - simeonidi03
 #include <string>
 #include <vector>
 #include <sstream>
+#include <queue>
 
+
+class Vertex {
+    int prev_vert = 0;
+    int dist_from_start = INT_MAX;
+};
+
+
+class Neighbor {
+    int vertex_index;
+    int dist;
+    bool operator<(const Neighbor& other) const {
+        return dist > other.dist; 
+    }
+};
 
 class Flight
 {
@@ -171,6 +186,9 @@ int main(){
     std::ifstream datafile("/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/dataterm.csv");
     std::ofstream logfile("new_data.txt");
     parsing(datafile, logfile);
+
+
+
 
     return 0;
 }
