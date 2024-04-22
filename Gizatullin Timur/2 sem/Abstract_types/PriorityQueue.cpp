@@ -93,6 +93,9 @@ int queue::pop()
     int head_val = element->value;
     head = element->next;
     delete element;
+    if (head == nullptr) {
+    tail = nullptr;
+    }
     return head_val;
 }
 
