@@ -49,16 +49,14 @@ void DynamicArray::resize(size_t new_size) {
         size = new_size;
     }
     else {
-        size += 1;
+        size = new_size;
     }
 }
 
 
 void DynamicArray::add(int element) {
-    if (size == buf) {
-        resize(buf + 1);
-    }
-    data[size++] = element;
+    resize(size + 1);
+    data[size] = element;
 }
 
 

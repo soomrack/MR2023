@@ -146,4 +146,12 @@ CMakeFiles/Task6.dir/parsing.cpp.o: \
  /usr/include/c++/8/queue /usr/include/c++/8/deque \
  /usr/include/c++/8/bits/stl_deque.h /usr/include/c++/8/bits/deque.tcc \
  /usr/include/c++/8/bits/stl_heap.h /usr/include/c++/8/bits/stl_queue.h \
- /usr/include/c++/8/bits/uses_allocator.h
+ /usr/include/c++/8/bits/uses_allocator.h /usr/include/c++/8/climits \
+ /usr/lib/gcc/x86_64-linux-gnu/8/include-fixed/limits.h \
+ /usr/lib/gcc/x86_64-linux-gnu/8/include-fixed/syslimits.h \
+ /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+ /usr/include/linux/limits.h \
+ /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/uio_lim.h

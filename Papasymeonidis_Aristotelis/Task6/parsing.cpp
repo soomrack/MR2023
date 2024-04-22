@@ -10,21 +10,147 @@ tg/inst/git/vk - simeonidi03
 #include <vector>
 #include <sstream>
 #include <queue>
+#include <climits>
 
 
 class Vertex {
+    public:
     int prev_vert = 0;
     int dist_from_start = INT_MAX;
 };
 
 
 class Neighbor {
+
+    public:
     int vertex_index;
     int dist;
     bool operator<(const Neighbor& other) const {
         return dist > other.dist; 
     }
+
+    public:
+    Neighbor(int v, int d) : vertex_index(v), dist(d) {}
 };
+
+
+void deikstra(int start, int end, const std::vector<std::vector<int>>& fl_table)
+{
+    int table_size = fl_table.size();
+    std::vector<Vertex> verts_obj(table_size);
+    std::vector<int> stack_to_go;
+    std::priority_queue<Neighbor> queue;
+
+    queue.push({ start, 0 });
+    verts_obj[start].dist_from_start = 0;
+
+    while (!queue.empty()) {
+        int current_vertex = queue.top().vertex_index;
+        int current_dist = queue.top().dist;
+        queue.pop();
+
+        for (int neighbor = 0; neighbor < table_size; ++neighbor) {
+            if (fl_table[current_vertex][neighbor] != INT_MAX) { stack_to_go.push_back(neighbor); }
+        }
+
+        for (int neighbor : stack_to_go) {
+            int new_dist = current_dist + fl_table[current_vertex][neighbor];
+            if (new_dist < verts_obj[neighbor].dist_from_start) {
+                verts_obj[neighbor].dist_from_start = new_dist;
+                verts_obj[neighbor].prev_vert = current_vertex;
+                queue.push({ neighbor, new_dist });
+            }
+        }
+        stack_to_go.clear();
+    }
+
+
+    if (verts_obj[end].dist_from_start == INT_MAX) { std::cout << "No path found" << std::endl; }
+    else {
+        std::cout << "Shortest path: ";
+        std::vector<int> path;
+
+        for (int idx_vert = end; idx_vert != start; idx_vert = verts_obj[idx_vert].prev_vert)
+            std::cout << idx_vert << " " << "<-" << " ";
+        std::cout << start << std::endl;
+        std::cout << "Time: " << verts_obj[end].dist_from_start << std::endl;
+    }
+}
+
+
+void print_flight_table(const std::vector<std::vector<int>>& flight_table)
+{
+    int table_size = flight_table.size();
+
+    for (int i = 0; i < table_size; ++i) {
+        std::cout << i << "  ";
+        for (int j = 0; j < table_size; ++j) {
+            if (flight_table[i][j] == INT_MAX) { std::cout << "INF "; }
+            else { std::cout << flight_table[i][j] << "   "; }
+        }
+    }
+}
+
+
+void filling_table(std::vector<std::vector<int>>& flight_table)
+{
+    std::ifstream datafile;
+    datafile.open("/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/build/new_data.txt");
+
+    if (!datafile.is_open()) {
+        std::cout << "Couldn't open datafile\n";
+        return;
+    }
+
+    std::string txtline;
+    while (!datafile.eof()) {
+        getline(datafile, txtline);
+        std::stringstream inputString(txtline);
+
+        int str, col, time;
+        std::string tempString;
+
+        getline(inputString, tempString, '\t');
+        str = atoi(tempString.c_str());
+
+        getline(inputString, tempString, '\t');
+        col = atoi(tempString.c_str());
+
+        std::getline(inputString, tempString, '\t');
+        time = atoi(tempString.c_str());
+
+        if (flight_table[str][col] > time) { flight_table[str][col] = time; }
+    }
+}
+
+
+void init() {
+    int table_size = 40 * 1000;
+    int start, end;
+    unsigned int state, run = 1;
+
+    std::vector<std::vector<int>> flight_table(table_size, std::vector<int>(table_size, INT_MAX));
+
+    filling_table(flight_table);
+
+    while (run) {
+        std::cout << "to start press 1: ";
+        std::cin >> state;
+
+        switch (state) {
+        case 0:
+            run = 0;
+            break;
+        case 1:
+            std::cout << "start: "; 
+            std::cin >> start;
+            std::cout << "end: ";
+            std::cin >> end;
+            deikstra(start, end, flight_table);
+            break;
+        }
+    }
+}
 
 class Flight
 {
@@ -186,7 +312,7 @@ int main(){
     std::ifstream datafile("/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/dataterm.csv");
     std::ofstream logfile("new_data.txt");
     parsing(datafile, logfile);
-
+    init();
 
 
 
