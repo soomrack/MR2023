@@ -80,7 +80,7 @@ void plant()
   cl.min_air_hum = 99;
   cl.max_air_hum = 100;
   cl.time_watering = 5000;
-  cl.time_ting = 60000;
+  cl.time_venting = 60000;
 }
 
 
@@ -142,18 +142,18 @@ void regular_ventilation()
 
 void air_temp()
 {
-  if (se.air_temp >= cl.min_air_temp && se.air_temp <= cl.max_air_temp) {
-    state.fan = OFF;
-    state.heat = OFF;
-  }
-
   if (se.air_temp < cl.min_air_temp) {
     state.fan = ON;
     state.heat = ON;
   }
 
-  if (se.air_temp > cl.max_air_temp) {
+  else if (se.air_temp > cl.max_air_temp) {
     state.fan = ON;
+    state.heat = OFF;
+  }
+  
+  else {
+    state.fan = OFF;
     state.heat = OFF;
   }
 }
@@ -161,18 +161,18 @@ void air_temp()
 
 void air_hum()
 {
-  if (se.air_hum >= cl.min_air_hum && se.air_hum <= cl.max_air_hum) {
-    state.fan = OFF;
-    state.pump = OFF;
-  }
-
   if (se.air_hum < cl.min_air_hum) {
     state.fan = OFF;
     state.pump = ON;
   }
 
-  if (se.air_hum > cl.max_air_hum) {
+  else if (se.air_hum > cl.max_air_hum) {
     state.fan = ON;
+    state.pump = OFF;
+  }
+  
+  else {
+    state.fan = OFF;
     state.pump = OFF;
   }
 }
