@@ -13,8 +13,8 @@ struct Element
 
 class Queue {
 private:
-    Element* top_pointer;
-    Element* bottom_pointer;
+    Element* head;
+    Element* tail;
 public:
     Queue();
     ~Queue();
@@ -26,7 +26,7 @@ public:
 };
 
 
-Queue::Queue() : top_pointer(nullptr), bottom_pointer(nullptr) {};
+Queue::Queue() : head(nullptr), tail(nullptr) {};
 
 
 Queue::~Queue() {
@@ -38,19 +38,19 @@ Queue::~Queue() {
 
 void Queue::push(int value) {
     Element* New_Element = new Element(value);
-    if (is_empty() || value < top_pointer->data) {
-        New_Element->previous = top_pointer;
-        top_pointer = New_Element;
+    if (is_empty() || value < head->data) {
+        New_Element->previous = head;
+        head = New_Element;
     }
     else {
-        Element* buf = top_pointer;
-        while (buf->previous != nullptr && value >= buf->previous->data) {
+        Element* buf = head;
+        while (buf->previous != nullptr && value > buf->previous->data) {
             buf = buf->previous;
         }
         New_Element->previous = buf->previous;
         buf->previous = New_Element;
         if (New_Element->previous == nullptr) {
-            bottom_pointer = New_Element;
+            tail = New_Element;
         }
     }
 }
@@ -58,23 +58,21 @@ void Queue::push(int value) {
 
 int Queue::pop() {
     if (is_empty()) {
-        return NAN;
+        return INT_MAX;
     }
-    else {
-        Element* deleted = top_pointer;
-        int deleted_data = deleted->data;
-        top_pointer = top_pointer->previous;
-        if (top_pointer != nullptr) {
-            top_pointer->next = nullptr;
-        }
-        delete[] deleted;
-        return deleted_data;
+    Element* deleted = head;
+    int deleted_data = deleted->data;
+    head = head->previous;
+    if (head != nullptr) {
+        head->next = nullptr;
     }
+    delete[] deleted;
+    return deleted_data;
 }
 
 
 void Queue::queue_print() {
-    Element* buf = top_pointer;
+    Element* buf = head;
     while (buf != nullptr) {
         cout << buf->data << "\t";
         cout << "\n";
@@ -84,7 +82,7 @@ void Queue::queue_print() {
 
 
 bool Queue::is_empty() {
-    return top_pointer == nullptr;
+    return head == nullptr;
 }
 
 
