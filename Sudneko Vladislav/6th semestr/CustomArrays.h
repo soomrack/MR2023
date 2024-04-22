@@ -156,6 +156,34 @@ public:
     void clear();
 };
 
+template <typename T>
+class PriorityQueue {
+    template <typename U>
+    class Node {
+    public:
+        U data;
+	size_t priority;
+        Node* next;
+
+        Node(U value) : data(value), next(nullptr) {}
+    };
+
+    Node<T>* front;
+    Node<T>* end;
+    size_t size;
+
+public:
+    PriorityQueue() : front(nullptr), end(nullptr), size(0) {}
+    ~PriorityQueue() { clear(); }
+
+    void enqueue(T);
+    T dequeue();
+    T front_element();
+    size_t get_size();
+    bool is_empty();
+    void clear();
+};
+
 } // namespace CustomArrays
 
 #endif
