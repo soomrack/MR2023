@@ -112,19 +112,15 @@ int main()
     list.display();
 
     list.push_tail(55);
-    list.display();
 
     list.push_head(50);
-    list.display();
 
     list.delete_head();
-    list.display();
 
     list.delete_tail();
-    list.display();
 
     list.delete_position(4);
-    list.display();
+    
     list.clear_list();
 
     return 0;
