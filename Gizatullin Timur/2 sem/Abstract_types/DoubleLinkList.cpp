@@ -1,15 +1,12 @@
 #include <iostream>
-using namespace std;
-
-typedef int Data;
 
 class Node {
 public:
-    Data data;
+    int data;
     Node* prev;
     Node* next;
 
-    Node(const Data data, Node* prev = nullptr, Node* next = nullptr) : data(data), prev(prev), next(next) {}
+    Node(const int data, Node* prev = nullptr, Node* next = nullptr) : data(data), prev(prev), next(next) {}
 };
 
 class List {
@@ -21,17 +18,17 @@ public:
     List() : head(nullptr), tail(nullptr) {}
     ~List() { clear(); }
 
-    void add_head(const Data value);
-    void add_tail(const Data value);
+    void add_head(const int value);
+    void add_tail(const int value);
     void delete_head();
     void delete_tail();
 
-    Data get_head_data();
-    Data get_tail_data();
+    int get_head_data();
+    int get_tail_data();
     void clear();
 };
 
-void List::add_head(const Data value) {
+void List::add_head(const int value) {
     if (head == nullptr)
     {
         head = tail = new Node(value);
@@ -43,7 +40,7 @@ void List::add_head(const Data value) {
     }
 }
 
-void List::add_tail(const Data value) {
+void List::add_tail(const int value) {
     if (tail == nullptr)
     {
         head = tail = new Node(value);
@@ -91,21 +88,21 @@ void List::delete_tail() {
     delete temp;
 }
 
-Data List::get_head_data() {
+int List::get_head_data() {
     if (head != nullptr) {
         return head->data;
     }
     else {
-        return Data();
+        return 0;
     }
 }
 
-Data List::get_tail_data() {
+int List::get_tail_data() {
     if (tail != nullptr) {
         return tail->data;
     }
     else {
-        return Data();
+        return 0;
     }
 }
 

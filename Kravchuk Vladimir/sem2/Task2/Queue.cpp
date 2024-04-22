@@ -1,0 +1,95 @@
+#include <iostream>
+
+using namespace std;
+
+struct Element
+{
+    int data;
+    Element* next;
+    Element* previous;
+    Element(int value) : data(value), next(nullptr), previous(nullptr) {}
+};
+
+
+class Queue {
+private:
+    Element* top_pointer;
+    Element* bottom_pointer;
+public:
+    Queue();
+    ~Queue();
+    void push(int value);
+    int pop();
+    void queue_print();
+    bool is_empty();
+
+};
+
+
+Queue::Queue() : top_pointer(nullptr), bottom_pointer(nullptr) {};
+
+
+Queue::~Queue() {
+    while (!is_empty()) {
+        pop();
+    }
+}
+
+
+void Queue::push(int value) {
+    Element* New_Element = new Element(value);
+    if (is_empty()) {
+        top_pointer = bottom_pointer = New_Element;
+    }
+    else {
+        bottom_pointer->previous = New_Element;
+        New_Element->next = bottom_pointer;
+        bottom_pointer = New_Element;
+    }
+}
+
+
+int Queue::pop() {
+    if (is_empty()) {
+        return NAN;
+    }
+    else {
+        Element* deleted = top_pointer;
+        int deleted_data = deleted->data;
+        top_pointer = top_pointer->previous;
+        if (top_pointer != nullptr) {
+            top_pointer->next = nullptr;
+        }
+        delete[] deleted;
+        return deleted_data;
+    }
+}
+
+
+void Queue::queue_print() {
+    Element* buf = top_pointer;
+    while (buf != nullptr) {
+        cout << buf->data << "\t";
+        cout << "\n";
+        buf = buf->previous;
+    }
+}
+
+
+bool Queue::is_empty() {
+    return top_pointer == nullptr;
+}
+
+
+int main()
+{
+    Queue queue;
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+    queue.push(4);
+    queue.pop();
+    queue.queue_print();
+
+    return 0;
+}

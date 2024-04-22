@@ -20,7 +20,7 @@ public:
     ~Stack();
     void push(int value);
     void print();
-    Element* pop();
+    int pop();
     int top();
     bool is_empty() const;
 };
@@ -69,15 +69,17 @@ void Stack::push(int value) {
 }
 
 
-Element* Stack::pop() {
+int Stack::pop() {
     if (is_empty()) {
-        cout << "Stack is empty\n" << endl;
-        return nullptr;
+        cout << "Stack is empty\n";
+        return NAN;
     }
     else {
         Element* deleted = topPointer;
+        int deleted_data = deleted->data;
         topPointer = topPointer->pointer;
-        return  deleted;
+        delete[] deleted;
+        return  deleted_data;
     }
 }
 
@@ -86,7 +88,7 @@ void Stack::print() {
     Element* buf = topPointer;
     while (buf != nullptr)
     {
-        cout << buf->data << "\n" << endl;
+        cout << buf->data << "\n";
         buf = buf->pointer;
     }
 }
@@ -94,7 +96,7 @@ void Stack::print() {
 
 int Stack::top() {
     if (is_empty()) {
-        cout << "Stack is empty\n" << endl;
+        cout << "Stack is empty\n";
         return 0;
     }
     return topPointer->data;
@@ -112,6 +114,7 @@ int main()
     Stack.push(1);
     Stack.push(2);
     Stack.push(3);
+    Stack.pop();
     Stack.print();
     return 0;
 }

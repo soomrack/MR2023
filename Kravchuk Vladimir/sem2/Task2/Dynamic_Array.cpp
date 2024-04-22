@@ -11,18 +11,18 @@ private:
 public:
     DynamicArray(size_t length);
     ~DynamicArray();
-    void resize(size_t dop_size);
+    void resize(size_t new_size);
     void add(int element);
-    void setElement(size_t idx, int element);
-    void arrayPrint();
-    int getElement(size_t idx);
-    size_t getSize();
+    void set_element(size_t idx, int element);
+    void array_print();
+    int get_element(size_t idx);
+    size_t get_size();
 };
 
 
 DynamicArray::DynamicArray(size_t length) : size{ 0 }, container { length } {
     if (length == 0) {
-        exit(1);
+        array = nullptr;
     }
     array = new int[container];
 }
@@ -34,35 +34,35 @@ DynamicArray::~DynamicArray() {
 }
 
 
-void DynamicArray::resize(size_t dop_size) {
-    if (size == container) {
-        container += dop_size;
-        int* newArray = new int[container];
-        memcpy(newArray, array, size * sizeof(int));
+void DynamicArray::resize(size_t new_size) {
+    if (new_size > container) {
+        container = new_size;
+        int* new_array = new int[container];
+        memcpy(new_array, array, size * sizeof(int));
         delete[] array;
-        array = newArray;
+        array = new_array;
     }
-    size += 1;
 }
 
 
 void DynamicArray::add(int element) {
-    resize(1);
-    array[size - 1] = element;
+    resize(size + 1);
+    array[size] = element;
+    size += 1;
 }
 
 
-void DynamicArray::setElement(size_t idx, int element) {
-    if ((idx >= 0) && (idx < size)) {
+void DynamicArray::set_element(size_t idx, int element) {
+    if (idx < size) {
         array[idx] = element;
     }
     else {
-        cout << "The index of the element is invalid\n" << endl;
+        cout << "The index of the element is invalid\n";
     }
 }
 
 
-void DynamicArray::arrayPrint() {
+void DynamicArray::array_print() {
     for (size_t idx = 0; idx < size; idx++) {
         cout << array[idx] << "\t";
     }
@@ -70,18 +70,18 @@ void DynamicArray::arrayPrint() {
 }
 
 
-int DynamicArray::getElement(size_t idx) {
-    if ((idx >= 0) && (idx < size)) {
+int DynamicArray::get_element(size_t idx) {
+    if (idx < size) {
         return array[idx];
     }
     else {
-        cout << "The index of the element is invalid\n" << endl;
+        cout << "The index of the element is invalid\n";
         return NAN;
     }
 }
 
 
-size_t DynamicArray::getSize() {
+size_t DynamicArray::get_size() {
     return size;
 }
 
@@ -93,8 +93,8 @@ int main()
     array.add(3);
     array.add(4);
     array.add(6);
-    array.arrayPrint();
-    array.getElement(-4);
+    array.array_print();
+    array.get_element(-4);
 
     return 0;
 }

@@ -1,7 +1,4 @@
 #include <iostream>
-#include <ctime>
-#include <cstdlib>
-using namespace std;
 
 struct Node
 {
@@ -16,7 +13,7 @@ private:
     Node* tail;
 
 public:
-    List();
+    List() : head(nullptr), tail(nullptr) {}
     ~List() {clear_list();}
     void push_tail(int value);
     void display();
@@ -24,16 +21,8 @@ public:
     void delete_head();
     void delete_tail();
     void delete_position(int pos);
-    void fill_withrandom();
     void clear_list();
 };
-
-
-List::List() {
-    head = nullptr;
-    tail = nullptr;
-}
-
 
 void List::push_tail(int value) 
 {
@@ -110,15 +99,6 @@ void List::delete_position(int pos) {
     previous->next = current->next;
 }
 
-void List::fill_withrandom() {
-    srand(time(0));
-    for (int el = 0; el < 5; el++)
-    {
-        push_tail(rand() % 20);
-    }
-}
-
-
 void List::clear_list()
 {
     head = nullptr;
@@ -129,24 +109,18 @@ void List::clear_list()
 int main()
 {
     List list;
-
-    list.fill_withrandom();
     list.display();
 
     list.push_tail(55);
-    list.display();
 
     list.push_head(50);
-    list.display();
 
     list.delete_head();
-    list.display();
 
     list.delete_tail();
-    list.display();
 
     list.delete_position(4);
-    list.display();
+    
     list.clear_list();
 
     return 0;

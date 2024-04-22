@@ -61,7 +61,116 @@ void print_flights(std::vector<Flight>& Flights){
     }
 }
 
+
+void write_to_file(std::ofstream& new_file, std::vector<Flight>& Flights)
+{
+    new_file << "fr.id" << "\t" 
+        << "to.id" << "\t" 
+        << "time" << "\t" 
+        << "car.id" << "\t" 
+        << "carrier.name" << "\t" 
+        << "ci.fr." << "\t" 
+        << "ci.to" << std::endl;
+    for (auto flight : Flights) {
+        new_file << flight.city_from_id << "\t" 
+            << flight.city_to_id << "\t" 
+            << flight.time << "\t" 
+            << flight.airline_id << "\t" 
+            << flight.airline_name << "\t" 
+            << flight.city_from << "\t" 
+            << flight.city_to << std::endl;
+    }
+}
+
+void source_file_is_open(std::ifstream& datafile){
+    if(datafile.is_open()){
+        std::cerr<<"File is open"<<std::endl;
+    }else{
+        std::cerr<<"File is not open"<<std::endl;
+    }
+}
+
+
+void target_file_is_open(std::ofstream& datafile){
+    if(datafile.is_open()){
+        std::cerr<<"File is open"<<std::endl;
+    }else{
+        std::cerr<<"File is not open"<<std::endl;
+    }
+}
+
+
+void parsing(std::ifstream& datafile, std::ofstream& logfile){
+
+    source_file_is_open(datafile);
+    target_file_is_open(logfile);
+
+    std::vector<Flight> Flights;
+    std::string line;
+
+
+//закончился ли исходный файл
+    while(!datafile.eof()){
+        std::getline(datafile, line);
+        std::stringstream inputString(line);
+        
+        std::string tempString;
+        int DEPARTURES_COMPLETE;
+        std::string carrier_name, city_from, city_to;
+        double time, carrier_id, city_from_id, city_to_id;
+
+        size_t add = 0;
+
+
+        for (size_t i = 0; i < 2; ++i) getline(inputString, tempString, ',');
+        DEPARTURES_COMPLETE = std::stoi(tempString.c_str()); 
+
+        for (size_t i = 0; i < 8; ++i) getline(inputString, tempString, ',');
+        time = std::stof(tempString.c_str()); 
+
+        for (size_t i = 0; i < 2; ++i) getline(inputString, tempString, ',');
+        carrier_id = std::stof(tempString.c_str()); 
+
+        getline(inputString, carrier_name, ','); 
+        if (carrier_name[0] == '\"') 
+        {
+            carrier_name.erase(0, 1);
+            add = 2;
+        }       
+
+        for (size_t i = 0; i < 9 + add; ++i) getline(inputString, tempString, ',');
+        city_from_id = std::stof(tempString.c_str()); 
+        getline(inputString, city_from, ',');
+
+        for (size_t i = 0; i < 11; ++i) getline(inputString, tempString, ',');
+        city_to_id = std::stof(tempString.c_str()); 
+        getline(inputString, city_to, ','); 
+
+
+        if (time > 0 && DEPARTURES_COMPLETE != 0)
+        {
+            Flight flight(time, carrier_id, carrier_name, city_from_id, city_from, city_to_id, city_to);
+            Flights.push_back(flight);
+        }
+    }
+    //displayFlights(Flights);
+    write_to_file(logfile, Flights);
+
+    
+
+    uint i = 0;
+
+
+
+    datafile.close();
+    logfile.close();
+
+}
+
 int main(){
+    std::ifstream datafile("/home/simeonidi03/Documents/GitHub/MR2023/Papasymeonidis_Aristotelis/Task6/dataterm.csv");
+    std::ofstream logfile("new_data.txt");
+    parsing(datafile, logfile);
 
     return 0;
 }

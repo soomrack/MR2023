@@ -1,95 +1,103 @@
 #include <iostream>
 
-class Node {
+
+class Node 
+{
 public:
-    int val;
+    int value;
     Node* next;
 public:
-    Node(int val) : val(val), next(nullptr) {}
+    Node(int val) : value(val), next(nullptr) {}
 };
 
 
-class queue {
+class queue 
+{
 private:
     Node* head;
     Node* tail;
 public:
     queue() : head(nullptr), tail(nullptr) {}
 
-    bool is_empty();
+    bool isEmpty();
     void push(int val);
     void print();
     int pop();
 };
 
 
-class Exception : public std::domain_error {
+class Exception : public std::domain_error 
+{
 public:
     Exception(const char* const message) : std::domain_error(message) {}
 };
 
 
-Exception empty("queue is empty");
+Exception empty("Queue is empty");
 
 
-bool queue::is_empty() {
+bool queue::isEmpty() 
+{
     return head == nullptr;
 }
 
 
-void queue::push(int val) {
-    Node* el = new Node(val);
-    if (is_empty() || val < head->val) {
-        el->next = head;
-        head = el;
+void queue::push(int val) 
+{
+    Node* element = new Node(val);
+    if (isEmpty() || val < head->value) 
+    {
+        element->next = head;
+        head = element;
     }
-    else {
-        Node* curr = head;
-        while (curr->next != nullptr && val >= curr->next->val) {
-            curr = curr->next;
+    else 
+    {
+        Node* current = head;
+        while (current->next != nullptr && val >= current->next->value) 
+        {
+            current = current->next;
         }
-        el->next = curr->next;
-        curr->next = el;
-        if (el->next == nullptr) {
-            tail = el;
+        element->next = current->next;
+        current->next = element;
+        if (element->next == nullptr) 
+        {
+            tail = element;
         }
     }
 }
 
 
-void queue::print() {
-    if (is_empty()) return;
-    Node* el = head;
-    while (el) {
-        std::cout << el->val << " ";
-        el = el->next;
+void queue::print() 
+{
+    if (isEmpty()) return;
+    Node* element = head;
+    while (element) {
+        std::cout << element->value << " ";
+        element = element->next;
     }
     std::cout << std::endl;
 }
 
 
-int queue::pop() {
-    if (is_empty()) throw empty;
-    Node* el = head;
-    int head_val = el->val;
-    head = el->next;
-    delete el;
+int queue::pop() 
+{
+    if (isEmpty()) throw empty;
+    Node* element = head;
+    int head_val = element->value;
+    head = element->next;
+    delete element;
     return head_val;
 }
 
 
-int main() {
+int main() 
+{
     queue A;
-    A.push(3);
-    A.push(1);
+    A.push(4);
     A.push(5);
-    A.push(2);
-
+    A.push(1);
+    A.push(15);
     A.print();
-
-    while (!A.is_empty()) {
-        std::cout << A.pop() << std::endl;
-    }
 
     return 0;
 }
