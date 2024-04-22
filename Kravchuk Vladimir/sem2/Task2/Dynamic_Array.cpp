@@ -3,11 +3,12 @@
 using namespace std;
 
 class DynamicArray {
-private:
+public:
     int* data;
     size_t size;
+    size_t size_allocated;
+private:
     size_t buf;
-
 public:
     DynamicArray();
     DynamicArray(size_t size, size_t start_bufer);
@@ -39,16 +40,15 @@ DynamicArray::~DynamicArray() {
 
 
 void DynamicArray::resize(size_t new_size) {
-    if (new_size > buf + size) {
+    if (new_size > size_allocated) {
         int* new_data = new int[new_size];
         memcpy(new_data, data, size * sizeof(int));
         delete[] data;
         data = new_data;
-        buf = new_size;
+        size_allocated = new_size + buf;
     }
     else {
         size += 1;
-        buf -= 1;
     }
 }
 
