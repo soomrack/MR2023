@@ -111,8 +111,55 @@ int main(){
 
 //закончился ли исходный файл
     while(!datafile.eof()){
+        std::getline(datafile, line);
+        std::stringstream inputString(line);
+        
+        std::string tempString;
+        int DEPARTURES_PERFORMED;
+        std::string carrier_name, city_from, city_to;
+        double time, carrier_id, city_from_id, city_to_id;
+        size_t add = 0;
 
+        for (size_t i = 0; i < 2; ++i)
+            getline(inputString, tempString, ',');
+        DEPARTURES_PERFORMED = atoi(tempString.c_str()); 
+
+        for (size_t i = 0; i < 8; ++i)
+            getline(inputString, tempString, ',');
+        time = atof(tempString.c_str()); 
+
+        for (size_t i = 0; i < 2; ++i)
+            getline(inputString, tempString, ',');
+        carrier_id = atof(tempString.c_str()); 
+
+        getline(inputString, carrier_name, ','); 
+        if (carrier_name[0] == '\"') 
+        {
+            carrier_name.erase(0, 1);
+            add = 2;
+        }       
+
+        for (size_t i = 0; i < 9 + add; ++i)
+            getline(inputString, tempString, ',');
+        city_from_id = atof(tempString.c_str()); 
+        getline(inputString, city_from, ',');
+
+        for (size_t i = 0; i < 11; ++i)
+            getline(inputString, tempString, ',');
+        city_to_id = atof(tempString.c_str()); 
+        getline(inputString, city_to, ','); 
+
+
+        if (time > 0 && DEPARTURES_PERFORMED != 0)
+        {
+            Flight flight(time, carrier_id, carrier_name, city_from_id, city_from, city_to_id, city_to);
+            Flights.push_back(flight);
+        }
     }
+    //displayFlights(Flights);
+    write_to_file(logfile, Flights);
+
+    
 
     uint i = 0;
 
