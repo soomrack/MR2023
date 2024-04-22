@@ -40,7 +40,6 @@ void Queue::push(int value) {
     Element* New_Element = new Element(value);
     if (is_empty() || value < top_pointer->data) {
         New_Element->previous = top_pointer;
-        New_Element->next = nullptr;
         top_pointer = New_Element;
     }
     else {
