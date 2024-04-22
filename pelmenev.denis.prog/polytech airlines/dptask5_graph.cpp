@@ -204,10 +204,12 @@ void Graph::print()
     GRAPH_FILE << "  " << std::endl;
 
     for (size_t city = 0; city < number_of_cities; city++) {
-        GRAPH_FILE << cities[city].name << "  ";
+        GRAPH_FILE << cities[city].name << " ";
+        GRAPH_FILE << "(" << cities[city].id << ")" << "  ";
 
         for (size_t line = 0; line < cities[city].airlines.size(); line++) {
-            GRAPH_FILE << cities[city].airlines[line].dest_city_name << "  ";
+            GRAPH_FILE << cities[city].airlines[line].dest_city_name << " ";
+            GRAPH_FILE << "(" << cities[city].airlines[line].dest_sity_market_id << ")" << "  ";
         }
 
         GRAPH_FILE << std::endl;
@@ -443,7 +445,7 @@ DijkstraResult Graph::find_way(const int origin, const int destination)
 
         search_city(ways, result.route[count].origin_sity_market_id, result.total_air_time);
 
-        
+        if (result.route[count].dest_sity_market_id == destination) return result;
 
         count++;
     }
@@ -460,6 +462,9 @@ int main()
 
     graph.form_graph();
     graph.print();
+
+    DijkstraResult graph_result = graph.find_way(34886, 34027);
+    graph_result.print();
 
     NEW_DATAFILE.close();
     GRAPH_FILE.close();
