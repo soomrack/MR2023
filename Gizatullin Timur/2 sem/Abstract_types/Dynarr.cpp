@@ -48,8 +48,7 @@ void DynamicArray::set_elem(size_t index, int value){
 
 void DynamicArray::add(int value){
     resize(size++);
-    data[size] = value;
-    size++;
+    data[size--] = value;
 }
 
 void DynamicArray::resize(size_t new_size) {
@@ -63,7 +62,7 @@ void DynamicArray::resize(size_t new_size) {
         delete[] data;
         data = new_data;
     }
-    else { bufer = size_allocated - size;
+    else {
     }
     size = new_size;
 }
