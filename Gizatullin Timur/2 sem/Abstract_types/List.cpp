@@ -116,8 +116,6 @@ void List::clear_list()
 int main()
 {
     List list;
-
-    list.fill_withrandom();
     list.display();
 
     list.push_tail(55);
