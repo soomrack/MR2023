@@ -21,9 +21,8 @@ public:
 DynamicArray::DynamicArray(): size(0), bufer(1), data (nullptr) {
 }
 
-DynamicArray::DynamicArray(size_t size, size_t bufer): size(size), bufer(bufer) {
-    size_allocated = size + bufer;
-    if (size_allocated = 0){
+DynamicArray::DynamicArray(size_t size, size_t bufer): size(size), bufer(bufer), size_allocated (size + bufer) {
+    if (size_allocated == 0){
         data = nullptr;
     }
     else {
@@ -36,7 +35,7 @@ DynamicArray::~DynamicArray() {
 }
 
 int DynamicArray::get_elem(size_t index) const {
-  if (index < size) {
+  if (index >= size) {
         return data[index];
     }
     return 0;
@@ -49,7 +48,8 @@ void DynamicArray::set_elem(size_t index, int value){
 
 void DynamicArray::add(int value){
     resize(size++);
-    data[size++] = value;
+    data[size] = value;
+    size++;
 }
 
 void DynamicArray::resize(size_t new_size) {
@@ -58,15 +58,14 @@ void DynamicArray::resize(size_t new_size) {
         size_allocated = new_size + bufer;
         int* new_data = new int[size_allocated];
         for (size_t i = 0; i < size; i++){
-            new_data[i] = data[i];}
+            new_data[i] = data[i];
+        }
         delete[] data;
         data = new_data;
-        size = new_size;
-     }
-    else {
-        size = new_size;
-        bufer = size_allocated - size;
     }
+    else { bufer = size_allocated - size;
+    }
+    size = new_size;
 }
 
 int main()

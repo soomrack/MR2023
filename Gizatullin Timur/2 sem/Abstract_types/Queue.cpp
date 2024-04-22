@@ -1,5 +1,6 @@
 #include <iostream>
 
+
 class Node {
 private:
     friend class queue;
@@ -8,6 +9,7 @@ private:
 public:
     Node(int val) : val(val), next(nullptr) {}
 };
+
 
 class queue {
 private:
@@ -71,6 +73,7 @@ int queue::pop() {
     delete el;
     return head_val;
 }
+
 
 int main()
 {

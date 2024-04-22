@@ -1,95 +1,164 @@
+#include <cstdint>
 #include <iostream>
 
-class Node {
-public:
-    int val;
-    Node* next;
-public:
-    Node(int val) : val(val), next(nullptr) {}
-};
 
-
-class queue {
+class Exception : std::exception {
 private:
-    Node* head;
-    Node* tail;
+    std::string message;
 public:
-    queue() : head(nullptr), tail(nullptr) {}
+    explicit Exception(std::string _message) { message = std::move(_message); };
 
-    bool is_empty();
-    void push(int val);
+
+    std::string getMessage() const { return message; };
+};
+
+
+template<typename T>
+class PriorityQueue;
+
+
+template<typename T>
+class Node {
+    friend class PriorityQueue<T>;
+
+
+private:
+    T data;
+    uint64_t priority;
+    Node<T>* next;
+    Node<T>* prev;
+public:
+    Node(T _object, uint64_t _priority);
+};
+
+
+template<typename T>
+class PriorityQueue {
+private:
+    uint64_t size;
+    Node<T>* head;
+    Node<T>* tail;
+
+public:
+    PriorityQueue();
+
+    bool isEmpty();
+    void push(T object, uint64_t priority);
+    T pop();
     void print();
-    int pop();
+    uint64_t getSize();
 };
 
 
-class Exception : public std::domain_error {
-public:
-    Exception(const char* const message) : std::domain_error(message) {}
-};
-
-
-Exception empty("queue is empty");
-
-
-bool queue::is_empty() {
-    return head == nullptr;
+template<typename T>
+Node<T>::Node(T _object, uint64_t _priority) {
+    data = _object;
+    priority = _priority;
+    next = nullptr;
+    prev = nullptr;
 }
 
 
-void queue::push(int val) {
-    Node* el = new Node(val);
-    if (is_empty() || val < head->val) {
-        el->next = head;
-        head = el;
+template<typename T>
+PriorityQueue<T>::PriorityQueue() {
+    size = 0;
+    head = nullptr;
+    tail = nullptr;
+}
+
+
+template<typename T>
+bool PriorityQueue<T>::isEmpty() {
+    return size == 0;
+}
+
+
+template<typename T>
+void PriorityQueue<T>::push(T object, uint64_t priority) {
+    auto* new_node = new Node<T>(object, priority);
+
+    if (isEmpty()) {
+        head = new_node;
+        tail = new_node;
+        size++;
+        return;
     }
-    else {
-        Node* curr = head;
-        while (curr->next != nullptr && val >= curr->next->val) {
-            curr = curr->next;
+
+    Node<T>* node = head;
+
+    while (node) {
+        if (node->priority < new_node->priority) {
+            new_node->next = node;
+            if (head == node) {
+                head = new_node;
+                node->prev = head;
+            }
+            else {
+                node->prev->next = new_node;
+                new_node->prev = node->prev;
+                node->prev = new_node;
+            }
+            size++;
+            return;
         }
-        el->next = curr->next;
-        curr->next = el;
-        if (el->next == nullptr) {
-            tail = el;
+        if (node->next != nullptr) {
+            node = node->next;
+            continue;
         }
+        break;
     }
+
+    tail->next = new_node;
+    new_node->prev = tail;
+    tail = new_node;
+    size++;
 }
 
 
-void queue::print() {
-    if (is_empty()) return;
-    Node* el = head;
-    while (el) {
-        std::cout << el->val << " ";
-        el = el->next;
+template<typename T>
+T PriorityQueue<T>::pop() {
+    if (isEmpty()) {
+        throw Exception("error: queue is empty");
     }
-    std::cout << std::endl;
+    size--;
+    T data = head->data;
+    head = head->next;
+    return data;
 }
 
 
-int queue::pop() {
-    if (is_empty()) throw empty;
-    Node* el = head;
-    int head_val = el->val;
-    head = el->next;
-    delete el;
-    return head_val;
+template<typename T>
+void PriorityQueue<T>::print() {
+    if (isEmpty()) {
+        return;
+    }
+    std::cout << "[";
+    Node<T>* node = head;
+    while (node != tail) {
+        std::cout << node->data << ", ";
+        node = node->next;
+    }
+    std::cout << tail->data << "]" << std::endl;
 }
 
+
+template<typename T>
+uint64_t PriorityQueue<T>::getSize() {
+    return size;
+}
 
 int main() {
-    queue A;
-    A.push(3);
-    A.push(1);
-    A.push(5);
-    A.push(2);
-
+    PriorityQueue<int> A;
+    A.push(0, 0);
+    A.push(1, 1);
+    A.push(2, 5);
+    A.push(3, 2);
+    A.push(4, 0);
+    A.push(5, 5);
     A.print();
 
-    while (!A.is_empty()) {
-        std::cout << A.pop() << std::endl;
-    }
+    A.pop();
+    A.print();
 
     return 0;
 }
