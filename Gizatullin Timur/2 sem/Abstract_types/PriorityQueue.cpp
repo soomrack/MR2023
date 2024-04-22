@@ -19,7 +19,7 @@ private:
 public:
     queue() : head(nullptr), tail(nullptr) {}
 
-    bool isEmpty();
+    bool is_empty();
     void push(int val);
     void print();
     int pop();
@@ -36,7 +36,7 @@ public:
 Exception empty("Queue is empty");
 
 
-bool queue::isEmpty() 
+bool queue::is_empty() 
 {
     return head == nullptr;
 }
@@ -45,7 +45,7 @@ bool queue::isEmpty()
 void queue::push(int val) 
 {
     Node* element = new Node(val);
-    if (isEmpty() || val < head->value) 
+    if (is_empty() || val < head->value) 
     {
         element->next = head;
         head = element;
@@ -53,7 +53,7 @@ void queue::push(int val)
     else 
     {
         Node* current = head;
-        while (current->next != nullptr && val >= current->next->value) 
+        while (current->next != nullptr && val > current->next->value)
         {
             current = current->next;
         }
@@ -69,7 +69,7 @@ void queue::push(int val)
 
 void queue::print() 
 {
-    if (isEmpty()) return;
+    if (is_empty()) return;
     Node* element = head;
     while (element) {
         std::cout << element->value << " ";
@@ -81,7 +81,7 @@ void queue::print()
 
 int queue::pop() 
 {
-    if (isEmpty()) throw empty;
+    if (is_empty()) throw empty;
     Node* element = head;
     int head_val = element->value;
     head = element->next;
