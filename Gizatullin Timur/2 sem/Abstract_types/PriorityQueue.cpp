@@ -49,28 +49,33 @@ bool queue::is_empty()
 }
 
 
-void queue::push(int val) 
-{
+void queue::push(int val) {
     Node* element = new Node(val);
-    if (is_empty() || val < head->value) 
-    {
+    if (is_empty() || val < head->value) {
         element->next = head;
         head = element;
-    }
-    else 
-    {
+        } 
+    else {
         Node* current = head;
-        while (current->next != nullptr && val > current->next->value)
+        while (current->next != nullptr && val >= current->next->value)
         {
             current = current->next;
         }
+
+    if (val == current->value) {
+        Node* temp = current->next;
+        current->next = element;
+        element->next = temp;
+    } 
+    else {
         element->next = current->next;
         current->next = element;
-        if (element->next == nullptr) 
-        {
-            tail = element;
-        }
     }
+
+    if (element->next == nullptr) {
+        tail = element;
+    }
+  }
 }
 
 
