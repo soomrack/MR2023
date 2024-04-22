@@ -17,7 +17,7 @@ public:
     bool is_empty();
     void push(int _val);
     void print();
-    void pop();
+    int pop();
 };
 
 bool Stack::is_empty() {
@@ -49,11 +49,13 @@ void Stack::print() {
     }
 }
 
-void Stack::pop() {
-    if (is_empty()) return;
+int Stack::pop() {
+    if (is_empty()) throw std::runtime_error("Stack is empty");
+    int value = st->val;
     Node* el = st;
     st = el->next;
     delete el;
+    return value;
 }
 
 int main() {

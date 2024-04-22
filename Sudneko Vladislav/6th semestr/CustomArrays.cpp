@@ -61,27 +61,24 @@ void DynamicArray<T>::set_buffer(size_t buffer) {
 
 template <typename T>
 void DynamicArray<T>::resize(int new_size) {
-	if (new_size > bufer + size) {
-	    T* new_data = new T[new_size];
+	if (new_size > size + free) {
+	    T* new_data = new T[new_size + buffer];
 	    memcpy(new_data, data, sizeof(T) * size);
             delete[] data;
+            size = new_size;
 	    data = new_data;
-	    free = free + buffer;
+	    free = buffer;
 	} else {
-           size++;
-	   buffer--;
+	   free = size + free - new_size;
+	   size = new_size;
 	}	
 }
 
 
 template <typename T>
 void DynamicArray<T>::push_back(T element) {
-	if (free == 0) {
-		resize(size + buffer + 1);
-	}
-	data[size] = element;
-	size++;
-	free--;
+	resize(size + 1);
+	data[size--] = element;
 }
 
 
@@ -103,7 +100,7 @@ void DynamicArray<T>::insert(T element, size_t idx) {
 	}
 
 	if (free == 0) {
-		resize(size + buffer + 1);
+		resize(size + 1);
 	}
 
 	memcpy(&data[idx + 1], &data[idx], sizeof(T) * (size - idx));
@@ -593,7 +590,7 @@ void PriorityQueue<T>::enqueue(T value, size_t priority) {
         front = newNode;
     } else {
         Node<T>* current = front;
-        while (current->next != nullptr && current->next->priority <= priority) {
+        while (current->next != nullptr && current->next->priority < priority) {
             current = current->next;
         }
         newNode->next = current->next;
