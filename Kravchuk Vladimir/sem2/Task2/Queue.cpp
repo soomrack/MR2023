@@ -44,7 +44,6 @@ void Queue::push(int value) {
     else {
         bottom_pointer->previous = New_Element;
         New_Element->next = bottom_pointer;
-        New_Element->previous = nullptr;
         bottom_pointer = New_Element;
     }
 }
