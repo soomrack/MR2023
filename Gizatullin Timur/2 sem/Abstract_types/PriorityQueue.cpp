@@ -17,7 +17,7 @@ private:
     Node* head;
     Node* tail;
 public:
-    queue() : head(nullptr), tail(nullptr) {}
+    queue() : head{nullptr}, tail{nullptr} {}
     ~queue() {};
 
     bool is_empty();
