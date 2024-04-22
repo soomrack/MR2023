@@ -584,6 +584,69 @@ void Queue<T>::clear() {
     size = 0;
 }
 
+template <typename T>
+void PriorityQueue<T>::enqueue(T value, size_t priority) {
+    Node<T>* newNode = new Node<T>(value, priority);
+
+    if (front == nullptr || priority < front->priority) {
+        newNode->next = front;
+        front = newNode;
+    } else {
+        Node<T>* current = front;
+        while (current->next != nullptr && current->next->priority <= priority) {
+            current = current->next;
+        }
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+    size++;
+}
+
+template <typename T>
+T PriorityQueue<T>::dequeue() {
+    if (is_empty()) {
+        throw std::runtime_error("Error: Queue is empty!");
+    }
+
+    Node<T>* temp = front;
+    T dequeuedValue = temp->data;
+    front = front->next;
+    delete temp;
+    size--;
+
+    return dequeuedValue;
+}
+
+template <typename T>
+T PriorityQueue<T>::front_element() {
+    if (is_empty()) {
+        throw std::runtime_error("Error: Queue is empty!");
+    }
+    return front->data;
+}
+
+template <typename T>
+size_t PriorityQueue<T>::get_size() {
+    return size;
+}
+
+template <typename T>
+bool PriorityQueue<T>::is_empty() {
+    return size == 0;
+}
+
+template <typename T>
+void PriorityQueue<T>::clear() {
+    Node<T>* current = front;
+    while (current != nullptr) {
+        Node<T>* temp = current;
+        current = current->next;
+        delete temp;
+    }
+    front = nullptr;
+    size = 0;
+}
+
 } // namespace CustomArrays
 
 
