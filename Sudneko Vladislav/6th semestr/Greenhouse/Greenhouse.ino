@@ -61,8 +61,7 @@ void setup() {
 
   int plantType;
   Serial.println(
-      "Enter plant type (1: Strawberry, 2: Cucumber, 3: Carrot, 4: Custom from "
-      "file):");
+      "Enter plant type (1: Strawberry, 2: Cucumber, 3: Carrot, 4: Test");
   while (!Serial.available()) {
   }  // Wait for input
   plantType = Serial.parseInt();
