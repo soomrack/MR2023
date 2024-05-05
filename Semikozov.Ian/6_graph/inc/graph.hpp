@@ -1,75 +1,64 @@
+/**
+ * @file graph.hpp
+ * @author Semikozov Ian (semikozov.yal@yandex.ru)
+ * @brief
+ * @version 0.1
+ * @date 18.04.2024
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #ifndef GRAPH_HPP_INCLUDED
 #define GRAPH_HPP_INCLUDED
 
-#include <algorithm>
-#include <atomic>
 #include <cmath>
 #include <map>
 #include <memory>
 #include <utility>
 #include <vector>
 
-struct Vertex;
-class Graph;
+struct vertex;
 
-using Point = std::pair<double, double>;
-using Edge = std::pair<double, Vertex *>;
-using Grid = std::vector<Point>;
+using edge = std::pair<double, vertex *>;
+using arcedge = std::pair<size_t, size_t>;
+using point = std::pair<double, double>;
+using spanning_tree = std::vector<arcedge>;
 
-struct Vertex
+class graph
 {
-    std::vector<Edge> adjacency;
-    std::atomic_bool visited{ false };
-    Point value;
-
-    Vertex(const Point &v) : value(v) {}
-    ~Vertex() {}
-}; // struct Vertex
-
-class Graph
-{
-    using VMap = std::map<size_t, Vertex *>;
-
-    static constexpr double infinity{ std::numeric_limits<double>::max() };
+    using VMap = std::map<size_t, vertex *>;
+    static constexpr double infinity{ std::numeric_limits<double>::infinity() };
+    static constexpr edge null_edge{ infinity, nullptr };
 
 public:
-    static Edge nullEdge;
+    graph() = default;
+    graph(std::vector<std::vector<double>> adj);
+    ~graph();
 
-public:
-    Graph() = default;
-    Graph(std::unique_ptr<Grid> &grid);
-    ~Graph();
-
-    /// \brief Add edge
     void add(const size_t from, const size_t to, const double cost);
-
-    /// \brief Add vertex
-    bool add(size_t index, const Point &point);
+    bool add(size_t index, const point &point_);
     bool remove(size_t index);
+    vertex *at(size_t index) const;
+    size_t index(vertex *vertex) const;
+    size_t size() const;
 
-    inline Vertex *at(size_t index)
-    {
-        return vmap.at(index);
-    }
-
-    inline size_t index(Vertex *vertex)
-    {
-        auto it = std::find_if(vmap.begin(), vmap.end(), [vertex](const auto &x) { return x.second == vertex; });
-        return it->first;
-    }
-
-    inline size_t size() const
-    {
-        return vmap.size();
-    }
+    spanning_tree find_spanning_tree(size_t indexA, size_t indexB) const;
 
 private:
-    /// \brief Updating adjacency matrix and fill edge vector
     void update();
 
 private:
+    mutable spanning_tree st;
     VMap vmap;
-
 }; // class Graph
+
+struct vertex
+{
+    std::vector<edge> adjacency;
+    point value;
+
+    vertex(const point &v) : value(v) {}
+    ~vertex() {}
+}; // struct Vertex
 
 #endif // GRAPH_HPP_INCLUDED

@@ -2,67 +2,77 @@
 
 #include <algorithm>
 
-Edge Graph::nullEdge{ infinity, nullptr };
-
-static inline double cost(Vertex &lhs, Vertex &rhs)
+static inline double cost(vertex &lhs, vertex &rhs)
 {
-    return std::sqrt(std::pow((lhs.value.first - rhs.value.first), 2) + std::pow((lhs.value.second - rhs.value.second), 2));
+    return std::sqrt(std::pow(lhs.value.first - rhs.value.first, 2) + std::pow(lhs.value.second - rhs.value.second, 2));
 }
 
-Graph::~Graph()
+graph::graph(std::vector<std::vector<double>> adj) {}
+
+graph::~graph()
 {
     for (auto it : vmap) { delete it.second; }
     vmap.clear();
 }
 
-Graph::Graph(std::unique_ptr<Grid> &grid)
+vertex *graph::at(size_t index) const
 {
-    size_t count = grid->size();
-
-    for (size_t index = 0; auto point : *grid) { this->add(index++, point); }
-    this->update();
+    return vmap.at(index);
 }
 
-void Graph::add(const size_t from, const size_t to, const double cost)
+size_t graph::index(vertex *vertex) const
 {
-    Vertex *f = (vmap.find(from)->second), *t = (vmap.find(to)->second);
+    auto it = std::find_if(vmap.begin(), vmap.end(), [vertex](const auto &x) { return x.second == vertex; });
+    return it->first;
+}
 
-    Edge edge = std::make_pair(cost, t);
+size_t graph::size() const
+{
+    return vmap.size();
+}
+
+/// \brief Add edge
+void graph::add(const size_t from, const size_t to, const double cost)
+{
+    auto *f = (vmap.find(from)->second), *t = (vmap.find(to)->second);
+    edge edge = std::make_pair(cost, t);
     f->adjacency.push_back(edge);
 }
 
-bool Graph::add(size_t index, const Point &point)
+/// \brief Add vertex
+bool graph::add(size_t index, const point &point)
 {
     VMap::iterator it = vmap.find(index);
 
     if (it != vmap.end()) { return false; }
-    auto *new_ = new Vertex{ point };
+    auto *new_ = new vertex{ point };
     vmap[index] = new_;
 
     return true;
 }
 
-void Graph::update()
+/// \brief Updating adjacency matrix and fill edge vector
+void graph::update()
 {
     size_t gSize = vmap.size();
 
     for (int i = 0; i < gSize; i++)
     {
-        Vertex *lhs = vmap.at(i);
+        vertex *lhs = vmap.at(i);
 
         for (size_t j = 0; auto it : vmap)
         {
-            Vertex *rhs = it.second;
+            vertex *rhs = it.second;
 
             double c = cost(*lhs, *rhs);
             this->add(i, it.first, c == 0 ? infinity : c);
         }
 
-        std::sort(lhs->adjacency.begin(), lhs->adjacency.end(), [](const auto &l, const auto &r) { return l.first < r.first; });
+        std::sort(lhs->adjacency.begin(), lhs->adjacency.end(), [](const auto &l, const auto &r) { return l.first > r.first; });
     }
 }
 
-bool Graph::remove(size_t index)
+bool graph::remove(size_t index)
 {
     VMap::iterator i = vmap.find(index);
     if (i != vmap.end())
@@ -76,3 +86,5 @@ bool Graph::remove(size_t index)
 
     return false;
 }
+
+spanning_tree graph::find_spanning_tree(size_t indexA, size_t indexB) const {}
