@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 
-std::vector<std::string> split(const std::string &s, char delimiter) {
-    std::vector<std::string> cells;
-    std::string cell;
+using namespace std;
+
+vector<string> split(const string &s, char delimiter) {
+    vector<string> cells;
+    string cell;
     bool insideQuotes = false;
     for (size_t i = 0; i < s.size(); ++i) {
         if (s[i] == '"') {
@@ -26,29 +28,29 @@ std::vector<std::string> split(const std::string &s, char delimiter) {
 
 
 int main() {
-    std::ifstream inputFile("data.csv");
-    std::ofstream outputFile("parsed.csv");
+    ifstream inputFile("data.csv");
+    ofstream outputFile("parsed.csv");
 
     if (!inputFile.is_open() || !outputFile.is_open()) {
-        std::cerr << "Error opening files." << std::endl;
+        cerr << "Error opening files." << endl;
         return 1;
     }
 
-    std::string line;
+    string line;
     
-    std::getline(inputFile, line);
+    getline(inputFile, line);
 
-    while (std::getline(inputFile, line)) {
-        std::vector<std::string> columns = split(line, ',');
+    while (getline(inputFile, line)) {
+        vector<string> columns = split(line, ',');
             
         if (columns.size() == 36) {
-            std::string originCityMarketID = columns[21];
-            std::string destCityMarketID = columns[32];
-            std::string airTime = columns[9];
-            std::string airlineID = columns[11];
-            std::string uniqueCarrierName = columns[12];
-            std::string originCity = columns[23];
-            std::string destCity = columns[34];
+            string originCityMarketID = columns[21];
+            string destCityMarketID = columns[32];
+            string airTime = columns[9];
+            string airlineID = columns[11];
+            string uniqueCarrierName = columns[12];
+            string originCity = columns[23];
+            string destCity = columns[34];
             if (originCityMarketID != "" && 
                 destCityMarketID != "" &&
                 airTime != "" && 
@@ -63,7 +65,7 @@ int main() {
                            << airlineID << ","
                            << uniqueCarrierName << "," 
                            << originCity << "," 
-                           << destCity << std::endl;    
+                           << destCity << endl;    
             }
             
         }
@@ -72,7 +74,7 @@ int main() {
     inputFile.close();
     outputFile.close();
 
-    std::cout << "Parsing success" << std::endl;
+    cout << "Parsing success" << endl;
 
     return 0;
 }
