@@ -8,11 +8,12 @@
 using namespace std;
 
 constexpr int OFFSET = 30000;
+constexpr int INF = INT_MAX
 
 class Vertex {
 public:
     int previous_vertex = 0;
-    int distance_from_start = INT_MAX;
+    int distance_from_start = INF;
 };
 
 class Neighbor {
@@ -43,7 +44,7 @@ void dijkstra(int start, int end, int** adjacency_matrix, int matrix_size)
         heap.pop_back();
 
         for (int neighbor = 0; neighbor < matrix_size; ++neighbor) {
-            if (adjacency_matrix[current_vertex][neighbor] != INT_MAX) {
+            if (adjacency_matrix[current_vertex][neighbor] != INF) {
                 int new_distance = current_distance + adjacency_matrix[current_vertex][neighbor];
                 if (new_distance < vertices[neighbor].distance_from_start) {
                     vertices[neighbor].distance_from_start = new_distance;
@@ -55,7 +56,7 @@ void dijkstra(int start, int end, int** adjacency_matrix, int matrix_size)
         }
     }
 
-    if (vertices[end].distance_from_start == INT_MAX) {
+    if (vertices[end].distance_from_start == INF) {
         cout << "No path found" << endl;
     } else {
         cout << "Shortest path: ";
@@ -105,7 +106,7 @@ void start() {
     for (int i = 0; i < matrix_size; ++i) {
         adjacency_matrix[i] = new int[matrix_size];
         for (int j = 0; j < matrix_size; ++j) {
-            adjacency_matrix[i][j] = INT_MAX;
+            adjacency_matrix[i][j] = INF;
         }
     }
 

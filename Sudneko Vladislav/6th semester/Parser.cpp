@@ -5,22 +5,22 @@
 #include <vector>
 
 std::vector<std::string> split(const std::string &s, char delimiter) {
-    std::vector<std::string> tokens;
-    std::string token;
+    std::vector<std::string> cells;
+    std::string cell;
     bool insideQuotes = false;
     for (size_t i = 0; i < s.size(); ++i) {
         if (s[i] == '"') {
             insideQuotes = !insideQuotes;
         }
         if (!insideQuotes && s[i] == delimiter) {
-            tokens.push_back(token);
-            token.clear();
+            cells.push_back(cell);
+            cell.clear();
         } else {
-            token += s[i];
+            cell += s[i];
         }
     }
-    tokens.push_back(token);
-    return tokens;
+    cells.push_back(cell);
+    return cells;
 }
 
 
@@ -41,7 +41,7 @@ int main() {
     while (std::getline(inputFile, line)) {
         std::vector<std::string> columns = split(line, ',');
             
-        if (columns.size() >= 36) {
+        if (columns.size() == 36) {
             std::string originCityMarketID = columns[21];
             std::string destCityMarketID = columns[32];
             std::string airTime = columns[9];
