@@ -1,6 +1,8 @@
+# Project configs and environments
 */.vscode/
 */build/
-task0/helloworld
+*/.venv/
+
 # Prerequisites
 *.d
 
@@ -32,3 +34,8 @@ task0/helloworld
 *.exe
 *.out
 *.app
+
+# Graphs task spare data
+**/cleared_data.csv
+**/cities.csv 
+**/T_T100_SEGMENT_ALL_CARRIER.csv
