@@ -1,101 +1,111 @@
 #include <iostream>
 #include <stdexcept>
-#include <vector>
-
-class Node {
-private:
-    friend class PriorityQueue;
-    int val;
-    int priority;
-public:
-    Node(int _val, int _priority) : val(_val), priority(_priority) {}
-};
 
 class PriorityQueue {
 private:
-    std::vector<Node*> heap;
+    class Node {
+    public:
+        int data;
+        size_t priority;
+        Node* next;
 
-    void heapifyUp(int index);
-    void heapifyDown(int index);
+        Node(int value) : data(value), priority(0), next(nullptr) {}
+        Node(int value, size_t prio) : data(value), priority(prio), next(nullptr) {}
+    };
+
+    Node* front;
+    Node* end;
+    size_t size;
 
 public:
-    PriorityQueue() {}
+    PriorityQueue();
+    ~PriorityQueue();
 
-    bool isEmpty() const;
-    void push(int _val, int _priority);
-    void print() const;
-    int pop();
+    void enqueue(int, size_t);
+    int dequeue();
+    int front_element();
+    size_t get_size();
+    bool is_empty();
+    void clear();
 };
 
-class QueueException : public std::domain_error {
-public:
-    QueueException(const char* const message) : std::domain_error(message) {}
-};
+PriorityQueue::PriorityQueue() : front(nullptr), end(nullptr), size(0) {}
 
-const QueueException emptyQueue("Queue is empty");
-
-bool PriorityQueue::isEmpty() const {
-    return heap.empty();
+PriorityQueue::~PriorityQueue() {
+    clear();
 }
 
-void PriorityQueue::push(int _val, int _priority) {
-    Node* el = new Node(_val, _priority);
-    heap.push_back(el);
-    heapifyUp(heap.size() - 1);
-}
+void PriorityQueue::enqueue(int value, size_t priority) {
+    Node* newNode = new Node(value, priority);
 
-void PriorityQueue::heapifyUp(int index) {
-    int parent = (index - 1) / 2;
-    while (index > 0 && heap[parent]->priority > heap[index]->priority) {
-        std::swap(heap[parent], heap[index]);
-        index = parent;
-        parent = (index - 1) / 2;
+    if (front == nullptr || priority < front->priority) {
+        newNode->next = front;
+        front = newNode;
+    } else {
+        Node* current = front;
+        while (current->next != nullptr && current->next->priority < priority) {
+            current = current->next;
+        }
+        newNode->next = current->next;
+        current->next = newNode;
     }
+    size++;
 }
 
-void PriorityQueue::print() const {
-    if (isEmpty()) return;
-    for (const auto& node : heap) {
-        std::cout << node->val << "(" << node->priority << ") ";
+int PriorityQueue::dequeue() {
+    if (is_empty()) {
+        throw std::runtime_error("Error: Queue is empty!");
     }
-    std::cout << std::endl;
+
+    Node* temp = front;
+    int dequeuedValue = temp->data;
+    front = front->next;
+    delete temp;
+    size--;
+
+    return dequeuedValue;
 }
 
-int PriorityQueue::pop() {
-    if (isEmpty()) throw emptyQueue;
-    Node* top = heap[0];
-    int topVal = top->val;
-    delete top;
-    heap[0] = heap.back();
-    heap.pop_back();
-    heapifyDown(0);
-    return topVal;
-}
-
-void PriorityQueue::heapifyDown(int index) {
-    int leftChild = 2 * index + 1;
-    int rightChild = 2 * index + 2;
-    int smallest = index;
-
-    if (leftChild < heap.size() && heap[leftChild]->priority < heap[smallest]->priority)
-        smallest = leftChild;
-    if (rightChild < heap.size() && heap[rightChild]->priority < heap[smallest]->priority)
-        smallest = rightChild;
-
-    if (smallest != index) {
-        std::swap(heap[index], heap[smallest]);
-        heapifyDown(smallest);
+int PriorityQueue::front_element() {
+    if (is_empty()) {
+        throw std::runtime_error("Error: Queue is empty!");
     }
+    return front->data;
+}
+
+size_t PriorityQueue::get_size() {
+    return size;
+}
+
+bool PriorityQueue::is_empty() {
+    return size == 0;
+}
+
+void PriorityQueue::clear() {
+    Node* current = front;
+    while (current != nullptr) {
+        Node* temp = current;
+        current = current->next;
+        delete temp;
+    }
+    front = nullptr;
+    size = 0;
 }
 
 int main() {
-    PriorityQueue A;
-    A.push(1, 2);
-    std::cout << "Is empty? " << A.isEmpty() << std::endl;
-    A.push(2, 1);
-    A.print();
-    A.push(3, 3);
-    A.pop();
-    A.print();
+    PriorityQueue priorityQueue;
+    priorityQueue.enqueue(5, 2);
+    priorityQueue.enqueue(10, 1);
+    priorityQueue.enqueue(15, 3);
+
+    std::cout << "PriorityQueue size: " << priorityQueue.get_size() << std::endl;
+    std::cout << "Front element: " << priorityQueue.front_element() << std::endl;
+
+    std::cout << "Dequeueing elements: ";
+    while (!priorityQueue.is_empty()) {
+        std::cout << priorityQueue.dequeue() << " ";
+    }
+    std::cout << std::endl;
+
     return 0;
 }
