@@ -31,8 +31,8 @@ private:
 
 DynamicArray::DynamicArray() {
     size = 0;
-    free = 5;   // default array size
-    buffer = 5; // default buffer
+    free = 5;
+    buffer = 5; 
     data = new int[free];
 }
 
@@ -46,7 +46,7 @@ DynamicArray::DynamicArray(const int array[], const size_t size)
 
 DynamicArray::DynamicArray(const std::initializer_list<int>& array, const size_t size)
     : size(size) {
-    buffer = 5; // default buffer
+    buffer = 5; 
     data = new int[size + buffer];
     std::copy(array.begin(), array.end(), data);
 }
