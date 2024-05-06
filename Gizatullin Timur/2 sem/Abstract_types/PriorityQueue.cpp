@@ -21,7 +21,6 @@ public:
 
     bool is_empty();
     void push(int val, int prior);
-    void print();
     int pop();
     void clear();
 };
@@ -42,17 +41,6 @@ bool Queue::is_empty()
     return head == nullptr;
 }
 
-void Queue::print() 
-{
-    if (is_empty()) return;
-    Node* element = head;
-    while (element) 
-    {
-        std::cout << element->value << " ";
-        element = element->next;
-    }
-    std::cout << std::endl;
-}
 
 void Queue::push(int val, int prior) 
 {
@@ -114,7 +102,6 @@ int main()
     A.push(4,1);
     A.push(5,2);
     A.push(1,2);
-    A.print();
 
     return 0;
 }
