@@ -2,8 +2,6 @@
 #include <cstring>
 #include <initializer_list>
 
-// DynamicArray implementation
-
 class DynamicArray {
 public:
     DynamicArray();
