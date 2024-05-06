@@ -1,10 +1,10 @@
 ﻿#include <iostream>
 
 
-class Node 
+class Node
 {
-private:
     friend class queue;
+private:
     int value;
     Node* next;
 public:
@@ -12,12 +12,11 @@ public:
 };
 
 
-class queue 
+class queue
 {
 private:
     Node* head;
     Node* tail;
-
 public:
     queue() : head(nullptr), tail(nullptr) {}
 
@@ -31,24 +30,24 @@ public:
 class Exception : public std::domain_error
 {
 public:
-    Exception(const char* const message) : std::domain_error(message)
-    {}
+    Exception(const char* const message) : std::domain_error(message) {}
 };
 
 
 Exception empty("Queue is empty");
 
 
-bool queue::isEmpty() 
+bool queue::isEmpty()
 {
     return head == nullptr;
 }
 
 
-void queue::push(int val) 
+void queue::push(int val)
 {
     Node* element = new Node(val);
-    if (isEmpty()) {
+    if (isEmpty())
+    {
         head = element;
         tail = element;
         return;
@@ -58,11 +57,16 @@ void queue::push(int val)
 }
 
 
-void queue::print() 
+void queue::print()
 {
-    if (isEmpty()) return;
+    if (isEmpty())
+    {
+        std::cout << "Queue is empty" << std::endl;
+        return;
+    }
     Node* element = head;
-    while (element) {
+    while (element)
+    {
         std::cout << element->value << " ";
         element = element->next;
     }
@@ -70,28 +74,35 @@ void queue::print()
 }
 
 
-int queue::pop() 
+int queue::pop()
 {
-    if (isEmpty()) throw empty;
+    if (isEmpty())
+    {
+        throw empty;
+    }
     Node* element = head;
     int head_val = element->value;
     head = element->next;
     delete element;
+    if (head == nullptr)
+    {
+        tail = nullptr;
+    }
     return head_val;
 }
 
 
 int main()
 {
-    queue A;
-    A.push(4);
-    A.push(8);
-    A.push(12);
-    A.print();
-    A.push(15);
-    A.pop();
-    A.pop();
-    A.print();
+    queue Q;
+    Q.push(4);
+    Q.push(8);
+    Q.push(12);
+    Q.print();
+    Q.push(15);
+    Q.pop();
+    Q.pop();
+    Q.print();
 
     return 0;
 }

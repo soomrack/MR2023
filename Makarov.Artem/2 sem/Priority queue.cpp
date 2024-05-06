@@ -49,6 +49,10 @@ void queue::push(int val)
     {
         element->next = head;
         head = element;
+        if (tail == nullptr)
+        {
+            tail = element;
+        }
     }
     else 
     {
@@ -71,7 +75,8 @@ void queue::print()
 {
     if (isEmpty()) return;
     Node* element = head;
-    while (element) {
+    while (element) 
+    {
         std::cout << element->value << " ";
         element = element->next;
     }
@@ -86,6 +91,10 @@ int queue::pop()
     int head_val = element->value;
     head = element->next;
     delete element;
+    if (head == nullptr)
+    {
+        tail = nullptr;
+    }
     return head_val;
 }
 

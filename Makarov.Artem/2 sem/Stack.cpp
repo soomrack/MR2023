@@ -1,7 +1,8 @@
 ﻿#include <iostream>
 
 
-class Node {
+class Node 
+{
 private:
     friend class Stack;
     int value;
@@ -71,19 +72,24 @@ void Stack::pop()
 
 int main() 
 {
-    Stack A;
-    A.push(5);
-    A.print();
-    A.push(1);
-    A.print();
-    A.push(10);
-    A.print();
-    A.pop();
-    A.print();
-    A.pop();
-    A.print();
-    A.pop();
-    A.print();
+    Stack S;
+    S.push(5);
+    S.print();
+    
+    S.push(1);
+    S.print();
+   
+    S.push(10);
+    S.print();
+    
+    S.pop();
+    S.print();
+    
+    S.pop();
+    S.print();
+    
+    S.pop();
+    S.print();
 
     return 0;
 }
