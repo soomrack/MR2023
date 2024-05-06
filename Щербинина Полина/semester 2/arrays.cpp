@@ -458,26 +458,6 @@ void DoubleLinkedList::print_list() {
     std::cout << "nullptr" << std::endl;
 }
 
-int main() {
-    DoubleLinkedList doubleLinkedList;
-    doubleLinkedList.push_back(5);
-    doubleLinkedList.push_back(10);
-    doubleLinkedList.push_back(15);
-
-    std::cout << "DoubleLinkedList size: " << doubleLinkedList.get_size() << std::endl;
-    std::cout << "List: ";
-    doubleLinkedList.print_list();
-
-    std::cout << "Popping back element: " << doubleLinkedList.pop_back() << std::endl;
-
-    std::cout << "Inserting 20 at index 1." << std::endl;
-    doubleLinkedList.insert(20, 1);
-    std::cout << "List: ";
-    doubleLinkedList.print_list();
-
-    return 0;
-}
-
 class Stack {
 private:
     class Node {
@@ -557,25 +537,6 @@ void Stack::clear() {
     }
     head = nullptr;
     size = 0;
-}
-
-int main() {
-    // Testing Stack
-    Stack stack;
-    stack.push(5);
-    stack.push(10);
-    stack.push(15);
-
-    std::cout << "Stack size: " << stack.get_size() << std::endl;
-    std::cout << "Top element: " << stack.top() << std::endl;
-
-    std::cout << "Popping elements: ";
-    while (!stack.is_empty()) {
-        std::cout << stack.pop() << " ";
-    }
-    std::cout << std::endl;
-
-    return 0;
 }
 
 class Queue {
@@ -662,24 +623,6 @@ void Queue::clear() {
     }
     front = end = nullptr;
     size = 0;
-}
-
-int main() {
-    Queue queue;
-    queue.enqueue(5);
-    queue.enqueue(10);
-    queue.enqueue(15);
-
-    std::cout << "Queue size: " << queue.get_size() << std::endl;
-    std::cout << "Front element: " << queue.front_element() << std::endl;
-
-    std::cout << "Dequeueing elements: ";
-    while (!queue.is_empty()) {
-        std::cout << queue.dequeue() << " ";
-    }
-    std::cout << std::endl;
-
-    return 0;
 }
 
 class PriorityQueue {
@@ -774,6 +717,53 @@ void PriorityQueue::clear() {
 }
 
 int main() {
+    DoubleLinkedList doubleLinkedList;
+    doubleLinkedList.push_back(5);
+    doubleLinkedList.push_back(10);
+    doubleLinkedList.push_back(15);
+
+    std::cout << "DoubleLinkedList size: " << doubleLinkedList.get_size() << std::endl;
+    std::cout << "List: ";
+    doubleLinkedList.print_list();
+
+    std::cout << "Popping back element: " << doubleLinkedList.pop_back() << std::endl;
+
+    std::cout << "Inserting 20 at index 1." << std::endl;
+    doubleLinkedList.insert(20, 1);
+    std::cout << "List: ";
+    doubleLinkedList.print_list();
+
+
+    Stack stack;
+    stack.push(5);
+    stack.push(10);
+    stack.push(15);
+
+    std::cout << "Stack size: " << stack.get_size() << std::endl;
+    std::cout << "Top element: " << stack.top() << std::endl;
+
+    std::cout << "Popping elements: ";
+    while (!stack.is_empty()) {
+        std::cout << stack.pop() << " ";
+    }
+    std::cout << std::endl;
+
+
+    Queue queue;
+    queue.enqueue(5);
+    queue.enqueue(10);
+    queue.enqueue(15);
+
+    std::cout << "Queue size: " << queue.get_size() << std::endl;
+    std::cout << "Front element: " << queue.front_element() << std::endl;
+
+    std::cout << "Dequeueing elements: ";
+    while (!queue.is_empty()) {
+        std::cout << queue.dequeue() << " ";
+    }
+    std::cout << std::endl;
+
+    
     PriorityQueue priorityQueue;
     priorityQueue.enqueue(5, 2);
     priorityQueue.enqueue(10, 1);
