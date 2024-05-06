@@ -1,75 +1,102 @@
 #include <iostream>
 #include <stdexcept>
 
-class Node {
-private:
-    friend class Stack;
-    int val;
-    Node* next;
-public:
-    Node(int _val) : val(_val), next(nullptr) {}
-};
-
 class Stack {
 private:
-    Node* top;
+    class Node {
+    public:
+        int data;
+        Node* next;
+
+        Node(int value) : data(value), next(nullptr) {}
+    };
+
+    Node* head;
+    size_t size;
+
 public:
-    Stack() : top(nullptr) {}
-    bool isEmpty() const;
-    void push(int _val);
-    void print() const;
-    void pop();
+    Stack();
+    ~Stack();
+
+    void push(int);
+    int pop();
+    int top();
+    size_t get_size();
+    bool is_empty();
+    void clear();
 };
 
-class StackException : public std::domain_error {
-public:
-    StackException(const char* const message) : std::domain_error(message) {}
-};
-
-const StackException emptyStack("Stack is empty");
-
-bool Stack::isEmpty() const {
-    return top == nullptr;
+Stack::Stack() {
+    head = nullptr;
+    size = 0;
 }
 
-void Stack::push(int _val) {
-    Node* el = new Node(_val);
-    if (isEmpty()) {
-        top = el;
-    }
-    else {
-        el->next = top;
-        top = el;
-    }
+Stack::~Stack() {
+    clear();
 }
 
-void Stack::print() const {
-    if (isEmpty()) {
-        std::cout << "Stack is empty" << std::endl;
-    }
-    else {
-        std::cout << top->val << std::endl;
-    }
+void Stack::push(int value) {
+    Node* newNode = new Node(value);
+    newNode->next = head;
+    head = newNode;
+    size++;
 }
 
-void Stack::pop() {
-    if (isEmpty()) throw emptyStack;
-    Node* el = top;
-    top = el->next;
-    delete el;
+int Stack::pop() {
+    if (is_empty()) {
+        throw std::runtime_error("Error: Stack is empty!");
+    }
+
+    Node* temp = head;
+    int poppedValue = temp->data;
+    head = head->next;
+    delete temp;
+    size--;
+
+    return poppedValue;
+}
+
+int Stack::top() {
+    if (is_empty()) {
+        throw std::runtime_error("Error: Stack is empty!");
+    }
+    return head->data;
+}
+
+size_t Stack::get_size() {
+    return size;
+}
+
+bool Stack::is_empty() {
+    return size == 0;
+}
+
+void Stack::clear() {
+    Node* current = head;
+    while (current != nullptr) {
+        Node* temp = current;
+        current = current->next;
+        delete temp;
+    }
+    head = nullptr;
+    size = 0;
 }
 
 int main() {
-    Stack A;
-    A.push(3);
-    std::cout << "Is empty? " << A.isEmpty() << std::endl;
-    A.print();
-    A.push(2);
-    A.print();
-    A.pop();
-    A.print();
-    A.pop();
-    A.print();
+    // Testing Stack
+    Stack stack;
+    stack.push(5);
+    stack.push(10);
+    stack.push(15);
+
+    std::cout << "Stack size: " << stack.get_size() << std::endl;
+    std::cout << "Top element: " << stack.top() << std::endl;
+
+    std::cout << "Popping elements: ";
+    while (!stack.is_empty()) {
+        std::cout << stack.pop() << " ";
+    }
+    std::cout << std::endl;
 
     return 0;
 }
