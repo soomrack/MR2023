@@ -1,102 +1,94 @@
 #include <iostream>
+#include <stdexcept>
 
+class PriorityQueue {
+    class Node {
+    public:
+        int data;
+        size_t priority;
+        Node* next;
 
-class Node 
-{
+        Node(int value, size_t prior) : data(value), priority(prior), next(nullptr) {}
+    };
+
+    Node* front;
+    size_t size;
+
 public:
-    int value;
-    int priority;
-    Node* next;
-public:
-    Node(int val, int priority) : value(val), next(nullptr), priority(priority) {}
-};
+    PriorityQueue() : front(nullptr), size(0) {}
+    ~PriorityQueue() { clear(); }
 
-
-class queue 
-{
-private:
-    Node* head;
-    Node* tail;
-public:
-    queue() : head{nullptr}, tail{nullptr} {};
-
+    void enqueue(int value, size_t priority);
+    int dequeue();
+    int front_element();
+    size_t get_size();
     bool is_empty();
-    void push(int val, int priority);
-    void print();
-    int pop();
+    void clear();
 };
 
+void PriorityQueue::enqueue(int value, size_t priority) {
+    Node* newNode = new Node(value, priority);
 
-class Exception : public std::domain_error 
-{
-public:
-    Exception(const char* const message) : std::domain_error(message) {}
-};
-
-Exception empty("Queue is empty");
-
-bool queue::is_empty() 
-{
-    return head == nullptr;
-
-}
-
-void queue::push(int val, int priority) {
-    Node* newNode = new Node(val, priority);
-    if (head == nullptr)
-    {
-        head = newNode;
-    }
-
-    if (priority < newNode->next->priority)
-    {
-        newNode->next = tail;
-        tail = newNode;
-    }
-    else
-    {
-        Node* current = tail;
+    if (front == nullptr || priority < front->priority) {
+        newNode->next = front;
+        front = newNode;
+    } else {
+        Node* current = front;
         while (current->next != nullptr && current->next->priority < priority) {
             current = current->next;
         }
         newNode->next = current->next;
         current->next = newNode;
     }
+    size++;
 }
 
-void queue::print() 
-{
-    if (is_empty()) return;
-    Node* element = head;
-    while (element) {
-        std::cout << element->value << " ";
-        element = element->next;
+int PriorityQueue::dequeue() {
+    if (is_empty()) {
+        throw std::runtime_error("Error: Queue is empty!");
     }
-    std::cout << std::endl;
+
+    Node* temp = front;
+    int dequeuedValue = temp->data;
+    front = front->next;
+    delete temp;
+    size--;
+
+    return dequeuedValue;
 }
 
-
-int queue::pop() 
-{
-    if (is_empty()) throw empty;
-    Node* element = head;
-    int head_val = element->value;
-    head = element->next;
-    delete element;
-    if (head == nullptr) {
-    tail = nullptr;
+int PriorityQueue::front_element() {
+    if (is_empty()) {
+        throw std::runtime_error("Error: Queue is empty!");
     }
-    return head_val;
+    return front->data;
 }
 
+size_t PriorityQueue::get_size() {
+    return size;
+}
 
-int main() 
-{
-    queue A;
+bool PriorityQueue::is_empty() {
+    return size == 0;
+}
 
-    A.push(5,10);
-    A.push(10,1);
-    A.push(6,2);
-    A.print();
+void PriorityQueue::clear() {
+    Node* current = front;
+    while (current != nullptr) {
+        Node* temp = current;
+        current = current->next;
+        delete temp;
+    }
+    front = nullptr;
+    size = 0;
+}
+
+int main() {
+    PriorityQueue PrOue;
+    PrOue.enqueue(2,2);
+    PrOue.enqueue(2,0);
+    PrOue.get_size();
+    PrOue.front_element();
+    PrOue.dequeue();
     return 0;
 }
