@@ -17,7 +17,7 @@ vector<string> split(const string &s, char delimiter) {
 }
 
 int main() {
-    ifstream inputFile("data.csv");
+    ifstream inputFile("T_T100_SEGMENT_ALL_CARRIER.csv");
     ofstream outputFile("parsed.csv");
 
     if (!inputFile.is_open() || !outputFile.is_open()) {
