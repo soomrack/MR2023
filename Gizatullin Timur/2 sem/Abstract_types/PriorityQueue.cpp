@@ -4,9 +4,10 @@ class Node
 {
 public:
     int value;
+    int priority;
     Node* next;
 
-    Node(int val) : value(val), next(nullptr) {}
+    Node(int val, int prior) : value(val), next(nullptr), priority(prior) {}
 };
 
 
@@ -19,9 +20,10 @@ public:
     Queue() : head(nullptr), tail(nullptr) {}
 
     bool is_empty();
-    void push(int val);
+    void push(int val, int prior);
     void print();
     int pop();
+    void clear();
 };
 
 
@@ -52,10 +54,10 @@ void Queue::print()
     std::cout << std::endl;
 }
 
-void Queue::push(int val) 
+void Queue::push(int val, int prior) 
 {
-    Node* element = new Node(val);
-    if (is_empty() || val < head->value) 
+    Node* element = new Node(val, prior);
+    if (is_empty() || prior < head->priority) 
     {
         element->next = head;
         head = element;
@@ -67,7 +69,7 @@ void Queue::push(int val)
     else 
     {
         Node* current = head;
-        while (current->next != nullptr && val > current->next->value) 
+        while (current->next != nullptr && prior > current->next->priority) 
         {
             current = current->next;
         }
@@ -95,13 +97,23 @@ int Queue::pop()
 }
 
 
+void Queue::clear() {
+    Node* current = head;
+    while (current != nullptr) {
+        Node* temp = current;
+        current = current->next;
+        delete temp;
+    }
+    head = nullptr;
+    tail = nullptr;
+}
+
 int main() 
 {
     Queue A;
-    A.push(4);
-    A.push(5);
-    A.push(1);
-    A.push(15);
+    A.push(4,1);
+    A.push(5,2);
+    A.push(1,2);
     A.print();
 
     return 0;
