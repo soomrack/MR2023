@@ -40,6 +40,17 @@ bool Queue::is_empty()
     return head == nullptr;
 }
 
+void Queue::print() 
+{
+    if (is_empty()) return;
+    Node* element = head;
+    while (element) 
+    {
+        std::cout << element->value << " ";
+        element = element->next;
+    }
+    std::cout << std::endl;
+}
 
 void Queue::push(int val) 
 {
@@ -68,20 +79,6 @@ void Queue::push(int val)
         }
     }
 }
-
-
-void Queue::print() 
-{
-    if (is_empty()) return;
-    Node* element = head;
-    while (element) 
-    {
-        std::cout << element->value << " ";
-        element = element->next;
-    }
-    std::cout << std::endl;
-}
-
 
 int Queue::pop() 
 {
