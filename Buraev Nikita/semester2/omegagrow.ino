@@ -1,300 +1,261 @@
-#define PIN_LIGHT_SENSOR A0
-#define PIN_HUMIDITY_SENSOR A1
-
-#define PIN_DHT_SENSOR 2
-#define PIN_HEAT 4
-#define PIN_WATER_PUMP 5
-#define PIN_LIGHT 6
-#define PIN_FAN 7
-
-#define ON 1
-#define OFF 0
-
-
 #include <TroykaDHT.h>
-DHT dht_sensor(PIN_DHT_SENSOR, DHT21);
 
+#define LIGHT_SENSOR_PIN      A0
+#define LIGHT_PIN             6
+#define HUMIDITY_SENSOR_PIN   A1
+#define WATER_PUMP_PIN        5
+#define DHT_SENSOR_PIN        2
+#define VENT_HEAT_PIN         4
+#define VENT_PIN              7
+#define ON_STATE              HIGH
+#define OFF_STATE             LOW
+#define POMP_INTERVAL         60000
+#define VENT_INTERVAL         60000 
 
-int PROGRAMM_CHECK_TIME = 10;
-int TIME_SET = 0;
+DHT dhtSensor(DHT_SENSOR_PIN, DHT21);
 
+int CHECK_INTERVAL = 1; // seconds
 
-struct Climate {
-  int def_luminosity;
-  int def_soil_hum;
-  double min_air_temp; 
-  double max_air_temp; 
-  double min_air_hum; 
-  double max_air_hum;
-  int time_venting;
-  int time_watering;
-}; 
+struct SystemState {
+  long long int lastVentilation;
+  long long int ventilationTime;
+  long long int wateringTime;
+  long long int lastWatering;
+  bool lightOn;
+  bool ventilationOn;
+  bool pumpOn;
+  bool heaterOn;
+};
 
-
-struct Sensors {
+struct SensorValues {
   int hours;
   int minutes;
   int seconds;
+  int lightIntensity;
+  double airTemperature;
+  double airHumidity;
+  int soilHumidity;
+};
 
-  int luminosity;
-  double air_temp;
-  double air_hum;
-  double soil_hum;
-}; 
+struct PlantConditions {
+  int lightThreshold;
+  double minTemperature;
+  double maxTemperature;
+  double minAirHumidity;
+  double maxAirHumidity;
+  int soilHumidityThreshold;
+  long long int wateringDuration;
+  long long int ventilationDuration;
+};
 
-
-struct State {
-  long long int time_venting;
-  long long int time_watering;
-  long long int last_watering;
-  bool regular_venting;
-  bool light;
-  bool fan;
-  bool pump;
-  bool heat;
-}; 
-
-
-Climate cl;
-Sensors se;
-State state;
+SystemState systemState;
+PlantConditions plantConditions;
+SensorValues sensorValues;
 
 
-void setup()
-{
+void setup() {
   Serial.begin(9600);
-  dht_sensor.begin();
-  pinMode(PIN_LIGHT, OUTPUT);
-  pinMode(PIN_WATER_PUMP, OUTPUT);
-  pinMode(PIN_DHT_SENSOR, INPUT);
-  pinMode(PIN_HEAT, OUTPUT);
-  pinMode(PIN_FAN, OUTPUT);
+  dhtSensor.begin();
+  pinMode(LIGHT_PIN, OUTPUT);
+  pinMode(WATER_PUMP_PIN, OUTPUT);
+  pinMode(DHT_SENSOR_PIN, INPUT);
+  pinMode(VENT_HEAT_PIN, OUTPUT);
+  pinMode(VENT_PIN, OUTPUT);
 
-  Serial.println("Set current time in only hours format, for example 16:34 will be 16: ");
-  Serial.write(TIME_SET);
+  int plantType;
+  Serial.println(
+      "Type of plant 1 to 4 (1: Strawberry, 2: Cucumber, 3: Carrot, 4: Potato)");
+  while (!Serial.available()) {
+  }  // Wait for input
+  plantType = Serial.parseInt();
+  Serial.println(plantType);
+
+  setPlantType(plantType);
 }
 
-
-void plant()
-{
-  cl.def_luminosity = 700;
-  cl.min_air_temp = 15;
-  cl.max_air_temp = 30;
-  cl.def_soil_hum = 90;
-  cl.min_air_hum = 99;
-  cl.max_air_hum = 100;
-  cl.time_watering = 5000;
-  cl.time_venting = 60000;
-}
-
-
-void custom_clock()
-{
-  se.seconds = millis() / 100;
-
-  if (se.seconds == 60) {
-    se.minutes += 1;
-    se.seconds = 0;
+void loop() {
+  readTime();
+  if (sensorValues.seconds % CHECK_INTERVAL == 0) {
+    systemCheck();
   }
+}
 
-  if (se.minutes == 60) {
-    se.hours += 1;
-    se.minutes = 0;
+void setPlantConditions(int lightThreshold, double minTemperature,
+                        double maxTemperature, double minAirHumidity,
+                        double maxAirHumidity, int soilHumidityThreshold,
+                        long long int wateringDuration, long long int ventilationDuration) {
+  plantConditions.lightThreshold = lightThreshold;
+  plantConditions.minTemperature = minTemperature;
+  plantConditions.maxTemperature = maxTemperature;
+  plantConditions.minAirHumidity = minAirHumidity;
+  plantConditions.maxAirHumidity = maxAirHumidity;
+  plantConditions.soilHumidityThreshold = soilHumidityThreshold;
+  plantConditions.wateringDuration = wateringDuration;
+  plantConditions.ventilationDuration = ventilationDuration;
+}
+
+void setPlantType(int plantType) {
+  switch (plantType) {
+    case 1:
+      setPlantConditions(400, 20, 30, 50, 80, 500, 10000, 120000); 
+      break;  
+    case 2:
+      setPlantConditions(200, 10, 25, 60, 90, 300, 15000, 180000);
+      break;  
+    case 3:
+      setPlantConditions(250, 15, 20, 70, 85, 400, 12000, 150000);
+      break;  
+    case 4:
+      setPlantConditions(250, -5, 50, 70, 85, 400, 50000, 30000);
+      break; 
+    default:
+      Serial.println("Invalid plant type");
   }
-
-  se.hours = TIME_SET;
-  
-  if (se.hours == 24) {
-    se.hours = 0;
-  } 
 }
 
 
-double soil_hum_convert(int value)
-{
-  double persents;
-  persents = (double)((1023 - value) * 100 / 1023);
-  return persents;
+void readTime() {
+  sensorValues.seconds = millis() / 1000;
+
+  if (sensorValues.seconds == 60) {
+    sensorValues.minutes += 1;
+    sensorValues.seconds = 0;
+  }
+  if (sensorValues.minutes == 60) {
+    sensorValues.hours += 1;
+    sensorValues.minutes = 0;
+  }
+  if (sensorValues.hours == 24) {
+    sensorValues.hours = 0;
+  }
 }
 
-
-void get_sensors()
-{
-  dht_sensor.read();
-
-  se.soil_hum = soil_hum_convert(analogRead(PIN_HUMIDITY_SENSOR));
-  se.luminosity = analogRead(PIN_LIGHT_SENSOR);
-  se.air_temp = dht_sensor.getTemperatureC();
-  se.air_hum = dht_sensor.getHumidity();
+void readSensors() {
+  dhtSensor.read();
+  delay(100);
+  sensorValues.soilHumidity = analogRead(HUMIDITY_SENSOR_PIN);
+  sensorValues.lightIntensity = analogRead(LIGHT_SENSOR_PIN);
+  sensorValues.airTemperature = dhtSensor.getTemperatureC();
+  sensorValues.airHumidity = dhtSensor.getHumidity();
 }
 
-
-void regular_ventilation()  
-{
-  state.time_venting += PROGRAMM_CHECK_TIME * 1000;
-
-  if (se.minutes % 4 == 0) { 
-    state.regular_venting = ON;
-    state.time_venting = 0;
+void regulateVentilation() {
+  Serial.println("============");
+  Serial.println((long int)systemState.ventilationTime);
+  Serial.println((long int)plantConditions.ventilationDuration);
+  if (systemState.lastVentilation >= plantConditions.ventilationDuration) {
+    systemState.ventilationOn = ON_STATE;
   } else {
-    if (state.time_venting > cl.time_venting) {
-      state.regular_venting = OFF;
+    systemState.ventilationOn = OFF_STATE;
+  }
+}
+
+
+
+void regulateTemperature() {
+  if (sensorValues.airTemperature >= plantConditions.minTemperature &&
+      sensorValues.airTemperature <= plantConditions.maxTemperature) {
+    systemState.ventilationOn = OFF_STATE;
+    systemState.heaterOn = OFF_STATE;
+  }
+  else if (sensorValues.airTemperature < plantConditions.minTemperature) {
+    systemState.ventilationOn = ON_STATE;
+    systemState.heaterOn = ON_STATE;
+  }
+  else if (sensorValues.airTemperature > plantConditions.maxTemperature) {
+    systemState.ventilationOn = ON_STATE;
+    systemState.heaterOn = OFF_STATE;
+  }
+}
+
+void regulateHumidity() {
+  if (sensorValues.airHumidity >= plantConditions.minAirHumidity &&
+      sensorValues.airHumidity <= plantConditions.maxAirHumidity) {
+    systemState.ventilationOn = OFF_STATE;
+    systemState.pumpOn = OFF_STATE;
+  }
+  if (sensorValues.airHumidity < plantConditions.minAirHumidity) {
+    systemState.ventilationOn = OFF_STATE;
+    systemState.pumpOn = ON_STATE;
+  }
+  if (sensorValues.airHumidity > plantConditions.maxAirHumidity) {
+    systemState.ventilationOn = ON_STATE;
+    systemState.pumpOn = OFF_STATE;
+  }
+}
+
+void regulateSoilHumidity() {
+  if (sensorValues.soilHumidity >= plantConditions.soilHumidityThreshold) {
+    systemState.pumpOn = ON_STATE;
+  } else {
+    systemState.pumpOn = OFF_STATE;
+  }
+}
+
+void regulateLight() {
+  if (sensorValues.lightIntensity >= plantConditions.lightThreshold) {
+    systemState.lightOn = ON_STATE;
+  } else {
+    systemState.lightOn = OFF_STATE;
+  }
+}
+
+void operateLight() {
+  digitalWrite(LIGHT_PIN, systemState.lightOn);
+}
+
+void operateHeater() {
+  if (systemState.heaterOn == ON_STATE) {
+    digitalWrite(VENT_PIN, ON_STATE);
+    digitalWrite(VENT_HEAT_PIN, ON_STATE);
+  } else {
+    digitalWrite(VENT_HEAT_PIN, OFF_STATE);
+  }
+}
+
+void operateVentilation() {
+  if (systemState.lastVentilation > (VENT_INTERVAL)) {
+    if (1) {
+      systemState.ventilationTime += CHECK_INTERVAL * 1000;
+      digitalWrite(VENT_PIN, ON_STATE);
+      if (systemState.ventilationTime > plantConditions.ventilationDuration) {
+        digitalWrite(VENT_PIN, OFF_STATE);
+        systemState.ventilationTime = 0;
+        systemState.lastVentilation = 0;
+      }
     } else {
-      state.regular_venting = ON;
+      digitalWrite(VENT_PIN, systemState.ventilationOn);
     }
   }
+  systemState.lastVentilation += CHECK_INTERVAL * 1000;
 }
 
-
-void air_temp()
-{
-  if (se.air_temp < cl.min_air_temp) {
-    state.fan = ON;
-    state.heat = ON;
-  }
-
-  else if (se.air_temp > cl.max_air_temp) {
-    state.fan = ON;
-    state.heat = OFF;
-  }
-  
-  else {
-    state.fan = OFF;
-    state.heat = OFF;
-  }
-}
-
-
-void air_hum()
-{
-  if (se.air_hum < cl.min_air_hum) {
-    state.fan = OFF;
-    state.pump = ON;
-  }
-
-  else if (se.air_hum > cl.max_air_hum) {
-    state.fan = ON;
-    state.pump = OFF;
-  }
-  
-  else {
-    state.fan = OFF;
-    state.pump = OFF;
-  }
-}
-
-
-void soil_hum()
-{
-  if (se.soil_hum < cl.def_soil_hum) {
-    state.pump = ON;
-  } else {
-    state.pump = OFF;
-  }
-}
-
-
-void light()
-{
-  if (se.luminosity >= cl.def_luminosity) {
-    state.light = ON;
-  } else {
-    state.light = OFF;
-  }
-}
-
-
-void day_cycle()
-{
-  if (se.hours < 6 || se.hours > 22){
-    state.regular_venting = OFF;
-    state.light = OFF;
-  }
-}
-
-
-void do_light()
-{
-  digitalWrite(PIN_LIGHT, state.light);
-}
-
-
-void do_heat()
-{
-  if (state.heat == ON) {
-    digitalWrite(PIN_FAN, ON);
-    digitalWrite(PIN_HEAT, ON);
-  } else {
-    digitalWrite(PIN_HEAT, OFF);
-  }
-}
-
-
-void do_vent()
-{
-  if (state.regular_venting == ON){
-    digitalWrite(PIN_FAN, ON);
-  } else if (state.fan == ON) {
-    digitalWrite(PIN_FAN, ON);
-  } else {
-    digitalWrite(PIN_FAN, OFF);
-  }
-}
-
-
-void do_pump()
-{ 
-  if (state.last_watering > 60000) {
-    if (state.pump == ON) {
-      digitalWrite(PIN_WATER_PUMP, state.pump);
-      state.time_watering += PROGRAMM_CHECK_TIME * 1000;
-
-      if (state.time_watering > cl.time_watering) {
-        digitalWrite(PIN_WATER_PUMP, OFF);
-        state.time_watering = 0;
-        state.last_watering = 0;
-      } 
+void operatePump() {
+  if (systemState.lastWatering > (POMP_INTERVAL)) {
+    if (systemState.pumpOn == ON_STATE) {
+      digitalWrite(WATER_PUMP_PIN, systemState.pumpOn);
+      systemState.wateringTime += CHECK_INTERVAL * 1000;
+      if (systemState.wateringTime > plantConditions.wateringDuration) {
+        digitalWrite(WATER_PUMP_PIN, OFF_STATE);
+        systemState.wateringTime = 0;
+        systemState.lastWatering = 0;
+      }
     } else {
-      digitalWrite(PIN_WATER_PUMP, state.pump);
+      digitalWrite(WATER_PUMP_PIN, systemState.pumpOn);
     }
   }
-
-  state.last_watering += PROGRAMM_CHECK_TIME * 1000;
+  systemState.lastWatering += CHECK_INTERVAL * 1000;
 }
 
-
-void periodic_check()
-{
-  get_sensors();
-
-  light();
-  air_temp();
-  air_hum();
-  regular_ventilation();
-  soil_hum();
-  
-  //day_cycle();
-
-  do_light();
-  do_heat();
-  do_vent();
-  do_pump();
-}
-
-
-void loop()
-{
-  plant();
-  custom_clock();
-
-  if (se.seconds % PROGRAMM_CHECK_TIME == 0) { 
-    delay(800);
-    periodic_check();
-  }
-  /* 
-  digitalWrite(PIN_LIGHT, HIGH);
-  digitalWrite(PIN_FAN, HIGH);
-  digitalWrite(PIN_HEAT, HIGH);
-  digitalWrite(PIN_WATER_PUMP, HIGH);
-  delay(1000); */
+void systemCheck() {
+  readSensors();
+  regulateTemperature();
+  regulateHumidity();
+//  regulateVentilation();
+  regulateSoilHumidity();
+  regulateLight();
+  operateLight();
+  operateVentilation();
+  operateHeater();
+  operatePump();
 }

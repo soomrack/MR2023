@@ -1,145 +1,104 @@
 ﻿#include <iostream>
-#include <cstdlib>
-#include <ctime>
+
 
 class DynamicArray {
 private:
-    int* arr; 
-    int size;
-
+    int* data;
+    size_t size;
+    size_t size_allocated;
 public:
-    DynamicArray();
+    size_t bufer;
 
+    DynamicArray();
     ~DynamicArray();
 
-    void add(int value, int index);
+    explicit DynamicArray(size_t size, size_t buffer);
 
-    void fillRandom(int n);
-
-    void remove(int index);
-
-    void print();
-
-    void resize(int n);
-
-    void clear();
+    int get_elem(size_t index) const;
+    void set_elem(size_t index, int value);
+    void add(int value);
+    void resize(size_t new_size);
 };
 
 
-DynamicArray::DynamicArray() 
+DynamicArray::DynamicArray() : size{0}, bufer{1}, data{nullptr} {}
+
+
+DynamicArray::DynamicArray(size_t size, size_t bufer) : size{ size }, bufer{ bufer }, size_allocated{ size + bufer } 
 {
-    arr = nullptr;
-    size = 0;
+    if (size_allocated == 0) 
+    {
+        data = nullptr;
+    }
+    else 
+    {
+        data = new int[size_allocated];
+    }
 }
 
 
 DynamicArray::~DynamicArray() 
 {
-    delete[] arr;
+    delete[] data;
 }
 
 
-void DynamicArray::fillRandom(int n) 
+int DynamicArray::get_elem(size_t index) const
 {
-    srand(time(nullptr));
-    arr = new int[n];
-
-    for (int i = 0; i < n; i++) {
-        arr[i] = rand() % 100;
+    if (index >= size) 
+    {
+        return data[index];
     }
-
-    size = n;
-}
-
-
-void DynamicArray::add(int value, int index) 
-{
-    int* temp = new int[size + 1]; 
-
-    for (int i = 0; i < index; i++) {
-        temp[i] = arr[i]; 
-    }
-
-    temp[index] = value;
-
-    for (int i = index + 1; i < size + 1; i++) {
-        temp[i] = arr[i - 1];
-    }
-
-    delete[] arr;
-    arr = temp;
-    size++;
-}
-
-
-void DynamicArray::remove(int index) 
-{
-    int* temp = new int[size - 1]; 
-
-    for (int i = 0; i < index; i++) {
-        temp[i] = arr[i];
-    }
-
-    for (int i = index + 1; i < size; i++) {
-        temp[i - 1] = arr[i];
-    }
-
-    delete[] arr;
-    arr = temp;
-    size--;
-}
-
-
-void DynamicArray::print() 
-{
-    for (int i = 0; i < size; i++) {
-        std::cout << arr[i] << " ";
-    }
-
-    std::cout << std::endl;
-}
-
-
-void DynamicArray::resize(int n) 
-{
-    int* temp = new int[n];
-    int minSize = (size < n) ? size : n;
-
-    for (int i = 0; i < minSize; i++) {
-        temp[i] = arr[i];
-    }
-
-    delete[] arr;
-    arr = temp;
-    size = n;
-}
-
-
-void DynamicArray::clear() 
-{
-    delete[] arr;
-    arr = nullptr;
-    size = 0;
-}
-
-
-int main() 
-{
-    DynamicArray arr;
-    arr.fillRandom(10);
-    arr.print();
-
-    arr.add(42, 5);
-    arr.print();
-
-    arr.remove(3);
-    arr.print();
-
-    arr.resize(6);
-    arr.print();
-
-    arr.clear();
-
     return 0;
 }
 
+
+void DynamicArray::set_elem(size_t index, int value) 
+{
+    if (size < index) return;
+    data[index] = value;
+}
+
+
+void DynamicArray::add(int value)
+{
+    resize(size++);
+    data[size--] = value;
+}
+
+
+void DynamicArray::resize(size_t new_size) 
+{
+    if (new_size > size_allocated)
+    {
+        size_allocated = new_size + bufer;
+        int* new_data = new int[size_allocated];
+        for (size_t i = 0; i < size; i++) 
+        {
+            new_data[i] = data[i];
+        }
+        delete[] data;
+        data = new_data;
+    }
+    size = new_size;
+}
+
+
+int main()
+{
+    DynamicArray arr(0, 3);
+   
+    arr.add(22);
+    arr.add(3);
+
+    arr.set_elem(2, 5);
+   
+    arr.add(72);
+
+    arr.resize(5);
+
+    arr.add(42);
+    arr.add(25);
+
+    return 0;
+}
