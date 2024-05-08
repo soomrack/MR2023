@@ -74,7 +74,7 @@ int PriorityQueue::head() {
     if (IsEmpty())
         cout << "Очередь пустая";
     else {
-        return data[0];
+        return data[size - 1];
     }
 }
 
@@ -82,7 +82,7 @@ int PriorityQueue::tail() {
     if (IsEmpty())
         cout << "Очередь пустая";
     else {
-        return data[size - 1];
+        return data[0];
     }
 }
 
