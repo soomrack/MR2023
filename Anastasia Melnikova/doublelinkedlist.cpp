@@ -34,7 +34,6 @@ public:
     void pop_front();  // удаление элементов в начале двусвязного списка:
     void pop_back();   // удаление элементов в конце двусвязного списка:
     Node* getAt(int index);  // метод для доступа к произвольному элементу двусвязного списка
-    Node* operator [] (int index);  // оператор для доступа к произвольному элементу двусвязного списка
     Node* insert(int index, MyData data);  // метод для вставки нового элемента в связный список с индексом index
     void erase(int index);  // удаление произвольного элемента с индексом index из связного списка
 };
@@ -105,10 +104,6 @@ Node* List::getAt(int index) {
     }
 
     return ptr;
-}
-
-Node* List::operator [] (int index) {
-    return getAt(index);
 }
 
 Node* List::insert(int index, MyData data) {
