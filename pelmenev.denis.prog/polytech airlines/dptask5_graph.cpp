@@ -48,12 +48,18 @@ public:
 public:
     Route();
     ~Route();
-    void clear();
-    void print();
+    void clear_route();
+    void print_route();
+    void add_point(std::vector <Airline> &ways, size_t &count);
+    void swap_elements(Airline &a, Airline &b);
+    void heapify(std::vector <Airline> &ways, size_t size, int index);
+private:
+    std::vector <Airline> find_shorter_ways(std::vector <Airline> ways, size_t count, Airline new_way);
+    bool shortcut(std::vector <Airline> &ways, size_t &count, Airline new_way);
 };
 
 
-class Graph 
+class Graph : private Route
 {
 private:
     std::vector <City> cities;
@@ -70,14 +76,11 @@ private:
     void add_city(std::string txtline, Airline airline);
     void check_airline_id(Airline &airline, size_t idx);
     Airline get_airline(std::string txtline);
+    bool check_city_id(const int city_id);
 private:
     void add_ways(std::vector <Airline> &ways, City point, unsigned int current_time);
-    void search_city(std::vector <Airline> &ways, const unsigned int city_id, unsigned int current_time);
-    bool check_destination(std::vector <Airline> &ways, City point, size_t line, size_t size);
-    void check_points(std::vector <Airline> &ways, City point, size_t line, size_t size);
+    void search_city(std::vector <Airline> &ways, Route result, const unsigned int city_id, unsigned int current_time);
 private:
-    void heapify(std::vector <Airline> &ways, size_t size, int index);
-    void swap_elements(Airline &a, Airline &b);
     std::string get_string(std::string par_str, size_t &index);
     std::string get_string_on_quote(std::string par_str, size_t &index);
 };
@@ -157,34 +160,144 @@ Airline& Airline::operator=(const Airline line)
 
 Route::Route()
 {
-    clear();
+    clear_route();
 }
 
 
 Route::~Route()
 {
-    clear();
+    clear_route();
 }
 
 
-void Route::clear()
+void Route::clear_route()
 {
     total_air_time = 0;
     routes.clear();
 }
 
 
-void Route::print()
+void Route::print_route()
 {
     std::cout << "Total air time: " << total_air_time << std::endl;
+    std::cout << std::endl;
 
     if (routes.empty()) return;
 
-    std::cout << routes[0].origin_city_name << std::endl;
-
     for (size_t idx = 0; idx < routes.size(); ++idx) {
+        std::cout << routes[idx].origin_city_name << "  --->  ";
         std::cout << routes[idx].dest_city_name << std::endl;
     }
+
+    std::cout << std::endl;
+    std::cout << "Have a good trip :)" << std::endl;
+}
+
+
+void Route::swap_elements(Airline &a, Airline &b)
+{
+    Airline buff;
+
+    buff = a;
+    a = b;
+    b = buff;
+}
+
+
+void Route::heapify(std::vector <Airline> &ways, size_t size, int index)
+{
+	size_t max = index;
+	size_t left = 2 * index + 1;
+	size_t right = 2 * index + 2;
+
+	if (left < size && ways[left].air_time < ways[max].air_time) max = left;
+
+	if (right < size && ways[right].air_time < ways[max].air_time) max = right;
+
+	if (max != index) {
+		swap_elements(ways[index], ways[max]);
+
+		heapify(ways, size, max);
+	}
+}
+
+
+std::vector <Airline> Route::find_shorter_ways(std::vector <Airline> ways, size_t count, Airline new_way)
+{
+    std::vector <Airline> shorter_ways;
+
+    for (size_t idx = 0; idx < ways.size(); ++idx) {
+        if (new_way.dest_city_market_id == ways[idx].dest_city_market_id) {
+            for (size_t line = 0; line < routes.size(); ++line) {
+                if (ways[idx].origin_city_market_id == routes[line].origin_city_market_id) {
+                    if (new_way.air_time >= ways[idx].air_time) {
+                        shorter_ways.push_back(ways[idx]);
+                        heapify(shorter_ways, shorter_ways.size(), 0);
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
+    return shorter_ways;
+}
+
+
+bool Route::shortcut(std::vector <Airline> &ways, size_t &count, Airline new_way)
+{
+    std::vector <Airline> shorter_ways = find_shorter_ways(ways, count, new_way);
+
+    if (shorter_ways.empty()) return false;
+
+    size_t line = 0;
+
+    while (routes[line].origin_city_market_id != shorter_ways[0].origin_city_market_id)
+        line++;
+
+    while (routes.size() > line) {
+        routes.erase(routes.end() - 1);
+        count--;
+    }
+
+    routes.push_back(shorter_ways[0]);
+    count++;
+    total_air_time = routes[count].air_time;
+
+    for (size_t idx = 0; idx < ways.size(); ++idx) {
+        if (shorter_ways[0].origin_city_market_id == ways[idx].origin_city_market_id &&
+        shorter_ways[0].dest_city_market_id == ways[idx].dest_city_market_id) {
+            ways.erase(ways.begin() + idx);
+            break;
+        }
+    }
+
+    return true;
+}
+
+
+void Route::add_point(std::vector <Airline> &ways, size_t &count)
+{
+    size_t idx = 0;
+
+    while (idx < ways.size()) {
+        if (routes[count].dest_city_market_id == ways[idx].origin_city_market_id) break;
+        idx++;
+    }
+
+    if (idx == ways.size()) {
+        routes.erase(routes.begin() + count);
+        count--;
+        return;
+    }
+
+    if (shortcut(ways, count, ways[idx])) return;
+
+    routes.push_back(ways[idx]);
+    ways.erase(ways.begin() + idx);
+    count++;
+    total_air_time = routes[count].air_time;
 }
 
 
@@ -220,7 +333,8 @@ void Graph::print()
 
         for (size_t line = 0; line < cities[city].airlines.size(); line++) {
             GRAPH_FILE << cities[city].airlines[line].dest_city_name << " ";
-            GRAPH_FILE << "(" << cities[city].airlines[line].dest_city_market_id << ")" << "  ";
+            GRAPH_FILE << "(" << cities[city].airlines[line].dest_city_market_id << ")" << " ";
+            GRAPH_FILE << "[" << cities[city].airlines[line].air_time << "]" << "  ";
         }
 
         GRAPH_FILE << std::endl;
@@ -322,6 +436,7 @@ void Graph::create_graph()
         if (txtline[0] == 'A') continue;
 
         airline = get_airline(txtline);
+        if (airline.dest_city_market_id == airline.origin_city_market_id) continue;
 
         for (size_t idx = 0; idx < number_of_cities; idx++) {
             if (airline.origin_city_market_id == cities[idx].id) {
@@ -344,60 +459,6 @@ void Graph::create_graph()
 }
 
 
-void Graph::swap_elements(Airline &a, Airline &b)
-{
-    Airline buff;
-
-    buff = a;
-    a = b;
-    b = buff;
-}
-
-
-void Graph::heapify(std::vector <Airline> &ways, size_t size, int index)
-{
-	size_t max = index;
-	size_t left = 2 * index + 1;
-	size_t right = 2 * index + 2;
-
-	if (left < size && ways[left].air_time < ways[max].air_time) max = left;
-
-	if (right < size && ways[right].air_time < ways[max].air_time) max = right;
-
-	if (max != index) {
-		swap_elements(ways[index], ways[max]);
-
-		heapify(ways, size, max);
-	}
-}
-
-
-bool Graph::check_destination(std::vector <Airline> &ways, City point, size_t line, size_t size)
-{
-    for (size_t idx = 0; idx < size; ++idx) {
-        if (point.airlines[line].dest_city_market_id == ways[idx].origin_city_market_id &&
-        point.airlines[line].origin_city_market_id == ways[idx].dest_city_market_id) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-
-void Graph::check_points(std::vector <Airline> &ways, City point, size_t line, size_t size)
-{
-    for (size_t idx = 0; idx < size; ++idx) {
-        if (point.airlines[line].dest_city_market_id == ways[idx].dest_city_market_id) {
-            if (point.airlines[line].air_time < ways[idx].air_time) {
-                ways.erase(ways.begin() + idx);
-                return;
-            }
-        }
-    }
-}
-
-
 void Graph::add_ways(std::vector <Airline> &ways, City point, unsigned int current_time)
 {
     if (ways.empty()) {
@@ -410,24 +471,27 @@ void Graph::add_ways(std::vector <Airline> &ways, City point, unsigned int curre
         return;
     }
 
-    size_t init_size = ways.size();
+    std::vector <Airline> new_ways;
 
     for (size_t line = 0; line < point.airlines.size(); ++line) {
-        if (check_destination(ways, point, line, init_size)) continue;
-
         point.airlines[line].air_time += current_time;
 
-        check_points(ways, point, line, init_size);
+        new_ways.insert(new_ways.begin(), point.airlines[line]);
 
-        ways.insert(ways.begin(), point.airlines[line]);
-
-        heapify(ways, ways.size(), 0);
+        heapify(new_ways, new_ways.size(), 0);
     }
+
+    ways.insert(ways.end(), new_ways.begin(), new_ways.end());
 }
 
 
-void Graph::search_city(std::vector <Airline> &ways, const unsigned int city_id, unsigned int current_time)
+void Graph::search_city(std::vector <Airline> &ways, Route result, const unsigned int city_id, unsigned int current_time)
 {
+    if (!result.routes.empty() && !ways.empty())
+        for (size_t idx = 0; idx < ways.size(); ++idx)
+            if (city_id == ways[idx].origin_city_market_id) return;
+        
+
     for (size_t city = 0; city < number_of_cities; ++city) {
         if (city_id == cities[city].id) {
             add_ways(ways, cities[city], current_time);
@@ -437,33 +501,46 @@ void Graph::search_city(std::vector <Airline> &ways, const unsigned int city_id,
 }
 
 
+bool Graph::check_city_id(const int city_id)
+{
+    for (size_t city = 0; city < number_of_cities; ++city) {
+        if (city_id == cities[city].id) {
+            return false;
+        }
+    }
+
+    std::cout << "Invalid City ID" << std::endl;
+
+    return true;
+}
+
+
 Route Graph::find_way(const int origin, const int destination)
 {
     Route result;
+
+    if (check_city_id(origin)) return result;
+    if (check_city_id(destination)) return result;
+
     std::vector <Airline> ways;
 
-    search_city(ways, origin, 0);
+    search_city(ways, result, origin, 0);
+    result.routes.push_back(ways[0]);
+    result.total_air_time = ways[0].air_time;
 
-    if (ways.empty()) {
-        std::cout << "Invalid City ID" << std::endl;
-        return result;
-    }
+    if (result.routes[0].dest_city_market_id == destination) return result;
 
     size_t count = 0;
 
     while (!ways.empty()) {
-        result.routes.push_back(ways[0]);
-        result.total_air_time = ways[0].air_time;
-        ways.erase(ways.begin());
+        search_city(ways, result, result.routes[count].dest_city_market_id, result.total_air_time);
+        result.add_point(ways, count);
 
+        if (result.routes.empty()) break;
         if (result.routes[count].dest_city_market_id == destination) return result;
-
-        search_city(ways, result.routes[count].dest_city_market_id, result.total_air_time);
-
-        count++;
     }
 
-    result.clear();
+    result.clear_route();
 
     std::cout << "The route is not found" << std::endl;
 
@@ -480,10 +557,13 @@ int main()
     std::cout << "__________________" << std::endl;
 
     graph.create_graph();
+    std::cout << "The Graph is created" << std::endl;
     graph.print();
 
-    Route graph_result = graph.find_way(34886, 34027);
-    graph_result.print();
+    std::cout << "__________________" << std::endl;
+
+    Route graph_result = graph.find_way(30466, 34027);
+    graph_result.print_route();
 
     NEW_DATAFILE.close();
     GRAPH_FILE.close();
