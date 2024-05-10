@@ -56,6 +56,7 @@ public:
 private:
     std::vector <Airline> find_shorter_ways(std::vector <Airline> ways, size_t count, Airline new_way);
     bool shortcut(std::vector <Airline> &ways, size_t &count, Airline new_way);
+    bool cut_useless(std::vector <Airline> &ways, size_t &count, size_t &idx);
 };
 
 
@@ -277,6 +278,22 @@ bool Route::shortcut(std::vector <Airline> &ways, size_t &count, Airline new_way
 }
 
 
+bool Route::cut_useless(std::vector <Airline> &ways, size_t &count, size_t &idx)
+{
+    if (ways[idx].dest_city_market_id == routes[count].origin_city_market_id &&
+    ways[idx].origin_city_market_id == routes[count].dest_city_market_id) {
+        if (routes[count].dest_city_market_id != ways[idx + 1].origin_city_market_id) {
+            routes.erase(routes.end() - 1);
+            ways.erase(ways.begin() + idx);
+            count--;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 void Route::add_point(std::vector <Airline> &ways, size_t &count)
 {
     size_t idx = 0;
@@ -293,6 +310,8 @@ void Route::add_point(std::vector <Airline> &ways, size_t &count)
     }
 
     if (shortcut(ways, count, ways[idx])) return;
+
+    if (cut_useless(ways, count, idx)) return;
 
     routes.push_back(ways[idx]);
     ways.erase(ways.begin() + idx);
@@ -562,7 +581,7 @@ int main()
 
     std::cout << "__________________" << std::endl;
 
-    Route graph_result = graph.find_way(30466, 34027);
+    Route graph_result = graph.find_way(34614, 34027);
     graph_result.print_route();
 
     NEW_DATAFILE.close();
