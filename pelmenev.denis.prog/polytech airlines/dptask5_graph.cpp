@@ -303,12 +303,6 @@ void Route::add_point(std::vector <Airline> &ways, size_t &count)
         idx++;
     }
 
-    if (idx == ways.size()) {
-        routes.erase(routes.begin() + count);
-        count--;
-        return;
-    }
-
     if (shortcut(ways, count, ways[idx])) return;
 
     if (cut_useless(ways, count, idx)) return;
@@ -581,7 +575,7 @@ int main()
 
     std::cout << "__________________" << std::endl;
 
-    Route graph_result = graph.find_way(34614, 34027);
+    Route graph_result = graph.find_way(35798, 34027);
     graph_result.print_route();
 
     NEW_DATAFILE.close();
