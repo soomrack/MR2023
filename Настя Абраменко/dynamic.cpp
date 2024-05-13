@@ -69,7 +69,7 @@ void DynamicArray::resize(int new_size) {
         memcpy(new_data, data, size * sizeof(int));
         delete[] data;
         data = new_data;
-        bufer = new_size;
+        size = new_size;
     }
     else {
         size = new_size;
