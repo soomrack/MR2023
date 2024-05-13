@@ -13,18 +13,18 @@ const byte PS_16 = (1 << ADPS2);
 
 void setup() {
     
-    ADCSRA &= ~PS_128; // reset the scale 128
-    ADCSRA |= PS_16; // Set scale 16 (1 MHz)
+    ADCSRA &= ~PS_128; 
+    ADCSRA |= PS_16; 
 
     pinMode(PIN_LIGHT_RIGHT, INPUT); 
     pinMode(PIN_LIGHT_LEFT, INPUT); 
     pinMode(PIN_SOUND, OUTPUT);
     int freshold = 800; 
     
-    while (true) 
-        if ((analogRead(PIN_LIGHT_RIGHT) > freshold)  &&  (analogRead(PIN_LIGHT_LEFT) > freshold)) { forward(255); }
-        if ((analogRead(PIN_LIGHT_RIGHT) > freshold)  &&  (analogRead(PIN_LIGHT_LEFT) < freshold)) { right(255); }
-        if ((analogRead(PIN_LIGHT_RIGHT) < freshold)  &&  (analogRead(PIN_LIGHT_LEFT) > freshold)) { left(255); }
+    while (true) {
+        if ((analogRead(PIN_LIGHT_RIGHT) > freshold)  &&  (analogRead(PIN_LIGHT_LEFT) > freshold)) { forward(230); }
+        if ((analogRead(PIN_LIGHT_RIGHT) > freshold)  &&  (analogRead(PIN_LIGHT_LEFT) < freshold)) { right(230); }
+        if ((analogRead(PIN_LIGHT_RIGHT) < freshold)  &&  (analogRead(PIN_LIGHT_LEFT) > freshold)) { left(230); }
         if ((analogRead(PIN_LIGHT_RIGHT) < freshold)  &&  (analogRead(PIN_LIGHT_LEFT) < freshold)) { search(); }  
     }
 }
@@ -61,7 +61,7 @@ void stop() {
 void left(byte speed) { 
   digitalWrite(PIN_RIGHT_DIRECTION, LOW); 
   digitalWrite(PIN_LEFT_DIRECTION, HIGH); 
-  analogWrite(PIN_SPEED_RIGHT, 255); 
+  analogWrite(PIN_SPEED_RIGHT, 230); 
   analogWrite(PIN_SPEED_LEFT, speed); 
 } 
 
@@ -70,7 +70,7 @@ void right(byte speed) {
   digitalWrite(PIN_RIGHT_DIRECTION, HIGH); 
   digitalWrite(PIN_LEFT_DIRECTION, LOW); 
   analogWrite(PIN_SPEED_RIGHT, speed); 
-  analogWrite(PIN_SPEED_LEFT, 255); 
+  analogWrite(PIN_SPEED_LEFT, 230); 
 }
 
 
@@ -95,7 +95,7 @@ void search() {
       speed_increment = 150; 
     } 
     speed_increment += 1; 
-    if (millis() - time > 7000) {  
+    if (millis() - time > 8000) {  
       stop();
       break;
     }
