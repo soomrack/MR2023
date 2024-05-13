@@ -66,7 +66,7 @@ void FlightParser::parse(std::ifstream* filestream, const std::string& path) {
     for (line; std::getline(*filestream, line, '\n');) {
         auto result = csv_stacker(line);
         flights.emplace_back(std::atoi(result[csv_header["AIR_TIME"]].c_str()),
-                             result[csv_header["ORIGIN_CITY_NAME"]],
+                            result[csv_header["ORIGIN_CITY_NAME"]],
                             result[csv_header["DEST_CITY_NAME"]]);
     }
     filestream->close();
