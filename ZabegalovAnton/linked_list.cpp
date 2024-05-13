@@ -43,7 +43,7 @@ void Linked_list::add_head(int value)
 
 void Linked_list::delete_head()
 {
-    if (head = nullptr) return;
+    if (head == nullptr) return;
 
     Node* temporary = head;
     head = head->next;
@@ -53,7 +53,7 @@ void Linked_list::delete_head()
 
 void Linked_list::print_head()
 {
-    if (head = nullptr) return;
+    if (head == nullptr) return;
 
     std::cout<<head->data<<std::endl;
 }
@@ -61,7 +61,7 @@ void Linked_list::print_head()
 
 int Linked_list::get_head()
 {
-    if (head = nullptr) return 1;
+    if (head == nullptr) return 1;
 
     return head->data;
 }
