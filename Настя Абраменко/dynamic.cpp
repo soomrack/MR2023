@@ -59,7 +59,7 @@ void DynamicArray::append(int value) {
     if (size == bufer) {
         resize(bufer + 1);
     }
-    data[size++] = value;
+    data[size - 1] = value;
 }
 
 
@@ -72,8 +72,8 @@ void DynamicArray::resize(int new_size) {
         bufer = new_size;
     }
     else {
-        size += 1;
-        bufer -= 1;
+        size = new_size;
+        bufer = size + buffer - new_size;
     }
 }
 
