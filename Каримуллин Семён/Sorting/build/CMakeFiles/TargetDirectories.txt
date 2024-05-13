@@ -1,0 +1,2 @@
+/home/prlx/MR2023/Каримуллин Семён/Sorting/build/CMakeFiles/edit_cache.dir
+/home/prlx/MR2023/Каримуллин Семён/Sorting/build/CMakeFiles/rebuild_cache.dir
