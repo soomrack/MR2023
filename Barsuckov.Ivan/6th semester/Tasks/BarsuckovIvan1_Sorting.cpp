@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include <math.h>
 #include <cstdlib>
 
@@ -16,7 +15,7 @@ void print_array(const ArrayItem array[], size_t size)
     std::cout << std::endl;
 }
 
-
+//Use XOR
 void swap_elements(ArrayItem& a, ArrayItem& b)
 {
     b = b ^ a;
@@ -124,7 +123,11 @@ void sort_heap(ArrayItem array[], size_t size)
 
 int main()
 {
-    size_t a_size = 10;
+  /*int A[] = {2, 4, 6, 8, 10, 1, 3, 5, 7, 9};
+    for (int i = 0; i < 10; i++)
+        cout << " " << A[i];*/ 
+        
+    size_t a_size = 5;
     ArrayItem* a;
     a = new ArrayItem[a_size];
 
@@ -135,19 +138,13 @@ int main()
     print_array(a, a_size);
     std::cout << "______________" << std::endl;
 
-    //sort_bubble(a, a_size);
+    sort_bubble(a, a_size);
     //sort_insertion(a, a_size);
     //sort_merge(a, a_size);
-
-    sort_heap(a, a_size);
+    //sort_heap(a, a_size);
 
     std::cout << "______________" << std::endl;
     print_array(a, a_size);
 
-
-    /*int A[] = {2, 4, 6, 8, 10, 1, 3, 5, 7, 9};
-
-    for (int i = 0; i < 10; i++)
-        cout << " " << A[i];*/
     return 0;
 }
