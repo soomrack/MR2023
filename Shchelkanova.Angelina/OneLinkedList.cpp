@@ -34,7 +34,7 @@ public:
 	void push_front(Data data); // добавление объекта в начало списка
 	Node* ret(int n); // возвращает указатель на объект списка с указанным индексом n
 	void insert(int n, Data data); // вставляет элемент по указанному индексу n
-	void earase(int n); // удаляет элемент по указанному индексу n
+	void erase(int n); // удаляет элемент по указанному индексу n
 };
 
 void OneLinkedList::pop_front() {
@@ -105,7 +105,7 @@ void OneLinkedList::insert(int n, Data data) {
 	if (right == NULL) tail = node;
 }
 
-void OneLinkedList::earase(int n) {
+void OneLinkedList::erase(int n) {
 	if (n < 0) return;
 	if (n == 0) {
 		pop_front();
@@ -135,7 +135,7 @@ int main() {
 	Node* k = list.ret(3);
 	cout << k << endl;
 
-	list.earase(3);
+	list.erase(3);
 	Node* l = list.ret(3);
 	cout << l << endl;
 
