@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-typedef double Data;
+typedef int Data;
 
 class Node {
 public:
