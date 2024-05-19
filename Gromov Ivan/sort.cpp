@@ -31,66 +31,50 @@ void insert_sort(int arr[], int size)
 }
 
 
-void merge(int arr[], int l, int m, int r)
-{
+void merge(int arr[], int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    int Left[n1], Right[n2];
 	
-    int n1 = m - l + 1;
-    int n2 =  r - m;
-	int i, j, k;
-	
-	int size = sizeof(&arr);
-		
-    int L[n1], M[n2];
- 
-    for (i = 0; i < n1; i++) {
-        L[i] = arr[l + i];
-	}
-    for (j = 0; j < n2; j++) {
-        M[j] = arr[m + 1 + j];
-	}
-	
-    i = 0; 
-    j = 0; 
-    k = l; 
- 
-    while (i < n1 && j < n2)
-    {
-        if (L[i] <= M[j]) {
-            arr[k] = L[i];
+    memcpy(Left, &arr[left], n1 * sizeof(int));
+    memcpy(Right, &arr[mid + 1], n2 * sizeof(int));
+
+    int i = 0, j = 0, k = left;
+
+    while (i < n1 && j < n2) {
+        if (Left[i] <= Right[j]) {
+            arr[k] = Left[i];
             i++;
-        }
-        else {
-            arr[k] = M[j];
+        } else {
+            arr[k] = Right[j];
             j++;
         }
         k++;
     }
- 
-    while (i < n1)
-    {
-        arr[k] = L[i];
-        i++;
-        k++;
+
+    while (i < n1) {
+        arr[k] = Left[i];
+        i++; 
+		k++;
     }
- 
-    while (j < n2)
-    {
-        arr[k] = M[j];
+
+    while (j < n2) {
+        arr[k] = Right[j];
         j++;
         k++;
     }
 }
 
-void mergeSort(int arr[], int l, int r) 
-{
-  if (l < r) {
-    int m = l + (r - l) / 2;
+void mergeSort(int arr[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
 
-    mergeSort(arr, l, m);
-    mergeSort(arr, m + 1, r);
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
 
-    merge(arr, l, m, r);
-  }
+        merge(arr, left, mid, right);
+    }
 }
 
 void print(int arr[], int number_out)
@@ -107,14 +91,14 @@ void heapify(int arr[], int n, int i)
 {
     int largest = i;   
 
-    int l = 2*i + 1;
-    int r = 2*i + 2; 
+    int left = 2*i + 1;
+    int right = 2*i + 2; 
 
-    if (l < n && arr[l] > arr[largest])
-        largest = l;
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
 
-    if (r < n && arr[r] > arr[largest])
-        largest = r;
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
 
     if (largest != i) {
         std::swap(arr[i], arr[largest]);
