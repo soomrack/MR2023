@@ -6,17 +6,17 @@ class Dynamic_array {
 private: 
     int* data;
     size_t size;
-    size_t buffer;
+    size_t container;
 
 public:
-    Dynamic_array(size_t your_size, size_t your_buffer);
+    Dynamic_array(size_t your_container);
     Dynamic_array(Dynamic_array& arr);
     Dynamic_array(Dynamic_array&& arr);
     ~Dynamic_array();
 
 public:
     int get_size();
-    int get_buffer();
+    int get_container();
     int get_element(int idx);
 
     void print_arr();
@@ -28,21 +28,21 @@ public:
 };
 
 
-Dynamic_array:: Dynamic_array(size_t your_size, size_t your_buffer)
+Dynamic_array:: Dynamic_array(size_t your_container)
 {
-    size = your_size;
-    buffer = your_buffer;
-    data = new int[size + buffer];
+    size = 0;
+    container = your_container;
+    data = new int[container];
 } 
 
 
 Dynamic_array:: Dynamic_array(Dynamic_array& arr)
 {
     size = arr.size;
-    buffer = arr.buffer;
+    container = arr.container;
     
     delete [] data;
-    data = new int[size + buffer];
+    data = new int[container];
     memcpy(data, arr.data, sizeof(int) * size); 
 } 
 
@@ -51,7 +51,7 @@ Dynamic_array:: Dynamic_array(Dynamic_array& arr)
 Dynamic_array:: Dynamic_array(Dynamic_array&& arr)
 {
     size = arr.size;
-    buffer = arr.buffer;
+    container = arr.container;
     
     delete [] data;
     data = arr.data;
@@ -62,7 +62,7 @@ Dynamic_array:: Dynamic_array(Dynamic_array&& arr)
 Dynamic_array:: ~Dynamic_array()
 {
     size = 0;
-    buffer = 0;
+    container = 0;
     delete [] data;
 }
 
@@ -73,9 +73,9 @@ int Dynamic_array:: get_size()
 }
 
 
-int Dynamic_array:: get_buffer()
+int Dynamic_array:: get_container()
 {
-    return buffer;
+    return container;
 }
 
 
@@ -103,8 +103,7 @@ void Dynamic_array:: set_arr()
     int arr[] = {1, 2, 3, 4, 150};
     int length = sizeof(arr) / sizeof(arr[0]);
 
-    if(length != size)
-        return;
+    resize(length);
     
     for(int i = 0; i < size; i++)
         data[i] = arr[i];
@@ -114,7 +113,7 @@ void Dynamic_array:: set_arr()
 void Dynamic_array:: set_element(int idx, int value)
 {
     if(idx > size - 1)
-        return;
+        resize(idx + 1);
     
     data[idx] = value;
 }
@@ -122,14 +121,14 @@ void Dynamic_array:: set_element(int idx, int value)
 
 void Dynamic_array:: resize(int new_size)
 {
-    if(new_size > size + buffer){
+    if(new_size > container){
         int* new_data = new int[new_size];
         memcpy(new_data, data, size * sizeof(int));
         delete [] data;
         data = new_data;
         size = new_size;
+        container = new_size;
     } else {
-        buffer = size + buffer - new_size;
         size = new_size;
     }
 }
@@ -137,7 +136,7 @@ void Dynamic_array:: resize(int new_size)
 
 int main()
 {
-    Dynamic_array Arr(5, 5);
+    Dynamic_array Arr(10);
 
     Arr.set_arr();
     Arr.print_arr();
