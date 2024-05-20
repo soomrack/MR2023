@@ -1,41 +1,50 @@
 #pragma once
 #include "parser.hpp"
 #include <unordered_map>
+#include <map>
 
 namespace DjikstraAirlanes {
-
-    struct Neighbour {
-        std::string neighbour_city{0};
-        uint16_t time{0};
-    };  //  struct Neighbour
-
+    using City = std::string;
     using namespace DjikstraAirlanesParser;
-    using city = std::string;
-    using adjacency_list = std::unordered_map<city, std::vector<Neighbour>>;
-    using parent_list = std::unordered_map<city, city>;
 
-    using path = std::pair<std::vector<Neighbour>, uint16_t>;
-    // uint16_t INF = UINT16_MAX;
+    using Time_list = std::map<City, Time>;
+    using Adjacency_list = std::map<City, Time_list>;
+    using Checked_nodes = std::vector<bool>;
+    using Parent_list = std::unordered_map<City, City>;
+    using Neighbour = std::pair<City, Time>;
+    using Path = std::pair<std::vector<Neighbour>, Time>;
 
-    class Airliner {
+
+    class PathFinder {
 
     private:
         FlightParser parser;
-        path current_path;
-        adjacency_list ad_list;
+        Path path_solution;
+        Adjacency_list adjacency_list;
+        Parent_list parent_list;
+        Time_list time_list;
+        bool* checked_nodes{nullptr};
 
-
+        static constexpr Time INF{UINT32_MAX};
+        static constexpr const char* NONE{"NONE"};
 
     public:
-        Airliner() = delete;
-        Airliner(const std::string& log_path);
-        ~Airliner() = default;
-        path find_path(std::string origin_city, std::string dest_city);
-        void print_graph();
+        PathFinder() = delete;
+        PathFinder(const std::string& log_path, DataType dtype);
+        ~PathFinder();
+
+        inline const Adjacency_list& get_graph() { return adjacency_list; }
+        void find(const std::string origin_city, const std::string dest_city);
+
+        void print_graph_info();
+        void print_path();
 
     private:
         void compose();
+        void restore_path(const std::string& origin, const std::string& dest);
+        const Neighbour find_closest_city();
 
-    };  //  class Airliner
+
+    };  //  class PathFinder
 
 };  //  namespace DjikstraAirlanes
