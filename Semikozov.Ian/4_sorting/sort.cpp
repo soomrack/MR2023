@@ -1,9 +1,8 @@
 #include "sort.hpp"
 
 #include <cstddef>
-#include <vector>
 
-void bubble_sort(std::vector<int> &v)
+void bubble_sort(sorting_t &v)
 {
     if (v.size() <= 1) { return; }
 
@@ -16,11 +15,11 @@ void bubble_sort(std::vector<int> &v)
     }
 }
 
-void merge_sort_body(std::vector<int> &v, std::vector<int> &&temp, size_t start, size_t end)
+void merge_sort_body(sorting_t &v, sorting_t &&temp, size_t start, size_t end)
 {
     if (start < end)
     {
-        auto merge = [](std::vector<int> &vector, std::vector<int> &temp, size_t start, size_t middle, size_t end)
+        auto merge = [](sorting_t &vector, sorting_t &temp, size_t start, size_t middle, size_t end)
         {
             size_t left = start, right = middle + 1;
             size_t index = start;
@@ -65,14 +64,14 @@ void merge_sort_body(std::vector<int> &v, std::vector<int> &&temp, size_t start,
     }
 }
 
-void merge_sort(std::vector<int> &v)
+void merge_sort(sorting_t &v)
 {
     if (v.size() <= 1) { return; }
 
-    merge_sort_body(v, std::vector<int>{ v }, 0, v.size() - 1);
+    merge_sort_body(v, sorting_t{ v }, 0, v.size() - 1);
 }
 
-void heapify(std::vector<int> &vector, size_t size, size_t idx)
+void heapify(sorting_t &vector, size_t size, size_t idx)
 {
     const size_t left = 2 * idx + 1, right = 2 * idx + 2;
     size_t idx_max_heap = idx;
@@ -88,7 +87,7 @@ void heapify(std::vector<int> &vector, size_t size, size_t idx)
     }
 }
 
-void heap_sort(std::vector<int> &vector)
+void heap_sort(sorting_t &vector)
 {
     for (size_t idx = vector.size() / 2 - 1; true; idx--)
     {
@@ -106,7 +105,7 @@ void heap_sort(std::vector<int> &vector)
     }
 }
 
-void insertion_sort(std::vector<int> &vector)
+void insertion_sort(sorting_t &vector)
 {
     for (size_t sorted = 1; sorted < vector.size(); sorted++)
     {

@@ -3,9 +3,11 @@
 
 #include <vector>
 
-void bubble_sort(std::vector<int> &vector);
-void merge_sort(std::vector<int> &vector);
-void heap_sort(std::vector<int> &vector);
-void insertion_sort(std::vector<int> &vector);
+using sorting_t = std::vector<int>;
+
+void bubble_sort(sorting_t &vector);
+void merge_sort(sorting_t &vector);
+void heap_sort(sorting_t &vector);
+void insertion_sort(sorting_t &vector);
 
 #endif // SORT_HPP_INCLUDED

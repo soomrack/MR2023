@@ -14,23 +14,21 @@
 #include "linked_list.hpp"
 #include <cstddef>
 
-namespace structures
-{
 template <typename T>
 struct queue : private linked_list<T>
 {
+public:
     queue() = default;
-    ~queue(){};
+    ~queue();
 
-    T &front() {}
-    T &back() {}
+    T &front();
+    T &back();
 
-    bool empty() {}
-    size_t size() {}
-    void push(const T &value_) {}
-    void emplace() {}
-    T pop() {}
-
+    bool empty();
+    size_t size();
+    void push(const T &value_);
+    void emplace();
+    T pop();
 }; // struct queue
 
 template <typename T>
@@ -41,6 +39,44 @@ static void swap(queue<T> &lhs, queue<T> &rhs) noexcept
     rhs = temp;
 }
 
-}; // namespace structures
+template <typename T>
+queue<T>::~queue()
+{}
+
+template <typename T>
+T &queue<T>::front()
+{
+    return linked_list<T>::front();
+}
+
+template <typename T>
+T &queue<T>::back()
+{
+    return linked_list<T>::back();
+}
+
+template <typename T>
+bool queue<T>::empty()
+{
+    return linked_list<T>::empty();
+}
+
+template <typename T>
+size_t queue<T>::size()
+{
+    return linked_list<T>::size();
+}
+
+template <typename T>
+void queue<T>::push(const T &value_)
+{
+    return linked_list<T>::push_back(value_);
+}
+
+template <typename T>
+T queue<T>::pop()
+{
+    return linked_list<T>::pop_back();
+}
 
 #endif // QUEUE_HPP_INCLUDED

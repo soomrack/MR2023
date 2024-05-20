@@ -13,9 +13,6 @@
 
 #include "linked_list.hpp"
 
-namespace structures
-{
-
 template <typename T>
 struct stack : private linked_list<T>
 {
@@ -23,30 +20,28 @@ struct stack : private linked_list<T>
 
     void push(const T &value_)
     {
-        this->push_back(value_);
+        linked_list<T>::push_back(value_);
     }
 
     T pop()
     {
-        return this->pop_back();
+        return linked_list<T>::pop_back();
     }
 
     T &top()
     {
-        return this->back();
+        return linked_list<T>::back();
     };
 
     bool empty()
     {
-        return this->size() == 0;
+        return linked_list<T>::empty();
     };
 
     size_t size()
     {
-        return this->size();
+        return linked_list<T>::size();
     };
-}; // class stack
-
-}; // namespace structures
+}; // struct stack
 
 #endif // STACK_HPP_INCLUDED

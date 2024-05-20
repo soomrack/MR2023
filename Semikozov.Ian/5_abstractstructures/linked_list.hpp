@@ -12,12 +12,58 @@
 #define LINKED_LIST_HPP_INCLUDED
 
 #include <cstddef>
-#include <iostream>
 #include <stdexcept>
 #include <utility>
 
-namespace structures
+namespace
 {
+template <typename T>
+struct node
+{
+    static constexpr T null_node{ 0 };
+
+    T value;
+    node *next;
+    node(const T value_, node *next_ = nullptr) : value{ value_ }, next{ next_ } {};
+
+    node(const node &other)
+    {
+        *this = other;
+    }
+
+    node &operator=(const node &rhs)
+    {
+        if (this == &rhs) { return *this; }
+
+        value = rhs.value;
+        next = rhs.next;
+
+        return *this;
+    };
+
+    node &operator=(const node &&rhs)
+    {
+        if (this == &rhs) { return *this; }
+
+        value = rhs.value;
+        next = rhs.next;
+
+        rhs.next = nullptr;
+        rhs = 0;
+
+        return *this;
+    };
+};
+
+template <typename T>
+void swap(node<T> &lhs, node<T> &rhs) noexcept
+{
+    using std::swap;
+    swap(lhs.next, rhs.next);
+    swap(lhs.value, rhs.value);
+}
+
+} // namespace
 
 template <typename T>
 struct linked_list
@@ -42,56 +88,19 @@ public:
     void remove(const size_t index);
     T &operator[](const size_t index);
 
-private:
-    struct node
-    {
-        static constexpr T null_node{ 0 };
-
-        T value;
-        node *next;
-        node() = delete;
-        node(const T value_, node *next_ = nullptr) : value{ value_ }, next{ next_ } {};
-
-        node(const node &other)
-        {
-            *this = other;
-        }
-
-        node &operator=(const node &rhs)
-        {
-            if (this == &rhs) { return *this; }
-
-            value = rhs.value;
-            next = rhs.next;
-
-            return *this;
-        };
-
-        node &operator=(const node &&rhs)
-        {
-            if (this == &rhs) { return *this; }
-
-            value = rhs.value;
-            next = rhs.next;
-
-            rhs.next = nullptr;
-            rhs = 0;
-
-            return *this;
-        };
-    };
-
-    static void swap(node &lhs, node &rhs) noexcept
-    {
-        node temp = lhs;
-        lhs = rhs;
-        rhs = temp;
-    }
-
 protected:
-    node *head{ nullptr }, *tail{ nullptr };
+    node<T> *head{ nullptr }, *tail{ nullptr };
     size_t size_{ 0 };
 };
+
+template <typename T>
+void swap(linked_list<T> &lhs, linked_list<T> &rhs)
+{
+    using std::swap;
+    swap(lhs.head, rhs.head);
+    swap(lhs.size_, rhs.size_);
+    swap(lhs.tail, rhs.tail);
+}
 
 template <typename T>
 linked_list<T>::linked_list(const linked_list &other)
@@ -114,7 +123,7 @@ linked_list<T>::linked_list(linked_list &&other) noexcept
 template <typename T>
 linked_list<T>::~linked_list()
 {
-    node *temp;
+    node<T> *temp;
 
     while (--size_)
     {
@@ -139,7 +148,7 @@ size_t linked_list<T>::size() const
 template <typename T>
 T &linked_list<T>::at(const size_t index) const
 {
-    if (this->empty() || index > size_ - 1) { throw std::runtime_error("Array index out of bounds"); }
+    if (index > size_ - 1) { throw std::runtime_error("Array index out of bounds"); }
 
     int temp = index;
     auto p = head;
@@ -295,7 +304,5 @@ T &linked_list<T>::operator[](const size_t index)
 
     return p->value;
 }
-
-}; // namespace structures
 
 #endif // LINKED_LIST_HPP_INCLUDED
