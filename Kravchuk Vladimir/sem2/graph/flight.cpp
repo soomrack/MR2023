@@ -22,14 +22,21 @@ struct MinHeap {
 private:
     vector<Neighbor> heap;
 
-    void heapify_up(size_t idx) {
-        size_t parent = (idx - 1) / 2;
-        while (idx > 0 && heap[idx].time < heap[parent].time) {
-            swap(heap[idx], heap[parent]);
-            idx = parent;
-            parent = (idx - 1) / 2;
-        }
+
+public:
+    Neighbor& operator[](size_t index) {
+        return heap[index];
     }
+
+    size_t size() const {
+        return heap.size();
+    }
+
+
+    bool empty() const {
+        return heap.empty();
+    }
+
 
     void heapify_down(int idx) {
         int left = 2 * idx + 1;
@@ -49,10 +56,16 @@ private:
         }
     }
 
-public:
-    bool empty() const {
-        return heap.empty();
+
+    void heapify_up(size_t idx) {
+        size_t parent = (idx - 1) / 2;
+        while (idx > 0 && heap[idx].time < heap[parent].time) {
+            swap(heap[idx], heap[parent]);
+            idx = parent;
+            parent = (idx - 1) / 2;
+        }
     }
+
 
     void push(const Neighbor& neighbor) {
         heap.push_back(neighbor);
@@ -77,6 +90,7 @@ void dijkstra(int start, int end, const vector<vector<int>>& fl_table) {
     size_t table_size = fl_table.size();
     vector<Vertex> Verts(table_size);
     vector<int> stack_to_go;
+    vector<bool> in_heap(table_size, false);
     MinHeap heap;
 
     heap.push({ start, 0 });
@@ -85,7 +99,7 @@ void dijkstra(int start, int end, const vector<vector<int>>& fl_table) {
     while (!heap.empty()) {
         int current_vertex = heap.pop().vertex;
 
-        for (int neighbor = 0; neighbor < table_size; ++neighbor) {
+        for (size_t neighbor = 0; neighbor < table_size; ++neighbor) {
             if (fl_table[current_vertex][neighbor] != numeric_limits<int>::max()) {
                 stack_to_go.push_back(neighbor);
             }
@@ -96,7 +110,19 @@ void dijkstra(int start, int end, const vector<vector<int>>& fl_table) {
             if (new_time < Verts[neighbor].time_from_start) {
                 Verts[neighbor].time_from_start = new_time;
                 Verts[neighbor].prev_vert = current_vertex;
-                heap.push({ neighbor, new_time });
+                if (!in_heap[neighbor]) {
+                    heap.push({ neighbor, new_time });
+                    in_heap[neighbor] = true; 
+                }
+                else {
+                    for (size_t idx = 0; idx < heap.size(); ++idx) {
+                        if (heap[idx].vertex == neighbor) {
+                            heap[idx].time = new_time;
+                            heap.heapify_up(idx);
+                            heap.heapify_down(idx);
+                        }
+                    }
+                }
             }
         }
         stack_to_go.clear();
