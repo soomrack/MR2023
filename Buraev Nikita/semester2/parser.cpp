@@ -7,17 +7,28 @@
 using namespace std;
 
 vector<string> split(const string &s, char delimiter) {
-    vector<string> tokens;
-    stringstream ss(s);
-    string token;
-    while (getline(ss, token, delimiter)) {
-        tokens.push_back(token);
+    vector<string> cells;
+    string cell;
+    bool insideQuotes = false;
+    for (size_t i = 0; i < s.size(); ++i) {
+        if (s[i] == '"') {
+            insideQuotes = !insideQuotes;
+        }
+        if (!insideQuotes && s[i] == delimiter) {
+            cells.push_back(cell);
+            cell.clear();
+        } else {
+            cell += s[i];
+        }
     }
-    return tokens;
+    cells.push_back(cell);
+    return cells;
 }
 
+
+
 int main() {
-    ifstream inputFile("T_T100_SEGMENT_ALL_CARRIER.csv");
+    ifstream inputFile("data.csv");
     ofstream outputFile("parsed.csv");
 
     if (!inputFile.is_open() || !outputFile.is_open()) {
@@ -27,7 +38,7 @@ int main() {
 
     string line;
     
-    getline(inputFile, line); // Read and ignore the header line
+    getline(inputFile, line);
 
     while (getline(inputFile, line)) {
         vector<string> columns = split(line, ',');
@@ -40,13 +51,13 @@ int main() {
             string uniqueCarrierName = columns[12];
             string originCity = columns[23];
             string destCity = columns[34];
-            if (!originCityMarketID.empty() && 
-                !destCityMarketID.empty() &&
-                !airTime.empty() && 
-                !airlineID.empty() && 
-                !uniqueCarrierName.empty() &&
-                !originCity.empty() && 
-                !destCity.empty()) {
+            if (originCityMarketID != "" && 
+                destCityMarketID != "" &&
+                airTime != "" && 
+                airlineID != "" && 
+                uniqueCarrierName != "" &&
+                originCity != "" && 
+                destCity != "") {
 
                 outputFile << originCityMarketID << "," 
                            << destCityMarketID << "," 
