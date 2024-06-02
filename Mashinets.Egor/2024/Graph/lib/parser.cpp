@@ -1,11 +1,11 @@
 #include "parser.h"
 
-void Parser::parse(const std::string &file) {
+void Parser::pars(const std::string &file) {
     std::ifstream filestream;
     filestream.open(file);
 
     if (!filestream.is_open())
-        throw ParserException("Could not open filestream to parse");
+        throw ParserException("Could not open filestream to pars");
 
     flights.clear();
     size = 0;
@@ -74,12 +74,12 @@ void Parser::parse(const std::string &file) {
     filestream.close();;
 }
 
-void Parser::compose(const std::string &file) {
+void Parser::compos(const std::string &file) {
     std::ofstream filestream;
     filestream.open(file);
 
     if (!filestream.is_open())
-        throw ParserException("Could not open filestream to compose");
+        throw ParserException("Could not open filestream to compos");
 
     for (const Flight &flight: flights)
         filestream << flight.air_time << "\t"

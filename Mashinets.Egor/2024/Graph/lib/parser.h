@@ -31,9 +31,9 @@ private:
     std::vector<Flight> flights;
     size_t size;
 public:
-    void parse(const std::string &file);
+    void pars(const std::string &file);
 
-    void compose(const std::string &file);
+    void compos(const std::string &file);
 
     std::vector<Flight> get_flights() { return flights; };
 

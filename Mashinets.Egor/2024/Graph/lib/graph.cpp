@@ -7,7 +7,7 @@ Graph::Graph(const std::vector<Flight> &flights) {
     }
 }
 
-void Graph::dijkstra(const std::string &origin, const std::string &dest) const {
+void Graph::dikstra(const std::string &origin, const std::string &dest) const {
     std::unordered_map<std::string, double> air_times;
     std::unordered_map<std::string, std::string> previous;
     std::priority_queue<std::pair<double, std::string>, std::vector<std::pair<double, std::string>>, std::greater<>> pq;
