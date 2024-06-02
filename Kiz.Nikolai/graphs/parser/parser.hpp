@@ -7,6 +7,7 @@
 
 namespace DjikstraAirlanesParser {
 
+    using Time = uint32_t;
 
     enum class CsvLineState {
         UnquotedField,
@@ -14,12 +15,12 @@ namespace DjikstraAirlanesParser {
         QuotedQuote
     };
 
+
     enum class DataType {
         Dirty = 1,
         Cleared = 2
     };
 
-    using Time = uint32_t;
 
     struct Flight {
         
@@ -42,15 +43,7 @@ namespace DjikstraAirlanesParser {
 
 
     class FlightParser {
-
-        friend std::ostream& operator<<(std::ostream& os, FlightParser& parser) {
-            for (auto flight: parser.flights) {
-                os << flight;
-            }
-            return os;
-        }
-
-
+ 
     private:
         std::vector<Flight> flights;
         std::map<std::string, int> csv_header;
@@ -77,6 +70,13 @@ namespace DjikstraAirlanesParser {
         void append_cleared_data_file();
         bool check_data_line(std::vector<std::string>& flight_line, size_t line_idx);
         std::vector<std::string> csv_stacker(const std::string& line);
+    
+        friend std::ostream& operator<<(std::ostream& os, FlightParser& parser) {
+            for (auto flight: parser.flights) {
+                os << flight;
+            }
+            return os;
+        }
 
     };  //  class FlightParser
 

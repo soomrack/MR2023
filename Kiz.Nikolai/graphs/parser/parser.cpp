@@ -41,7 +41,7 @@ template<>
 void FlightParser::parse<DataType::Cleared>(std::ifstream* filestream, const std::string& path) {
     if(!filestream->is_open()) {
         try { filestream->open(path); }
-        catch (std::exception& e) { throw ParserException("Couldn't open a file."); } 
+        catch (...) { throw ParserException("Couldn't open a file."); } 
     }
     cleared_data_path = path;
     std::string line;
