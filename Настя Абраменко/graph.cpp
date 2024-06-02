@@ -188,18 +188,19 @@ void dijkstra(int start, int end, const vector<vector<int>>& fl_table)
     int table_size = fl_table.size();
     vector<Vertex> verts_obj(table_size);
     vector<int> stack_to_go;
-    priority_queue<Neighbor> queue;
+    vector<bool> in_heap(table_size, false);
+    MinHeap heap;
 
-    queue.push({ start, 0 });
+    heap.push({ start, 0 });
     verts_obj[start].dist_from_start = 0;
 
-    while (!queue.empty()) {
-        int current_vertex = queue.top().vertex_index;
-        int current_dist = queue.top().dist;
-        queue.pop();
+    while (!heap.empty()) {
+        int current_vertex = heap.pop().vertex;
 
         for (int neighbor = 0; neighbor < table_size; ++neighbor) {
-            if (fl_table[current_vertex][neighbor] != INT_MAX) { stack_to_go.push_back(neighbor); }
+            if (fl_table[current_vertex][neighbor] != INT_MAX) { 
+                stack_to_go.push_back(neighbor); 
+            }
         }
 
         for (int neighbor : stack_to_go) {
@@ -207,12 +208,14 @@ void dijkstra(int start, int end, const vector<vector<int>>& fl_table)
             if (new_dist < verts_obj[neighbor].dist_from_start) {
                 verts_obj[neighbor].dist_from_start = new_dist;
                 verts_obj[neighbor].prev_vert = current_vertex;
-                queue.push({ neighbor, new_dist });
+                if (in_heap[neighbor]) {
+                    heap.push({ heighbor, new_dist });
+                    in_heap[neighbor] = true;
+                }
             }
         }
         stack_to_go.clear();
     }
-
 
     if (verts_obj[end].dist_from_start == INT_MAX) { cout << "No path found" << endl; }
     else {
