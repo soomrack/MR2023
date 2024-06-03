@@ -95,7 +95,8 @@ void parsing(ifstream& datafile, ofstream& logfile) {
     vector<Flight> Flights;
     string line;
 
-    while (getline(datafile, line)) {
+    while (!datafile.eof()) {
+        getline(datafile, line);
         stringstream inputString(line);
 
         string tempString;
@@ -197,21 +198,12 @@ void dijkstra(int start, int end, const vector<vector<int>>& fl_table) {
     }
     else {
         cout << "Shortest path: ";
-        vector<int> path;
+vector<int> path;
 
-        for (int idx_vert = end; idx_vert != start; idx_vert = verts_obj[idx_vert].prev_vert) {
-            path.push_back(idx_vert);
-        }
-        path.push_back(start);
-
-        for (auto it = path.rbegin(); it != path.rend(); ++it) {
-            cout << *it;
-            if (it + 1 != path.rend()) {
-                cout << " <- ";
-            }
-        }
-        cout << endl;
-        cout << "Time: " << verts_obj[end].dist_from_start << endl;
+for (int idx_vert = end; idx_vert != start; idx_vert = verts_obj[idx_vert].prev_vert)
+    cout << idx_vert << " " << "<-" << " ";
+    cout << start << endl;
+    cout << "Time: " << verts_obj[end].dist_from_start << endl;
     }
 }
 
