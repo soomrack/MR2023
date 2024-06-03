@@ -1,0 +1,1 @@
+/usr/bin/g++ -g CMakeFiles/ray_casting.dir/main.cpp.o CMakeFiles/ray_casting.dir/source/shapes.cpp.o CMakeFiles/ray_casting.dir/source/scene.cpp.o -o ray_casting 
