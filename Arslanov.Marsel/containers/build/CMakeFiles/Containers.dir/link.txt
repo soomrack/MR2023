@@ -1,0 +1,1 @@
+/usr/bin/g++ -g CMakeFiles/Containers.dir/main.cpp.o CMakeFiles/Containers.dir/vector/array.cpp.o CMakeFiles/Containers.dir/single_linked_list/single_linked_list.cpp.o -o Containers 

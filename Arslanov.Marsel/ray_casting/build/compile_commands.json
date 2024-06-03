@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/marsel/Polikek/programming/ray_casting/build",
+  "command": "/usr/bin/g++  -I/home/marsel/Polikek/programming/ray_casting/Vecs -I/home/marsel/Polikek/programming/ray_casting/include -g -o CMakeFiles/ray_casting.dir/main.cpp.o -c /home/marsel/Polikek/programming/ray_casting/main.cpp",
+  "file": "/home/marsel/Polikek/programming/ray_casting/main.cpp"
+},
+{
+  "directory": "/home/marsel/Polikek/programming/ray_casting/build",
+  "command": "/usr/bin/g++  -I/home/marsel/Polikek/programming/ray_casting/Vecs -I/home/marsel/Polikek/programming/ray_casting/include -g -o CMakeFiles/ray_casting.dir/source/shapes.cpp.o -c /home/marsel/Polikek/programming/ray_casting/source/shapes.cpp",
+  "file": "/home/marsel/Polikek/programming/ray_casting/source/shapes.cpp"
+},
+{
+  "directory": "/home/marsel/Polikek/programming/ray_casting/build",
+  "command": "/usr/bin/g++  -I/home/marsel/Polikek/programming/ray_casting/Vecs -I/home/marsel/Polikek/programming/ray_casting/include -g -o CMakeFiles/ray_casting.dir/source/scene.cpp.o -c /home/marsel/Polikek/programming/ray_casting/source/scene.cpp",
+  "file": "/home/marsel/Polikek/programming/ray_casting/source/scene.cpp"
+}
+]
