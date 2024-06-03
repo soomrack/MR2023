@@ -1,0 +1,1 @@
+# All the data connected with calibration process: csv data, pdf report, binary file for CubeSat.
