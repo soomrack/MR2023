@@ -1,3 +1,0 @@
-/home/marsel/Polikek/programming/containers/build/CMakeFiles/Containers.dir
-/home/marsel/Polikek/programming/containers/build/CMakeFiles/edit_cache.dir
-/home/marsel/Polikek/programming/containers/build/CMakeFiles/rebuild_cache.dir

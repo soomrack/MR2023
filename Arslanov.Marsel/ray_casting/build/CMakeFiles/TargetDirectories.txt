@@ -1,3 +1,0 @@
-/home/marsel/Polikek/programming/ray_casting/build/CMakeFiles/ray_casting.dir
-/home/marsel/Polikek/programming/ray_casting/build/CMakeFiles/edit_cache.dir
-/home/marsel/Polikek/programming/ray_casting/build/CMakeFiles/rebuild_cache.dir
