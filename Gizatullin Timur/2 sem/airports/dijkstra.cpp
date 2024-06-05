@@ -13,7 +13,7 @@ constexpr int INF = numeric_limits<int>::max();
 
 class Vertex {
 public:
-    int previous_vertex = -1;
+    int previous_vertex = 0;
     int distance_from_start = INF;
 };
 
