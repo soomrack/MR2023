@@ -1,65 +1,109 @@
 #include "parser.hpp"
 
-#include <boost/format.hpp>
+#include "debug.hpp"
+
+#include <filesystem>
 #include <fstream>
+#include <sstream>
 
-parser::parser(const std::string &path_) : path{ path_ } {}
+using namespace debug;
 
-void parser::parse()
+std::vector<desc::sptr> parser::parse(const std::string &file)
 {
-    boost::format fmt = boost::format{ "File %1% is not opened" };
-    std::string cities_path = path + "cities.csv", tours_path = path + "cleared_data.csv";
-
-    std::fstream cities_file{ cities_path, std::ios_base::in };
-
-    if (!cities_file.is_open() || cities_file.bad())
+    auto s = std::filesystem::exists(file);
+    if (!s)
     {
-        throw std::runtime_error{ (fmt % cities_path).str() };
+        throw std::runtime_error{ boost::str(fmt % sb[err] % file).append(" is not exist") };
     }
 
-    size_t size = this->parse_cities(cities_file);
-
-    std::fstream tours_file(tours_path, std::ios_base::in);
-    if (!tours_file.is_open()) { throw std::runtime_error{ (fmt % tours_path).str() }; }
-
-    auto filling = [&, this](std::vector<double> &adj_row, std::string &city)
+    std::fstream filestream{ file, std::ios_base::in };
+    if (!filestream.is_open())
     {
-        adj_row.reserve(size);
-        std::string line;
-        size_t pos{ 0 };
-        while (std::getline(tours_file, line))
+        throw std::runtime_error(boost::str(fmt % sb[err] % "Couldn't open file"));
+    }
+
+    std::vector<desc::sptr> flights;
+    std::string line, temp;
+
+    double air_time;
+    std::string unique_carrier_name, origin_city, dest_city;
+    uint16_t departures, airline_id, origin_city_market_id, desk_city_market_id;
+
+    const size_t departures_offset = 2, air_time_offset = 8, airline_id_offset = 2,
+                 dest_city_market_id_offset = 11;
+    size_t origin_city_market_id_offset;
+
+    while (!filestream.eof())
+    {
+        std::getline(filestream, line);
+        std::stringstream input(line);
+
+        for (size_t i = 0; i < departures_offset; i++) { std::getline(input, temp, ','); }
+        departures = atoi(temp.c_str());
+
+        for (size_t i = 0; i < air_time_offset; i++) { std::getline(input, temp, ','); }
+        air_time = atof(temp.c_str());
+
+        for (size_t i = 0; i < airline_id_offset; i++) { std::getline(input, temp, ','); }
+        airline_id = atoi(temp.c_str());
+
+        std::getline(input, unique_carrier_name, ',');
+
+        if (unique_carrier_name[0] == '\"')
         {
-            if ((pos = line.find(city)) == std::string::npos) { continue; }
-
-            std::stringstream ss(line);
+            unique_carrier_name.erase(0, 1);
+            origin_city_market_id_offset = 11;
         }
-        for (auto it : adj_row) {}
-    };
+        else origin_city_market_id_offset = 9;
+        for (size_t i = 0; i < origin_city_market_id_offset; i++)
+        {
+            std::getline(input, temp, ',');
+        }
+        origin_city_market_id = atoi(temp.c_str());
 
-    std::vector<std::vector<double>> adj;
-    adj.reserve(size);
+        std::getline(input, origin_city, ',');
+
+        for (size_t i = 0; i < dest_city_market_id_offset; i++) { std::getline(input, temp, ','); }
+        desk_city_market_id = atoi(temp.c_str());
+
+        std::getline(input, dest_city, ',');
+
+        if (air_time > 0 && departures > 0)
+        {
+            auto flight = std::make_shared<desc::flight>();
+
+            flight->air_time = air_time;
+            flight->airline_id = airline_id;
+            flight->unique_carrier_name = unique_carrier_name;
+            flight->origin_city_market_id = origin_city_market_id;
+            flight->dest_city_market_id = desk_city_market_id;
+            flight->origin_city = origin_city;
+            flight->dest_city = dest_city;
+
+            std::cout << fmt % sb[info] % "New flight added: " << *flight << std::endl;
+
+            flights.push_back(flight);
+        }
+    }
+
+    filestream.close();
+
+    return flights;
 }
 
-size_t parser::parse_cities(std::istream &is)
+void parser::dump(std::vector<desc::sptr> &flights, const std::string &file)
 {
-    std::string line;
-    size_t cities_cnt{ 0 };
-
-    while (std::getline(is, line))
+    std::fstream filestream{ file, std::ios_base::out };
+    if (!filestream.is_open())
     {
-        std::string delimiter = ",\"";
-
-        size_t pos = 0;
-        std::string token;
-        while ((pos = line.find(delimiter)) != std::string::npos)
-        {
-            token = line.substr(0, pos);
-            line.erase(0, pos + delimiter.length() - 1);
-            auto cp = std::make_pair(std::stoul(token), line);
-            cities.push_back(cp);
-        }
-        cities_cnt++;
+        throw std::runtime_error(boost::str(fmt % sb[err] % "Couldn't open file"));
     }
-
-    return cities_cnt;
+    for (auto &flight : flights)
+    {
+        filestream << flight->air_time << "\t" << flight->airline_id << "\t"
+                   << flight->unique_carrier_name << "\t" << flight->origin_city_market_id << "\t"
+                   << flight->dest_city_market_id << "\t" << flight->origin_city << "\t"
+                   << flight->dest_city << "\t" << std::endl;
+    }
+    filestream.close();
 }
