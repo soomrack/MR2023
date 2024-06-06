@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/marsel/Polikek/programming/containers/build",
+  "command": "/usr/bin/g++  -I/home/marsel/Polikek/programming/containers/vector -I/home/marsel/Polikek/programming/containers/single_linked_list -I/home/marsel/Polikek/programming/containers/list -I/home/marsel/Polikek/programming/containers/stack -I/home/marsel/Polikek/programming/containers/priority_queue -g -Wall -Wextra -Wpedantic -Og -std=gnu++20 -o CMakeFiles/Containers.dir/main.cpp.o -c /home/marsel/Polikek/programming/containers/main.cpp",
+  "file": "/home/marsel/Polikek/programming/containers/main.cpp"
+},
+{
+  "directory": "/home/marsel/Polikek/programming/containers/build",
+  "command": "/usr/bin/g++  -I/home/marsel/Polikek/programming/containers/vector -I/home/marsel/Polikek/programming/containers/single_linked_list -I/home/marsel/Polikek/programming/containers/list -I/home/marsel/Polikek/programming/containers/stack -I/home/marsel/Polikek/programming/containers/priority_queue -g -Wall -Wextra -Wpedantic -Og -std=gnu++20 -o CMakeFiles/Containers.dir/vector/array.cpp.o -c /home/marsel/Polikek/programming/containers/vector/array.cpp",
+  "file": "/home/marsel/Polikek/programming/containers/vector/array.cpp"
+},
+{
+  "directory": "/home/marsel/Polikek/programming/containers/build",
+  "command": "/usr/bin/g++  -I/home/marsel/Polikek/programming/containers/vector -I/home/marsel/Polikek/programming/containers/single_linked_list -I/home/marsel/Polikek/programming/containers/list -I/home/marsel/Polikek/programming/containers/stack -I/home/marsel/Polikek/programming/containers/priority_queue -g -Wall -Wextra -Wpedantic -Og -std=gnu++20 -o CMakeFiles/Containers.dir/single_linked_list/single_linked_list.cpp.o -c /home/marsel/Polikek/programming/containers/single_linked_list/single_linked_list.cpp",
+  "file": "/home/marsel/Polikek/programming/containers/single_linked_list/single_linked_list.cpp"
+}
+]

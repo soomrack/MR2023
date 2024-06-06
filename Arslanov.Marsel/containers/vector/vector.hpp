@@ -24,7 +24,7 @@ public:
     }
 
     Vector(size_t size, T value)
-        : sz(size), cap(size + CAP_OFFSET), arr(new T[cap]) {
+            : sz(size), cap(size + CAP_OFFSET), arr(new T[cap]) {
         for (size_t idx = 0; idx < size; ++idx) {
             *(arr + idx) = value;
         }

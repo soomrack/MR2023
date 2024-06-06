@@ -3,32 +3,70 @@
 #include <vector>
 
 // #include "include/vector.hpp"
+#include "array.hpp"
 #include "list.hpp"
+#include "priority_queue.hpp"
+#include "single_linked_list.hpp"
 #include "vector.hpp"
 
 int main() {
-    Vector<int> v(6, 5);
-    v.push_back(8);
-    v.push_back(10);
-    v.pop_back();
-    std::cout << v << std::endl;
-    v.reserve(10);
-    v.resize(9);
-    std::cout << v << std::endl;
+    Array arr = {1, 5, 7, 8, 45, 3, 2};
+    std::cout << arr;
+    arr.resize(20, 666);
+    std::cout << arr;
 
-    // int a = 5;
-    // int b = 6;
+    std::cout << "\n\n\n";
 
-    // Node<int> node(3, nullptr, nullptr);
-    // Node<int> node1(a, nullptr, nullptr);
-    // Node<int> node2(b, nullptr, nullptr);
-    // node.set_next(node1);
-    // node.set_prev(node2);
-    // std::cout << node << node.next() << node.prev() << std::endl;
+    single_linked_list::Single_linked_list slist = {3, 5, 7, 2, 1};
+    std::cout << slist;
+    slist.push_back(333);
+    std::cout << slist;
+    slist.push_back(123).push_back(234);
+    std::cout << slist;
+    slist.pop_back().pop_front();
+    std::cout << slist;
+    slist.insertt(0, 66);
+    std::cout << slist;
+    slist.remove(2);
+    std::cout << slist;
+    single_linked_list::Single_linked_list slist2 = slist;
+    std::cout << slist2;
+    slist.push_back(33);
+    std::cout << slist;
+    std::cout << slist2;
 
-    // // List<int> l;
-    // // l.push_back(a);
-    // // l.print();
+    std::cout << "\n\n\n";
+
+    List<int32_t> list = {3, 5, 7, 2, 1};
+    std::cout << list;
+    list.push_back(333);
+    std::cout << list;
+    list.push_back(123).push_back(234);
+    std::cout << list;
+    list.pop_back().pop_front();
+    std::cout << list;
+    list.insert(0, 66);
+    std::cout << list;
+    list.remove(2);
+    std::cout << list;
+    List<int32_t> list2 = list;
+    std::cout << list2;
+    list.push_back(33);
+    std::cout << list;
+    std::cout << list2;
+
+    std::cout << "\n\n\n";
+
+    priority_queue::Priority_queue queue;
+    queue.push(3, 1).push(4, 3).push(5, 2);
+    // queue.push(30, 2).push(40, 2).push(50, 2);
+    // queue.push(300, 3).push(400, 3).push(500, 3);
+
+    priority_queue::data_type data = queue.top();
+    std::cout << data << std::endl;
+    queue.pop();
+    data = queue.top();
+    std::cout << data << std::endl;
 
     return 0;
 }

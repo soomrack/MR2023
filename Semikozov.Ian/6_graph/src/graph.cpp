@@ -1,90 +1,84 @@
 #include "graph.hpp"
+#include "debug.hpp"
 
 #include <algorithm>
+#include <limits>
+#include <queue>
 
-static inline double cost(vertex &lhs, vertex &rhs)
+using namespace debug;
+
+graph::graph(const desc::flight_v &flights)
 {
-    return std::sqrt(std::pow(lhs.value.first - rhs.value.first, 2) + std::pow(lhs.value.second - rhs.value.second, 2));
-}
-
-graph::graph(std::vector<std::vector<double>> adj) {}
-
-graph::~graph()
-{
-    for (auto it : vmap) { delete it.second; }
-    vmap.clear();
-}
-
-vertex *graph::at(size_t index) const
-{
-    return vmap.at(index);
-}
-
-size_t graph::index(vertex *vertex) const
-{
-    auto it = std::find_if(vmap.begin(), vmap.end(), [vertex](const auto &x) { return x.second == vertex; });
-    return it->first;
-}
-
-size_t graph::size() const
-{
-    return vmap.size();
-}
-
-/// \brief Add edge
-void graph::add(const size_t from, const size_t to, const double cost)
-{
-    auto *f = (vmap.find(from)->second), *t = (vmap.find(to)->second);
-    edge edge = std::make_pair(cost, t);
-    f->adjacency.push_back(edge);
-}
-
-/// \brief Add vertex
-bool graph::add(size_t index, const point &point)
-{
-    VMap::iterator it = vmap.find(index);
-
-    if (it != vmap.end()) { return false; }
-    auto *new_ = new vertex{ point };
-    vmap[index] = new_;
-
-    return true;
-}
-
-/// \brief Updating adjacency matrix and fill edge vector
-void graph::update()
-{
-    size_t gSize = vmap.size();
-
-    for (int i = 0; i < gSize; i++)
+    for (const auto &flight : flights)
     {
-        vertex *lhs = vmap.at(i);
+        g[flight->origin_city].emplace_back(flight->dest_city, flight->air_time);
+        g[flight->dest_city].emplace_back(flight->origin_city, flight->air_time);
+    }
+}
 
-        for (size_t j = 0; auto it : vmap)
+std::unordered_map<std::string, graph::adj> graph::get() const
+{
+    return g;
+}
+
+void graph::dijkstra(const std::string &origin, const std::string &dest) const
+{
+    constexpr auto infinity = std::numeric_limits<double>::max();
+    std::unordered_map<std::string, double> air_times;
+    std::unordered_map<std::string, std::string> previous;
+    std::priority_queue<std::pair<double, std::string>,
+                        std::vector<std::pair<double, std::string>>,
+                        std::greater<>>
+        pq;
+
+    for (const auto &node : g) { air_times[node.first] = infinity; }
+
+    air_times[origin] = 0.;
+    pq.emplace(0., origin);
+
+    while (!pq.empty())
+    {
+        std::pair<double, std::string> current = pq.top();
+        pq.pop();
+
+        if (current.second == dest) { break; }
+
+        for (const auto &air_time : g.at(current.second))
         {
-            vertex *rhs = it.second;
+            double new_air_time = air_times[current.second] + air_time.second;
 
-            double c = cost(*lhs, *rhs);
-            this->add(i, it.first, c == 0 ? infinity : c);
+            if (new_air_time < air_times[air_time.first])
+            {
+                air_times[air_time.first] = new_air_time;
+                previous[air_time.first] = current.second;
+                pq.emplace(new_air_time, air_time.first);
+            }
         }
-
-        std::sort(lhs->adjacency.begin(), lhs->adjacency.end(), [](const auto &l, const auto &r) { return l.first > r.first; });
     }
-}
 
-bool graph::remove(size_t index)
-{
-    VMap::iterator i = vmap.find(index);
-    if (i != vmap.end())
+    if (air_times[dest] == infinity)
     {
-        auto v = std::move(i->second);
-        vmap.erase(i);
-        delete v;
-
-        return true;
+        throw std::runtime_error{ boost::str(fmt % sb[err] % "No path available") };
     }
 
-    return false;
-}
+    std::vector<std::string> path;
+    std::string current = dest;
 
-spanning_tree graph::find_spanning_tree(size_t indexA, size_t indexB) const {}
+    while (current != origin)
+    {
+        path.push_back(current);
+        current = previous[current];
+    }
+
+    path.push_back(origin);
+    std::reverse(path.begin(), path.end());
+
+    auto path_desc = boost::str(fmt % sb[info] % "Shortest path: ");
+    for (const std::string &city : path) { path_desc.append(city).append(" "); }
+    std::cout << path_desc << std::endl;
+
+    auto time = std::to_string(air_times[dest]);
+    path_desc = boost::str(fmt % sb[info] % "Total time: ").append(time);
+
+    std::cout << path_desc << std::endl;
+}

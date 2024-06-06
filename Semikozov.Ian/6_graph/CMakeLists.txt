@@ -1,13 +1,17 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.6)
 
-project(graph LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.6)
+project(graph)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+find_package(Boost 1.83 REQUIRED)
 
-file(GLOB source_list ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+set(SOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(${PROJECT_NAME} ${source_list})
+file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp)
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
-target_sources(${PROJECT_NAME} PRIVATE ${source_list})
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/inc ${Boost_INC})
+
+add_executable(graph_example main.cpp)
+
+target_link_libraries(graph_example PRIVATE graph)
