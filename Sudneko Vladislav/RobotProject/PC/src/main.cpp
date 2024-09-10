@@ -29,18 +29,14 @@ int main(int argc, char** argv) {
             break;
         }
     
-        // Convert frame to 4 channels (RGBA) if it's not already
         if (frame.channels() == 3) {
             cv::cvtColor(frame, frame, cv::COLOR_BGR2BGRA);
         }
     
-        // Ensure overlay image fits within the frame
         if (overlay_image.cols > frame.cols || overlay_image.rows > frame.rows) {
-            // Resize overlay image to fit within the frame
             cv::resize(overlay_image, overlay_image, cv::Size(frame.cols, frame.rows));
         }
     
-        // Split the overlay into RGB and Alpha channels
         cv::Mat overlay_rgb, overlay_alpha;
         std::vector<cv::Mat> overlay_channels(4);
         cv::split(overlay_image, overlay_channels);
@@ -48,16 +44,14 @@ int main(int argc, char** argv) {
         cv::merge(std::vector<cv::Mat>{overlay_channels[0], overlay_channels[1], overlay_channels[2]}, overlay_rgb);
         overlay_alpha = overlay_channels[3];
     
-        // Create a region of interest (ROI) in the frame where the overlay will be applied
         cv::Rect roi(cv::Point(0, 0), overlay_image.size());
         cv::Mat frame_roi = frame(roi);
     
-        // Blend the overlay into the frame using the alpha channel
         for (int y = 0; y < overlay_image.rows; ++y) {
             for (int x = 0; x < overlay_image.cols; ++x) {
-                cv::Vec4b& pixel = frame_roi.at<cv::Vec4b>(y, x); // Access frame pixel (with alpha)
-                cv::Vec3b& overlay_pixel = overlay_rgb.at<cv::Vec3b>(y, x); // Access overlay pixel
-                uchar alpha = overlay_alpha.at<uchar>(y, x); // Access overlay alpha channel
+                cv::Vec4b& pixel = frame_roi.at<cv::Vec4b>(y, x); 
+                cv::Vec3b& overlay_pixel = overlay_rgb.at<cv::Vec3b>(y, x); 
+                uchar alpha = overlay_alpha.at<uchar>(y, x); 
     
                 // Perform alpha blending
                 pixel[0] = (overlay_pixel[0] * alpha + pixel[0] * (255 - alpha)) / 255; // Blue
