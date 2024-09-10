@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "OmegabotManualControl",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "OmegabotManualControl::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OmegabotManualControl-Debug-221b8f8db6f6eb283df0.json",
+					"name" : "OmegabotManualControl",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/vladislav/Documents/\u041f\u043e\u043b\u0438\u0442\u0435\u0445/\u0410\u043d\u0430\u043d\u044c\u0435\u0432\u0441\u043a\u0438\u0439/RobotProject/Rasberry/build",
+		"source" : "/Users/vladislav/Documents/\u041f\u043e\u043b\u0438\u0442\u0435\u0445/\u0410\u043d\u0430\u043d\u044c\u0435\u0432\u0441\u043a\u0438\u0439/RobotProject/Rasberry"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

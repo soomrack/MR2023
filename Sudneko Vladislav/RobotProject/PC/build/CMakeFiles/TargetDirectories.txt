@@ -1,0 +1,3 @@
+/Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/build/CMakeFiles/OmegabotManualControl.dir
+/Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/build/CMakeFiles/edit_cache.dir
+/Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/build/CMakeFiles/rebuild_cache.dir
