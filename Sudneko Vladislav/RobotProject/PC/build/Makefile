@@ -48,19 +48,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/Cellar/cmake/3.30.3/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.30.3/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/Cellar/cmake/3.30.3/bin/cmake -E rm -f
+RM = /usr/local/Cellar/cmake/3.30.3/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC
+CMAKE_SOURCE_DIR = "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/build
+CMAKE_BINARY_DIR = "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /Users/vladislav/Documents/Политех/Ананьевск�
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/opt/homebrew/Cellar/cmake/3.30.3/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/local/Cellar/cmake/3.30.3/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -78,7 +78,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake to regenerate build system..."
-	/opt/homebrew/Cellar/cmake/3.30.3/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/local/Cellar/cmake/3.30.3/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/build/CMakeFiles /Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build/CMakeFiles" "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build//CMakeFiles/progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named OmegabotManualControl
+# Target rules for targets named OmegabotManualControlPC
 
 # Build rule for target.
-OmegabotManualControl: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 OmegabotManualControl
-.PHONY : OmegabotManualControl
+OmegabotManualControlPC: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 OmegabotManualControlPC
+.PHONY : OmegabotManualControlPC
 
 # fast build rule for target.
-OmegabotManualControl/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControl.dir/build.make CMakeFiles/OmegabotManualControl.dir/build
-.PHONY : OmegabotManualControl/fast
+OmegabotManualControlPC/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControlPC.dir/build.make CMakeFiles/OmegabotManualControlPC.dir/build
+.PHONY : OmegabotManualControlPC/fast
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControl.dir/build.make CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControlPC.dir/build.make CMakeFiles/OmegabotManualControlPC.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -142,7 +142,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControl.dir/build.make CMakeFiles/OmegabotManualControl.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControlPC.dir/build.make CMakeFiles/OmegabotManualControlPC.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -150,7 +150,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControl.dir/build.make CMakeFiles/OmegabotManualControl.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControlPC.dir/build.make CMakeFiles/OmegabotManualControlPC.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 # Help Target
@@ -161,7 +161,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... OmegabotManualControl"
+	@echo "... OmegabotManualControlPC"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

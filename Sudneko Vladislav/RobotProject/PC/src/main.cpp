@@ -4,7 +4,7 @@
 #include "RobotController.hpp"
 
 int main(int argc, char** argv) {
-    RobotController robot("localhost", 5656, 5656);
+    RobotController robot("localhost", 5657, 5656);
 
     std::string rtsp_stream = "rtsp://localhost:8554/test";
     cv::VideoCapture cap(rtsp_stream);

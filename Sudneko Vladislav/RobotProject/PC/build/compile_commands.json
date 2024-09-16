@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/build",
-  "command": "/usr/bin/clang++  -I/Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/build -I/Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC -isystem /opt/homebrew/Cellar/opencv/4.10.0_5/include/opencv4 -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -o CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o -c /Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/src/main.cpp",
-  "file": "/Users/vladislav/Documents/Политех/Ананьевский/RobotProject/PC/src/main.cpp",
-  "output": "CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o"
-}
-]

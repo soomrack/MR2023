@@ -45,25 +45,25 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/Cellar/cmake/3.30.3/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.30.3/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/Cellar/cmake/3.30.3/bin/cmake -E rm -f
+RM = /usr/local/Cellar/cmake/3.30.3/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/vladislav/Documents/Политех/Ананьевский/RobotProject/Rasberry
+CMAKE_SOURCE_DIR = "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/vladislav/Documents/Политех/Ананьевский/RobotProject/Rasberry/build
+CMAKE_BINARY_DIR = "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build"
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/OmegabotManualControl.dir/all
+all: CMakeFiles/OmegabotManualControlRS.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -71,34 +71,34 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/OmegabotManualControl.dir/clean
+clean: CMakeFiles/OmegabotManualControlRS.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/OmegabotManualControl.dir
+# Target rules for target CMakeFiles/OmegabotManualControlRS.dir
 
 # All Build rule for target.
-CMakeFiles/OmegabotManualControl.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControl.dir/build.make CMakeFiles/OmegabotManualControl.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControl.dir/build.make CMakeFiles/OmegabotManualControl.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/vladislav/Documents/Политех/Ананьевский/RobotProject/Rasberry/build/CMakeFiles --progress-num=1,2 "Built target OmegabotManualControl"
-.PHONY : CMakeFiles/OmegabotManualControl.dir/all
+CMakeFiles/OmegabotManualControlRS.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControlRS.dir/build.make CMakeFiles/OmegabotManualControlRS.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControlRS.dir/build.make CMakeFiles/OmegabotManualControlRS.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" --progress-num=1,2 "Built target OmegabotManualControlRS"
+.PHONY : CMakeFiles/OmegabotManualControlRS.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/OmegabotManualControl.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/vladislav/Documents/Политех/Ананьевский/RobotProject/Rasberry/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/OmegabotManualControl.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/vladislav/Documents/Политех/Ананьевский/RobotProject/Rasberry/build/CMakeFiles 0
-.PHONY : CMakeFiles/OmegabotManualControl.dir/rule
+CMakeFiles/OmegabotManualControlRS.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/OmegabotManualControlRS.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" 0
+.PHONY : CMakeFiles/OmegabotManualControlRS.dir/rule
 
 # Convenience name for target.
-OmegabotManualControl: CMakeFiles/OmegabotManualControl.dir/rule
-.PHONY : OmegabotManualControl
+OmegabotManualControlRS: CMakeFiles/OmegabotManualControlRS.dir/rule
+.PHONY : OmegabotManualControlRS
 
 # clean rule for target.
-CMakeFiles/OmegabotManualControl.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControl.dir/build.make CMakeFiles/OmegabotManualControl.dir/clean
-.PHONY : CMakeFiles/OmegabotManualControl.dir/clean
+CMakeFiles/OmegabotManualControlRS.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControlRS.dir/build.make CMakeFiles/OmegabotManualControlRS.dir/clean
+.PHONY : CMakeFiles/OmegabotManualControlRS.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
