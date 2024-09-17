@@ -13,42 +13,42 @@ public:
         : communicator(robot_host) { } 
 
     void moveForward() {
-        communicator.sendCommand("/forward");
+        communicator.sendCommand("forward");
         std::cout << "Moving forward" << std::endl;
     }
 
     void moveBackward() {
-        communicator.sendCommand("/down");
+        communicator.sendCommand("back");
         std::cout << "Moving backward" << std::endl;
     }
 
     void moveLeft() {
-        communicator.sendCommand("/left");
+        communicator.sendCommand("left");
         std::cout << "Moving left" << std::endl;
     }
 
     void moveRight() {
-        communicator.sendCommand("/right");
+        communicator.sendCommand("right");
         std::cout << "Moving right" << std::endl;
     }
 
     void grabCatch() {
-        communicator.sendCommand("/catch");
+        communicator.sendCommand("catch");
         std::cout << "Catching" << std::endl;
     }
 
     void grabRelease() {
-        communicator.sendCommand("/release");
+        communicator.sendCommand("release");
         std::cout << "Releasing" << std::endl;
     }
 
     void grabUp() {
-        communicator.sendCommand("/up");
+        communicator.sendCommand("up");
         std::cout << "Grab Up" << std::endl;
     }
 
     void grabDown() {
-        communicator.sendCommand("/down");
+        communicator.sendCommand("down");
         std::cout << "Grab Down" << std::endl;
     }
 };

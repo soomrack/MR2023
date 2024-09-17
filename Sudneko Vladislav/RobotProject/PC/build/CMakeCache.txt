@@ -20,15 +20,14 @@ CMAKE_ADDR2LINE:FILEPATH=CMAKE_ADDR2LINE-NOTFOUND
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
-//Choose the type of build, options are: None Debug Release RelWithDebInfo
-// MinSizeRel ...
-CMAKE_BUILD_TYPE:STRING=
+//No help, variable specified on the command line.
+CMAKE_BUILD_TYPE:STRING=Debug
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
-//CXX compiler
-CMAKE_CXX_COMPILER:STRING=/usr/bin/clang++
+//No help, variable specified on the command line.
+CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/clang++
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=
@@ -44,6 +43,9 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
+
+//No help, variable specified on the command line.
+CMAKE_C_COMPILER:FILEPATH=/usr/bin/clang
 
 //Path to a program.
 CMAKE_DLLTOOL:FILEPATH=CMAKE_DLLTOOL-NOTFOUND
@@ -63,8 +65,8 @@ CMAKE_EXE_LINKER_FLAGS_RELEASE:STRING=
 //Flags used by the linker during RELWITHDEBINFO builds.
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
-//Enable/Disable output of compile commands during generation.
-CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
+//No help, variable specified on the command line.
+CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
 
 //Value Computed by CMake.
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build/CMakeFiles/pkgRedirects
@@ -207,6 +209,33 @@ OmegabotManualControl_SOURCE_DIR:STATIC=/Users/vladislav/Documents/GitHub/MR2023
 //The directory containing a CMake configuration file for OpenCV.
 OpenCV_DIR:PATH=/opt/homebrew/lib/cmake/opencv4
 
+//Arguments to supply to pkg-config
+PKG_CONFIG_ARGN:STRING=
+
+//pkg-config executable
+PKG_CONFIG_EXECUTABLE:FILEPATH=/opt/homebrew/bin/pkg-config
+
+//Path to a library.
+pkgcfg_lib_GST_glib-2.0:FILEPATH=/opt/homebrew/Cellar/glib/2.80.4/lib/libglib-2.0.dylib
+
+//Path to a library.
+pkgcfg_lib_GST_gobject-2.0:FILEPATH=/opt/homebrew/Cellar/glib/2.80.4/lib/libgobject-2.0.dylib
+
+//Path to a library.
+pkgcfg_lib_GST_gstbase-1.0:FILEPATH=/opt/homebrew/Cellar/gstreamer/1.24.7/lib/libgstbase-1.0.dylib
+
+//Path to a library.
+pkgcfg_lib_GST_gstreamer-1.0:FILEPATH=/opt/homebrew/Cellar/gstreamer/1.24.7/lib/libgstreamer-1.0.dylib
+
+//Path to a library.
+pkgcfg_lib_GST_gstvideo-1.0:FILEPATH=/opt/homebrew/Cellar/gstreamer/1.24.7/lib/libgstvideo-1.0.dylib
+
+//Path to a library.
+pkgcfg_lib_GST_intl:FILEPATH=/opt/homebrew/opt/gettext/lib/libintl.dylib
+
+//Path to a library.
+pkgcfg_lib_SDL2_SDL2:FILEPATH=/opt/homebrew/lib/libSDL2.dylib
+
 
 ########################
 # INTERNAL cache entries
@@ -341,4 +370,105 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding OpenCV
 FIND_PACKAGE_MESSAGE_DETAILS_OpenCV:INTERNAL=[/opt/homebrew/Cellar/opencv/4.10.0_5][v4.10.0()]
+//Details about finding PkgConfig
+FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/opt/homebrew/bin/pkg-config][v0.29.2()]
+GST_CFLAGS:INTERNAL=-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/glib/2.80.4/include;-I/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;-I/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;-I/opt/homebrew/opt/gettext/include;-I/opt/homebrew/Cellar/pcre2/10.44/include;-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
+GST_CFLAGS_I:INTERNAL=
+GST_CFLAGS_OTHER:INTERNAL=
+GST_FOUND:INTERNAL=1
+GST_INCLUDEDIR:INTERNAL=
+GST_INCLUDE_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/glib/2.80.4/include;/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;/opt/homebrew/opt/gettext/include;/opt/homebrew/Cellar/pcre2/10.44/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
+GST_LDFLAGS:INTERNAL=-L/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-L/opt/homebrew/Cellar/glib/2.80.4/lib;-L/opt/homebrew/opt/gettext/lib;-lgstvideo-1.0;-lgstbase-1.0;-lgstreamer-1.0;-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-lgobject-2.0;-lglib-2.0;-lintl
+GST_LDFLAGS_OTHER:INTERNAL=-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib
+GST_LIBDIR:INTERNAL=
+GST_LIBRARIES:INTERNAL=gstvideo-1.0;gstbase-1.0;gstreamer-1.0;gobject-2.0;glib-2.0;intl
+GST_LIBRARY_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/lib;/opt/homebrew/Cellar/glib/2.80.4/lib;/opt/homebrew/opt/gettext/lib
+GST_LIBS:INTERNAL=
+GST_LIBS_L:INTERNAL=
+GST_LIBS_OTHER:INTERNAL=
+GST_LIBS_PATHS:INTERNAL=
+GST_MODULE_NAME:INTERNAL=
+GST_PREFIX:INTERNAL=
+GST_STATIC_CFLAGS:INTERNAL=-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/glib/2.80.4/include;-I/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;-I/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;-I/opt/homebrew/opt/gettext/include;-I/opt/homebrew/Cellar/pcre2/10.44/include;-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
+GST_STATIC_CFLAGS_I:INTERNAL=
+GST_STATIC_CFLAGS_OTHER:INTERNAL=
+GST_STATIC_INCLUDE_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/glib/2.80.4/include;/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;/opt/homebrew/opt/gettext/include;/opt/homebrew/Cellar/pcre2/10.44/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
+GST_STATIC_LDFLAGS:INTERNAL=-L/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-L/opt/homebrew/Cellar/orc/0.4.39/lib;-L/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-L/opt/homebrew/Cellar/glib/2.80.4/lib;-L/opt/homebrew/opt/gettext/lib;-L/opt/homebrew/Cellar/pcre2/10.44/lib;-L/usr/lib;-lgstvideo-1.0;-lm;-lorc-0.4;-lm;-lgstbase-1.0;-lgstreamer-1.0;-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-lm;-ldl;-framework;Cocoa;-lgmodule-2.0;-lintl;-lgobject-2.0;-lintl;-lffi;-lglib-2.0;-lintl;-liconv;-lm;-framework;Foundation;-framework;CoreFoundation;-framework;AppKit;-framework;Carbon;-lpcre2-8;-D_THREAD_SAFE;-pthread
+GST_STATIC_LDFLAGS_OTHER:INTERNAL=-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-framework;Cocoa;-framework;Foundation;-framework;CoreFoundation;-framework;AppKit;-framework;Carbon;-D_THREAD_SAFE;-pthread
+GST_STATIC_LIBDIR:INTERNAL=
+GST_STATIC_LIBRARIES:INTERNAL=gstvideo-1.0;m;orc-0.4;m;gstbase-1.0;gstreamer-1.0;m;dl;gmodule-2.0;intl;gobject-2.0;intl;ffi;glib-2.0;intl;iconv;m;pcre2-8
+GST_STATIC_LIBRARY_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/lib;/opt/homebrew/Cellar/orc/0.4.39/lib;/opt/homebrew/Cellar/gstreamer/1.24.7/lib;/opt/homebrew/Cellar/glib/2.80.4/lib;/opt/homebrew/opt/gettext/lib;/opt/homebrew/Cellar/pcre2/10.44/lib;/usr/lib
+GST_STATIC_LIBS:INTERNAL=
+GST_STATIC_LIBS_L:INTERNAL=
+GST_STATIC_LIBS_OTHER:INTERNAL=
+GST_STATIC_LIBS_PATHS:INTERNAL=
+GST_VERSION:INTERNAL=
+GST_gstreamer-1.0_INCLUDEDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/include
+GST_gstreamer-1.0_LIBDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/lib
+GST_gstreamer-1.0_MODULE_NAME:INTERNAL=gstreamer-1.0
+GST_gstreamer-1.0_PREFIX:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7
+GST_gstreamer-1.0_VERSION:INTERNAL=1.24.7
+GST_gstreamer-video-1.0_INCLUDEDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/include
+GST_gstreamer-video-1.0_LIBDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/lib
+GST_gstreamer-video-1.0_MODULE_NAME:INTERNAL=gstreamer-video-1.0
+GST_gstreamer-video-1.0_PREFIX:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7
+GST_gstreamer-video-1.0_VERSION:INTERNAL=1.24.7
+//ADVANCED property for variable: PKG_CONFIG_ARGN
+PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
+PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
+SDL2_CFLAGS:INTERNAL=-D_THREAD_SAFE;-I/opt/homebrew/include;-I/opt/homebrew/include/SDL2
+SDL2_CFLAGS_I:INTERNAL=
+SDL2_CFLAGS_OTHER:INTERNAL=-D_THREAD_SAFE
+SDL2_FOUND:INTERNAL=1
+SDL2_INCLUDEDIR:INTERNAL=/opt/homebrew/include
+SDL2_INCLUDE_DIRS:INTERNAL=/opt/homebrew/include;/opt/homebrew/include/SDL2
+SDL2_LDFLAGS:INTERNAL=-L/opt/homebrew/lib;-lSDL2
+SDL2_LDFLAGS_OTHER:INTERNAL=
+SDL2_LIBDIR:INTERNAL=/opt/homebrew/lib
+SDL2_LIBRARIES:INTERNAL=SDL2
+SDL2_LIBRARY_DIRS:INTERNAL=/opt/homebrew/lib
+SDL2_LIBS:INTERNAL=
+SDL2_LIBS_L:INTERNAL=
+SDL2_LIBS_OTHER:INTERNAL=
+SDL2_LIBS_PATHS:INTERNAL=
+SDL2_MODULE_NAME:INTERNAL=sdl2
+SDL2_PREFIX:INTERNAL=/opt/homebrew
+SDL2_STATIC_CFLAGS:INTERNAL=-D_THREAD_SAFE;-I/opt/homebrew/include;-I/opt/homebrew/include/SDL2
+SDL2_STATIC_CFLAGS_I:INTERNAL=
+SDL2_STATIC_CFLAGS_OTHER:INTERNAL=-D_THREAD_SAFE
+SDL2_STATIC_INCLUDE_DIRS:INTERNAL=/opt/homebrew/include;/opt/homebrew/include/SDL2
+SDL2_STATIC_LDFLAGS:INTERNAL=-L/opt/homebrew/lib;-lSDL2;-lm;-Wl,-framework,CoreAudio;-Wl,-framework,AudioToolbox;-Wl,-weak_framework,CoreHaptics;-Wl,-weak_framework,GameController;-Wl,-framework,ForceFeedback;-lobjc;-Wl,-framework,CoreVideo;-Wl,-framework,Cocoa;-Wl,-framework,Carbon;-Wl,-framework,IOKit;-Wl,-weak_framework,QuartzCore;-Wl,-weak_framework,Metal
+SDL2_STATIC_LDFLAGS_OTHER:INTERNAL=-Wl,-framework,CoreAudio;-Wl,-framework,AudioToolbox;-Wl,-weak_framework,CoreHaptics;-Wl,-weak_framework,GameController;-Wl,-framework,ForceFeedback;-Wl,-framework,CoreVideo;-Wl,-framework,Cocoa;-Wl,-framework,Carbon;-Wl,-framework,IOKit;-Wl,-weak_framework,QuartzCore;-Wl,-weak_framework,Metal
+SDL2_STATIC_LIBDIR:INTERNAL=
+SDL2_STATIC_LIBRARIES:INTERNAL=SDL2;m;objc
+SDL2_STATIC_LIBRARY_DIRS:INTERNAL=/opt/homebrew/lib
+SDL2_STATIC_LIBS:INTERNAL=
+SDL2_STATIC_LIBS_L:INTERNAL=
+SDL2_STATIC_LIBS_OTHER:INTERNAL=
+SDL2_STATIC_LIBS_PATHS:INTERNAL=
+SDL2_VERSION:INTERNAL=2.30.7
+SDL2_sdl2_INCLUDEDIR:INTERNAL=
+SDL2_sdl2_LIBDIR:INTERNAL=
+SDL2_sdl2_PREFIX:INTERNAL=
+SDL2_sdl2_VERSION:INTERNAL=
+__pkg_config_arguments_GST:INTERNAL=REQUIRED;gstreamer-1.0;gstreamer-video-1.0
+__pkg_config_arguments_SDL2:INTERNAL=REQUIRED;sdl2
+__pkg_config_checked_GST:INTERNAL=1
+__pkg_config_checked_SDL2:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GST_glib-2.0
+pkgcfg_lib_GST_glib-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GST_gobject-2.0
+pkgcfg_lib_GST_gobject-2.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GST_gstbase-1.0
+pkgcfg_lib_GST_gstbase-1.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GST_gstreamer-1.0
+pkgcfg_lib_GST_gstreamer-1.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GST_gstvideo-1.0
+pkgcfg_lib_GST_gstvideo-1.0-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GST_intl
+pkgcfg_lib_GST_intl-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_SDL2_SDL2
+pkgcfg_lib_SDL2_SDL2-ADVANCED:INTERNAL=1
+prefix_result:INTERNAL=/opt/homebrew/lib
 

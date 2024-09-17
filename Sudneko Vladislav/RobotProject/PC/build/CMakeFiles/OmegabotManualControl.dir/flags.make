@@ -4,9 +4,9 @@
 # compile CXX with /usr/bin/clang++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I"/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build" -I"/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC" -isystem /opt/homebrew/Cellar/opencv/4.10.0_5/include/opencv4
+CXX_INCLUDES = -I"/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build" -I"/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC" -I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0 -I/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4 -I/opt/homebrew/Cellar/glib/2.80.4/include -I/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0 -I/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include -I/opt/homebrew/opt/gettext/include -I/opt/homebrew/Cellar/pcre2/10.44/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi -I/opt/homebrew/include -I/opt/homebrew/include/SDL2
 
-CXX_FLAGSarm64 = -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
+CXX_FLAGSarm64 = -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
 
-CXX_FLAGS = -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
+CXX_FLAGS = -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
 

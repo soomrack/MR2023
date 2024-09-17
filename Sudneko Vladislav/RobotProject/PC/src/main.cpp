@@ -1,122 +1,101 @@
-#include <opencv2/opencv.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <gst/gst.h>
+#include <SDL2/SDL.h>
 #include <iostream>
 #include "RobotController.hpp"
 
-int main(int argc, char** argv) {
-    RobotController robot("http://localhost:5000");
+static GstElement *pipeline;
 
-    std::string rtsp_stream;
-    if (argc < 2) {
-        rtsp_stream = "rtsp://127.0.0.1:8554/omegabot_stream";
-    } else {
-        std::string ip = argv[1];
-        rtsp_stream = "rtsp://" + ip + ":8554/omegabot_stream";
+static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
+    switch (GST_MESSAGE_TYPE(msg)) {
+        case GST_MESSAGE_EOS:
+            std::cout << "End of stream" << std::endl;
+            g_main_loop_quit((GMainLoop *)data);
+            break;
+        case GST_MESSAGE_ERROR:
+            {
+                gchar *debug;
+                GError *error;
+                gst_message_parse_error(msg, &error, &debug);
+                std::cerr << "Error: " << error->message << std::endl;
+                g_free(debug);
+                g_error_free(error);
+                g_main_loop_quit((GMainLoop *)data);
+                break;
+            }
+        default:
+            break;
     }
-
-    cv::VideoCapture cap(rtsp_stream, cv::CAP_GSTREAMER);
-    if (!cap.isOpened()) {
-        std::cerr << "Error: Unable to open RTSP stream: " << rtsp_stream << std::endl;
-        return -1;
-    }
-
-    cv::Mat overlay_image = cv::imread("front.png", cv::IMREAD_UNCHANGED);
-    if (overlay_image.empty()) {
-        std::cerr << "Error: Unable to load overlay image" << std::endl;
-        return -1;
-    }
-
-    cv::Mat frame;
-cv::namedWindow("Robot Control", cv::WINDOW_AUTOSIZE);
-
-while (true) {
-    cap >> frame;
-    if (frame.empty()) {
-        std::cerr << "Error: Unable to capture video frame" << std::endl;
-        break;
-    }
-
-    // Convert frame to 4 channels (RGBA) if it's not already
-    if (frame.channels() == 3) {
-        cv::cvtColor(frame, frame, cv::COLOR_BGR2BGRA);
-    }
-
-    // Ensure overlay image fits within the frame
-    if (overlay_image.cols > frame.cols || overlay_image.rows > frame.rows) {
-        // Resize overlay image to fit within the frame
-        cv::resize(overlay_image, overlay_image, cv::Size(frame.cols, frame.rows));
-    }
-
-    // Split the overlay into RGB and Alpha channels
-    cv::Mat overlay_rgb, overlay_alpha;
-    std::vector<cv::Mat> overlay_channels(4);
-    cv::split(overlay_image, overlay_channels);
-    overlay_rgb = cv::Mat(overlay_image.size(), CV_8UC3);
-    cv::merge(std::vector<cv::Mat>{overlay_channels[0], overlay_channels[1], overlay_channels[2]}, overlay_rgb);
-    overlay_alpha = overlay_channels[3];
-
-    // Create a region of interest (ROI) in the frame where the overlay will be applied
-    cv::Rect roi(cv::Point(0, 0), overlay_image.size());
-    cv::Mat frame_roi = frame(roi);
-
-    // Blend the overlay into the frame using the alpha channel
-    for (int y = 0; y < overlay_image.rows; ++y) {
-        for (int x = 0; x < overlay_image.cols; ++x) {
-            cv::Vec4b& pixel = frame_roi.at<cv::Vec4b>(y, x); // Access frame pixel (with alpha)
-            cv::Vec3b& overlay_pixel = overlay_rgb.at<cv::Vec3b>(y, x); // Access overlay pixel
-            uchar alpha = overlay_alpha.at<uchar>(y, x); // Access overlay alpha channel
-
-            // Perform alpha blending
-            pixel[0] = (overlay_pixel[0] * alpha + pixel[0] * (255 - alpha)) / 255; // Blue
-            pixel[1] = (overlay_pixel[1] * alpha + pixel[1] * (255 - alpha)) / 255; // Green
-            pixel[2] = (overlay_pixel[2] * alpha + pixel[2] * (255 - alpha)) / 255; // Red
-            pixel[3] = std::max(pixel[3], alpha); // Update alpha channel
-        }
-    }
-
-    std::string displayText = "Distance to obstacle: 20 cm";
-    int fontFace = cv::FONT_HERSHEY_SIMPLEX;
-    double fontScale = 0.5;
-    int thickness = 1;
-    int baseline = 0;
-    cv::Size textSize = cv::getTextSize(displayText, fontFace, fontScale, thickness, &baseline);
-
-    cv::Point textOrg(10, frame.rows - 10);
-
-    cv::putText(frame, displayText, textOrg, fontFace, fontScale, cv::Scalar(255, 255, 255), thickness);
-
-
-    cv::imshow("Robot Control", frame);
-
-    char key = (char)cv::waitKey(30);
-    if (key == 27) { 
-        break;
-    }
-    else if (key == 'w') {
-        robot.moveForward();
-    }
-    else if (key == 's') {
-        robot.moveBackward();
-    }
-    else if (key == 'a') {
-        robot.moveLeft();
-    }
-    else if (key == 'f') {
-        robot.grabCatch();
-    }
-    else if (key == 'e') {
-        robot.grabRelease();
-    }
-    else if (key == 'o') {
-        robot.grabUp();
-    }
-    else if (key == 'l') {
-        robot.grabDown();
-    }
+    return TRUE;
 }
 
-cap.release();
-cv::destroyAllWindows();
+int main(int argc, char *argv[]) {
+    gst_init(&argc, &argv);
+
+    pipeline = gst_parse_launch(
+        "udpsrc port=8888 caps=\"application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96\" ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink",
+        NULL);
+
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
+        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
+        return 1;
+    }
+
+    SDL_Window *window = SDL_CreateWindow("Robot Control App", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 1, SDL_WINDOW_HIDDEN);
+    if (!window) {
+        std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return 1;
+    }
+
+    GMainLoop *loop = g_main_loop_new(NULL, FALSE);
+    GstBus *bus = gst_element_get_bus(pipeline);
+    gst_bus_add_watch(bus, bus_call, loop);
+    gst_object_unref(bus);
+
+    gst_element_set_state(pipeline, GST_STATE_PLAYING);
+
+    RobotController robot = RobotController("http://192.168.242.84:5000");
+
+    bool running = true;
+    while (running) {
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                running = false;
+            } else if (e.type == SDL_KEYDOWN) {
+                switch (e.key.keysym.sym) {
+                    case SDLK_w:
+                        std::cout << "Move forward" << std::endl;
+                        robot.moveForward();
+                        break;
+                    case SDLK_a:
+                        std::cout << "Turn left" << std::endl;
+                        robot.moveLeft();
+                        break;
+                    case SDLK_s:
+                        std::cout << "Move backward" << std::endl;
+                        robot.grabDown();
+                        break;
+                    case SDLK_d:
+                        std::cout << "Turn right" << std::endl;
+                        robot.moveRight();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        // Process GStreamer events
+        g_main_context_iteration(NULL, FALSE);
+    }
+
+    // Clean up
+    gst_element_set_state(pipeline, GST_STATE_NULL);
+    gst_object_unref(pipeline);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    g_main_loop_unref(loop);
 
     return 0;
 }
