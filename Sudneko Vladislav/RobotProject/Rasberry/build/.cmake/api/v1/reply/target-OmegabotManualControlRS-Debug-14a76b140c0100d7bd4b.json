@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "RTSPServer"
+			"path" : "OmegabotManualControlRS"
 		}
 	],
 	"backtrace" : 1,
@@ -27,7 +27,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 18,
+				"line" : 21,
 				"parent" : 0
 			},
 			{
@@ -39,13 +39,19 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 22,
+				"line" : 25,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
 				"line" : 12,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 16,
 				"parent" : 0
 			}
 		]
@@ -59,13 +65,24 @@
 					"fragment" : "-g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk"
 				}
 			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 3,
+					"define" : "BOOST_SYSTEM_DYN_LINK"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "BOOST_SYSTEM_NO_LIB"
+				}
+			],
 			"includes" : 
 			[
 				{
-					"path" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/RTSPServer/build"
+					"path" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build"
 				},
 				{
-					"path" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/RTSPServer"
+					"path" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry"
 				},
 				{
 					"backtrace" : 4,
@@ -102,6 +119,11 @@
 				{
 					"backtrace" : 4,
 					"path" : "/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "/opt/anaconda3/include"
 				}
 			],
 			"language" : "CXX",
@@ -115,11 +137,11 @@
 			},
 			"sourceIndexes" : 
 			[
-				0
+				5
 			]
 		}
 	],
-	"id" : "RTSPServer::@6890427a1f51a3e7e1df",
+	"id" : "OmegabotManualControlRS::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -148,32 +170,12 @@
 				"role" : "libraryPath"
 			},
 			{
-				"fragment" : "-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib -Wl,-rpath,/opt/homebrew/Cellar/glib/2.80.4/lib -Wl,-rpath,/opt/homebrew/opt/gettext/lib",
+				"fragment" : "-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib -Wl,-rpath,/opt/homebrew/Cellar/glib/2.80.4/lib -Wl,-rpath,/opt/homebrew/opt/gettext/lib -Wl,-rpath,/opt/anaconda3/lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "-lgstreamer-1.0",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 3,
-				"fragment" : "-lgobject-2.0",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 3,
-				"fragment" : "-lglib-2.0",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 3,
-				"fragment" : "-lintl",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 3,
-				"fragment" : "-lgstrtspserver-1.0",
+				"fragment" : "/opt/anaconda3/lib/libboost_system.dylib",
 				"role" : "libraries"
 			},
 			{
@@ -204,8 +206,8 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "RTSPServer",
-	"nameOnDisk" : "RTSPServer",
+	"name" : "OmegabotManualControlRS",
+	"nameOnDisk" : "OmegabotManualControlRS",
 	"paths" : 
 	{
 		"build" : ".",
@@ -214,10 +216,27 @@
 	"sourceGroups" : 
 	[
 		{
-			"name" : "Source Files",
+			"name" : "",
 			"sourceIndexes" : 
 			[
 				0
+			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				1,
+				2,
+				3,
+				4
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				5
 			]
 		}
 	],
@@ -225,9 +244,34 @@
 	[
 		{
 			"backtrace" : 1,
+			"path" : "src/.DS_Store",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/ArduinoCommunicator.hpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/PCCommunicator.hpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/RTSPStreamer.hpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/crow_all.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/main.cpp",
-			"sourceGroupIndex" : 0
+			"sourceGroupIndex" : 2
 		}
 	],
 	"type" : "EXECUTABLE"

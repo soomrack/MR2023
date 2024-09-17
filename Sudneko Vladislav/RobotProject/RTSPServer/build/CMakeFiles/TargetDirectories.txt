@@ -1,3 +1,0 @@
-/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/RTSPServer/build/CMakeFiles/RTSPServer.dir
-/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/RTSPServer/build/CMakeFiles/edit_cache.dir
-/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/RTSPServer/build/CMakeFiles/rebuild_cache.dir

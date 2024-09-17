@@ -427,9 +427,12 @@
 			"path" : "build/CMakeFiles/3.30.3/CMakeCXXCompiler.cmake"
 		},
 		{
-			"isCMake" : true,
 			"isExternal" : true,
-			"path" : "/opt/homebrew/Cellar/cmake/3.30.3/share/cmake/Modules/FindPkgConfig.cmake"
+			"path" : "/opt/homebrew/lib/cmake/opencv4/OpenCVConfig-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/homebrew/lib/cmake/opencv4/OpenCVConfig.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -443,54 +446,18 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfigVersion.cmake"
+			"path" : "/opt/homebrew/lib/cmake/opencv4/OpenCVModules.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/Boost-1.82.0/BoostConfig.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/boost_system-1.82.0/boost_system-config-version.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/boost_system-1.82.0/boost_system-config.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/BoostDetectToolset-1.82.0.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/boost_system-1.82.0/libboost_system-variant-shared.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/boost_system-1.82.0/libboost_system-variant-static.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/boost_headers-1.82.0/boost_headers-config-version.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/opt/anaconda3/lib/cmake/boost_headers-1.82.0/boost_headers-config.cmake"
+			"path" : "/opt/homebrew/lib/cmake/opencv4/OpenCVModules-release.cmake"
 		}
 	],
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build",
-		"source" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry"
+		"build" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build",
+		"source" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC"
 	},
 	"version" : 
 	{

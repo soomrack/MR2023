@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build",
+  "command": "/usr/bin/clang++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -I\"/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build\" -I\"/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry\" -I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0 -I/opt/homebrew/Cellar/glib/2.80.4/include -I/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0 -I/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include -I/opt/homebrew/opt/gettext/include -I/opt/homebrew/Cellar/pcre2/10.44/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi -I/opt/homebrew/Cellar/glib/2.80.4/include/gio-unix-2.0 -I/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4 -isystem /opt/anaconda3/include -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -o CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o -c \"/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/src/main.cpp\"",
+  "file": "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/src/main.cpp",
+  "output": "CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o"
+}
+]
