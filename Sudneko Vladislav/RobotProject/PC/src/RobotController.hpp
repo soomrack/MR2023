@@ -1,54 +1,54 @@
 #ifndef ROBOTCONTROLLER
 #define ROBOTCONTROLLER
 
-#include "GCSCommunicator.hpp"
+#include "RaspberryCommunicator.hpp"
 #include <iostream>
 
 class RobotController {
 private:
-    GCSCommunicator communicator;
+    RaspberryCommunicator communicator;
 
 public:
-    RobotController(const std::string& ip, int recv_port, int send_port)
-        : communicator(ip, recv_port, send_port) { } 
+    RobotController(const std::string& robot_host)
+        : communicator(robot_host) { } 
 
     void moveForward() {
-        communicator.move(UP);
+        communicator.sendCommand("/forward");
         std::cout << "Moving forward" << std::endl;
     }
 
     void moveBackward() {
-        communicator.move(DOWN);
+        communicator.sendCommand("/down");
         std::cout << "Moving backward" << std::endl;
     }
 
     void moveLeft() {
-        communicator.move(LEFT);
+        communicator.sendCommand("/left");
         std::cout << "Moving left" << std::endl;
     }
 
     void moveRight() {
-        communicator.move(RIGHT);
+        communicator.sendCommand("/right");
         std::cout << "Moving right" << std::endl;
     }
 
     void grabCatch() {
-        communicator.move(CATCH);
+        communicator.sendCommand("/catch");
         std::cout << "Catching" << std::endl;
     }
 
     void grabRelease() {
-        communicator.move(RELEASE);
+        communicator.sendCommand("/release");
         std::cout << "Releasing" << std::endl;
     }
 
     void grabUp() {
-        communicator.move(UP);
+        communicator.sendCommand("/up");
         std::cout << "Grab Up" << std::endl;
     }
 
     void grabDown() {
-        communicator.move(DOWN);
+        communicator.sendCommand("/down");
         std::cout << "Grab Down" << std::endl;
     }
 };

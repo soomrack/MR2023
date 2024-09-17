@@ -45,19 +45,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/local/Cellar/cmake/3.30.3/bin/cmake
+CMAKE_COMMAND = /opt/homebrew/Cellar/cmake/3.30.3/bin/cmake
 
 # The command to remove a file.
-RM = /usr/local/Cellar/cmake/3.30.3/bin/cmake -E rm -f
+RM = /opt/homebrew/Cellar/cmake/3.30.3/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry"
+CMAKE_SOURCE_DIR = "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build"
+CMAKE_BINARY_DIR = "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build"
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/OmegabotManualControlRS.dir/clean
 CMakeFiles/OmegabotManualControlRS.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControlRS.dir/build.make CMakeFiles/OmegabotManualControlRS.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/OmegabotManualControlRS.dir/build.make CMakeFiles/OmegabotManualControlRS.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" --progress-num=1,2 "Built target OmegabotManualControlRS"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" --progress-num=1,2 "Built target OmegabotManualControlRS"
 .PHONY : CMakeFiles/OmegabotManualControlRS.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/OmegabotManualControlRS.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" 2
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/OmegabotManualControlRS.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" 0
 .PHONY : CMakeFiles/OmegabotManualControlRS.dir/rule
 
 # Convenience name for target.

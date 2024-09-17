@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/src/main.cpp" "CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o" "gcc" "CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o.d"
+  "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/src/main.cpp" "CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o" "gcc" "CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

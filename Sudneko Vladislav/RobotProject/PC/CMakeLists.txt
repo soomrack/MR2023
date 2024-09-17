@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(OmegabotManualControlPC LANGUAGES CXX)
+project(OmegabotManualControl LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

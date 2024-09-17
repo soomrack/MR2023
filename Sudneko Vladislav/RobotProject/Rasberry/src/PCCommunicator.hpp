@@ -3,14 +3,12 @@
 #include <atomic>
 #include <iostream>
 #include <string>
-#include <vector>
 
 class PCCommunicator {
-    std::vector<float> distances = {
-        -1, // front sensor
-    };
+    float front_distance_sensor = -1;
 public:
     PCCommunicator() : running(true) {
+        std::cout << "Server on robot starts" << std::endl;
         web_server_thread = std::thread(&PCCommunicator::start_server, this);
     }
 
@@ -35,17 +33,17 @@ private:
         CROW_ROUTE(app, "/move/<string>")
         ([this](const std::string& direction) {
             this->move(direction);
-            std:string result =  "Move command " + direction + " executed.";
+            std::string result =  "Move command " + direction + " executed.";
             return crow::response(200, result);
         });
 
         CROW_ROUTE(app, "/distance")
-        ([this](const std::string& sensor_position) {
+        ([this]() {
             crow::json::wvalue distance;
-            distance["distances"] = crow::json::wvalue::list(distances);
+            distance["front"] = front_distance_sensor;
             return distance;
         });
 
-        app.port(18080).multithreaded().run();
+        app.port(5000).multithreaded().run();
     }
 };

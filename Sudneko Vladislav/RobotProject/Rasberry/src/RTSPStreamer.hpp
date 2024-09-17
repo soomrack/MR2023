@@ -31,16 +31,38 @@ public:
         }
 
         server = gst_rtsp_server_new();
+        if (!server) {
+            std::cerr << "Failed to create RTSP server" << std::endl;
+            return false;
+        }
+
         GstRTSPMountPoints *mounts = gst_rtsp_server_get_mount_points(server);
+        if (!mounts) {
+            std::cerr << "Failed to get mount points" << std::endl;
+            g_object_unref(server);
+            server = nullptr;
+            return false;
+        }
 
         media_factory = gst_rtsp_media_factory_new();
-        gst_rtsp_media_factory_set_launch(media_factory, pipeline_description.c_str());
+        if (!media_factory) {
+            std::cerr << "Failed to create media factory" << std::endl;
+            g_object_unref(mounts);
+            g_object_unref(server);
+            server = nullptr;
+            return false;
+        }
 
+        gst_rtsp_media_factory_set_launch(media_factory, pipeline_description.c_str());
         gst_rtsp_mount_points_add_factory(mounts, mount_point.c_str(), media_factory);
         g_object_unref(mounts);
 
         if (gst_rtsp_server_attach(server, nullptr) == 0) {
             std::cerr << "Failed to attach the server" << std::endl;
+            g_object_unref(media_factory);
+            media_factory = nullptr;
+            g_object_unref(server);
+            server = nullptr;
             return false;
         }
 
@@ -58,6 +80,8 @@ public:
                 if (loop_thread.joinable()) {
                     loop_thread.join();
                 }
+                g_main_loop_unref(loop);
+                loop = nullptr;
             }
             running.store(false);
         }
@@ -72,6 +96,8 @@ private:
 
     void run_main_loop() {
         loop = g_main_loop_new(nullptr, FALSE);
-        g_main_loop_run(loop);
+        if (loop) {
+            g_main_loop_run(loop);
+        }
     }
 };

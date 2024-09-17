@@ -1,3 +1,3 @@
-/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build/CMakeFiles/OmegabotManualControlPC.dir
-/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build/CMakeFiles/edit_cache.dir
-/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build/CMakeFiles/rebuild_cache.dir
+/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build/CMakeFiles/OmegabotManualControl.dir
+/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build/CMakeFiles/edit_cache.dir
+/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build/CMakeFiles/rebuild_cache.dir

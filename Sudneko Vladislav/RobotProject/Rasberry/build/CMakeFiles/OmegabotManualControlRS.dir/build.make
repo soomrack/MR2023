@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/local/Cellar/cmake/3.30.3/bin/cmake
+CMAKE_COMMAND = /opt/homebrew/Cellar/cmake/3.30.3/bin/cmake
 
 # The command to remove a file.
-RM = /usr/local/Cellar/cmake/3.30.3/bin/cmake -E rm -f
+RM = /opt/homebrew/Cellar/cmake/3.30.3/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry"
+CMAKE_SOURCE_DIR = "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build"
+CMAKE_BINARY_DIR = "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build"
 
 # Include any dependencies generated for this target.
 include CMakeFiles/OmegabotManualControlRS.dir/depend.make
@@ -70,18 +70,18 @@ include CMakeFiles/OmegabotManualControlRS.dir/progress.make
 include CMakeFiles/OmegabotManualControlRS.dir/flags.make
 
 CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o: CMakeFiles/OmegabotManualControlRS.dir/flags.make
-CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o: /Users/admin/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/Rasberry/src/main.cpp
+CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o: /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/Rasberry/src/main.cpp
 CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o: CMakeFiles/OmegabotManualControlRS.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o -MF CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o.d -o CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o -c "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/src/main.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o -MF CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o.d -o CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o -c "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/src/main.cpp"
 
 CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/src/main.cpp" > CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.i
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/src/main.cpp" > CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.i
 
 CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/src/main.cpp" -o CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.s
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/src/main.cpp" -o CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.s
 
 # Object files for target OmegabotManualControlRS
 OmegabotManualControlRS_OBJECTS = \
@@ -92,9 +92,9 @@ OmegabotManualControlRS_EXTERNAL_OBJECTS =
 
 OmegabotManualControlRS: CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o
 OmegabotManualControlRS: CMakeFiles/OmegabotManualControlRS.dir/build.make
-OmegabotManualControlRS: /usr/local/lib/libboost_system-mt.dylib
+OmegabotManualControlRS: /opt/anaconda3/lib/libboost_system.dylib
 OmegabotManualControlRS: CMakeFiles/OmegabotManualControlRS.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable OmegabotManualControlRS"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable OmegabotManualControlRS"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/OmegabotManualControlRS.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -106,6 +106,6 @@ CMakeFiles/OmegabotManualControlRS.dir/clean:
 .PHONY : CMakeFiles/OmegabotManualControlRS.dir/clean
 
 CMakeFiles/OmegabotManualControlRS.dir/depend:
-	cd "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry" "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry" "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build" "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build" "/Users/admin/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles/OmegabotManualControlRS.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry" "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry" "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build" "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build" "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Rasberry/build/CMakeFiles/OmegabotManualControlRS.dir/DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : CMakeFiles/OmegabotManualControlRS.dir/depend
 
