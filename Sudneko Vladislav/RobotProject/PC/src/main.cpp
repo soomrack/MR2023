@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
                         break;
                     case SDLK_s:
                         std::cout << "Move backward" << std::endl;
-                        robot.grabDown();
+                        robot.moveBackward();
                         break;
                     case SDLK_d:
                         std::cout << "Turn right" << std::endl;
