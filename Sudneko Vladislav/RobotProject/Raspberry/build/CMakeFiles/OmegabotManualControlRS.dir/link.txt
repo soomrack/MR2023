@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o -o OmegabotManualControlRS  /usr/lib/arm-linux-gnueabihf/libboost_system.so.1.74.0 -lserialport -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0 -lgstrtspserver-1.0 -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0 -lpthread -lgstrtspserver-1.0 -lgstbase-1.0 -lpthread 

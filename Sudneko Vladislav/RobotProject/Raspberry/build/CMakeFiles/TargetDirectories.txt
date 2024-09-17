@@ -1,0 +1,3 @@
+/home/pi/Rasberry/build/CMakeFiles/rebuild_cache.dir
+/home/pi/Rasberry/build/CMakeFiles/edit_cache.dir
+/home/pi/Rasberry/build/CMakeFiles/OmegabotManualControlRS.dir
