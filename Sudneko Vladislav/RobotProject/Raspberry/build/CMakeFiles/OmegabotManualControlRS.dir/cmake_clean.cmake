@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o"
+  "CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o.d"
   "OmegabotManualControlRS"
   "OmegabotManualControlRS.pdb"
 )

@@ -1,3 +1,3 @@
-/home/pi/Rasberry/build/CMakeFiles/rebuild_cache.dir
-/home/pi/Rasberry/build/CMakeFiles/edit_cache.dir
-/home/pi/Rasberry/build/CMakeFiles/OmegabotManualControlRS.dir
+/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/build/CMakeFiles/OmegabotManualControlRS.dir
+/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/build/CMakeFiles/edit_cache.dir
+/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/build/CMakeFiles/rebuild_cache.dir

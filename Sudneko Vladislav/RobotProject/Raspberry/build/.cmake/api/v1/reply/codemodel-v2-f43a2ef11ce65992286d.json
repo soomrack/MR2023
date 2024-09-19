@@ -6,6 +6,7 @@
 			[
 				{
 					"build" : ".",
+					"jsonFile" : "directory-.-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.10"
@@ -38,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "OmegabotManualControlRS::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-OmegabotManualControlRS-2e1989f192cf07c157e9.json",
+					"jsonFile" : "target-OmegabotManualControlRS-7049e3921e0733088ec4.json",
 					"name" : "OmegabotManualControlRS",
 					"projectIndex" : 0
 				}
@@ -48,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/pi/Rasberry/build",
-		"source" : "/home/pi/Rasberry"
+		"build" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/build",
+		"source" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 1
+		"minor" : 7
 	}
 }
