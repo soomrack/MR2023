@@ -1470,5 +1470,6 @@ CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/deque \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/map \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/condition_variable \
+  /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/Raspberry/src/TimeCounter.hpp \
   /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/Raspberry/src/ArduinoCommunicator.hpp \
   /opt/homebrew/Cellar/libserialport/0.1.1/include/libserialport.h

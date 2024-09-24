@@ -73,15 +73,15 @@ CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o: CMakeFiles/OmegabotManual
 CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o: /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/Raspberry/src/main.cpp
 CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o: CMakeFiles/OmegabotManualControlRS.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o -MF CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o.d -o CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o -c "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/src/main.cpp"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o -MF CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o.d -o CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.o -c "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/src/main.cpp"
 
 CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/src/main.cpp" > CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.i
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/src/main.cpp" > CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.i
 
 CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/src/main.cpp" -o CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.s
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/src/main.cpp" -o CMakeFiles/OmegabotManualControlRS.dir/src/main.cpp.s
 
 # Object files for target OmegabotManualControlRS
 OmegabotManualControlRS_OBJECTS = \

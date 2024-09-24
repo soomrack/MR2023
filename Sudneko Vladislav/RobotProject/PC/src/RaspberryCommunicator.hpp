@@ -14,6 +14,11 @@ public:
         requester.send_get_request(request);
     }
 
+    void sendHeartbeat() noexcept {
+        std::string request = "/heartbeat";
+        requester.send_get_request(request);
+    }
+
     float getDistance() {
         std::string distance_response = requester.send_get_request("/distance");
         try {

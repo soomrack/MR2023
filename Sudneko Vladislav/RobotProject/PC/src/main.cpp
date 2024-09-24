@@ -2,6 +2,9 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "RobotController.hpp"
+#include <thread>
+#include <chrono>
+#include <functional>
 
 static GstElement *pipeline;
 
@@ -28,6 +31,13 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
     return TRUE;
 }
 
+void send_heartbeat(RobotController &robot) {
+    while (true) {
+        robot.sendHeartbeat();
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+}
+
 int main(int argc, char *argv[]) {
     gst_init(&argc, &argv);
 
@@ -40,7 +50,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("Robot Control App", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 1, SDL_WINDOW_HIDDEN);
+    SDL_Window *window = SDL_CreateWindow("Robot Control App", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN);
     if (!window) {
         std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
@@ -54,7 +64,9 @@ int main(int argc, char *argv[]) {
 
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
 
-    RobotController robot = RobotController("http://192.168.242.84:5000");
+    RobotController robot = RobotController("http://192.168.24.84:5000");
+
+    // std::thread heartbeat_sender = std::thread(send_heartbeat, std::ref(robot));
 
     bool running = true;
     while (running) {

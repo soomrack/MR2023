@@ -51,6 +51,11 @@ public:
         communicator.sendCommand("down");
         std::cout << "Grab Down" << std::endl;
     }
+
+    void sendHeartbeat() {
+        communicator.sendHeartbeat();
+        std::cout << "HeartBeat sent" << std::endl;
+    }
 };
 
 #endif // ROBOTCONTROLLER
