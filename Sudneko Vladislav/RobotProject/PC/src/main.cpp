@@ -5,6 +5,7 @@
 #include <thread>
 #include <chrono>
 #include <functional>
+#include <atomic>
 
 static GstElement *pipeline;
 
@@ -15,24 +16,24 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
             g_main_loop_quit((GMainLoop *)data);
             break;
         case GST_MESSAGE_ERROR:
-            {
-                gchar *debug;
-                GError *error;
-                gst_message_parse_error(msg, &error, &debug);
-                std::cerr << "Error: " << error->message << std::endl;
-                g_free(debug);
-                g_error_free(error);
-                g_main_loop_quit((GMainLoop *)data);
-                break;
-            }
+        {
+            gchar *debug;
+            GError *error;
+            gst_message_parse_error(msg, &error, &debug);
+            std::cerr << "Error: " << error->message << std::endl;
+            g_free(debug);
+            g_error_free(error);
+            g_main_loop_quit((GMainLoop *)data);
+            break;
+        }
         default:
             break;
     }
     return TRUE;
 }
 
-void send_heartbeat(RobotController &robot) {
-    while (true) {
+void send_heartbeat(RobotController &robot, std::atomic<bool> &running) {
+    while (running) {
         robot.sendHeartbeat();
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
@@ -66,9 +67,9 @@ int main(int argc, char *argv[]) {
 
     RobotController robot = RobotController("http://192.168.24.84:5000");
 
-    // std::thread heartbeat_sender = std::thread(send_heartbeat, std::ref(robot));
+    std::atomic<bool> running(true);
+    std::thread heartbeat_sender(send_heartbeat, std::ref(robot), std::ref(running));
 
-    bool running = true;
     while (running) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
@@ -92,17 +93,53 @@ int main(int argc, char *argv[]) {
                         std::cout << "Turn right" << std::endl;
                         robot.moveRight();
                         break;
+                    case SDLK_f:
+                        std::cout << "Catch (grab)" << std::endl;
+                        robot.grab();
+                        break;
+                    case SDLK_e:
+                        std::cout << "Release (drop)" << std::endl;
+                        robot.release();
+                        break;
+                    case SDLK_o:
+                        std::cout << "Move up" << std::endl;
+                        robot.moveUp();
+                        break;
+                    case SDLK_l:
+                        std::cout << "Move down" << std::endl;
+                        robot.moveDown();
+                        break;
+                    case SDLK_ESCAPE:
+                        running = false;
+                        break;
+                    default:
+                        break;
+                }
+            } else if (e.type == SDL_KEYUP) {
+                switch (e.key.keysym.sym) {
+                    case SDLK_w:
+                    case SDLK_a:
+                    case SDLK_s:
+                    case SDLK_d:
+                    case SDLK_f:
+                    case SDLK_e:
+                    case SDLK_o:
+                    case SDLK_l:
+                        std::cout << "Stop" << std::endl;
+                        robot.stop();
+                        break;
                     default:
                         break;
                 }
             }
         }
 
-        // Process GStreamer events
         g_main_context_iteration(NULL, FALSE);
     }
 
-    // Clean up
+    running = false;
+    heartbeat_sender.join();
+
     gst_element_set_state(pipeline, GST_STATE_NULL);
     gst_object_unref(pipeline);
     SDL_DestroyWindow(window);
