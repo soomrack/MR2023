@@ -13,17 +13,18 @@ int main() {
     ArduinoCommunicator arduino_communicator("/dev/ttyUSB0", 9600); 
 
     while (run) {
-        std::cout << "Read from Arduino" << std::endl;
+        // std::cout << "Read from Arduino" << std::endl;
         // Listen sensors data from Arduino and send to the GCS
         // &arduino_communicator.readFromArduino();
 
 
         // Listen command data from GCS and send to arduino
-        std::cout << "Write to arduino" << std::endl;
+        // std::cout << "Write to arduino" << std::endl;
 
         if (!pc_communicator.is_autopilot()) {
             arduino_communicator.writeToArduino(pc_communicator.get_command());
         } else {
+            std::cout << "Connection lost" << std::endl;
             arduino_communicator.writeToArduino(pc_communicator.get_connection_error_code());
         }
         

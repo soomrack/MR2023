@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("Robot Control App", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow("Robot Control App", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_HIDDEN);
     if (!window) {
         std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
 
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
 
-    RobotController robot = RobotController("http://192.168.24.84:5000");
+    RobotController robot = RobotController("http://192.168.76.84:5000");
 
     std::atomic<bool> running(true);
     std::thread heartbeat_sender(send_heartbeat, std::ref(robot), std::ref(running));
@@ -109,6 +109,22 @@ int main(int argc, char *argv[]) {
                         std::cout << "Grab down" << std::endl;
                         robot.grabDown();
                         break;
+                    case SDLK_g:
+                        std::cout << "Forward until obstacle" << std::endl;
+                        robot.forwardUntilObstacle();
+                        break;
+                    case SDLK_h:
+                        std::cout << "3 seconds forward, rotate, and return back" << std::endl;
+                        robot.goAndRotateAround();
+                        break;
+                    case SDLK_j:
+                        std::cout << "Start shooting video" << std::endl;
+                        robot.startShootingVideo();
+                        break;
+                    case SDLK_k:
+                        std::cout << "Stop shooting video" << std::endl;
+                        robot.stopShootingVideo();
+                        break;
                     case SDLK_ESCAPE:
                         running = false;
                         break;
@@ -121,11 +137,6 @@ int main(int argc, char *argv[]) {
                     case SDLK_a:
                     case SDLK_s:
                     case SDLK_d:
-                    case SDLK_f:
-                    case SDLK_e:
-                    case SDLK_o:
-                    case SDLK_l:
-                        std::cout << "Stop" << std::endl;
                         robot.stop();
                         break;
                     default:

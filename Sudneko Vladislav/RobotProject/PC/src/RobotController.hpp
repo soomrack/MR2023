@@ -52,6 +52,11 @@ public:
         std::cout << "Grab Down" << std::endl;
     }
 
+    void forwardUntilObstacle() {
+        communicator.sendCommand("forwardUntilObstacle");
+        std::cout << "Forward until obstacle" << std::endl;
+    }
+
     void stop() {
         communicator.sendCommand("stop");
         std::cout << "Stop robot" << std::endl;

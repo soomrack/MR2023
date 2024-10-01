@@ -4,4 +4,4 @@ gst-launch-1.0 -v udpsrc port=8888 caps="application/x-rtp, media=video, clock-r
 
 Robot:
 
-gst-launch-1.0 rpicamsrc ! video/x-h264, width=640, height=480, framerate=30/1 ! rtph264pay config-interval=1 pt=96 ! udpsink host=192.168.24.67 port=8888
+gst-launch-1.0 rpicamsrc ! video/x-h264, width=640, height=480, framerate=30/1 ! rtph264pay config-interval=1 pt=96 ! udpsink host=192.168.76.67 port=8888d

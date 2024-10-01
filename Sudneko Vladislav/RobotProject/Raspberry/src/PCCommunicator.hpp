@@ -15,6 +15,7 @@ class PCCommunicator {
     int connection_error_code = 400;
     TimeCounter counter;
     std::thread web_server_thread;
+    std::thread heartbeat_thread;
     std::atomic<bool> running;
     uint16_t critical_time = 10; 
     bool autopilot = false;
@@ -45,9 +46,11 @@ class PCCommunicator {
 
     void heartbeat_handler() {
         while (running) {
+            std::cout << "Heartbeat time is " << counter.getCounter() << std::endl;
             if (counter.getCounter() > critical_time) {
                 autopilot = true;
             } else {
+                std::cout << move_command << " - move command" << std::endl;
                 autopilot = false;
             }   
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -58,7 +61,7 @@ public:
     PCCommunicator() : running(true) {
         std::cout << "Server on robot starts" << std::endl;
         web_server_thread = std::thread(&PCCommunicator::start_server, this);
-        heartbeat_threadd = std::thread(&PCCommunicator::heartbeat_handler, this);
+        heartbeat_thread = std::thread(&PCCommunicator::heartbeat_handler, this);
     }
 
 
@@ -99,7 +102,7 @@ private:
             return distance;
         });
 
-        CROW_ROUTE(app, "/heatbeat")
+        CROW_ROUTE(app, "/heartbeat")
         ([this]() {
             counter.start();
             counter.reset();

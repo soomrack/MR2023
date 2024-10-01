@@ -9,9 +9,13 @@ class RaspberryCommunicator {
 public:
     RaspberryCommunicator(std::string raspberry_address) : requester(raspberry_address) {};
 
-    void sendCommand(std::string command) noexcept {
+    void sendMoveCommand(std::string command) noexcept {
         std::string request = "/move/" + command;
         requester.send_get_request(request);
+    }
+
+    void sendVideoCommand(std::string command) noexcept {
+        std::string request = "/video/" + command;
     }
 
     void sendHeartbeat() noexcept {
