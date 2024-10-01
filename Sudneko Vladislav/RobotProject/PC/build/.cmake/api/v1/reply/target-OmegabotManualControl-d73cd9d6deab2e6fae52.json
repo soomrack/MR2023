@@ -56,7 +56,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics"
+					"fragment" : "-std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk"
 				}
 			],
 			"includes" : 
@@ -69,23 +69,23 @@
 				},
 				{
 					"backtrace" : 4,
-					"path" : "/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0"
+					"path" : "/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0"
 				},
 				{
 					"backtrace" : 4,
-					"path" : "/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4"
+					"path" : "/opt/homebrew/Cellar/orc/0.4.40/include/orc-0.4"
 				},
 				{
 					"backtrace" : 4,
-					"path" : "/opt/homebrew/Cellar/glib/2.80.4/include"
+					"path" : "/opt/homebrew/Cellar/glib/2.82.1/include"
 				},
 				{
 					"backtrace" : 4,
-					"path" : "/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0"
+					"path" : "/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0"
 				},
 				{
 					"backtrace" : 4,
-					"path" : "/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include"
+					"path" : "/opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include"
 				},
 				{
 					"backtrace" : 4,
@@ -129,21 +129,17 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-g",
-				"role" : "flags"
-			},
-			{
 				"fragment" : "",
 				"role" : "flags"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "-L/opt/homebrew/Cellar/gstreamer/1.24.7/lib",
+				"fragment" : "-L/opt/homebrew/Cellar/gstreamer/1.24.8/lib",
 				"role" : "libraryPath"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "-L/opt/homebrew/Cellar/glib/2.80.4/lib",
+				"fragment" : "-L/opt/homebrew/Cellar/glib/2.82.1/lib",
 				"role" : "libraryPath"
 			},
 			{
@@ -157,7 +153,7 @@
 				"role" : "libraryPath"
 			},
 			{
-				"fragment" : "-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib -Wl,-rpath,/opt/homebrew/Cellar/glib/2.80.4/lib -Wl,-rpath,/opt/homebrew/opt/gettext/lib -Wl,-rpath,/opt/homebrew/lib",
+				"fragment" : "-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.8/lib -Wl,-rpath,/opt/homebrew/Cellar/glib/2.82.1/lib -Wl,-rpath,/opt/homebrew/opt/gettext/lib -Wl,-rpath,/opt/homebrew/lib",
 				"role" : "libraries"
 			},
 			{

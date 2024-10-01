@@ -1,7 +1,11 @@
+#ifndef PCCOMMUNICATOR
+#define PCCOMMUNICATOR
+
 #include "crow_all.h"
 #include "TimeCounter.hpp"
 #include <thread>
 #include <atomic>
+#include <chrono>
 #include <iostream>
 #include <string>
 
@@ -9,7 +13,10 @@ class PCCommunicator {
     float front_distance_sensor = -1;
     int move_command = -1;
     TimeCounter counter;
-
+    std::thread web_server_thread;
+    std::atomic<bool> running;
+    uint16_t critical_time = 10; 
+    bool autopilot = false;
 
     int get_direction_code(const std::string& direction) {
         if (direction == "forward") {
@@ -20,8 +27,18 @@ class PCCommunicator {
             return 44;
         } else if (direction == "right") {
             return 55;
+        } else if (direction == "catch") {
+            return 66;
+        } else if (direction == "release") {
+            return 77;
+        } else if (direction == "up") {
+            return 88;
+        } else if (direction == "down") {
+            return 99;
+        } else if (direction == "stop") {
+            return 111;
         } else {
-            return 135;
+            return 135; // do nothing
         }
     }
 
@@ -29,6 +46,18 @@ public:
     PCCommunicator() : running(true) {
         std::cout << "Server on robot starts" << std::endl;
         web_server_thread = std::thread(&PCCommunicator::start_server, this);
+        heartbeat_threadd = std::thread(&PCCommunicator::heartbeat_handler, this);
+    }
+
+    void heartbeat_handler() {
+        while (running) {
+            if (counter.getCounter() > critical_time) {
+                autopilot = true;
+            } else {
+                autopilot = false;
+            }   
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
     }
 
     int get_command() {
@@ -43,8 +72,6 @@ public:
     }
 
 private:
-    std::thread web_server_thread;
-    std::atomic<bool> running;
 
     void start_server() {
         crow::SimpleApp app;
@@ -73,3 +100,5 @@ private:
 
     }
 };
+
+#endif // PCCOMMUNICATOR

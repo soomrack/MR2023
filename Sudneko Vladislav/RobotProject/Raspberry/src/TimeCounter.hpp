@@ -1,3 +1,6 @@
+#ifndef TIMECOUNTER
+#define TIMECOUNTER
+
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -48,3 +51,5 @@ public:
         counter = 0;
     }
 };
+
+#endif // TIMECOUNTER

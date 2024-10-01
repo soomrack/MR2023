@@ -27,7 +27,7 @@
 					[
 						0
 					],
-					"name" : "OmegabotManualControl",
+					"name" : "OmegabotManualControlRS",
 					"targetIndexes" : 
 					[
 						0
@@ -38,9 +38,9 @@
 			[
 				{
 					"directoryIndex" : 0,
-					"id" : "OmegabotManualControl::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-OmegabotManualControl-Debug-b92584d0797dae2e276c.json",
-					"name" : "OmegabotManualControl",
+					"id" : "OmegabotManualControlRS::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OmegabotManualControlRS-Debug-55f9e3b806f2b93faedb.json",
+					"name" : "OmegabotManualControlRS",
 					"projectIndex" : 0
 				}
 			]
@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build",
-		"source" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC"
+		"build" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/build",
+		"source" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry"
 	},
 	"version" : 
 	{

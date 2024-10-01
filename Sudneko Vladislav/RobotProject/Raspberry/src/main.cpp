@@ -13,13 +13,12 @@ int main() {
     ArduinoCommunicator arduino_communicator("/dev/ttyUSB0", 9600); 
 
     while (run) {
-        std::cout << "Start read from arduino" << std::endl;
+        std::cout << "Read from Arduino" << std::endl;
         // Listen sensors data from Arduino and send to the GCS
         // &arduino_communicator.readFromArduino();
 
         // Listen command data from GCS and send to arduino
         std::cout << pc_communicator.get_command() << std::endl;
-
         std::cout << "Write to arduino" << std::endl;
         arduino_communicator.writeToArduino(pc_communicator.get_command());
         std::this_thread::sleep_for(std::chrono::milliseconds(100));    

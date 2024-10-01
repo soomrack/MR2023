@@ -1,11 +1,11 @@
 CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: \
   /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/main.cpp \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gst.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/galloca.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtypes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include/glibconfig.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmacros.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gst.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/galloca.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtypes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include/glibconfig.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmacros.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/stddef.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__config \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__config_site \
@@ -24,8 +24,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/float.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/float.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/float.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gversionmacros.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glib-visibility.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gversionmacros.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glib-visibility.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/time.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/_types.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types.h \
@@ -59,11 +59,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_errno_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_ssize_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/strings.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/garray.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gasyncqueue.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gthread.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gatomic.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glib-typeof.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/garray.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gasyncqueue.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gthread.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gatomic.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glib-typeof.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/type_traits \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__assert \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__verbose_abort \
@@ -207,10 +207,10 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/invoke.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/type_identity.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/unwrap_ref.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gerror.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gerror.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gquark.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gutils.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gquark.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gutils.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/stdlib.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/stdlib.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/wait.h \
@@ -246,82 +246,82 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/malloc/_ptrcheck.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_dev_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_mode_t.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbacktrace.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbacktrace.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/signal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_pthread/_pthread_t.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbase64.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbitlock.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbookmarkfile.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdatetime.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtimezone.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbytes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gcharset.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gchecksum.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gconvert.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdataset.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdate.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdir.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbase64.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbitlock.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbookmarkfile.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdatetime.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtimezone.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbytes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gcharset.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gchecksum.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gconvert.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdataset.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdate.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdir.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/dirent.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/dirent.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_ino_t.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/genviron.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gfileutils.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ggettext.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghash.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glist.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmem.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gnode.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghmac.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghook.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghostutils.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/giochannel.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmain.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gpoll.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gslist.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstring.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gunicode.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstrfuncs.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gkeyfile.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmappedfile.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmarkup.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmessages.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gvariant.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gvarianttype.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/goption.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gpathbuf.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gpattern.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gprimes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gqsort.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gqueue.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grand.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grcbox.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grefcount.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grefstring.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gregex.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gscanner.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gsequence.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gshell.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gslice.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gspawn.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstringchunk.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstrvbuilder.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtestutils.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/genviron.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gfileutils.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ggettext.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghash.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glist.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmem.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gnode.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghmac.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghook.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghostutils.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/giochannel.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmain.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gpoll.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gslist.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstring.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gunicode.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstrfuncs.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gkeyfile.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmappedfile.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmarkup.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmessages.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gvariant.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gvarianttype.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/goption.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gpathbuf.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gpattern.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gprimes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gqsort.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gqueue.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grand.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grcbox.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grefcount.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grefstring.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gregex.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gscanner.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gsequence.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gshell.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gslice.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gspawn.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstringchunk.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstrvbuilder.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtestutils.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/errno.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/errno.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/errno.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gthreadpool.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtimer.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtrashstack.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtree.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/guri.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/guuid.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gversion.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gallocator.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gcache.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gcompletion.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gmain.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/grel.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gthread.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gthreadpool.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtimer.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtrashstack.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtree.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/guri.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/guuid.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gversion.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gallocator.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gcache.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gcompletion.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gmain.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/grel.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gthread.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/types.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_u_char.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_u_short.h \
@@ -361,107 +361,107 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/pthread/qos.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/qos.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_mach_port_t.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glib-autocleanups.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/glib-compat.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstenumtypes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib-object.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gbinding.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gobject.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gtype.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gobject-visibility.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gvalue.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gparam.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gclosure.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gsignal.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gmarshal.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gboxed.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/glib-types.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gbindinggroup.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/genums.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/glib-enumtypes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gparamspecs.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gsignalgroup.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gsourceclosure.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gtypemodule.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gtypeplugin.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gvaluearray.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gvaluetypes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gobject-autocleanups.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstconfig.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstversion.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstatomicqueue.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbin.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstelement.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstobject.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcontrolbinding.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcontrolsource.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstclock.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpad.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbuffer.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstminiobject.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstallocator.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmemory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcaps.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gststructure.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdatetime.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcapsfeatures.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmeta.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbytearrayinterface.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbufferlist.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpadtemplate.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstevent.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstformat.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstiterator.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttaglist.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstsample.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstsegment.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmessage.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstquery.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttoc.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcontext.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdevice.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gststreams.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gststreamcollection.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttask.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttaskpool.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbus.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstelementfactory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstplugin.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmacros.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpluginfeature.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsturi.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbufferpool.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstchildproxy.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdebugutils.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdevicemonitor.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdeviceprovider.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdeviceproviderfactory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdynamictypefactory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstelementmetadata.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsterror.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstghostpad.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstinfo.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstparamspecs.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstvalue.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpipeline.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpoll.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpreset.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstprotection.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstregistry.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpromise.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstsystemclock.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttagsetter.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttocsetter.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttracer.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttracerfactory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttracerrecord.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttypefind.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttypefindfactory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstutils.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstparse.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcompat.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glib-autocleanups.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/glib-compat.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstenumtypes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib-object.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gbinding.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gobject.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gtype.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gobject-visibility.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gvalue.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gparam.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gclosure.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gsignal.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gmarshal.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gboxed.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/glib-types.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gbindinggroup.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/genums.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/glib-enumtypes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gparamspecs.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gsignalgroup.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gsourceclosure.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gtypemodule.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gtypeplugin.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gvaluearray.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gvaluetypes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gobject-autocleanups.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstconfig.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstversion.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstatomicqueue.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbin.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstelement.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstobject.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcontrolbinding.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcontrolsource.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstclock.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpad.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbuffer.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstminiobject.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstallocator.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmemory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcaps.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gststructure.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdatetime.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcapsfeatures.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmeta.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbytearrayinterface.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbufferlist.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpadtemplate.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstevent.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstformat.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstiterator.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttaglist.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstsample.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstsegment.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmessage.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstquery.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttoc.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcontext.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdevice.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gststreams.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gststreamcollection.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttask.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttaskpool.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbus.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstelementfactory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstplugin.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmacros.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpluginfeature.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsturi.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbufferpool.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstchildproxy.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdebugutils.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdevicemonitor.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdeviceprovider.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdeviceproviderfactory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdynamictypefactory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstelementmetadata.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsterror.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstghostpad.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstinfo.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstparamspecs.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstvalue.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpipeline.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpoll.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpreset.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstprotection.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstregistry.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpromise.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstsystemclock.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttagsetter.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttocsetter.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttracer.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttracerfactory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttracerrecord.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttypefind.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttypefindfactory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstutils.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstparse.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcompat.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/TargetConditionals.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmacos.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmacos.h \
   /opt/homebrew/include/SDL2/SDL.h /opt/homebrew/include/SDL2/SDL_main.h \
   /opt/homebrew/include/SDL2/SDL_stdinc.h \
   /opt/homebrew/include/SDL2/SDL_config.h \

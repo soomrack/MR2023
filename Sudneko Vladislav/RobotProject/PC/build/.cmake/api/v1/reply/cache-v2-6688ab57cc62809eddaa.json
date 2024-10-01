@@ -31,7 +31,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/ar"
+			"value" : "/Library/Developer/CommandLineTools/usr/bin/ar"
 		},
 		{
 			"name" : "CMAKE_BUILD_TYPE",
@@ -39,11 +39,11 @@
 			[
 				{
 					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
+					"value" : "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..."
 				}
 			],
 			"type" : "STRING",
-			"value" : "Debug"
+			"value" : ""
 		},
 		{
 			"name" : "CMAKE_CACHEFILE_DIR",
@@ -92,18 +92,6 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "3"
-		},
-		{
-			"name" : "CMAKE_COLOR_DIAGNOSTICS",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Enable colored diagnostics throughout."
-				}
-			],
-			"type" : "BOOL",
-			"value" : "1"
 		},
 		{
 			"name" : "CMAKE_COLOR_MAKEFILE",
@@ -167,11 +155,11 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
+					"value" : "CXX compiler"
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/clang++"
+			"value" : "/Library/Developer/CommandLineTools/usr/bin/c++"
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS",
@@ -252,18 +240,6 @@
 			],
 			"type" : "STRING",
 			"value" : "-O2 -g -DNDEBUG"
-		},
-		{
-			"name" : "CMAKE_C_COMPILER",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
-				}
-			],
-			"type" : "FILEPATH",
-			"value" : "/usr/bin/clang"
 		},
 		{
 			"name" : "CMAKE_DLLTOOL",
@@ -395,11 +371,11 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
+					"value" : "Enable/Disable output of compile commands during generation."
 				}
 			],
 			"type" : "BOOL",
-			"value" : "TRUE"
+			"value" : ""
 		},
 		{
 			"name" : "CMAKE_EXTRA_GENERATOR",
@@ -499,7 +475,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/anaconda3/bin/install_name_tool"
+			"value" : "/usr/bin/install_name_tool"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -527,7 +503,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/ld"
+			"value" : "/Library/Developer/CommandLineTools/usr/bin/ld"
 		},
 		{
 			"name" : "CMAKE_MAKE_PROGRAM",
@@ -639,7 +615,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/nm"
+			"value" : "/Library/Developer/CommandLineTools/usr/bin/nm"
 		},
 		{
 			"name" : "CMAKE_NUMBER_OF_MAKEFILES",
@@ -683,7 +659,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/objdump"
+			"value" : "/Library/Developer/CommandLineTools/usr/bin/objdump"
 		},
 		{
 			"name" : "CMAKE_OSX_ARCHITECTURES",
@@ -783,7 +759,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/ranlib"
+			"value" : "/Library/Developer/CommandLineTools/usr/bin/ranlib"
 		},
 		{
 			"name" : "CMAKE_READELF",
@@ -1019,7 +995,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/strip"
+			"value" : "/Library/Developer/CommandLineTools/usr/bin/strip"
 		},
 		{
 			"name" : "CMAKE_TAPI",
@@ -1066,18 +1042,6 @@
 			"value" : "FALSE"
 		},
 		{
-			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_OpenCV",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Details about finding OpenCV"
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : "[/opt/homebrew/Cellar/opencv/4.10.0_5][v4.10.0()]"
-		},
-		{
 			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig",
 			"properties" : 
 			[
@@ -1099,7 +1063,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/glib/2.80.4/include;-I/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;-I/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;-I/opt/homebrew/opt/gettext/include;-I/opt/homebrew/Cellar/pcre2/10.44/include;-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi"
+			"value" : "-I/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;-I/opt/homebrew/Cellar/orc/0.4.40/include/orc-0.4;-I/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;-I/opt/homebrew/Cellar/glib/2.82.1/include;-I/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0;-I/opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include;-I/opt/homebrew/opt/gettext/include;-I/opt/homebrew/Cellar/pcre2/10.44/include;-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi"
 		},
 		{
 			"name" : "GST_CFLAGS_I",
@@ -1159,7 +1123,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/glib/2.80.4/include;/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;/opt/homebrew/opt/gettext/include;/opt/homebrew/Cellar/pcre2/10.44/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;/opt/homebrew/Cellar/orc/0.4.40/include/orc-0.4;/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;/opt/homebrew/Cellar/glib/2.82.1/include;/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0;/opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include;/opt/homebrew/opt/gettext/include;/opt/homebrew/Cellar/pcre2/10.44/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi"
 		},
 		{
 			"name" : "GST_LDFLAGS",
@@ -1171,7 +1135,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "-L/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-L/opt/homebrew/Cellar/glib/2.80.4/lib;-L/opt/homebrew/opt/gettext/lib;-lgstvideo-1.0;-lgstbase-1.0;-lgstreamer-1.0;-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-lgobject-2.0;-lglib-2.0;-lintl"
+			"value" : "-L/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-L/opt/homebrew/Cellar/glib/2.82.1/lib;-L/opt/homebrew/opt/gettext/lib;-lgstvideo-1.0;-lgstbase-1.0;-lgstreamer-1.0;-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-lgobject-2.0;-lglib-2.0;-lintl"
 		},
 		{
 			"name" : "GST_LDFLAGS_OTHER",
@@ -1183,7 +1147,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib"
+			"value" : "-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.8/lib"
 		},
 		{
 			"name" : "GST_LIBDIR",
@@ -1219,7 +1183,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/lib;/opt/homebrew/Cellar/glib/2.80.4/lib;/opt/homebrew/opt/gettext/lib"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/lib;/opt/homebrew/Cellar/glib/2.82.1/lib;/opt/homebrew/opt/gettext/lib"
 		},
 		{
 			"name" : "GST_LIBS",
@@ -1303,7 +1267,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/glib/2.80.4/include;-I/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;-I/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;-I/opt/homebrew/opt/gettext/include;-I/opt/homebrew/Cellar/pcre2/10.44/include;-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi"
+			"value" : "-I/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;-I/opt/homebrew/Cellar/orc/0.4.40/include/orc-0.4;-I/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;-I/opt/homebrew/Cellar/glib/2.82.1/include;-I/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0;-I/opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include;-I/opt/homebrew/opt/gettext/include;-I/opt/homebrew/Cellar/pcre2/10.44/include;-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi"
 		},
 		{
 			"name" : "GST_STATIC_CFLAGS_I",
@@ -1339,7 +1303,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/glib/2.80.4/include;/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;/opt/homebrew/opt/gettext/include;/opt/homebrew/Cellar/pcre2/10.44/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;/opt/homebrew/Cellar/orc/0.4.40/include/orc-0.4;/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;/opt/homebrew/Cellar/glib/2.82.1/include;/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0;/opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include;/opt/homebrew/opt/gettext/include;/opt/homebrew/Cellar/pcre2/10.44/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi"
 		},
 		{
 			"name" : "GST_STATIC_LDFLAGS",
@@ -1351,7 +1315,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "-L/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-L/opt/homebrew/Cellar/orc/0.4.39/lib;-L/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-L/opt/homebrew/Cellar/glib/2.80.4/lib;-L/opt/homebrew/opt/gettext/lib;-L/opt/homebrew/Cellar/pcre2/10.44/lib;-L/usr/lib;-lgstvideo-1.0;-lm;-lorc-0.4;-lm;-lgstbase-1.0;-lgstreamer-1.0;-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-lm;-ldl;-framework;Cocoa;-lgmodule-2.0;-lintl;-lgobject-2.0;-lintl;-lffi;-lglib-2.0;-lintl;-liconv;-lm;-framework;Foundation;-framework;CoreFoundation;-framework;AppKit;-framework;Carbon;-lpcre2-8;-D_THREAD_SAFE;-pthread"
+			"value" : "-L/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-L/opt/homebrew/Cellar/orc/0.4.40/lib;-L/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-L/opt/homebrew/Cellar/glib/2.82.1/lib;-L/opt/homebrew/opt/gettext/lib;-L/opt/homebrew/Cellar/pcre2/10.44/lib;-L/usr/lib;-lgstvideo-1.0;-lm;-lorc-0.4;-lm;-lgstbase-1.0;-lgstreamer-1.0;-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-lm;-ldl;-framework;Cocoa;-lgmodule-2.0;-lintl;-lgobject-2.0;-lintl;-lffi;-lglib-2.0;-lintl;-liconv;-lm;-framework;Foundation;-framework;CoreFoundation;-framework;AppKit;-framework;Carbon;-lpcre2-8;-D_THREAD_SAFE;-pthread"
 		},
 		{
 			"name" : "GST_STATIC_LDFLAGS_OTHER",
@@ -1363,7 +1327,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-framework;Cocoa;-framework;Foundation;-framework;CoreFoundation;-framework;AppKit;-framework;Carbon;-D_THREAD_SAFE;-pthread"
+			"value" : "-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-framework;Cocoa;-framework;Foundation;-framework;CoreFoundation;-framework;AppKit;-framework;Carbon;-D_THREAD_SAFE;-pthread"
 		},
 		{
 			"name" : "GST_STATIC_LIBDIR",
@@ -1399,7 +1363,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/lib;/opt/homebrew/Cellar/orc/0.4.39/lib;/opt/homebrew/Cellar/gstreamer/1.24.7/lib;/opt/homebrew/Cellar/glib/2.80.4/lib;/opt/homebrew/opt/gettext/lib;/opt/homebrew/Cellar/pcre2/10.44/lib;/usr/lib"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/lib;/opt/homebrew/Cellar/orc/0.4.40/lib;/opt/homebrew/Cellar/gstreamer/1.24.8/lib;/opt/homebrew/Cellar/glib/2.82.1/lib;/opt/homebrew/opt/gettext/lib;/opt/homebrew/Cellar/pcre2/10.44/lib;/usr/lib"
 		},
 		{
 			"name" : "GST_STATIC_LIBS",
@@ -1471,7 +1435,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/include"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/include"
 		},
 		{
 			"name" : "GST_gstreamer-1.0_LIBDIR",
@@ -1483,7 +1447,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/lib"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/lib"
 		},
 		{
 			"name" : "GST_gstreamer-1.0_MODULE_NAME",
@@ -1507,7 +1471,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8"
 		},
 		{
 			"name" : "GST_gstreamer-1.0_VERSION",
@@ -1519,7 +1483,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "1.24.7"
+			"value" : "1.24.8"
 		},
 		{
 			"name" : "GST_gstreamer-video-1.0_INCLUDEDIR",
@@ -1531,7 +1495,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/include"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/include"
 		},
 		{
 			"name" : "GST_gstreamer-video-1.0_LIBDIR",
@@ -1543,7 +1507,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/lib"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/lib"
 		},
 		{
 			"name" : "GST_gstreamer-video-1.0_MODULE_NAME",
@@ -1567,7 +1531,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8"
 		},
 		{
 			"name" : "GST_gstreamer-video-1.0_VERSION",
@@ -1579,7 +1543,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "1.24.7"
+			"value" : "1.24.8"
 		},
 		{
 			"name" : "OmegabotManualControl_BINARY_DIR",
@@ -1616,18 +1580,6 @@
 			],
 			"type" : "STATIC",
 			"value" : "/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC"
-		},
-		{
-			"name" : "OpenCV_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "The directory containing a CMake configuration file for OpenCV."
-				}
-			],
-			"type" : "PATH",
-			"value" : "/opt/homebrew/lib/cmake/opencv4"
 		},
 		{
 			"name" : "PKG_CONFIG_ARGN",
@@ -2143,7 +2095,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/homebrew/Cellar/glib/2.80.4/lib/libglib-2.0.dylib"
+			"value" : "/opt/homebrew/Cellar/glib/2.82.1/lib/libglib-2.0.dylib"
 		},
 		{
 			"name" : "pkgcfg_lib_GST_gobject-2.0",
@@ -2159,7 +2111,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/homebrew/Cellar/glib/2.80.4/lib/libgobject-2.0.dylib"
+			"value" : "/opt/homebrew/Cellar/glib/2.82.1/lib/libgobject-2.0.dylib"
 		},
 		{
 			"name" : "pkgcfg_lib_GST_gstbase-1.0",
@@ -2175,7 +2127,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/lib/libgstbase-1.0.dylib"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/lib/libgstbase-1.0.dylib"
 		},
 		{
 			"name" : "pkgcfg_lib_GST_gstreamer-1.0",
@@ -2191,7 +2143,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/lib/libgstreamer-1.0.dylib"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/lib/libgstreamer-1.0.dylib"
 		},
 		{
 			"name" : "pkgcfg_lib_GST_gstvideo-1.0",
@@ -2207,7 +2159,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.7/lib/libgstvideo-1.0.dylib"
+			"value" : "/opt/homebrew/Cellar/gstreamer/1.24.8/lib/libgstvideo-1.0.dylib"
 		},
 		{
 			"name" : "pkgcfg_lib_GST_intl",

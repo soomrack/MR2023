@@ -1,9 +1,9 @@
-#include <Servo.h> m 
+#include <Servo.h>
   
 // Constants for movement and grabbing  
 #define SPEED             110  
 #define SPEED_ROTATE      150  
-#define CRITICAL_DISTANCE 10  
+#define CRITICAL_DISTANCE 10
   
 // Pin definitions  
 #define SENSOR_RF_FORWARD A2  
@@ -53,7 +53,9 @@ void setup() {
   
 void loop() {  
    Serial.print("Arduino: ");  
-   Serial.println(readForwardRangefinder());  
+   Serial.print(readForwardRangefinder());  
+   Serial.print(";");
+   Serial.println(readLeftRangefinder());
     
    if (Serial.available() > 0) {  
     String input = Serial.readStringUntil('\n');  
@@ -61,17 +63,10 @@ void loop() {
       
     if (input.startsWith("PC:")) {  
       int commandID = input.substring(4).toInt(); 
- 
-      if (commandID == 22) { 
-       digitalWrite(BLINK, HIGH);  
-       } else { 
-        digitalWrite(BLINK, LOW); 
-       } 
   
       if (commandID == 22) {  
         if (readForwardRangefinder() > 10) {  
           runForward(); 
-           
         }  
       } else if (commandID == 33) {  
         runBack();  
@@ -79,7 +74,17 @@ void loop() {
         steerLeft();  
       } else if (commandID == 55) {  
         steerRight();  
-      } else if (commandID == 135) { 
+      } else if (commandID == 66) {  
+        grabCatch();  
+      } else if (commandID == 77) {  
+        grabRelease();  
+      } else if (commandID == 88) {  
+        grabUp();  
+      } else if (commandID == 99) {  
+        grabDown();  
+      } else if (commandID == 111) {  
+        stopMotors();  
+      } else if (commandID == 400) { 
         if (readForwardRangefinder() > CRITICAL_DISTANCE) { 
          runForward(); 
         } else if (readLeftRangeFinder() > CRITICAl_DISTANCE) { 

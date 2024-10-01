@@ -95,19 +95,19 @@ int main(int argc, char *argv[]) {
                         break;
                     case SDLK_f:
                         std::cout << "Catch (grab)" << std::endl;
-                        robot.grab();
+                        robot.grabCatch();
                         break;
                     case SDLK_e:
                         std::cout << "Release (drop)" << std::endl;
-                        robot.release();
+                        robot.grabRelease();
                         break;
                     case SDLK_o:
-                        std::cout << "Move up" << std::endl;
-                        robot.moveUp();
+                        std::cout << "Grab up" << std::endl;
+                        robot.grabUp();
                         break;
                     case SDLK_l:
-                        std::cout << "Move down" << std::endl;
-                        robot.moveDown();
+                        std::cout << "Grab down" << std::endl;
+                        robot.grabDown();
                         break;
                     case SDLK_ESCAPE:
                         running = false;

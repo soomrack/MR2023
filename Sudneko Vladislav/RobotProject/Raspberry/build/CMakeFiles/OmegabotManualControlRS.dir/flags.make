@@ -6,7 +6,7 @@ CXX_DEFINES = -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB
 
 CXX_INCLUDES = -I"/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry/build" -I"/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/Raspberry" -I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0 -I/opt/homebrew/Cellar/glib/2.80.4/include -I/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0 -I/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include -I/opt/homebrew/opt/gettext/include -I/opt/homebrew/Cellar/pcre2/10.44/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi -I/opt/homebrew/Cellar/glib/2.80.4/include/gio-unix-2.0 -I/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4 -I/opt/homebrew/Cellar/libserialport/0.1.1/include -isystem /opt/homebrew/include
 
-CXX_FLAGSarm64 = -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
+CXX_FLAGSarm64 = -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
 
-CXX_FLAGS = -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
+CXX_FLAGS = -g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
 

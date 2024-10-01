@@ -1089,190 +1089,190 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
   /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/RobotController.hpp \
   /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/httplib.h \
   /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/json.hpp \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib-object.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gallocator.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gcache.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gcompletion.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gmain.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/grel.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gthread.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/galloca.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/garray.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gasyncqueue.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gatomic.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbacktrace.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbase64.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbitlock.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbookmarkfile.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbytes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gcharset.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gchecksum.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gconvert.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdataset.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdate.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdatetime.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdir.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/genviron.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gerror.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gfileutils.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ggettext.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghash.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghmac.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghook.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghostutils.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/giochannel.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gkeyfile.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glib-autocleanups.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glib-typeof.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glib-visibility.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glist.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmacros.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmain.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmappedfile.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmarkup.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmem.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmessages.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gnode.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/goption.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gpathbuf.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gpattern.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gpoll.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gprimes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gqsort.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gquark.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gqueue.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grand.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grcbox.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grefcount.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grefstring.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gregex.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gscanner.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gsequence.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gshell.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gslice.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gslist.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gspawn.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstrfuncs.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstring.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstringchunk.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstrvbuilder.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtestutils.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gthread.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gthreadpool.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtimer.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtimezone.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtrashstack.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtree.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtypes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gunicode.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/guri.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gutils.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/guuid.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gvariant.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gvarianttype.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gversion.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gversionmacros.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gbinding.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gbindinggroup.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gboxed.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gclosure.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/genums.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/glib-enumtypes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/glib-types.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gmarshal.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gobject-autocleanups.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gobject-visibility.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gobject.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gparam.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gparamspecs.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gsignal.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gsignalgroup.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gsourceclosure.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gtype.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gtypemodule.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gtypeplugin.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gvalue.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gvaluearray.h \
-  /opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gvaluetypes.h \
-  /opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include/glibconfig.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/glib-compat.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gst.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstallocator.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstatomicqueue.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbin.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbuffer.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbufferlist.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbufferpool.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbus.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbytearrayinterface.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcaps.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcapsfeatures.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstchildproxy.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstclock.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcompat.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstconfig.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcontext.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcontrolbinding.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcontrolsource.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdatetime.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdebugutils.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdevice.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdevicemonitor.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdeviceprovider.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdeviceproviderfactory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdynamictypefactory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstelement.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstelementfactory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstelementmetadata.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstenumtypes.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsterror.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstevent.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstformat.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstghostpad.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstinfo.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstiterator.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmacos.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmacros.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmemory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmessage.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmeta.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstminiobject.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstobject.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpad.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpadtemplate.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstparamspecs.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstparse.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpipeline.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstplugin.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpluginfeature.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpoll.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpreset.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpromise.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstprotection.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstquery.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstregistry.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstsample.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstsegment.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gststreamcollection.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gststreams.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gststructure.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstsystemclock.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttaglist.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttagsetter.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttask.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttaskpool.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttoc.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttocsetter.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttracer.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttracerfactory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttracerrecord.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttypefind.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttypefindfactory.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsturi.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstutils.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstvalue.h \
-  /opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstversion.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib-object.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gallocator.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gcache.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gcompletion.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gmain.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/grel.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gthread.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/galloca.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/garray.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gasyncqueue.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gatomic.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbacktrace.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbase64.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbitlock.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbookmarkfile.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbytes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gcharset.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gchecksum.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gconvert.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdataset.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdate.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdatetime.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdir.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/genviron.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gerror.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gfileutils.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ggettext.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghash.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghmac.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghook.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghostutils.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/giochannel.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gkeyfile.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glib-autocleanups.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glib-typeof.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glib-visibility.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glist.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmacros.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmain.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmappedfile.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmarkup.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmem.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmessages.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gnode.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/goption.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gpathbuf.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gpattern.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gpoll.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gprimes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gqsort.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gquark.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gqueue.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grand.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grcbox.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grefcount.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grefstring.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gregex.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gscanner.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gsequence.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gshell.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gslice.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gslist.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gspawn.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstrfuncs.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstring.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstringchunk.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstrvbuilder.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtestutils.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gthread.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gthreadpool.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtimer.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtimezone.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtrashstack.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtree.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtypes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gunicode.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/guri.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gutils.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/guuid.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gvariant.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gvarianttype.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gversion.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gversionmacros.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gbinding.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gbindinggroup.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gboxed.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gclosure.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/genums.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/glib-enumtypes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/glib-types.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gmarshal.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gobject-autocleanups.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gobject-visibility.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gobject.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gparam.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gparamspecs.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gsignal.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gsignalgroup.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gsourceclosure.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gtype.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gtypemodule.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gtypeplugin.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gvalue.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gvaluearray.h \
+  /opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gvaluetypes.h \
+  /opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include/glibconfig.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/glib-compat.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gst.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstallocator.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstatomicqueue.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbin.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbuffer.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbufferlist.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbufferpool.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbus.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbytearrayinterface.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcaps.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcapsfeatures.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstchildproxy.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstclock.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcompat.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstconfig.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcontext.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcontrolbinding.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcontrolsource.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdatetime.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdebugutils.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdevice.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdevicemonitor.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdeviceprovider.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdeviceproviderfactory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdynamictypefactory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstelement.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstelementfactory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstelementmetadata.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstenumtypes.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsterror.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstevent.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstformat.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstghostpad.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstinfo.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstiterator.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmacos.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmacros.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmemory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmessage.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmeta.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstminiobject.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstobject.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpad.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpadtemplate.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstparamspecs.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstparse.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpipeline.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstplugin.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpluginfeature.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpoll.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpreset.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpromise.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstprotection.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstquery.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstregistry.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstsample.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstsegment.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gststreamcollection.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gststreams.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gststructure.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstsystemclock.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttaglist.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttagsetter.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttask.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttaskpool.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttoc.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttocsetter.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttracer.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttracerfactory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttracerrecord.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttypefind.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttypefindfactory.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsturi.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstutils.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstvalue.h \
+  /opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstversion.h \
   /opt/homebrew/include/SDL2/SDL.h \
   /opt/homebrew/include/SDL2/SDL_assert.h \
   /opt/homebrew/include/SDL2/SDL_atomic.h \
@@ -1329,8 +1329,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /opt/homebrew/include/SDL2/SDL_version.h:
 
-/opt/homebrew/include/SDL2/SDL_timer.h:
-
 /opt/homebrew/include/SDL2/SDL_thread.h:
 
 /opt/homebrew/include/SDL2/SDL_system.h:
@@ -1341,9 +1339,13 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /opt/homebrew/include/SDL2/SDL_shape.h:
 
+/opt/homebrew/include/SDL2/SDL_rwops.h:
+
 /opt/homebrew/include/SDL2/SDL_rect.h:
 
 /opt/homebrew/include/SDL2/SDL_power.h:
+
+/opt/homebrew/include/SDL2/SDL_misc.h:
 
 /opt/homebrew/include/SDL2/SDL_metal.h:
 
@@ -1352,8 +1354,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /opt/homebrew/include/SDL2/SDL_locale.h:
 
 /opt/homebrew/include/SDL2/SDL_loadso.h:
-
-/opt/homebrew/include/SDL2/SDL_joystick.h:
 
 /opt/homebrew/include/SDL2/SDL_hints.h:
 
@@ -1369,6 +1369,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /opt/homebrew/include/SDL2/SDL_cpuinfo.h:
 
+/opt/homebrew/include/SDL2/SDL_config.h:
+
 /opt/homebrew/include/SDL2/SDL_blendmode.h:
 
 /opt/homebrew/include/SDL2/SDL_audio.h:
@@ -1377,195 +1379,217 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /opt/homebrew/include/SDL2/SDL.h:
 
-/opt/homebrew/include/SDL2/SDL_config.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstutils.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstversion.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsturi.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttypefind.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttypefind.h:
 
-/opt/homebrew/include/SDL2/SDL_misc.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttracerrecord.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttracerrecord.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttracer.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttracerfactory.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttask.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttocsetter.h:
+/opt/homebrew/include/SDL2/SDL_timer.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttask.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstsystemclock.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttagsetter.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gststructure.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gststructure.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gststreamcollection.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gststreams.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstsample.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstsegment.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstregistry.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstregistry.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpreset.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstprotection.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpluginfeature.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpluginfeature.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstplugin.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstplugin.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstparse.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpipeline.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstparamspecs.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstparamspecs.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttocsetter.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmeta.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpadtemplate.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmemory.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstminiobject.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmacos.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmeta.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstevent.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstinfo.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstelementfactory.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstghostpad.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstelement.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstformat.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdynamictypefactory.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstelementmetadata.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdeviceprovider.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstelementfactory.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdevicemonitor.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstelement.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdevice.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdynamictypefactory.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdatetime.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdevice.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcontrolsource.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdatetime.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstconfig.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcontrolsource.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcompat.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcontrolbinding.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstchildproxy.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcontext.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcaps.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstconfig.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbus.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcompat.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstatomicqueue.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstclock.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstallocator.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstchildproxy.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gst.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcaps.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/glib-compat.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbytearrayinterface.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gvalue.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbufferpool.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gtype.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbin.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gsourceclosure.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gst.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gsignalgroup.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/glib-compat.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gparamspecs.h:
+/opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include/glibconfig.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gobject.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gvaluetypes.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gobject-visibility.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gvalue.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gmarshal.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gtypemodule.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/glib-types.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttaskpool.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gclosure.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gsignal.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gboxed.h:
+/opt/homebrew/include/SDL2/SDL_joystick.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gbindinggroup.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gparamspecs.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gbinding.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gparam.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gversion.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gobject.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gvarianttype.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpipeline.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gvariant.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gobject-autocleanups.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/guuid.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/glib-types.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gutils.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/glib-enumtypes.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gunicode.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/genums.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtypes.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gclosure.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtimer.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gboxed.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gslist.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gbinding.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gqueue.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gversion.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grcbox.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gvarianttype.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gpoll.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gvariant.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/goption.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/guri.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmessages.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtree.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmem.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gthread.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmarkup.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtestutils.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmappedfile.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstrvbuilder.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstelementmetadata.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstrfuncs.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmacros.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gspawn.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glib-visibility.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gscanner.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/giochannel.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gregex.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghostutils.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grefcount.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghook.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grand.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghash.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gqueue.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ggettext.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gquark.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gfileutils.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gqsort.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gerror.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmessage.h:
 
-/opt/homebrew/include/SDL2/SDL_rwops.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gprimes.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsterror.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gpattern.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdatetime.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gpathbuf.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gchecksum.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gnode.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbitlock.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmessages.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbase64.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmain.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbacktrace.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glib-typeof.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/garray.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/giochannel.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/galloca.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghmac.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gthread.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ggettext.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gmain.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdataset.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gcompletion.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gconvert.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gallocator.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gchecksum.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbytes.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstvalue.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gpoll.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib-object.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbookmarkfile.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbitlock.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbase64.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmappedfile.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gbacktrace.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gatomic.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gasyncqueue.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/garray.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/galloca.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gmain.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gallocator.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib-object.h:
 
 /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/json.hpp:
 
@@ -1587,8 +1611,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/xlocale/_ctype.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gtypeplugin.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/wchar.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/unistd.h:
@@ -1603,7 +1625,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/select.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstiterator.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/queue.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gerror.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/qos.h:
 
@@ -1619,13 +1645,13 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_useconds_t.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtypes.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_u_int8_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_u_int32_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_u_int16_t.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gscanner.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_u_char.h:
 
@@ -1636,6 +1662,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_time_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_suseconds_t.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmacros.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_socklen_t.h:
 
@@ -1651,13 +1679,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_posix_vdisable.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmessage.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_o_sync.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_o_dsync.h:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdeviceproviderfactory.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_null.h:
 
@@ -1679,8 +1703,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_int16_t.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpromise.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_ino_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_ino64_t.h:
@@ -1689,9 +1711,15 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_filesec_t.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbus.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_fd_setsize.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdevicemonitor.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_fd_isset.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grcbox.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_fd_copy.h:
 
@@ -1711,9 +1739,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_symbol_aliasing.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtestutils.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_pthread/_pthread_types.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdate.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_pthread/_pthread_t.h:
 
@@ -1723,8 +1751,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_pthread/_pthread_rwlock_t.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpoll.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_pthread/_pthread_once_t.h:
 
 /opt/homebrew/include/SDL2/SDL_haptic.h:
@@ -1733,8 +1759,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_pthread/_pthread_mutexattr_t.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbytearrayinterface.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_pthread/_pthread_mutex_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_pthread/_pthread_attr_t.h:
@@ -1742,8 +1766,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_ct_rune_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_posix_availability.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gpattern.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_endian.h:
 
@@ -1759,6 +1781,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/nl_types.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gtypeplugin.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/netinet/tcp.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/netinet/in.h:
@@ -1769,15 +1793,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/net/if.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstring.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/malloc/_ptrcheck.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/xlocale/_stdlib.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/malloc/_malloc_type.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gversionmacros.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/malloc/_malloc.h:
 
@@ -1787,13 +1807,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/machine/limits.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gslice.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/machine/endian.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/machine/_types.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/genviron.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/machine/_mcontext.h:
 
@@ -1809,13 +1825,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/fcntl.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gkeyfile.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/dirent.h:
 
 /opt/homebrew/include/SDL2/SDL_pixels.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/genums.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/wctype.h:
 
@@ -1833,7 +1845,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/typeinfo:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdir.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/type_traits:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gvaluearray.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/tuple:
 
@@ -1852,8 +1868,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/span:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/set:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstiterator.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/regex:
 
@@ -1897,8 +1911,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/float.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/grel.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/filesystem:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/exception:
@@ -1906,8 +1918,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/errno.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/deque:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gthreadpool.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/cwchar:
 
@@ -1919,8 +1929,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/cstdio:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstsystemclock.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/cstdint:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/cstddef:
@@ -1931,13 +1939,15 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/condition_variable:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gquark.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdeviceproviderfactory.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/climits:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/chrono:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/charconv:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gststreams.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/errno.h:
 
@@ -1953,7 +1963,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__variant/monostate.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gsignalgroup.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__utility/terminate_on_exception.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstenumtypes.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__utility/rel_ops.h:
 
@@ -1999,6 +2013,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/remove_cvref.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstsegment.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/remove_cv.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/promote.h:
@@ -2025,8 +2041,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /opt/homebrew/include/SDL2/SDL_video.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gparam.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/variant:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_const.h:
@@ -2034,6 +2048,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__format/write_escaped.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_trivially_destructible.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpoll.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_trivially_default_constructible.h:
 
@@ -2057,6 +2073,10 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_scalar.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsterror.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/genviron.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_lexicographical_compare.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__fwd/ios.h:
@@ -2065,7 +2085,7 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_same.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsturi.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtimezone.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_nothrow_move_assignable.h:
 
@@ -2095,8 +2115,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_equality_comparable.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbin.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_reference.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_empty.h:
@@ -2104,8 +2122,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_copy_constructible.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_copy_assignable.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/ghmac.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_unsigned_integer.h:
 
@@ -2122,6 +2138,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/float.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_class.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstobject.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/os/availability.h:
 
@@ -2185,6 +2203,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/add_pointer.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/goption.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/unique_copy.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__tuple/tuple_element.h:
@@ -2199,13 +2219,13 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__tree:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstallocator.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/join_view.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__thread/thread.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__thread/poll_with_backoff.h:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstutils.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__system_error/error_code.h:
 
@@ -2213,9 +2233,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__string/constexpr_c_functions.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__split_buffer:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmem.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcontext.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__split_buffer:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/take_while_view.h:
 
@@ -2255,6 +2275,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/filter_view.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmemory.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/empty.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/minmax_element.h:
@@ -2281,17 +2303,15 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/as_rvalue_view.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstparse.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/uniform_random_bit_generator.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/student_t_distribution.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstdebugutils.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/shuffle_order_engine.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_final.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtrashstack.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__filesystem/space_info.h:
 
@@ -2300,6 +2320,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__thread/this_thread.h:
 
 /opt/homebrew/include/SDL2/SDL_events.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gslist.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/stat.h:
 
@@ -2353,6 +2375,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/discard_block_engine.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstcapsfeatures.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/fisher_f_distribution.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/binomial_distribution.h:
@@ -2367,13 +2391,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__numeric/transform_reduce.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gststreamcollection.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/_types/_uint64_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_integral.h:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstminiobject.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__numeric/transform_inclusive_scan.h:
 
@@ -2393,7 +2413,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__numeric/pstl_transform_reduce.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpad.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__numeric/pstl_reduce.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstevent.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__tuple/sfinae_helpers.h:
 
@@ -2404,6 +2428,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/weibull_distribution.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__numeric/partial_sum.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/grefstring.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__numeric/iota.h:
 
@@ -2445,8 +2471,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/temporary_buffer.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gobject-autocleanups.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_set_intersection.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/shared_ptr.h:
@@ -2461,9 +2485,13 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/strip_signature.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gbindinggroup.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/ranges_uninitialized_algorithms.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_move_constructible.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gcompletion.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/knuth_b.h:
 
@@ -2495,7 +2523,7 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/builtin_new_allocator.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gregex.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbuffer.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_merge.h:
 
@@ -2517,8 +2545,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/align.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grefcount.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/string:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/wrap_iter.h:
@@ -2526,8 +2552,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/sortable.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/size.h:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstclock.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/wait.h:
 
@@ -2545,9 +2569,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/prev.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grefstring.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/move_sentinel.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstprotection.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_wchar_t.h:
 
@@ -2563,13 +2587,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/ranges_iterator_traits.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstinfo.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/iterator_with_data.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/iterator.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdebugutils.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstghostpad.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/iterator.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/views.h:
 
@@ -2627,8 +2649,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_char_like_type.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/grand.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sched.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/back_insert_iterator.h:
@@ -2637,25 +2657,17 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/access.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttracer.h:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttaskpool.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ios/fpos.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__fwd/tuple.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__fwd/string.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttoc.h:
-
 /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/arm_neon.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/__wctype.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__fwd/streambuf.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gnode.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__fwd/sstream.h:
 
@@ -2675,21 +2687,21 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__fwd/istream.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glib-autocleanups.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/reverse_iterator.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstquery.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_fsfilcnt_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__fwd/get.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdir.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_void.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/unary_negate.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__std_mbstate_t.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gdatetime.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/remove_if.h:
 
@@ -2701,9 +2713,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/operations.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/unique_ptr.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gsequence.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/guri.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/unique_ptr.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/not_fn.h:
 
@@ -2720,6 +2732,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/invoke.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/function.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttoc.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/range_adaptor.h:
 
@@ -2741,13 +2755,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__format/unicode.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glib-typeof.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__locale:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/add_const.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbuffer.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmacros.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/temp_value.h:
 
@@ -2770,6 +2782,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__format/formatter_output.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__format/formatter_integer.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstpromise.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/nat.h:
 
@@ -2802,6 +2816,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__format/buffer.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__filesystem/recursive_directory_iterator.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gthreadpool.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__iterator/projected.h:
 
@@ -2875,6 +2891,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__concepts/convertible_to.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttagsetter.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__concepts/totally_ordered.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__concepts/common_with.h:
@@ -2887,11 +2905,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__concepts/boolean_testable.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gshell.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__compare/weak_order.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gprimes.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstringchunk.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/invoke.h:
 
@@ -2933,13 +2949,13 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_null_pointer.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstquery.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/to.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__chrono/year_month_weekday.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__chrono/year_month.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gunicode.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__string/char_traits.h:
 
@@ -2966,8 +2982,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/rank.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__chrono/steady_clock.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include/glibconfig.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/binary_search.h:
 
@@ -3013,19 +3027,21 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__chrono/duration.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gcharset.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/next_permutation.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__node_handle:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_transform.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtree.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__utility/integer_sequence.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__charconv/traits.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__chrono/month_weekday.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttypefindfactory.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/wctype.h:
 
@@ -3037,7 +3053,7 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__chrono/concepts.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/deprecated/gcache.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glib-autocleanups.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/set_difference.h:
 
@@ -3061,6 +3077,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__bit_reference:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/grel.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_u_int.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__config_site:
@@ -3068,8 +3086,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_member_object_pointer.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__bit/has_single_bit.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gsequence.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__bit/endian.h:
 
@@ -3093,15 +3109,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_nothrow_copy_assignable.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpad.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/errno.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/is_transparent.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/arm/endian.h:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpreset.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__chrono/high_resolution_clock.h:
 
@@ -3112,8 +3124,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__bit/bit_ceil.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__fwd/string_view.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gvaluetypes.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__concepts/copyable.h:
 
@@ -3145,15 +3155,13 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/swap_ranges.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gtype.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__atomic/check_memory_order.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_nothrow_destructible.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__hash_table:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstpadtemplate.h:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcontrolbinding.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__concepts/invocable.h:
 
@@ -3162,8 +3170,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__filesystem/perm_options.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__charconv/from_chars_result.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstrvbuilder.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__atomic/atomic_lock_free.h:
 
@@ -3203,13 +3209,19 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__bit/blsr.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gslice.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/set_symmetric_difference.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gstring.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_set_symmetric_difference.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__chrono/calendar.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_constructible.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gtimer.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__compare/partial_order.h:
 
@@ -3220,6 +3232,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/transform_view.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/set_intersection.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gkeyfile.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__bit/popcount.h:
 
@@ -3239,9 +3253,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/search.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/binary_function.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gobject-visibility.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gqsort.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/binary_function.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__atomic/kill_dependency.h:
 
@@ -3261,13 +3275,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_nothrow_copy_constructible.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdataset.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/reverse.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/replace_if.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gtypemodule.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/remove_copy.h:
 
@@ -3276,8 +3286,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_upper_bound.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__atomic/atomic_flag.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gspawn.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_copy_n.h:
 
@@ -3293,8 +3301,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/pstl_merge.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstsample.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_sort_heap.h:
 
 /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/RaspberryCommunicator.hpp:
@@ -3307,8 +3313,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_sort.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gvaluearray.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/make_projected.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/for_each_n.h:
@@ -3316,8 +3320,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/stable_partition.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/remove_copy_if.h:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttypefindfactory.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__filesystem/operations.h:
 
@@ -3345,11 +3347,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_reverse.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstmacos.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/geometric_distribution.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_replace_if.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gcharset.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__config:
 
@@ -3369,6 +3371,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__thread/formatter.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gsourceclosure.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/partition_point.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_prev_permutation.h:
@@ -3381,6 +3385,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/auto_ptr.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstbufferlist.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/map:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__concepts/destructible.h:
@@ -3392,8 +3398,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_partition_copy.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_search_n.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtimezone.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/rend.h:
 
@@ -3419,8 +3423,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_find.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstcapsfeatures.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_pthread/_pthread_cond_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/AvailabilityInternalLegacy.h:
@@ -3445,7 +3447,7 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/seed_seq.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbufferlist.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghook.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_min.h:
 
@@ -3476,8 +3478,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/net/if_var.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/comp_ref_type.h:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstbufferpool.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/stdlib.h:
 
@@ -3519,6 +3519,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_is_permutation.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/guuid.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/compressed_pair.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__format/formatter_integral.h:
@@ -3530,6 +3532,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/iterator_operations.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_count.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/gobject/gmarshal.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_any_of.h:
 
@@ -3543,8 +3547,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/pstl_backends/cpu_backends/transform_reduce.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbytes.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_swappable.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/clamp_to_integral.h:
@@ -3557,7 +3559,7 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_copy_if.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gtrashstack.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gutils.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__filesystem/copy_options.h:
 
@@ -3576,8 +3578,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_generate_n.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_minmax_element.h:
-
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstmacros.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_set_difference.h:
 
@@ -3611,11 +3611,7 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/shuffle.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gbookmarkfile.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_member_function_pointer.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gthread.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/stdio.h:
 
@@ -3623,17 +3619,11 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/partition_copy.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/gsignal.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/is_heap.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/clamp.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstobject.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/pointer_to_unary_function.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstringchunk.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h:
 
@@ -3646,8 +3636,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__bit/bit_cast.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_nothrow_assignable.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gconvert.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/prev_permutation.h:
 
@@ -3717,11 +3705,13 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_remove_copy_if.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstenumtypes.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__utility/auto_cast.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__charconv/to_chars_base_10.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gmarkup.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glib-visibility.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/poisson_distribution.h:
 
@@ -3730,8 +3720,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/pstl_backends/cpu_backends/transform.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_set_union.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gmain.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/pstl_count.h:
 
@@ -3745,9 +3733,13 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/pstl_backends/cpu_backends/stable_sort.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__utility/exception_guard.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/copy_move_common.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttracerfactory.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/noexcept_move_assign_container.h:
 
@@ -3759,7 +3751,7 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__fwd/memory_resource.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gstformat.h:
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gsttaglist.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/pthread/qos.h:
 
@@ -3771,13 +3763,19 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/any_of.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gshell.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/stdexcept:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/array:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_primary_template.h:
 
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gcache.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/is_sorted_until.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstatomicqueue.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__availability:
 
@@ -3793,6 +3791,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/copy.h:
 
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstvalue.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/fill.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/list:
@@ -3802,6 +3802,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_uintptr_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/generate.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghostutils.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__concepts/common_reference_with.h:
 
@@ -3815,9 +3817,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/_wctype.h:
 
-/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/pstl_backends/cpu_backends/for_each.h:
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gversionmacros.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gpathbuf.h:
+/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/pstl_backends/cpu_backends/for_each.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_seek_set.h:
 
@@ -3837,21 +3839,21 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/is_heap_until.h:
 
-/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0/gst/gsttaglist.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/pstl_backends/cpu_backends/any_of.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gstrfuncs.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/sort.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__functional/weak_result_type.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/deprecated/gthread.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/copy_n.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/AvailabilityVersions.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/pstl_for_each.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstversion.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/copy_backward.h:
 
@@ -3883,8 +3885,6 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/arm/_mcontext.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gatomic.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__chrono/convert_to_tm.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__random/bernoulli_distribution.h:
@@ -3894,6 +3894,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/streambuf:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__memory/uses_allocator_construction.h:
+
+/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0/gst/gstdeviceprovider.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/stdint.h:
 
@@ -3919,13 +3921,9 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /opt/homebrew/include/SDL2/SDL_gamecontroller.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/gobject/glib-enumtypes.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/arm/signal.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_move.h:
-
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gasyncqueue.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/_types/_ucontext.h:
 
@@ -3934,6 +3932,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/_types/_uintmax_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/_types/_nl_item.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/glist.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__filesystem/u8path.h:
 
@@ -3945,17 +3945,15 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__ranges/enable_borrowed_range.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/glist.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__filesystem/directory_options.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__type_traits/is_literal_type.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_shuffle.h:
 
-/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0/glib/gdate.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__fwd/subrange.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/ghash.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/pstl_backend.h:
 
@@ -3966,5 +3964,7 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/ranges_replace_copy_if.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/c++/v1/__algorithm/find_end.h:
+
+/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0/glib/gfileutils.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/_xlocale.h:

@@ -18,19 +18,17 @@
 CMAKE_ADDR2LINE:FILEPATH=CMAKE_ADDR2LINE-NOTFOUND
 
 //Path to a program.
-CMAKE_AR:FILEPATH=/usr/bin/ar
+CMAKE_AR:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/ar
 
-//No help, variable specified on the command line.
-CMAKE_BUILD_TYPE:STRING=Debug
-
-//Enable colored diagnostics throughout.
-CMAKE_COLOR_DIAGNOSTICS:BOOL=1
+//Choose the type of build, options are: None Debug Release RelWithDebInfo
+// MinSizeRel ...
+CMAKE_BUILD_TYPE:STRING=
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
-//No help, variable specified on the command line.
-CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/clang++
+//CXX compiler
+CMAKE_CXX_COMPILER:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/c++
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=
@@ -46,9 +44,6 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
-
-//No help, variable specified on the command line.
-CMAKE_C_COMPILER:FILEPATH=/usr/bin/clang
 
 //Path to a program.
 CMAKE_DLLTOOL:FILEPATH=CMAKE_DLLTOOL-NOTFOUND
@@ -68,20 +63,20 @@ CMAKE_EXE_LINKER_FLAGS_RELEASE:STRING=
 //Flags used by the linker during RELWITHDEBINFO builds.
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
-//No help, variable specified on the command line.
-CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
+//Enable/Disable output of compile commands during generation.
+CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 
 //Value Computed by CMake.
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC/build/CMakeFiles/pkgRedirects
 
 //Path to a program.
-CMAKE_INSTALL_NAME_TOOL:FILEPATH=/opt/anaconda3/bin/install_name_tool
+CMAKE_INSTALL_NAME_TOOL:FILEPATH=/usr/bin/install_name_tool
 
 //Install path prefix, prepended onto install directories.
 CMAKE_INSTALL_PREFIX:PATH=/usr/local
 
 //Path to a program.
-CMAKE_LINKER:FILEPATH=/usr/bin/ld
+CMAKE_LINKER:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/ld
 
 //Path to a program.
 CMAKE_MAKE_PROGRAM:FILEPATH=/usr/bin/make
@@ -107,13 +102,13 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_NM:FILEPATH=/usr/bin/nm
+CMAKE_NM:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/nm
 
 //Path to a program.
 CMAKE_OBJCOPY:FILEPATH=CMAKE_OBJCOPY-NOTFOUND
 
 //Path to a program.
-CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
+CMAKE_OBJDUMP:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/objdump
 
 //Build architectures for OSX
 CMAKE_OSX_ARCHITECTURES:STRING=
@@ -136,7 +131,7 @@ CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 CMAKE_PROJECT_NAME:STATIC=OmegabotManualControl
 
 //Path to a program.
-CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
+CMAKE_RANLIB:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/ranlib
 
 //Path to a program.
 CMAKE_READELF:FILEPATH=CMAKE_READELF-NOTFOUND
@@ -189,7 +184,7 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_STRIP:FILEPATH=/usr/bin/strip
+CMAKE_STRIP:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/strip
 
 //Path to a program.
 CMAKE_TAPI:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/tapi
@@ -209,9 +204,6 @@ OmegabotManualControl_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 OmegabotManualControl_SOURCE_DIR:STATIC=/Users/vladislav/Documents/GitHub/MR2023/Sudneko Vladislav/RobotProject/PC
 
-//The directory containing a CMake configuration file for OpenCV.
-OpenCV_DIR:PATH=/opt/homebrew/lib/cmake/opencv4
-
 //Arguments to supply to pkg-config
 PKG_CONFIG_ARGN:STRING=
 
@@ -219,19 +211,19 @@ PKG_CONFIG_ARGN:STRING=
 PKG_CONFIG_EXECUTABLE:FILEPATH=/opt/homebrew/bin/pkg-config
 
 //Path to a library.
-pkgcfg_lib_GST_glib-2.0:FILEPATH=/opt/homebrew/Cellar/glib/2.80.4/lib/libglib-2.0.dylib
+pkgcfg_lib_GST_glib-2.0:FILEPATH=/opt/homebrew/Cellar/glib/2.82.1/lib/libglib-2.0.dylib
 
 //Path to a library.
-pkgcfg_lib_GST_gobject-2.0:FILEPATH=/opt/homebrew/Cellar/glib/2.80.4/lib/libgobject-2.0.dylib
+pkgcfg_lib_GST_gobject-2.0:FILEPATH=/opt/homebrew/Cellar/glib/2.82.1/lib/libgobject-2.0.dylib
 
 //Path to a library.
-pkgcfg_lib_GST_gstbase-1.0:FILEPATH=/opt/homebrew/Cellar/gstreamer/1.24.7/lib/libgstbase-1.0.dylib
+pkgcfg_lib_GST_gstbase-1.0:FILEPATH=/opt/homebrew/Cellar/gstreamer/1.24.8/lib/libgstbase-1.0.dylib
 
 //Path to a library.
-pkgcfg_lib_GST_gstreamer-1.0:FILEPATH=/opt/homebrew/Cellar/gstreamer/1.24.7/lib/libgstreamer-1.0.dylib
+pkgcfg_lib_GST_gstreamer-1.0:FILEPATH=/opt/homebrew/Cellar/gstreamer/1.24.8/lib/libgstreamer-1.0.dylib
 
 //Path to a library.
-pkgcfg_lib_GST_gstvideo-1.0:FILEPATH=/opt/homebrew/Cellar/gstreamer/1.24.7/lib/libgstvideo-1.0.dylib
+pkgcfg_lib_GST_gstvideo-1.0:FILEPATH=/opt/homebrew/Cellar/gstreamer/1.24.8/lib/libgstvideo-1.0.dylib
 
 //Path to a library.
 pkgcfg_lib_GST_intl:FILEPATH=/opt/homebrew/opt/gettext/lib/libintl.dylib
@@ -371,51 +363,49 @@ CMAKE_TAPI-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
-//Details about finding OpenCV
-FIND_PACKAGE_MESSAGE_DETAILS_OpenCV:INTERNAL=[/opt/homebrew/Cellar/opencv/4.10.0_5][v4.10.0()]
 //Details about finding PkgConfig
 FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/opt/homebrew/bin/pkg-config][v0.29.2()]
-GST_CFLAGS:INTERNAL=-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/glib/2.80.4/include;-I/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;-I/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;-I/opt/homebrew/opt/gettext/include;-I/opt/homebrew/Cellar/pcre2/10.44/include;-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
+GST_CFLAGS:INTERNAL=-I/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;-I/opt/homebrew/Cellar/orc/0.4.40/include/orc-0.4;-I/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;-I/opt/homebrew/Cellar/glib/2.82.1/include;-I/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0;-I/opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include;-I/opt/homebrew/opt/gettext/include;-I/opt/homebrew/Cellar/pcre2/10.44/include;-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
 GST_CFLAGS_I:INTERNAL=
 GST_CFLAGS_OTHER:INTERNAL=
 GST_FOUND:INTERNAL=1
 GST_INCLUDEDIR:INTERNAL=
-GST_INCLUDE_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/glib/2.80.4/include;/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;/opt/homebrew/opt/gettext/include;/opt/homebrew/Cellar/pcre2/10.44/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
-GST_LDFLAGS:INTERNAL=-L/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-L/opt/homebrew/Cellar/glib/2.80.4/lib;-L/opt/homebrew/opt/gettext/lib;-lgstvideo-1.0;-lgstbase-1.0;-lgstreamer-1.0;-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-lgobject-2.0;-lglib-2.0;-lintl
-GST_LDFLAGS_OTHER:INTERNAL=-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib
+GST_INCLUDE_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;/opt/homebrew/Cellar/orc/0.4.40/include/orc-0.4;/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;/opt/homebrew/Cellar/glib/2.82.1/include;/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0;/opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include;/opt/homebrew/opt/gettext/include;/opt/homebrew/Cellar/pcre2/10.44/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
+GST_LDFLAGS:INTERNAL=-L/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-L/opt/homebrew/Cellar/glib/2.82.1/lib;-L/opt/homebrew/opt/gettext/lib;-lgstvideo-1.0;-lgstbase-1.0;-lgstreamer-1.0;-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-lgobject-2.0;-lglib-2.0;-lintl
+GST_LDFLAGS_OTHER:INTERNAL=-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.8/lib
 GST_LIBDIR:INTERNAL=
 GST_LIBRARIES:INTERNAL=gstvideo-1.0;gstbase-1.0;gstreamer-1.0;gobject-2.0;glib-2.0;intl
-GST_LIBRARY_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/lib;/opt/homebrew/Cellar/glib/2.80.4/lib;/opt/homebrew/opt/gettext/lib
+GST_LIBRARY_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.8/lib;/opt/homebrew/Cellar/glib/2.82.1/lib;/opt/homebrew/opt/gettext/lib
 GST_LIBS:INTERNAL=
 GST_LIBS_L:INTERNAL=
 GST_LIBS_OTHER:INTERNAL=
 GST_LIBS_PATHS:INTERNAL=
 GST_MODULE_NAME:INTERNAL=
 GST_PREFIX:INTERNAL=
-GST_STATIC_CFLAGS:INTERNAL=-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;-I/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;-I/opt/homebrew/Cellar/glib/2.80.4/include;-I/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;-I/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;-I/opt/homebrew/opt/gettext/include;-I/opt/homebrew/Cellar/pcre2/10.44/include;-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
+GST_STATIC_CFLAGS:INTERNAL=-I/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;-I/opt/homebrew/Cellar/orc/0.4.40/include/orc-0.4;-I/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;-I/opt/homebrew/Cellar/glib/2.82.1/include;-I/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0;-I/opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include;-I/opt/homebrew/opt/gettext/include;-I/opt/homebrew/Cellar/pcre2/10.44/include;-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
 GST_STATIC_CFLAGS_I:INTERNAL=
 GST_STATIC_CFLAGS_OTHER:INTERNAL=
-GST_STATIC_INCLUDE_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/orc/0.4.39/include/orc-0.4;/opt/homebrew/Cellar/gstreamer/1.24.7/include/gstreamer-1.0;/opt/homebrew/Cellar/glib/2.80.4/include;/opt/homebrew/Cellar/glib/2.80.4/include/glib-2.0;/opt/homebrew/Cellar/glib/2.80.4/lib/glib-2.0/include;/opt/homebrew/opt/gettext/include;/opt/homebrew/Cellar/pcre2/10.44/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
-GST_STATIC_LDFLAGS:INTERNAL=-L/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-L/opt/homebrew/Cellar/orc/0.4.39/lib;-L/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-L/opt/homebrew/Cellar/glib/2.80.4/lib;-L/opt/homebrew/opt/gettext/lib;-L/opt/homebrew/Cellar/pcre2/10.44/lib;-L/usr/lib;-lgstvideo-1.0;-lm;-lorc-0.4;-lm;-lgstbase-1.0;-lgstreamer-1.0;-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-lm;-ldl;-framework;Cocoa;-lgmodule-2.0;-lintl;-lgobject-2.0;-lintl;-lffi;-lglib-2.0;-lintl;-liconv;-lm;-framework;Foundation;-framework;CoreFoundation;-framework;AppKit;-framework;Carbon;-lpcre2-8;-D_THREAD_SAFE;-pthread
-GST_STATIC_LDFLAGS_OTHER:INTERNAL=-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.7/lib;-framework;Cocoa;-framework;Foundation;-framework;CoreFoundation;-framework;AppKit;-framework;Carbon;-D_THREAD_SAFE;-pthread
+GST_STATIC_INCLUDE_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;/opt/homebrew/Cellar/orc/0.4.40/include/orc-0.4;/opt/homebrew/Cellar/gstreamer/1.24.8/include/gstreamer-1.0;/opt/homebrew/Cellar/glib/2.82.1/include;/opt/homebrew/Cellar/glib/2.82.1/include/glib-2.0;/opt/homebrew/Cellar/glib/2.82.1/lib/glib-2.0/include;/opt/homebrew/opt/gettext/include;/opt/homebrew/Cellar/pcre2/10.44/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/usr/include/ffi
+GST_STATIC_LDFLAGS:INTERNAL=-L/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-L/opt/homebrew/Cellar/orc/0.4.40/lib;-L/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-L/opt/homebrew/Cellar/glib/2.82.1/lib;-L/opt/homebrew/opt/gettext/lib;-L/opt/homebrew/Cellar/pcre2/10.44/lib;-L/usr/lib;-lgstvideo-1.0;-lm;-lorc-0.4;-lm;-lgstbase-1.0;-lgstreamer-1.0;-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-lm;-ldl;-framework;Cocoa;-lgmodule-2.0;-lintl;-lgobject-2.0;-lintl;-lffi;-lglib-2.0;-lintl;-liconv;-lm;-framework;Foundation;-framework;CoreFoundation;-framework;AppKit;-framework;Carbon;-lpcre2-8;-D_THREAD_SAFE;-pthread
+GST_STATIC_LDFLAGS_OTHER:INTERNAL=-Wl,-rpath,/opt/homebrew/Cellar/gstreamer/1.24.8/lib;-framework;Cocoa;-framework;Foundation;-framework;CoreFoundation;-framework;AppKit;-framework;Carbon;-D_THREAD_SAFE;-pthread
 GST_STATIC_LIBDIR:INTERNAL=
 GST_STATIC_LIBRARIES:INTERNAL=gstvideo-1.0;m;orc-0.4;m;gstbase-1.0;gstreamer-1.0;m;dl;gmodule-2.0;intl;gobject-2.0;intl;ffi;glib-2.0;intl;iconv;m;pcre2-8
-GST_STATIC_LIBRARY_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/lib;/opt/homebrew/Cellar/orc/0.4.39/lib;/opt/homebrew/Cellar/gstreamer/1.24.7/lib;/opt/homebrew/Cellar/glib/2.80.4/lib;/opt/homebrew/opt/gettext/lib;/opt/homebrew/Cellar/pcre2/10.44/lib;/usr/lib
+GST_STATIC_LIBRARY_DIRS:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.8/lib;/opt/homebrew/Cellar/orc/0.4.40/lib;/opt/homebrew/Cellar/gstreamer/1.24.8/lib;/opt/homebrew/Cellar/glib/2.82.1/lib;/opt/homebrew/opt/gettext/lib;/opt/homebrew/Cellar/pcre2/10.44/lib;/usr/lib
 GST_STATIC_LIBS:INTERNAL=
 GST_STATIC_LIBS_L:INTERNAL=
 GST_STATIC_LIBS_OTHER:INTERNAL=
 GST_STATIC_LIBS_PATHS:INTERNAL=
 GST_VERSION:INTERNAL=
-GST_gstreamer-1.0_INCLUDEDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/include
-GST_gstreamer-1.0_LIBDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/lib
+GST_gstreamer-1.0_INCLUDEDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.8/include
+GST_gstreamer-1.0_LIBDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.8/lib
 GST_gstreamer-1.0_MODULE_NAME:INTERNAL=gstreamer-1.0
-GST_gstreamer-1.0_PREFIX:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7
-GST_gstreamer-1.0_VERSION:INTERNAL=1.24.7
-GST_gstreamer-video-1.0_INCLUDEDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/include
-GST_gstreamer-video-1.0_LIBDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7/lib
+GST_gstreamer-1.0_PREFIX:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.8
+GST_gstreamer-1.0_VERSION:INTERNAL=1.24.8
+GST_gstreamer-video-1.0_INCLUDEDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.8/include
+GST_gstreamer-video-1.0_LIBDIR:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.8/lib
 GST_gstreamer-video-1.0_MODULE_NAME:INTERNAL=gstreamer-video-1.0
-GST_gstreamer-video-1.0_PREFIX:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.7
-GST_gstreamer-video-1.0_VERSION:INTERNAL=1.24.7
+GST_gstreamer-video-1.0_PREFIX:INTERNAL=/opt/homebrew/Cellar/gstreamer/1.24.8
+GST_gstreamer-video-1.0_VERSION:INTERNAL=1.24.8
 //ADVANCED property for variable: PKG_CONFIG_ARGN
 PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
