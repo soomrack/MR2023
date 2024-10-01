@@ -12,6 +12,7 @@
 class PCCommunicator {
     float front_distance_sensor = -1;
     int move_command = -1;
+    int connection_error_code = 400;
     TimeCounter counter;
     std::thread web_server_thread;
     std::atomic<bool> running;
@@ -42,13 +43,6 @@ class PCCommunicator {
         }
     }
 
-public:
-    PCCommunicator() : running(true) {
-        std::cout << "Server on robot starts" << std::endl;
-        web_server_thread = std::thread(&PCCommunicator::start_server, this);
-        heartbeat_threadd = std::thread(&PCCommunicator::heartbeat_handler, this);
-    }
-
     void heartbeat_handler() {
         while (running) {
             if (counter.getCounter() > critical_time) {
@@ -60,8 +54,24 @@ public:
         }
     }
 
+public:
+    PCCommunicator() : running(true) {
+        std::cout << "Server on robot starts" << std::endl;
+        web_server_thread = std::thread(&PCCommunicator::start_server, this);
+        heartbeat_threadd = std::thread(&PCCommunicator::heartbeat_handler, this);
+    }
+
+
     int get_command() {
         return move_command;
+    }
+
+    bool is_autopilot() {
+        return autopilot;
+    }
+
+    int get_connection_error_code() {
+        return connection_error_code;
     }
 
     ~PCCommunicator() {

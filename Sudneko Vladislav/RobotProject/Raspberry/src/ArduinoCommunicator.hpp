@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ARDUINOCOMMUNICATOR
+#define ARDUINOCOMMUNICATOR
+
 #include <iostream>
 #include <libserialport.h>
 #include <cstring>
@@ -61,3 +63,5 @@ public:
 private:
     struct sp_port* serial_port;
 };
+
+#endif // ARDUINOCOMMUNICATOR
