@@ -10,6 +10,7 @@
 #include <time.h>
 #include <mutex>
 
+
 struct speed
 {
     int left = 0, right = 0;
@@ -55,6 +56,7 @@ void transmit_video()
         usleep(10000);
     }  
 }
+
 
 void transmit_speed_to_arduino()
 {

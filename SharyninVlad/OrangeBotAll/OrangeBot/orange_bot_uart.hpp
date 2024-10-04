@@ -17,4 +17,5 @@ public:
     void open_port();
     int configure_port();
     int send_speed(int left, int right);
+    int receive_distance(int front_distance);
 };
