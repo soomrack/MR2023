@@ -22,12 +22,7 @@ int main(int argc, char* argv[]) {
     ConsoleHistorySaver historySaver("robot_log.txt");
 
     while (run) {
-        // std::cout << "Read from Arduino" << std::endl;
-        // Listen to sensor data from Arduino and send to the GCS
         // arduino_communicator.readFromArduino();
-
-        // Listen for command data from GCS and send to Arduino
-        // std::cout << "Write to Arduino" << std::endl;
 
         if (!pc_communicator.is_connection_lost()) {
             arduino_communicator.writeToArduino(pc_communicator.get_command());
