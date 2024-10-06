@@ -20,6 +20,7 @@ class PCCommunicator {
     std::atomic<bool> running;
     uint16_t critical_time = 10; 
     bool connection_lost = false;
+    VideoCaptureHandler videoHandler;
 
     int get_direction_code(const std::string& direction) {
         if (direction == "forward") {
@@ -65,7 +66,7 @@ class PCCommunicator {
     }
 
 public:
-    PCCommunicator() : running(true) {
+    PCCommunicator(const std::string& ip) : running(true), videoHandler(ip) {
         std::cout << "Server on robot starts" << std::endl;
         web_server_thread = std::thread(&PCCommunicator::start_server, this);
         heartbeat_thread = std::thread(&PCCommunicator::heartbeat_handler, this);
