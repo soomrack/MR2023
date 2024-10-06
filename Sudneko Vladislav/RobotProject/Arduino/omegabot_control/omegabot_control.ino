@@ -1,11 +1,16 @@
 #include <Servo.h>
+#include <Wire.h>
+#include <ICM20948_WE.h>
 
-// Constants for movement and grabbing  
+// Constants for movement and grabbing
 #define SPEED              110
 #define SPEED_ROTATE       150
 #define CRITICAL_DISTANCE  20
+#define TOLERANCE          2  // Tolerance in degrees 
+                              // for stopping the rotation
+#define CRITICAL_DISTANCE_FORWARD 3
 
-// Pin definitions  
+// Pin definitions
 #define SENSOR_RF_FORWARD  A2
 #define SENSOR_RF_LEFT     A3
 #define MOTOR_L_PWM_PIN    6
@@ -16,14 +21,18 @@
 #define SERVO_1_PIN        A1
 #define BLINK              13
 
-// Variables  
+// Magnetometer I2C address
+#define ICM20948_ADDR 0x68
+
+// Variables
 uint8_t pos_servo_0 = 0;
 uint8_t pos_servo_1 = 0;
 int distance = 0;
 Servo servo_0;
 Servo servo_1;
+ICM20948_WE myIMU(ICM20948_ADDR);  // Magnetometer object
 
-// Function prototypes  
+// Function prototypes
 void runForward();
 void runBack();
 void steerRight();
@@ -34,10 +43,17 @@ void grabCatch();
 void grabRelease();
 int readForwardRangefinder();
 void stopMotors();
+double getAngle();
+void imuSetup();
+void rotate(int targetAngle);
+void runForwardUntil(int distance);
+void runForwardRotateAndBack();
+void runAutopilot();
 
 void setup() {
   Serial.begin(9600);
 
+  // Initialize servos
   servo_0.attach(SERVO_0_PIN);
   servo_1.attach(SERVO_1_PIN);
 
@@ -49,6 +65,10 @@ void setup() {
 
   servo_0.write(0);
   servo_1.write(150);
+
+  // Initialize magnetometer
+  Wire.begin();
+  imuSetup();  // Set up the IMU (including the magnetometer)
 }
 
 void loop() {
@@ -65,9 +85,7 @@ void loop() {
       int commandID = input.substring(4).toInt();
 
       if (commandID == 22) {
-        if (readForwardRangefinder() > 10) {
-          runForward();
-        }
+        runForwardUntil(CRITICAL_DISTANCE_FORWARD);
       } else if (commandID == 33) {
         runBack();
       } else if (commandID == 44) {
@@ -84,20 +102,99 @@ void loop() {
         grabDown();
       } else if (commandID == 111) {
         stopMotors();
+      } else if (commandID == 122) {
+        runForwardUntil(CRITICAL_DISTANCE_FORWARD);
+      } else if (commandID == 133) {
+        runForwardRotateAndBack();
       } else if (commandID == 400) {
-        if (readForwardRangefinder() > CRITICAL_DISTANCE) {
-          runForward();
-        } else if (readLeftRangeFinder() > CRITICAl_DISTANCE) {
-          while (!(readForwardRangefinder() > CRITICAL_DISTANCE))
-            steerLeft();
-
-        }
+        runAutopilot();
       }
-
-      delay(100);
+      delay(10);
     }
   }
+}
 
+void runAutopilot() {
+    if (readForwardRangefinder() > CRITICAL_DISTANCE) {
+      runForward();
+    } else if (readLeftRangefinder() > CRITICAL_DISTANCE) {
+      while (!(readForwardRangefinder() > CRITICAL_DISTANCE))
+        steerLeft();
+    }
+}
+
+void runForwardUntil(int distance) {
+    if (readForwardRangefinder() > distance) {
+      runForward();
+    } else {
+      stopMotors();
+    }
+}
+
+void runForwardRotateAndBack() {
+    runForward();
+    delay(5);
+    rotate(360);
+    runBack();
+    delay(5);
+}
+
+void rotate(int targetAngle) {
+    int currentAngle = getAngle();
+    int angleDifference = targetAngle - currentAngle;
+
+    if (angleDifference > 180) {
+        angleDifference -= 360;
+    } else if (angleDifference < -180) {
+        angleDifference += 360;
+    }
+
+    while (abs(angleDifference) > TOLERANCE) {
+        currentAngle = getAngle(); 
+        angleDifference = targetAngle - currentAngle;
+
+        if (angleDifference > 180) {
+            angleDifference -= 360;
+        } else if (angleDifference < -180) {
+            angleDifference += 360;
+        }
+
+        if (angleDifference > 0) {
+            steerRight();
+        } else {
+            steerLeft();
+        }
+
+        delay(50);
+    }
+
+    stopMotors();
+}
+
+double getAngle() {
+  myIMU.readSensor();
+  xyzFloat magVal = myIMU.getMagValues(); 
+
+  double heading = atan2(magVal.y, magVal.x) * 180.0 / PI;
+  if (heading < 0) {
+    heading += 360;  // Normalize to 0-360 degrees
+  }
+
+  return heading;
+}
+
+void imuSetup() {
+  if (!myIMU.init()) {
+    Serial.println("ICM20948 does not respond");
+  } else {
+    Serial.println("ICM20948 is connected");
+  }
+
+  if (!myIMU.initMagnetometer()) {
+    Serial.println("Magnetometer does not respond");
+  } else {
+    Serial.println("Magnetometer is initialized");
+  }
 }
 
 void runForward() {

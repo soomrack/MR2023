@@ -39,6 +39,10 @@ class PCCommunicator {
             return 99;
         } else if (direction == "stop") {
             return 111;
+        } else if (direction == "forward_until_obstacle") {
+            return 122;
+        } else if (direction == "forward_rotate_and_back") {
+            return 133;
         } else {
             return 135; // do nothing
         }
