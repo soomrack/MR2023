@@ -3,14 +3,15 @@
 
 #include "PCCommunicator.hpp"
 #include "ArduinoCommunicator.hpp"
+#include "ConsoleHistorySaver.hpp"
 
 // Consts
 const bool run = true;
 
 int main() {
     PCCommunicator pc_communicator;
-
     ArduinoCommunicator arduino_communicator("/dev/ttyUSB0", 9600); 
+    ConsoleHistorySaver historySaver("robot_log.txt");
 
     while (run) {
         // std::cout << "Read from Arduino" << std::endl;
@@ -21,7 +22,7 @@ int main() {
         // Listen command data from GCS and send to arduino
         // std::cout << "Write to arduino" << std::endl;
 
-        if (!pc_communicator.is_autopilot()) {
+        if (!pc_communicator.is_connection_lost()) {
             arduino_communicator.writeToArduino(pc_communicator.get_command());
         } else {
             std::cout << "Connection lost" << std::endl;

@@ -3,6 +3,7 @@
 
 #include "crow_all.h"
 #include "TimeCounter.hpp"
+#include "VideoCapture.hpp
 #include <thread>
 #include <atomic>
 #include <chrono>
@@ -18,7 +19,7 @@ class PCCommunicator {
     std::thread heartbeat_thread;
     std::atomic<bool> running;
     uint16_t critical_time = 10; 
-    bool autopilot = false;
+    bool connection_lost = false;
 
     int get_direction_code(const std::string& direction) {
         if (direction == "forward") {
@@ -43,6 +44,8 @@ class PCCommunicator {
             return 122;
         } else if (direction == "forward_rotate_and_back") {
             return 133;
+        } else if (direction == "autopilot") {
+            return 144;
         } else {
             return 135; // do nothing
         }
@@ -52,10 +55,10 @@ class PCCommunicator {
         while (running) {
             std::cout << "Heartbeat time is " << counter.getCounter() << std::endl;
             if (counter.getCounter() > critical_time) {
-                autopilot = true;
+                connection_lost = true;
             } else {
                 std::cout << move_command << " - move command" << std::endl;
-                autopilot = false;
+                connection_lost = false;
             }   
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
@@ -73,8 +76,8 @@ public:
         return move_command;
     }
 
-    bool is_autopilot() {
-        return autopilot;
+    bool is_connection_lost() {
+        return connection_lost;
     }
 
     int get_connection_error_code() {
@@ -97,6 +100,18 @@ private:
         ([this](const std::string& direction) {
             move_command = get_direction_code(direction);
             return crow::response(200, "Move command sent");
+        });
+
+        CROW_ROUTE(app, "/video/<string>")
+        ([this](const std::string& operation) {
+            if (operation == "start") {
+                videoHandler.startVideoCapture();
+                return crow::response(200, "Video capture started");
+            } else if (operation == "stop") {
+                videoHandler.stopVideoCapture();
+                return crow::response(200, "Video capture stopped");
+            }
+            return crow::response(200, "Video command sent");
         });
 
         CROW_ROUTE(app, "/distance")

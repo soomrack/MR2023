@@ -105,11 +105,13 @@ void loop() {
       } else if (commandID == 111) {
         stopMotors();
       } else if (commandID == 122) {
-        runForwardUntil(CRITICAL_DISTANCE_FORWARD);
+        runForwardUntil(CRITICAL_DISTANCE);
       } else if (commandID == 133) {
         runForwardRotateAndBack();
-      } else if (commandID == 400) {
+      } else if (commandID == 144) {
         runAutopilot();
+      } else if (commandID == 400) {
+        runBack();    
       }
       delay(10);
     }
@@ -142,7 +144,7 @@ void runForwardRotateAndBack() {
 }
 
 void rotate(int targetAngle) {
-    unsigned long currentAngle = getAngleFromEnc1();
+    unsigned long currentAngle = (getAngleFromEnc1() + getAngleFromEnc2()) / 2;
     unsigned long angleDifference = targetAngle - currentAngle;
 
     while (abs(angleDifference) > TOLERANCE) {

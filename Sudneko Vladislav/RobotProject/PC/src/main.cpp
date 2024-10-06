@@ -114,8 +114,12 @@ int main(int argc, char *argv[]) {
                         robot.forwardUntilObstacle();
                         break;
                     case SDLK_h:
-                        std::cout << "3 seconds forward, rotate, and return back" << std::endl;
-                        robot.goAndRotateAround();
+                        std::cout << "Forward, rotate and back" << std::endl;
+                        robot.forwardRotateAndBack();
+                        break;
+                    case SDLK_i:
+                        std::cout << "Start autopilot" << std::endl;
+                        robot.autopilot();
                         break;
                     case SDLK_j:
                         std::cout << "Start shooting video" << std::endl;
