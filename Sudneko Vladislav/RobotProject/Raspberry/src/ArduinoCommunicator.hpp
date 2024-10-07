@@ -7,6 +7,8 @@
 #include <thread>
 #include <chrono>
 #include <stdexcept>
+#include <sstream>
+#include "SensorData.hpp"
 
 class ArduinoCommunicator {
 public:
@@ -19,19 +21,23 @@ public:
         disconnect();
     }
 
+    std::tuple<int, int> get_sensor_data() {
+        return SensorData::getValues();
+    }
+
     void readFromArduino() {
         char buffer[128];
         while (true) {
             if (isConnected()) {
                 int bytes_read = sp_nonblocking_read(serial_port, buffer, sizeof(buffer) - 1);
                 if (bytes_read > 0) {
-                    buffer[bytes_read] = '\0';  // Null-terminate the string
+                    buffer[bytes_read] = '\0';  
                     std::string line(buffer);
                     if (!line.empty()) {
-                        std::cout << "Arduino: " << line << std::endl;
+                        parseAndStoreData(line);
                     }
                 } else if (bytes_read == SP_ERR_TIMEOUT) {
-                    std::cout << "Timeout read ffrom Arduino" << std::endl;
+                    std::cout << "Timeout read from Arduino" << std::endl;
                 }
             } else {
                 std::cout << "Connection lost, attempting to reconnect..." << std::endl;
@@ -42,7 +48,6 @@ public:
         }
     }
 
-    // Send command ID to Arduino
     void writeToArduino(int commandID) {
         if (isConnected()) {
             std::string command = "PC: " + std::to_string(commandID) + "\n";
@@ -99,6 +104,24 @@ private:
             std::cout << "Reconnected to Arduino." << std::endl;
         } catch (const std::runtime_error& e) {
             std::cout << "Reconnect failed: " << e.what() << std::endl;
+        }
+    }
+
+    void parseAndStoreData(const std::string& data) {
+        // Example input: "Arduino: 2;45"
+        if (data.find("Arduino: ") == 0) {
+            std::stringstream ss(data.substr(9));  // Skip "Arduino: "
+            int values[2];
+            char delimiter;
+
+            ss >> values[0] >> delimiter >> values[1];
+
+            if (delimiter == ';') {
+                SensorData::setValues(values[0], values[1]);
+                std::cout << "Data updated - Forward: " << values[0] << ", Left: " << values[1] << std::endl;
+            } else {
+                std::cout << "Invalid data format received: " << data << std::endl;
+            }
         }
     }
 };

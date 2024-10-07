@@ -22,7 +22,8 @@ int main(int argc, char* argv[]) {
     ConsoleHistorySaver historySaver("robot_log.txt");
 
     while (run) {
-        // arduino_communicator.readFromArduino();
+        auto [forward_value, left_value] = arduino_communicator.get_sensor_data();
+        pc_communicator.set_sensor_data(forward_value, left_value);
 
         if (!pc_communicator.is_connection_lost()) {
             arduino_communicator.writeToArduino(pc_communicator.get_command());

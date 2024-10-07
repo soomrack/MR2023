@@ -12,6 +12,7 @@
 
 class PCCommunicator {
     float front_distance_sensor = -1;
+    float left_distance_sensor  = -1;
     int move_command = -1;
     int connection_error_code = 400;
     TimeCounter counter;
@@ -21,6 +22,13 @@ class PCCommunicator {
     uint16_t critical_time = 10; 
     bool connection_lost = false;
     VideoCaptureHandler videoHandler;
+
+    void setSensorsData(float frontSensor, float leftSensor) {
+        if (frontSensor >= 0 && leftSensor >= 0) {
+            front_distance_sensor = frontSensor;
+            left_distance_sensor  = leftSensor;
+        }
+    }
 
     int get_direction_code(const std::string& direction) {
         if (direction == "forward") {
@@ -72,6 +80,10 @@ public:
         heartbeat_thread = std::thread(&PCCommunicator::heartbeat_handler, this);
     }
 
+    void set_sensor_data(int forward, int left) {
+        front_distance_sensor = forward;
+        left_distance_sensor  = left;
+    }
 
     int get_command() {
         return move_command;
@@ -115,11 +127,12 @@ private:
             return crow::response(200, "Video command sent");
         });
 
-        CROW_ROUTE(app, "/distance")
+        CROW_ROUTE(app, "/sensors")
         ([this]() {
-            crow::json::wvalue distance;
-            distance["forward"] = front_distance_sensor;
-            return distance;
+            crow::json::wvalue sensors;
+            sensors["forward_rangefinder"] = front_distance_sensor;
+            sensors["left_rangefinder"] = left_distance_sensor;
+            return sensors;
         });
 
         CROW_ROUTE(app, "/heartbeat")
