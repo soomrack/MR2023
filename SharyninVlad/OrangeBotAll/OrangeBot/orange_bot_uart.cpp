@@ -64,7 +64,7 @@ int orange_bot_uart::send_speed(int left, int right)
     return 0;
 }
 
-int orange_bot_uart::receive_distance(int& front_distance)
+int orange_bot_uart::receive_distance(int front_distance)
 {
     if (uart_error != 0) return -1;
 
