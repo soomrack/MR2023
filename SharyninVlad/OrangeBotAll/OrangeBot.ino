@@ -4,8 +4,12 @@
 #define RIGHT_MOTOR_A  5
 #define RIGHT_MOTOR_B  3
 
+#define US_TRIG_PIN 9
+#define US_ECHO_PIN 8
+
 unsigned long currentTime = millis();
 unsigned long previousTime = millis();
+long distance_to_object;
 
 void drive(int left_pwm, int right_pwm)
 {
@@ -30,12 +34,31 @@ void drive(int left_pwm, int right_pwm)
   }
 }
 
+int get_distance_to_object(){
+  long duration, distance_cm;
+
+  digitalWrite(US_TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(US_TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(US_TRIG_PIN, LOW);
+
+  // Засекаем время возвращения сигнала
+  duration = pulseIn(US_ECHO_PIN, HIGH);
+  
+  distance_cm = duration * 0.034 / 2;
+
+  return distance_cm;
+}
+
 void setup() {
   Serial.begin(19200);
   pinMode(LEFT_MOTOR_A, OUTPUT);
   pinMode(LEFT_MOTOR_B, OUTPUT);
   pinMode(RIGHT_MOTOR_A, OUTPUT);
   pinMode(RIGHT_MOTOR_B, OUTPUT);
+  pinMode(US_TRIG_PIN, OUTPUT);
+  pinMode(US_ECHO_PIN, INPUT);
 }
 
 void loop() {
@@ -55,6 +78,10 @@ void loop() {
       Serial.println(right_pwm);
      */
       drive(left_pwm, right_pwm);
+
+      ///send distance to orange
+      distance_to_object = get_distance_to_object();
+      Serial.println(distance_to_object);
 
       previousTime = millis();
     }
