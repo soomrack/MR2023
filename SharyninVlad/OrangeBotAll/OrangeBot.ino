@@ -4,7 +4,7 @@
 #define RIGHT_MOTOR_A  5
 #define RIGHT_MOTOR_B  3
 
-#define US_TRIG_PIN 9
+#define US_TRIG_PIN 7
 #define US_ECHO_PIN 8
 
 unsigned long currentTime = millis();
