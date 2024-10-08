@@ -1085,6 +1085,7 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdint.h \
   /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/HTTPRequester.hpp \
+  /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/PingService.hpp \
   /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/RaspberryCommunicator.hpp \
   /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/RobotController.hpp \
   /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/httplib.h \
@@ -1594,6 +1595,8 @@ CMakeFiles/OmegabotManualControl.dir/src/main.cpp.o: /Users/vladislav/Documents/
 /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/json.hpp:
 
 /Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/RobotController.hpp:
+
+/Users/vladislav/Documents/GitHub/MR2023/Sudneko\ Vladislav/RobotProject/PC/src/PingService.hpp:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdint.h:
 

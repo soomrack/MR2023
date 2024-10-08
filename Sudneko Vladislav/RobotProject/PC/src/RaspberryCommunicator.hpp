@@ -11,7 +11,8 @@ class RaspberryCommunicator {
     PingService pingService;
     
 public:
-    RaspberryCommunicator(std::string raspberryAddress) : requester(raspberryAddress), pingService(raspberryAddress) {};
+    RaspberryCommunicator(std::string raspberryAddress) : 
+        requester(raspberryAddress), pingService(raspberryAddress) {};
 
     void sendMoveCommand(std::string command) noexcept {
         std::string request = "/move/" + command;
@@ -23,14 +24,14 @@ public:
     }
 
     void sendHeartbeat() noexcept {
-        std::string request = "/heartbeat";
+        std::string request = "/heartbeat"; 
         requester.send_get_request(request);
     }
 
     std::string getSensorsInfo() {
-        std::string _response = requester.send_get_request("/sensors");
+        std::string sensors_response = requester.send_get_request("/sensors");
         try {
-            auto json_data = nlohmann::json::parse(distance_response);
+            auto json_data = nlohmann::json::parse(sensors_response);
 
             std::stringstream text;
             text << "forward rangefinder = " << json_data["forward_rangefinder"].get<int>() 
