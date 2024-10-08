@@ -3,14 +3,17 @@
 
 #include "RaspberryCommunicator.hpp"
 #include <iostream>
+#include <string>
 
 class RobotController {
 private:
     RaspberryCommunicator communicator;
+    std::string robotInfo;
+    std::string robotIp;
 
 public:
     RobotController(const std::string& robot_host)
-        : communicator(robot_host) { } 
+        : communicator(robot_host) {} 
 
     void moveForward() {
         communicator.sendMoveCommand("forward");
@@ -85,6 +88,11 @@ public:
     void sendHeartbeat() {
         communicator.sendHeartbeat();
         std::cout << "HeartBeat sent" << std::endl;
+    }
+
+    std::string getInfo() {
+        robotInfo = communicator.getSensorsInfo();
+        return robotInfo;
     }
 };
 

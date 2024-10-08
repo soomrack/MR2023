@@ -7,7 +7,7 @@
 #include <functional>
 #include <atomic>
 
-static GstElement *pipeline;
+static GstElement *pipeline, *text_overlay;
 
 static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
     switch (GST_MESSAGE_TYPE(msg)) {
@@ -15,8 +15,7 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
             std::cout << "End of stream" << std::endl;
             g_main_loop_quit((GMainLoop *)data);
             break;
-        case GST_MESSAGE_ERROR:
-        {
+        case GST_MESSAGE_ERROR: {
             gchar *debug;
             GError *error;
             gst_message_parse_error(msg, &error, &debug);
@@ -32,6 +31,13 @@ static gboolean bus_call(GstBus *bus, GstMessage *msg, gpointer data) {
     return TRUE;
 }
 
+static gboolean update_text_overlay(gpointer data) {
+    RobotController *robot = static_cast<RobotController *>(data);
+    std::string info = robot->getInfo();
+    g_object_set(text_overlay, "text", info.c_str(), NULL);
+    return TRUE; 
+}
+
 void send_heartbeat(RobotController &robot, std::atomic<bool> &running) {
     while (running) {
         robot.sendHeartbeat();
@@ -40,11 +46,16 @@ void send_heartbeat(RobotController &robot, std::atomic<bool> &running) {
 }
 
 int main(int argc, char *argv[]) {
+    RobotController robot = RobotController("http://192.168.76.84:5000");
+
     gst_init(&argc, &argv);
 
     pipeline = gst_parse_launch(
-        "udpsrc port=8888 caps=\"application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96\" ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink",
+        "udpsrc port=8888 caps=\"application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96\" ! "
+        "rtph264depay ! avdec_h264 ! videoconvert ! textoverlay name=overlay ! autovideosink",
         NULL);
+
+    text_overlay = gst_bin_get_by_name(GST_BIN(pipeline), "overlay");
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
@@ -65,10 +76,10 @@ int main(int argc, char *argv[]) {
 
     gst_element_set_state(pipeline, GST_STATE_PLAYING);
 
-    RobotController robot = RobotController("http://192.168.76.84:5000");
-
     std::atomic<bool> running(true);
     std::thread heartbeat_sender(send_heartbeat, std::ref(robot), std::ref(running));
+
+    g_timeout_add(100, update_text_overlay, &robot);
 
     while (running) {
         SDL_Event e;

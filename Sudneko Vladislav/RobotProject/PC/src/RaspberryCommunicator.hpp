@@ -2,12 +2,16 @@
 #define RASPBERRYCOMMUNICATOR
 
 #include "HTTPRequester.hpp"
+#include "PingService.hpp"
 #include "json.hpp"
+#include <sstream>
 
 class RaspberryCommunicator {
     HTTPRequester requester;
+    PingService pingService;
+    
 public:
-    RaspberryCommunicator(std::string raspberry_address) : requester(raspberry_address) {};
+    RaspberryCommunicator(std::string raspberryAddress) : requester(raspberryAddress), pingService(raspberryAddress) {};
 
     void sendMoveCommand(std::string command) noexcept {
         std::string request = "/move/" + command;
@@ -23,14 +27,20 @@ public:
         requester.send_get_request(request);
     }
 
-    float getDistance() {
-        std::string distance_response = requester.send_get_request("/distance");
+    std::string getSensorsInfo() {
+        std::string _response = requester.send_get_request("/sensors");
         try {
             auto json_data = nlohmann::json::parse(distance_response);
-            return json_data["front"].get<float>();
+
+            std::stringstream text;
+            text << "forward rangefinder = " << json_data["forward_rangefinder"].get<int>() 
+                << ", left rangefinder = " << json_data["left_rangefinder"].get<int>() 
+                << ", ping = " << pingService.getPingTime();
+
+            return text.str();
         } catch (const nlohmann::json::exception& e) {
             std::cerr << "JSON parsing error: " << e.what() << std::endl;
-            return -1.0f;
+            return "Error in JSON parsing";
         }
     }
 };
