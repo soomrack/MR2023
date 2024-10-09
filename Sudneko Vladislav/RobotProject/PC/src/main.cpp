@@ -46,7 +46,7 @@ void send_heartbeat(RobotController &robot, std::atomic<bool> &running) {
 }
 
 int main(int argc, char *argv[]) {
-    RobotController robot = RobotController("http://192.168.76.84:5000");
+    RobotController robot = RobotController("http://192.168.176.84:5000");
 
     gst_init(&argc, &argv);
 
@@ -152,6 +152,8 @@ int main(int argc, char *argv[]) {
                     case SDLK_a:
                     case SDLK_s:
                     case SDLK_d:
+                    case SDLK_o:
+                    case SDLK_l:
                         robot.stop();
                         break;
                     default:

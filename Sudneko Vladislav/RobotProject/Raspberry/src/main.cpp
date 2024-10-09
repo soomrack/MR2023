@@ -23,6 +23,7 @@ int main(int argc, char* argv[]) {
 
     while (run) {
         auto [forward_value, left_value] = arduino_communicator.get_sensor_data();
+        std::cout << forward_value << left_value << std::endl;
         pc_communicator.set_sensor_data(forward_value, left_value);
 
         if (!pc_communicator.is_connection_lost()) {

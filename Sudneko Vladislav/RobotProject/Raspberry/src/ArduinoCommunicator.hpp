@@ -8,44 +8,27 @@
 #include <chrono>
 #include <stdexcept>
 #include <sstream>
+#include <atomic>
 #include "SensorData.hpp"
 
 class ArduinoCommunicator {
 public:
     ArduinoCommunicator(const std::string& port, int baud_rate) 
-        : port_name(port), baud_rate(baud_rate), serial_port(nullptr) {
+        : port_name(port), baud_rate(baud_rate), serial_port(nullptr), stop_thread(false) {
         connect();
+        startReadingThread();  // Start reading in a separate thread
     }
 
     ~ArduinoCommunicator() {
+        stop_thread = true;  // Signal the thread to stop
+        if (read_thread.joinable()) {
+            read_thread.join();  // Wait for the thread to finish
+        }
         disconnect();
     }
 
     std::tuple<int, int> get_sensor_data() {
         return SensorData::getValues();
-    }
-
-    void readFromArduino() {
-        char buffer[128];
-        while (true) {
-            if (isConnected()) {
-                int bytes_read = sp_nonblocking_read(serial_port, buffer, sizeof(buffer) - 1);
-                if (bytes_read > 0) {
-                    buffer[bytes_read] = '\0';  
-                    std::string line(buffer);
-                    if (!line.empty()) {
-                        parseAndStoreData(line);
-                    }
-                } else if (bytes_read == SP_ERR_TIMEOUT) {
-                    std::cout << "Timeout read from Arduino" << std::endl;
-                }
-            } else {
-                std::cout << "Connection lost, attempting to reconnect..." << std::endl;
-                reconnect();
-            }
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
     }
 
     void writeToArduino(int commandID) {
@@ -61,6 +44,8 @@ private:
     struct sp_port* serial_port;
     std::string port_name;
     int baud_rate;
+    std::thread read_thread;  // Thread for reading from Arduino
+    std::atomic<bool> stop_thread;  // Flag to stop the thread
 
     void connect() {
         sp_return result = sp_get_port_by_name(port_name.c_str(), &serial_port);
@@ -123,6 +108,32 @@ private:
                 std::cout << "Invalid data format received: " << data << std::endl;
             }
         }
+    }
+
+    void readFromArduino() {
+        char buffer[128];
+        while (!stop_thread) {
+            if (isConnected()) {
+                int bytes_read = sp_nonblocking_read(serial_port, buffer, sizeof(buffer) - 1);
+                if (bytes_read > 0) {
+                    buffer[bytes_read] = '\0';  
+                    std::string line(buffer);
+                    if (!line.empty()) {
+                        std::cout << line << " - line" << std::endl;
+                        parseAndStoreData(line);
+                    }
+                }
+            } else {
+                std::cout << "Connection lost, attempting to reconnect..." << std::endl;
+                reconnect();
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+    }
+
+    void startReadingThread() {
+        read_thread = std::thread(&ArduinoCommunicator::readFromArduino, this);
     }
 };
 

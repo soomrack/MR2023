@@ -3,7 +3,7 @@
 
 #include "crow_all.h"
 #include "TimeCounter.hpp"
-#include "VideoCapture.hpp
+#include "VideoCapture.hpp"
 #include <thread>
 #include <atomic>
 #include <chrono>
@@ -76,6 +76,7 @@ class PCCommunicator {
 public:
     PCCommunicator(const std::string& ip) : running(true), videoHandler(ip) {
         std::cout << "Server on robot starts" << std::endl;
+        videoHandler.startStreamingAndRecording();
         web_server_thread = std::thread(&PCCommunicator::start_server, this);
         heartbeat_thread = std::thread(&PCCommunicator::heartbeat_handler, this);
     }
@@ -99,6 +100,7 @@ public:
 
     ~PCCommunicator() {
         running = false;
+        videoHandler.stopStreamingAndRecording();
         if (web_server_thread.joinable()) {
             web_server_thread.join();
         }
@@ -113,18 +115,6 @@ private:
         ([this](const std::string& direction) {
             move_command = get_direction_code(direction);
             return crow::response(200, "Move command sent");
-        });
-
-        CROW_ROUTE(app, "/video/<string>")
-        ([this](const std::string& operation) {
-            if (operation == "start") {
-                videoHandler.startVideoCapture();
-                return crow::response(200, "Video capture started");
-            } else if (operation == "stop") {
-                videoHandler.stopVideoCapture();
-                return crow::response(200, "Video capture stopped");
-            }
-            return crow::response(200, "Video command sent");
         });
 
         CROW_ROUTE(app, "/sensors")

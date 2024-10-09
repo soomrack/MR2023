@@ -21,6 +21,7 @@ public:
 
     void sendVideoCommand(std::string command) noexcept {
         std::string request = "/video/" + command;
+        requester.send_get_request(request);
     }
 
     void sendHeartbeat() noexcept {
