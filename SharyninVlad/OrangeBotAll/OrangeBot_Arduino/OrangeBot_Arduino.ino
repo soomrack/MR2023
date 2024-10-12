@@ -9,6 +9,8 @@
 
 unsigned long currentTime = millis();
 unsigned long previousTime = millis();
+unsigned long PrTime = millis();
+int timeflag = 1;
 long distance_to_object;
 
 void drive(int left_pwm, int right_pwm)
@@ -34,22 +36,37 @@ void drive(int left_pwm, int right_pwm)
   }
 }
 
-int get_distance_to_object(){
+
+void get_distance_to_object(unsigned long Time) {
   long duration, distance_cm;
 
-  digitalWrite(US_TRIG_PIN, LOW);
-  delayMicroseconds(2);
-  digitalWrite(US_TRIG_PIN, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(US_TRIG_PIN, LOW);
+  if (timeflag == 1)
+  {
+    digitalWrite(US_TRIG_PIN, LOW);
+    timeflag = 2;
+  }
 
-  // Засекаем время возвращения сигнала
-  duration = pulseIn(US_ECHO_PIN, HIGH);
-  
-  distance_cm = duration * 0.034 / 2;
+  if (Time - PrTime >= 2 && timeflag == 2)
+  {
+    digitalWrite(US_TRIG_PIN, HIGH);
+    timeflag = 3;
+  }
 
-  return distance_cm;
+  if (Time - PrTime >= 12 && timeflag == 3)
+  {
+    digitalWrite(US_TRIG_PIN, LOW);
+    timeflag = 1;
+    PrTime = Time;
+    // Засекаем время возвращения сигнала
+    duration = pulseIn(US_ECHO_PIN, HIGH, 30000);  // 30 ms тайм-аут
+    distance_cm = duration * 0.034 / 2;
+
+    if (distance_cm <= 0 || distance_cm > 60)
+      distance_cm = 60;
+    Serial.println(distance_cm);
+  }
 }
+
 
 void setup() {
   Serial.begin(19200);
@@ -64,6 +81,10 @@ void setup() {
 void loop() {
   currentTime = millis();
 
+  ///send distance to orange
+  get_distance_to_object(currentTime);
+  
+  //Serial.println(currentTime);
   if (Serial.available() > 0) {
     String data = Serial.readStringUntil('\n');
     int commaIndex = data.indexOf(',');
@@ -72,16 +93,12 @@ void loop() {
       int left_pwm = data.substring(0, commaIndex).toInt();
       int right_pwm = data.substring(commaIndex + 1).toInt();
       /*
-      Serial.print("L: ");
-      Serial.print(left_pwm);
-      Serial.print("  R: ");
-      Serial.println(right_pwm);
-     */
+        Serial.print("L: ");
+        Serial.print(left_pwm);
+        Serial.print("  R: ");
+        Serial.println(right_pwm);
+      */
       drive(left_pwm, right_pwm);
-
-      ///send distance to orange
-      distance_to_object = get_distance_to_object();
-      Serial.println(distance_to_object);
 
       previousTime = millis();
     }

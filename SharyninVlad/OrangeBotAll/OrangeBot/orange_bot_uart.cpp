@@ -64,24 +64,26 @@ int orange_bot_uart::send_speed(int left, int right)
     return 0;
 }
 
-int orange_bot_uart::receive_distance(int front_distance)
-{
+int orange_bot_uart::receive_distance()
+{   
+    tcflush(uart0_filestream, TCOFLUSH);  // Очистка буфера перед отправкой данных
+
     if (uart_error != 0) return -1;
+    char buffer[20];
 
-    char buffer[256];
-    int length = read(uart0_filestream, (void*)buffer, sizeof(buffer)); // Чтение данных из UART
-
-    if (length < 0) {
-        std::cerr << "Ошибка при чтении данных с UART.\n";
+    // Проверка доступности UART перед отправкой
+    int flags = fcntl(uart0_filestream, F_GETFL, 0);
+    if (flags & O_NONBLOCK) {
+        std::cerr << "Буфер UART занят.\n";
         return -1;
     }
-    else if (length == 0) {
-        std::cerr << "Нет данных для чтения.\n";
+
+    // Прием данных по UART
+    int count = read(uart0_filestream, buffer, sizeof(buffer));
+    std::cerr << buffer << std::endl;
+    if (count < 0) {
+        std::cerr << "Ошибка передачи данных по UART.\n";
         return -1;
-    }
-    else {
-        buffer[length] = '\0';
-        front_distance = atoi(buffer);
     }
     return 0;
 }

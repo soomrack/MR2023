@@ -35,7 +35,7 @@ int orange_bot_udp_client::create_client_socket()
     return 0; 
 }
 
-void orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right_speed)
+int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right_speed)
 {
     int left, right;
     char comma;
@@ -45,6 +45,9 @@ void orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* righ
 
     // Получаем данные от сервера с любого порта
     int recv_len = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *)&server_addr, &server_addr_len);
+
+    if (recv_len < 0) return -1;
+
     /*
     if (recv_len < 0) std::cerr << "Receive failed!" << std::endl;
     else std::cout << "Received " << recv_len << " bytes from " << inet_ntoa(sender_addr.sin_addr) << ":" << ntohs(sender_addr.sin_port) << std::endl;
@@ -65,39 +68,67 @@ void orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* righ
     }
     else
         std::cerr << "Error of parsing string: " << speed_string << std::endl;
+    return 0;
 }
 
 
 
-void orange_bot_udp_client::receive_frame_from_server() 
+int orange_bot_udp_client::receive_frame_from_server() 
 {
     // Получаем размер изображения
     int img_size;
     recvfrom(sockfd, &img_size, sizeof(img_size), 0, (struct sockaddr*)&server_addr, &server_addr_len);
+    //std::cerr << img_size << std::endl;
+
+    if (img_size <= 0 || img_size > MAX_IMG_SIZE) {  // Установите разумный предел MAX_IMG_SIZE
+        //std::cerr << "Invalid image size received: " << img_size << std::endl;
+        return -1;
+    }
 
     // Получаем само изображение
     std::vector<uchar> buffer(img_size);
-    recvfrom(sockfd, buffer.data(), img_size, 0, (struct sockaddr*)&server_addr, &server_addr_len);
+    int recv_len = recvfrom(sockfd, buffer.data(), img_size, 0, (struct sockaddr*)&server_addr, &server_addr_len);
+    
+    if (recv_len < 0) {
+        std::cerr << "Failed to receive image data!" << std::endl;
+        return -1;
+    }
+    
+    if (recv_len != img_size) {
+        //std::cerr << "Incomplete image data received!" << std::endl;
+        return -1;
+    }
+
+    if (buffer.size() != img_size) {
+        std::cerr << "Buffer size mismatch!" << std::endl;
+        return -1;
+    }
 
     // Декодируем изображение
     frame = cv::imdecode(buffer, cv::IMREAD_COLOR);
     if (frame.empty()) {
         std::cerr << "Failed to decode image!" << std::endl;
+        return -1;
     }
+    return 1;
 }
     
 
 
 /*
 int main() {
-    orange_bot_udp_client client;
-    int left, right;
+    orange_bot_camera cam(320, 240); 
 
-    client.create_server_socket();
-    client.connect_to_server();
-    client.transmit_server_info();
+    client_v.create_client_socket();
 
-    client.receive_server_data(&left, &right);
-    std::cout << "left: " << left << "right: "<< right << std::endl;
-    return 0;
+    while (1){
+        client_v.receive_frame_from_server();
+        cam.frame = client_v.frame;
+        cam.show_frame("PC");
+
+        if (cv::waitKey(1) == 27) {  // Нажмите ESC для выхода
+            break;
+        }
+		usleep(20000);
+    }
 }*/

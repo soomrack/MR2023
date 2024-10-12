@@ -82,7 +82,7 @@ void key_detect()
 
 void transmit_speed()
 {
-	orange_bot_udp_server server_s(8081, 8082, "192.168.0.32");
+	orange_bot_udp_server server_s(8081, 8082, "192.168.1.53");
 	
     server_s.create_server_socket();
     server_s.set_client_address();
@@ -90,7 +90,7 @@ void transmit_speed()
 	while(1)
 	{
 		server_s.transmit_speed_to_client(drive.left, drive.right);
-		std::cout << "PC:  " << drive.left << "," <<  drive.right << std::endl;
+		//std::cout << "PC:  " << drive.left << "," <<  drive.right << std::endl;
 		usleep(20000);
 		//std::cout << "Sent number to the client." << std::endl;
 	}
@@ -105,7 +105,8 @@ void receive_video()
     client_v.create_client_socket();
 
     while (1){
-        client_v.receive_frame_from_server();
+        if (client_v.receive_frame_from_server() < 0)
+			continue;
         cam.frame = client_v.frame;
         cam.show_frame("PC");
 
