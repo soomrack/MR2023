@@ -64,14 +64,14 @@ int orange_bot_uart::send_speed(int left, int right)
     return 0;
 }
 
-int orange_bot_uart::receive_distance()
+int orange_bot_uart::receive_data()
 {   
     tcflush(uart0_filestream, TCOFLUSH);  // Очистка буфера перед отправкой данных
 
     if (uart_error != 0) return -1;
     char buffer[20];
 
-    // Проверка доступности UART перед отправкой
+    // Проверка доступности UART перед получением
     int flags = fcntl(uart0_filestream, F_GETFL, 0);
     if (flags & O_NONBLOCK) {
         std::cerr << "Буфер UART занят.\n";
@@ -80,10 +80,18 @@ int orange_bot_uart::receive_distance()
 
     // Прием данных по UART
     int count = read(uart0_filestream, buffer, sizeof(buffer));
-    std::cerr << buffer << std::endl;
-    if (count < 0) {
-        std::cerr << "Ошибка передачи данных по UART.\n";
-        return -1;
+
+    std::string data(buffer);
+    std::cerr << "Received data: " << data << std::endl;
+
+    // Считывание ID данных
+    if (data.find("DIST:") != std::string::npos) {
+        front_distance = std::stoi(data.substr(5)); 
+        std::cout << "Distance: " << front_distance << " cm" << std::endl;
+    } 
+    else if (data.find("SOUND:") != std::string::npos) {
+        sound_level = std::stoi(data.substr(6)); 
+        std::cout << "Sound level: " << sound_level << std::endl;
     }
     return 0;
 }

@@ -67,7 +67,7 @@ void transmit_speed_to_arduino()
     {
         //std::cout << "Arduino:  " << speed.left << "," << speed.right << std::endl;
         uart.send_speed(speed.left,speed.right);
-        uart.receive_distance();
+        uart.receive_data();
         std::cout << uart.front_distance << std::endl;
         usleep(10000);
     }     

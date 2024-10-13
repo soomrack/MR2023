@@ -7,6 +7,8 @@
 #define US_TRIG_PIN 7
 #define US_ECHO_PIN 8
 
+#define SOUND_SENS_PIN 9
+
 unsigned long currentTime = millis();
 unsigned long previousTime = millis();
 unsigned long PrTime = millis();
@@ -37,7 +39,8 @@ void drive(int left_pwm, int right_pwm)
 }
 
 
-void get_distance_to_object(unsigned long Time) {
+void send_distance_to_object(unsigned long Time) 
+{
   long duration, distance_cm;
 
   if (timeflag == 1)
@@ -63,8 +66,17 @@ void get_distance_to_object(unsigned long Time) {
 
     if (distance_cm <= 0 || distance_cm > 60)
       distance_cm = 60;
+    Serial.print("DIST:");
     Serial.println(distance_cm);
   }
+}
+
+
+void send_sound_info() {
+  int sound_level = digitalRead(SOUND_SENS_PIN);
+  
+  Serial.print("SOUND:");
+  Serial.println(sound_level);
 }
 
 
@@ -76,13 +88,14 @@ void setup() {
   pinMode(RIGHT_MOTOR_B, OUTPUT);
   pinMode(US_TRIG_PIN, OUTPUT);
   pinMode(US_ECHO_PIN, INPUT);
+  pinMode(SOUND_SENS_PIN, INPUT);
 }
 
 void loop() {
   currentTime = millis();
 
   ///send distance to orange
-  get_distance_to_object(currentTime);
+  send_distance_to_object(currentTime);
   
   //Serial.println(currentTime);
   if (Serial.available() > 0) {
