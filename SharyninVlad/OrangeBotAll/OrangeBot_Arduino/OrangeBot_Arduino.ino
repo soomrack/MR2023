@@ -74,7 +74,7 @@ void send_distance_to_object(unsigned long Time)
 void send_sound_info() {
   int sound_level = digitalRead(SOUND_SENS_PIN);
   
-  Serial.println(sound_level + 60);
+  Serial.println(sound_level + 70);
 }
 
 
