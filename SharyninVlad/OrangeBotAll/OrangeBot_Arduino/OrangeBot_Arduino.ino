@@ -66,7 +66,6 @@ void send_distance_to_object(unsigned long Time)
 
     if (distance_cm <= 0 || distance_cm > 60)
       distance_cm = 60;
-    Serial.print("DIST:");
     Serial.println(distance_cm);
   }
 }
@@ -75,7 +74,6 @@ void send_distance_to_object(unsigned long Time)
 void send_sound_info() {
   int sound_level = digitalRead(SOUND_SENS_PIN);
   
-  Serial.print("SOUND:");
   Serial.println(sound_level + 60);
 }
 
