@@ -96,6 +96,7 @@ void loop() {
 
   ///send distance to orange
   send_distance_to_object(currentTime);
+  send_sound_info();
   
   //Serial.println(currentTime);
   if (Serial.available() > 0) {
