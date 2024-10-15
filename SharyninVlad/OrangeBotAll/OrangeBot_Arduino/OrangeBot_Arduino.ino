@@ -7,7 +7,7 @@
 #define US_TRIG_PIN 7
 #define US_ECHO_PIN 8
 
-#define SOUND_SENS_PIN 9
+#define SOUND_SENS_PIN A1
 
 unsigned long currentTime = millis();
 unsigned long previousTime = millis();
@@ -76,7 +76,7 @@ void send_sound_info() {
   int sound_level = digitalRead(SOUND_SENS_PIN);
   
   Serial.print("SOUND:");
-  Serial.println(sound_level);
+  Serial.println(sound_level + 60);
 }
 
 
@@ -105,6 +105,7 @@ void loop() {
     if (commaIndex > 0) {
       int left_pwm = data.substring(0, commaIndex).toInt();
       int right_pwm = data.substring(commaIndex + 1).toInt();
+      int status = data.substring(commaIndex + 2).toInt();
       /*
         Serial.print("L: ");
         Serial.print(left_pwm);
