@@ -17,6 +17,6 @@ public:
     ~orange_bot_uart();    
     void open_port();
     int configure_port();
-    int send_speed(int left, int right, int status);
+    int send_speed(int left, int right, int status, int quality);
     int receive_distance();
 };
