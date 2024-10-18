@@ -11,13 +11,12 @@ public:
     struct termios options;
     int uart_error = 0;
     int front_distance = 0;
-    int sound_level = 0;
-
+    int black_box = 0;
 public:
     orange_bot_uart(std::string port_name);
     ~orange_bot_uart();    
     void open_port();
     int configure_port();
-    int send_speed(int left, int right);
-    int receive_data();
+    int send_speed(int left, int right, int status);
+    int receive_distance();
 };

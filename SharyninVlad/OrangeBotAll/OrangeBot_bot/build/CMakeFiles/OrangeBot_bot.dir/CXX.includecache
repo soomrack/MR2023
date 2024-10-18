@@ -6,6 +6,30 @@
 
 #IncludeRegexTransform: 
 
+/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot.cpp
+orange_bot_udp_client.hpp
+/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_udp_client.hpp
+orange_bot_udp_server.hpp
+/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_udp_server.hpp
+orange_bot_camera.hpp
+/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_camera.hpp
+orange_bot_uart.hpp
+/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_uart.hpp
+orange_bot_keydetect.hpp
+/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_keydetect.hpp
+iostream
+-
+fstream
+-
+thread
+-
+chrono
+-
+time.h
+-
+mutex
+-
+
 /home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_camera.hpp
 opencv2/opencv.hpp
 -
@@ -22,10 +46,6 @@ unistd.h
 sys/select.h
 -
 
-/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_uart.cpp
-orange_bot_uart.hpp
-/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_uart.hpp
-
 /home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_uart.hpp
 iostream
 -
@@ -35,10 +55,6 @@ unistd.h
 -
 termios.h
 -
-
-/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_udp_client.cpp
-orange_bot_udp_client.hpp
-/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_udp_client.hpp
 
 /home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_udp_client.hpp
 sys/socket.h
@@ -71,22 +87,6 @@ iostream
 -
 opencv2/opencv.hpp
 -
-
-/home/ublaptop/Cpp_Progects/OrangeBot/orange_pc.cpp
-iostream
--
-thread
--
-chrono
--
-orange_bot_keydetect.hpp
-/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_keydetect.hpp
-orange_bot_udp_server.hpp
-/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_udp_server.hpp
-orange_bot_udp_client.hpp
-/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_udp_client.hpp
-orange_bot_camera.hpp
-/home/ublaptop/Cpp_Progects/OrangeBot/orange_bot_camera.hpp
 
 /usr/include/opencv4/opencv2/calib3d.hpp
 opencv2/core.hpp

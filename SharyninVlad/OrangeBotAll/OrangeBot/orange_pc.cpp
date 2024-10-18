@@ -13,6 +13,7 @@ class speed_control
 {
 public:
 	int left = 0, right = 0;
+	int status;
 	int speed = 205;
 	void push(int l, int r)
 	{
@@ -72,6 +73,16 @@ void key_detect()
 		case 122: //z
 			drive.speed_change("-");
 			break;
+		case 112: //p
+			if (drive.status == 0)
+				drive.status = 1;
+			else drive.status = 0;
+			break;
+		case 121: //p
+			if (drive.status == 0)
+				drive.status = 2;
+			else drive.status = 0;
+			break;
 		default:
 			std::cout << keyboard.key_pressed << std::endl;
 			break;
@@ -82,15 +93,15 @@ void key_detect()
 
 void transmit_speed()
 {
-	orange_bot_udp_server server_s(8081, 8082, "192.168.1.53");
+	orange_bot_udp_server server_s(8081, 8082, "192.168.0.32"); //101
 	
     server_s.create_server_socket();
     server_s.set_client_address();
 
 	while(1)
 	{
-		server_s.transmit_speed_to_client(drive.left, drive.right);
-		//std::cout << "PC:  " << drive.left << "," <<  drive.right << std::endl;
+		server_s.transmit_speed_to_client(drive.left, drive.right, drive.status);
+		std::cout << "PC:  " << drive.left << "," <<  drive.right << "," <<  drive.status << std::endl;
 		usleep(20000);
 		//std::cout << "Sent number to the client." << std::endl;
 	}

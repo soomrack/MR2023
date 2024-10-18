@@ -52,9 +52,9 @@ int orange_bot_udp_server::set_client_address()
 }
 
 
-int orange_bot_udp_server::transmit_speed_to_client(int left, int right)
+int orange_bot_udp_server::transmit_speed_to_client(int left, int right, int status)
 {
-    std::string speed_string = std::to_string(left) + "," + std::to_string(right); // Объединение чисел в строку
+    std::string speed_string = std::to_string(left) + "," + std::to_string(right) + "," + std::to_string(status); // Объединение чисел в строку
     sendto(sockfd, speed_string.c_str(), speed_string.size(), 0, (struct sockaddr *)&client_addr, sizeof(client_addr)); //посылаем строку клиенту
     //std::cout << speed_string.c_str() << std::endl;
     return 0;

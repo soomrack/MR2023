@@ -1,0 +1,3 @@
+/home/ublaptop/Cpp_Progects/OrangeBot_bot/build/CMakeFiles/rebuild_cache.dir
+/home/ublaptop/Cpp_Progects/OrangeBot_bot/build/CMakeFiles/edit_cache.dir
+/home/ublaptop/Cpp_Progects/OrangeBot_bot/build/CMakeFiles/OrangeBot_bot.dir

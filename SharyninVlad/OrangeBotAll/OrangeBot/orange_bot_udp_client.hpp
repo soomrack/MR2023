@@ -16,7 +16,7 @@ public:
     socklen_t server_addr_len = sizeof(server_addr);
     std::string server_ip;
 public: 
-    char buffer[16] = {0};
+    char buffer[20] = {0};
     cv::Mat frame;
     int MAX_IMG_SIZE = 40000; 
 
@@ -26,7 +26,7 @@ public:
     int create_client_socket();
     int connect_to_server();
     void transmit_server_info();
-    int receive_speed_from_server(int* left_speed, int* right_speed);
+    int receive_speed_from_server(int* left_speed, int* right_speed, int* status_speed);
     int receive_frame_from_server();
     int set_server_address();
 };

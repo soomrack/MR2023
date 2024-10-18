@@ -35,10 +35,10 @@ int orange_bot_udp_client::create_client_socket()
     return 0; 
 }
 
-int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right_speed)
+int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right_speed, int* status_speed)
 {
-    int left, right;
-    char comma;
+    int left, right, status;
+    char comma1, comma2;
 
     // Очищаем буфер перед получением данных
     memset(buffer, 0, sizeof(buffer));
@@ -52,19 +52,21 @@ int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right
     if (recv_len < 0) std::cerr << "Receive failed!" << std::endl;
     else std::cout << "Received " << recv_len << " bytes from " << inet_ntoa(sender_addr.sin_addr) << ":" << ntohs(sender_addr.sin_port) << std::endl;
     */
-    //std::cout << buffer << "- buffer" << std::endl; // debug
+    //std::cout << "buffer: " << buffer << std::endl; // debug
 
     std::string speed_string(buffer);
     std::stringstream ss(speed_string);
 
     // Читаем первое число, запятую и второе число
-    ss >> left >> comma >> right;
+    ss >> left >> comma1 >> right >> comma2 >> status;
 
     // Проверяем, что запятая на месте, и парсинг прошел успешно
-    if (ss && comma == ',')
+    if (ss && comma1 == ',')
     {
         *left_speed = left;
         *right_speed = right;
+        if (comma2 == ',')
+            *status_speed = status;
     }
     else
         std::cerr << "Error of parsing string: " << speed_string << std::endl;

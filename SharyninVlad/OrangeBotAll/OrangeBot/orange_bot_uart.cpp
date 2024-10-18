@@ -37,7 +37,7 @@ int orange_bot_uart::configure_port()
     return 0;
 }
 
-int orange_bot_uart::send_speed(int left, int right)
+int orange_bot_uart::send_speed(int left, int right, int status)
 {
     tcflush(uart0_filestream, TCOFLUSH);  // Очистка буфера перед отправкой данных
 
@@ -45,7 +45,7 @@ int orange_bot_uart::send_speed(int left, int right)
     char buffer[20];
 
     // Форматируем данные в строку
-    int len = snprintf(buffer, sizeof(buffer), "%d,%d\n", left, right);
+    int len = snprintf(buffer, sizeof(buffer), "%d,%d,%d\n", left, right, status);
     //std::cout << buffer;
 
     // Проверка доступности UART перед отправкой
@@ -64,14 +64,14 @@ int orange_bot_uart::send_speed(int left, int right)
     return 0;
 }
 
-int orange_bot_uart::receive_data()
+int orange_bot_uart::receive_distance()
 {   
     tcflush(uart0_filestream, TCOFLUSH);  // Очистка буфера перед отправкой данных
 
     if (uart_error != 0) return -1;
     char buffer[20];
 
-    // Проверка доступности UART перед получением
+    // Проверка доступности UART перед отправкой
     int flags = fcntl(uart0_filestream, F_GETFL, 0);
     if (flags & O_NONBLOCK) {
         std::cerr << "Буфер UART занят.\n";
@@ -80,18 +80,16 @@ int orange_bot_uart::receive_data()
 
     // Прием данных по UART
     int count = read(uart0_filestream, buffer, sizeof(buffer));
+    //std::cerr << buffer << std::endl;
+    int int_buffer = atoi(buffer); 
+    if (int_buffer > 60)
+        black_box = int_buffer - 70;
+    else front_distance = int_buffer;
 
-    std::string data(buffer);
-    std::cerr << "Received data: " << data << std::endl;
-
-    // Считывание ID данных
-    if (data.find("DIST:") != std::string::npos) {
-        front_distance = std::stoi(data.substr(5)); 
-        std::cout << "Distance: " << front_distance << " cm" << std::endl;
-    } 
-    else if (data.find("SOUND:") != std::string::npos) {
-        sound_level = std::stoi(data.substr(6)); 
-        std::cout << "Sound level: " << sound_level << std::endl;
+    //std::cerr << front_distance << std::endl;
+    if (count < 0) {
+        std::cerr << "Ошибка передачи данных по UART.\n";
+        return -1;
     }
     return 0;
 }
