@@ -37,7 +37,7 @@ int orange_bot_uart::configure_port()
     return 0;
 }
 
-int orange_bot_uart::send_speed(int left, int right, int status)
+int orange_bot_uart::send_speed(int left, int right, int status, int quality)
 {
     tcflush(uart0_filestream, TCOFLUSH);  // Очистка буфера перед отправкой данных
 
@@ -45,7 +45,7 @@ int orange_bot_uart::send_speed(int left, int right, int status)
     char buffer[20];
 
     // Форматируем данные в строку
-    int len = snprintf(buffer, sizeof(buffer), "%d,%d,%d\n", left, right, status);
+    int len = snprintf(buffer, sizeof(buffer), "%d,%d,%d\n", left, right, status, quality);
     //std::cout << buffer;
 
     // Проверка доступности UART перед отправкой
