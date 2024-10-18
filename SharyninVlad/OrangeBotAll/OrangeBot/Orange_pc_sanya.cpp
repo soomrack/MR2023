@@ -3,6 +3,7 @@
 #include <chrono>
 #include <ctime>
 #include <opencv2/opencv.hpp>
+#include <fstream>
 
 #include "orange_bot_keydetect.hpp"
 #include "orange_bot_udp_server.hpp"
@@ -90,6 +91,25 @@ void record_video_with_telemetry(orange_bot_camera &cam)
 	}
 }
 
+// Функция сохранения телеметрии в файл
+void save_telemetry_to_file()
+{
+	std::ofstream telemetry_file;
+	telemetry_file.open("telemetry.txt", std::ios_base::app);  // Открываем файл для добавления
+
+	auto now = std::chrono::system_clock::now();
+	std::time_t current_time = std::chrono::system_clock::to_time_t(now);
+
+	if (telemetry_file.is_open()) {
+		telemetry_file << "Time: " << std::ctime(&current_time);
+		telemetry_file << "Left: " << drive.left << ", Right: " << drive.right << ", Status: " << drive.status << "\n";
+		telemetry_file.close();
+		std::cout << "Telemetry saved to file." << std::endl;
+	} else {
+		std::cout << "Failed to open telemetry file." << std::endl;
+	}
+}
+
 // Функция для обнаружения нажатия клавиш
 void key_detect(orange_bot_camera &cam)
 {
@@ -149,6 +169,9 @@ void key_detect(orange_bot_camera &cam)
 			break;
 		case 114: // 'r' - Начало или остановка записи видео
 			toggle_video_recording(cam);
+			break;
+		case 116: // 't' - Сохранение телеметрии в файл
+			save_telemetry_to_file();
 			break;
 		default:
 			std::cout << keyboard.key_pressed << std::endl;
