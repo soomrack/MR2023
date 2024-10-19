@@ -20,20 +20,24 @@ public:
 		left = l;
 		right = r;
 	}
-	void speed_change (const char* c)
+	void speed_change(const char* c)
 	{
-		c == "+" ? speed+=10 : speed-=10;
-		if (speed > 255 ) speed = 255;
-		if (speed < 5 ) speed = 5;
+		c == "+" ? speed += 10 : speed -= 10;
+		if (speed > 255) speed = 255;
+		if (speed < 5) speed = 5;
 	}
 }drive;
+
+int IMG_HEIGHT = 240;
+int IMG_WIDTH = 320;
+int quality = 2;
 
 void key_detect()
 {
 	keyboard.init_keyboard();
-	while(1)
+	while (1)
 	{
-        keyboard.scan_keyboard();
+		keyboard.scan_keyboard();
 		//printf("%d\n", keyboard.key_pressed);
 		switch (keyboard.key_pressed)
 		{
@@ -60,7 +64,7 @@ void key_detect()
 			break;
 		case 44: //,
 			drive.push(-drive.speed, -drive.speed);
-			break;	
+			break;
 		case 46: ///
 			drive.push(-drive.speed, -drive.speed + 100);
 			break;
@@ -69,7 +73,7 @@ void key_detect()
 			break;
 		case 97: //a
 			drive.speed = 205;
-			break;	
+			break;
 		case 122: //z
 			drive.speed_change("-");
 			break;
@@ -83,6 +87,36 @@ void key_detect()
 				drive.status = 2;
 			else drive.status = 0;
 			break;
+		case xxx:
+			if (quality < 3) 
+			{
+				quality += 1
+				if (quality = 2) 
+				{
+					IMG_HEIGHT = 240;
+					IMG_WIDTH = 320;
+				}
+				else 
+				{
+					IMG_HEIGHT = 480;
+					IMG_WITDH = 640;
+				}
+			}
+		case yyy:
+			if (quality < 1)
+			{
+				quality -= 1
+				if (quality = 2)
+				{
+					IMG_HEIGHT = 240;
+					IMG_WIDTH = 320;
+				}
+				else
+				{
+					IMG_HEIGHT = 12O;
+					IMG_WIDTH = 160;
+				}
+			}
 		default:
 			std::cout << keyboard.key_pressed << std::endl;
 			break;
@@ -94,14 +128,14 @@ void key_detect()
 void transmit_speed()
 {
 	orange_bot_udp_server server_s(8081, 8082, "192.168.0.32"); //101
-	
-    server_s.create_server_socket();
-    server_s.set_client_address();
 
-	while(1)
+	server_s.create_server_socket();
+	server_s.set_client_address();
+
+	while (1)
 	{
-		server_s.transmit_speed_to_client(drive.left, drive.right, drive.status);
-		std::cout << "PC:  " << drive.left << "," <<  drive.right << "," <<  drive.status << std::endl;
+		server_s.transmit_speed_to_client(drive.left, drive.right, drive.status, IMG_WIDTH, IMG_HEIGHT);
+		std::cout << "PC:  " << drive.left << "," << drive.right << "," << drive.status << "," << IMG_WIDTH << "," << IMG_HEIGHT << std::endl;
 		usleep(20000);
 		//std::cout << "Sent number to the client." << std::endl;
 	}
@@ -110,22 +144,22 @@ void transmit_speed()
 
 void receive_video()
 {
-    orange_bot_udp_client client_v(8091);
-    orange_bot_camera cam(320, 240); 
+	orange_bot_udp_client client_v(8091);
+	orange_bot_camera cam(IMG_WIDTH, IMG_HEIGHT);
 
-    client_v.create_client_socket();
+	client_v.create_client_socket();
 
-    while (1){
-        if (client_v.receive_frame_from_server() < 0)
+	while (1) {
+		if (client_v.receive_frame_from_server() < 0)
 			continue;
-        cam.frame = client_v.frame;
-        cam.show_frame("PC");
+		cam.frame = client_v.frame;
+		cam.show_frame("PC");
 
-        if (cv::waitKey(1) == 27) {  // Нажмите ESC для выхода
-            break;
-        }
+		if (cv::waitKey(1) == 27) {  // Нажмите ESC для выхода
+			break;
+		}
 		usleep(20000);
-    }
+	}
 }
 
 
@@ -136,6 +170,6 @@ int main() {
 	th1.join();
 	th2.join();
 	th3.join();
-	
+
 	return 0;
 }

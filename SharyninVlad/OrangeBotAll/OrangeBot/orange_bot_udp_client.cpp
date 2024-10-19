@@ -27,24 +27,24 @@ int orange_bot_udp_client::create_client_socket()
     client_addr.sin_addr.s_addr = INADDR_ANY;
 
     // Привязываем сокет
-    if (bind(sockfd, (struct sockaddr *)&client_addr, sizeof(client_addr)) < 0) {
+    if (bind(sockfd, (struct sockaddr*)&client_addr, sizeof(client_addr)) < 0) {
         std::cerr << "Binding failed!" << std::endl;
         return -1;
     }
     std::cerr << "Client socket binded " << std::endl;
-    return 0; 
+    return 0;
 }
 
-int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right_speed, int* status_speed)
+int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right_speed, int* status_speed, int* IMG_WIDTH, int* ING_HEIGHT)
 {
-    int left, right, status;
-    char comma1, comma2;
+    int left, right, status, IMG_WIDTH, IMG_HEIGHT;
+    char comma1, comma2, comma3, comma4;
 
     // Очищаем буфер перед получением данных
     memset(buffer, 0, sizeof(buffer));
 
     // Получаем данные от сервера с любого порта
-    int recv_len = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *)&server_addr, &server_addr_len);
+    int recv_len = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr*)&server_addr, &server_addr_len);
 
     if (recv_len < 0) return -1;
 
@@ -58,7 +58,7 @@ int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right
     std::stringstream ss(speed_string);
 
     // Читаем первое число, запятую и второе число
-    ss >> left >> comma1 >> right >> comma2 >> status;
+    ss >> left >> comma1 >> right >> comma2 >> status >> comma3 >> IMG_WIDTH >> comma4 >> IMG_HEIGHT;
 
     // Проверяем, что запятая на месте, и парсинг прошел успешно
     if (ss && comma1 == ',')
@@ -67,6 +67,10 @@ int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right
         *right_speed = right;
         if (comma2 == ',')
             *status_speed = status;
+        if (comma3 == ',')
+            *IMG_WIDTH_SIZE = IMG_WIDTH;
+        if (comma4 == ',')
+            *IMG_HEIGHT_SIZE = IMG_HEIGHT;
     }
     else
         std::cerr << "Error of parsing string: " << speed_string << std::endl;
@@ -75,7 +79,7 @@ int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right
 
 
 
-int orange_bot_udp_client::receive_frame_from_server() 
+int orange_bot_udp_client::receive_frame_from_server()
 {
     // Получаем размер изображения
     int img_size;
@@ -90,12 +94,12 @@ int orange_bot_udp_client::receive_frame_from_server()
     // Получаем само изображение
     std::vector<uchar> buffer(img_size);
     int recv_len = recvfrom(sockfd, buffer.data(), img_size, 0, (struct sockaddr*)&server_addr, &server_addr_len);
-    
+
     if (recv_len < 0) {
         std::cerr << "Failed to receive image data!" << std::endl;
         return -1;
     }
-    
+
     if (recv_len != img_size) {
         //std::cerr << "Incomplete image data received!" << std::endl;
         return -1;
@@ -114,12 +118,12 @@ int orange_bot_udp_client::receive_frame_from_server()
     }
     return 1;
 }
-    
+
 
 
 /*
 int main() {
-    orange_bot_camera cam(320, 240); 
+    orange_bot_camera cam(320, 240);
 
     client_v.create_client_socket();
 
@@ -131,6 +135,6 @@ int main() {
         if (cv::waitKey(1) == 27) {  // Нажмите ESC для выхода
             break;
         }
-		usleep(20000);
+        usleep(20000);
     }
 }*/

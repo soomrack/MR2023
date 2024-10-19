@@ -19,6 +19,8 @@ struct speed
     int time_error = 0;
 }speed;
 
+int IMG_WIDTH = 320;
+int IMG_HEIGHT = 240;
 
 void receive_speed()
 {
@@ -28,35 +30,35 @@ void receive_speed()
 
     while (1)
     {
-        client_s.receive_speed_from_server(&speed.left, &speed.right, &speed.status);
+        client_s.receive_speed_from_server(&speed.left, &speed.right, &speed.status, &IMG_WIDTH, &IMG_HEIGHT);
         speed.time_error = 0;
         std::cout << "BOT:" << speed.left << "," << speed.right << "," << speed.status << std::endl;
         usleep(10000);
-    }    
+    }
 }
 
 
 void transmit_video()
 {
-	orange_bot_udp_server server_v(8091, 8092, "192.168.0.100"); //0.12
-	
+    orange_bot_udp_server server_v(8091, 8092, "192.168.0.100"); //0.12
+
     server_v.create_server_socket();
     server_v.set_client_address();
-    
-	orange_bot_camera cam(320, 240);    
+
+    orange_bot_camera cam(IMG_WIDHT, IMG_HEIGHT);
     cam.camera_connect();
 
     while (true) {
         cam.get_frame();
-		cv::flip(cam.frame, cam.frame, 0);
-		cv::flip(cam.frame, cam.frame, 1);
+        cv::flip(cam.frame, cam.frame, 0);
+        cv::flip(cam.frame, cam.frame, 1);
         /*cam.show_frame("bot");
         if (cv::waitKey(1) == 27) {  // Нажмите ESC для выхода
             break;
         }*/
-		server_v.transmit_frame_to_client(cam.frame);
+        server_v.transmit_frame_to_client(cam.frame);
         usleep(10000);
-    }  
+    }
 }
 
 void add_to_file(int number)
@@ -83,13 +85,13 @@ void transmit_speed_to_arduino()
                 speed.right = 0;
             }
         if (speed.status == 2 && time_flag == 0)
-	{
+        {
             start_time = clock();
             time_flag = 1;
         }
-	
+
         if (speed.status == 0 && time_flag == 1)
-          time_flag = 0;
+            time_flag = 0;
 
         if (speed.status == 2)
         {
@@ -98,37 +100,37 @@ void transmit_speed_to_arduino()
             //std::cout << "period" << period << std::endl;
         }
 
-	if (speed.status == 2)
+        if (speed.status == 2)
         {
             if (period > 0 && period < 4)
-		{
-			speed.left = 205;
-                	speed.right = 205;
-		}
-		if (period > 4 && period < 6.2)
-                { 
-                        speed.left = -205;
-                        speed.right = 205;
-                }
-		if (period > 6.2 && period < 10)
-                { 
-                        speed.left = 205;
-                        speed.right = 205;
-                }
+            {
+                speed.left = 205;
+                speed.right = 205;
+            }
+            if (period > 4 && period < 6.2)
+            {
+                speed.left = -205;
+                speed.right = 205;
+            }
+            if (period > 6.2 && period < 10)
+            {
+                speed.left = 205;
+                speed.right = 205;
+            }
         }
 
         //std::cout << "Arduino:  " << speed.left << "," << speed.right << std::endl;
-        uart.send_speed(speed.left,speed.right,speed.status);
+        uart.send_speed(speed.left, speed.right, speed.status);
         uart.receive_distance();
         //std::cout << "Front_distatce:  " << uart.front_distance << std::endl;
-	if (speed.status == 1){
-	    std::cout << "black_box: "<< uart.black_box << std::endl;
+        if (speed.status == 1) {
+            std::cout << "black_box: " << uart.black_box << std::endl;
             add_to_file(uart.black_box);
             //uart.black_box = 0;
         }
-       //std::cout << uart.front_distance << std::endl;
+        //std::cout << uart.front_distance << std::endl;
         usleep(10000);
-    }     
+    }
 }
 
 void timer_error()
@@ -160,14 +162,14 @@ void timer_error()
 }
 
 
-int main() 
+int main()
 {
     std::thread th1(receive_speed);
-	std::thread th2(transmit_video);
+    std::thread th2(transmit_video);
     std::thread th3(transmit_speed_to_arduino);
     std::thread th4(timer_error);
-	th1.join();
-	th2.join();
+    th1.join();
+    th2.join();
     th3.join();
     th4.join();
 }

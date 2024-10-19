@@ -16,7 +16,7 @@ public:
     orange_bot_udp_server(int client_p, int server_p, std::string clientip);
     ~orange_bot_udp_server();
     int create_server_socket();
-    int transmit_speed_to_client(int left, int right, int status);
+    int transmit_speed_to_client(int left, int right, int status, int IMG_WIDTH, int IMG_HEIGHT);
     void transmit_frame_to_client(cv::Mat frame);
     int set_client_address();
 };
