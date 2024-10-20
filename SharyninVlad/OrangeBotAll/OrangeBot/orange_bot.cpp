@@ -48,7 +48,7 @@ void transmit_video()
     server_v.create_server_socket();
     server_v.set_client_address();
 
-    orange_bot_camera cam(IMG_WIDHT, IMG_HEIGHT);
+    orange_bot_camera cam(IMG_WIDTH, IMG_HEIGHT);
     cam.camera_connect();
 
     old_img_width = IMG_WIDTH;
