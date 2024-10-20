@@ -35,7 +35,7 @@ int orange_bot_udp_client::create_client_socket()
     return 0;
 }
 
-int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right_speed, int* status_speed, int* IMG_WIDTH, int* ING_HEIGHT)
+int orange_bot_udp_client::receive_speed_from_server(int* left_speed, int* right_speed, int* status_speed, int* IMG_WIDTH_SIZE, int* IMG_HEIGHT_SIZE)
 {
     int left, right, status, IMG_WIDTH, IMG_HEIGHT;
     char comma1, comma2, comma3, comma4;
