@@ -183,7 +183,7 @@ void key_detect()
 				}
 				else
 				{
-					IMG_HEIGHT = 12O;
+					IMG_HEIGHT = 120;
 					IMG_WIDTH = 160;
 				}
 			}
