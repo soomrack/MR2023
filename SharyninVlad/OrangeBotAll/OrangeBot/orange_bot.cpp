@@ -40,6 +40,9 @@ void receive_speed()
 
 void transmit_video()
 {
+    int old_img_width;
+    int old_img_height;
+
     orange_bot_udp_server server_v(8091, 8092, "192.168.0.100"); //0.12
 
     server_v.create_server_socket();
@@ -48,7 +51,14 @@ void transmit_video()
     orange_bot_camera cam(IMG_WIDHT, IMG_HEIGHT);
     cam.camera_connect();
 
+    old_img_width = IMG_WIDTH;
+    old_img_height = IMG_HEIGHT;
+
     while (true) {
+        if (IMG_HEIGHT != old_img_height or IMG_WIDTH != old_img_width){
+            transmit_video();
+        }
+        
         cam.get_frame();
         cv::flip(cam.frame, cam.frame, 0);
         cv::flip(cam.frame, cam.frame, 1);
