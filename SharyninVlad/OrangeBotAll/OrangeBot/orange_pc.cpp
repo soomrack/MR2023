@@ -16,6 +16,7 @@ int quality = 2;
 cv::VideoWriter video_writer;
 bool is_recording = false;
 
+orange_bot_camera cam(IMG_WIDTH, IMG_HEIGHT);
 
 class keyboard keyboard;
 
@@ -157,32 +158,28 @@ void key_detect()
 		case 116: //t - Сохранение телеметрии в файл
 			save_telemetry_to_file();
 			break;
-		case xxx:
+		case 328:
 			if (quality < 3) 
 			{
-				quality += 1
-				if (quality = 2) 
-				{
+				quality += 1;
+				if (quality == 2) {
 					IMG_HEIGHT = 240;
 					IMG_WIDTH = 320;
 				}
-				else 
-				{
+				else {
 					IMG_HEIGHT = 480;
-					IMG_WITDH = 640;
+					IMG_WIDTH = 640;
 				}
 			}
-		case yyy:
+		case 336:
 			if (quality < 1)
 			{
-				quality -= 1
-				if (quality = 2)
-				{
+				quality -= 1;
+				if (quality == 2) {
 					IMG_HEIGHT = 240;
 					IMG_WIDTH = 320;
 				}
-				else
-				{
+				else {
 					IMG_HEIGHT = 120;
 					IMG_WIDTH = 160;
 				}
@@ -219,7 +216,7 @@ void transmit_speed()
 void receive_video()
 {
 	orange_bot_udp_client client_v(8091);
-	orange_bot_camera cam(IMG_WIDTH, IMG_HEIGHT);
+
 
 	client_v.create_client_socket();
 
@@ -240,7 +237,7 @@ void receive_video()
 
 
 int main() {
-	std::thread th1(key_detect, std::ref(cam));
+	std::thread th1(key_detect);
 	std::thread th2(transmit_speed);
 	std::thread th3(receive_video);
 	
