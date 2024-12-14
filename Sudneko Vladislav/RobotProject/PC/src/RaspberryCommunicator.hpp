@@ -35,9 +35,9 @@ public:
             auto json_data = nlohmann::json::parse(sensors_response);
 
             std::stringstream text;
-            text << "forward rangefinder = " << json_data["forward_rangefinder"].get<int>() 
-                << ", left rangefinder = " << json_data["left_rangefinder"].get<int>() 
-                << ", ping = " << pingService.getPingTime();
+            text << "forward rangefinder = " << json_data["forward_rangefinder"].get<int>()
+                 << ", humidity sensor = " << json_data["left_rangefinder"].get<int>();
+                // << ", ping = " << pingService.getPingTime();
 
             return text.str();
         } catch (const nlohmann::json::exception& e) {

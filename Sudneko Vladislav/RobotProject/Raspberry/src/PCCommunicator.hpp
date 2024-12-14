@@ -12,7 +12,7 @@
 
 class PCCommunicator {
     float front_distance_sensor = -1;
-    float left_distance_sensor  = -1;
+    float sensor  = -1;
     int move_command = -1;
     int connection_error_code = 400;
     TimeCounter counter;
@@ -23,10 +23,10 @@ class PCCommunicator {
     bool connection_lost = false;
     VideoCaptureHandler videoHandler;
 
-    void setSensorsData(float frontSensor, float leftSensor) {
-        if (frontSensor >= 0 && leftSensor >= 0) {
+    void setSensorsData(float frontSensor, float someSensor) {
+        if (frontSensor >= 0 && someSensor >= 0) {
             front_distance_sensor = frontSensor;
-            left_distance_sensor  = leftSensor;
+            sensor = someSensor;
         }
     }
 
@@ -83,7 +83,7 @@ public:
 
     void set_sensor_data(int forward, int left) {
         front_distance_sensor = forward;
-        left_distance_sensor  = left;
+        sensor  = left;
     }
 
     int get_command() {
@@ -121,7 +121,7 @@ private:
         ([this]() {
             crow::json::wvalue sensors;
             sensors["forward_rangefinder"] = front_distance_sensor;
-            sensors["left_rangefinder"] = left_distance_sensor;
+            sensors["sensor"] = sensor;
             return sensors;
         });
 

@@ -95,6 +95,7 @@ private:
     void parseAndStoreData(const std::string& data) {
         // Example input: "Arduino: 2;45"
         if (data.find("Arduino: ") == 0) {
+            std::cout << "Get data from Arduino: " << data << std::endl;
             std::stringstream ss(data.substr(9));  // Skip "Arduino: "
             int values[2];
             char delimiter;

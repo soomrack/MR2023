@@ -46,7 +46,15 @@ void send_heartbeat(RobotController &robot, std::atomic<bool> &running) {
 }
 
 int main(int argc, char *argv[]) {
-    RobotController robot = RobotController("http://192.168.176.84:5000");
+    if (argc < 2) {
+        std::cerr << "Использование: " << argv[0] << " <IP-адрес>" << std::endl;
+        return 1;
+    }
+
+    std::string ip = argv[1];
+    std::string url = "http://" + ip + ":5000";
+
+    RobotController robot(url);
 
     gst_init(&argc, &argv);
 
