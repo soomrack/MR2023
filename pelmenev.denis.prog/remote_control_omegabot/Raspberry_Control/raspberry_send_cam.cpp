@@ -1,45 +1,59 @@
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iostream>
-#include <conio.h>  // Для работы с функцией _kbhit() и _getch()
 #include <thread>
 #include <vector>
-#include <opencv2/opencv.hpp>  // OpenCV для отображения видео
+#include <opencv2/opencv.hpp>
+#include <fstream>
+#include <algorithm>
+#include <cctype>
+#include <atomic>
+#include <csignal>
 
 #pragma comment(lib, "ws2_32.lib")  // Подключение библиотеки Winsock
 
-#define SERVER_IP "192.168.110.232"  // IP адрес Raspberry
-#define SERVER_PORT 12345         // Порт для передачи команд
-#define VIDEO_PORT 12346          // Порт для приема видеопотока
+#define SERVER_IP "192.168.110.232" // IP адрес Raspberry
+#define SERVER_PORT 12345           // Порт для передачи команд
+#define VIDEO_PORT  12346           // Порт для приёма видеопотока
+#define LOGS_PORT   12347           // Порт для приёма логов
 
-// Функция для приема и отображения видеопотока
+std::atomic<bool> running_logs(true);
+std::atomic<bool> running(true);
+
+void signalHandler(int signum) {
+    std::cout << "Signal " << signum << " received, stopping program..." << std::endl;
+    running = false;
+    running_logs = false;
+}
+
 void receive_video_stream() {
-    // Строка пайплайна GStreamer для OpenCV
     std::string gst_pipeline =
         "udpsrc port=" + std::to_string(VIDEO_PORT) + " ! "
         "application/x-rtp, encoding-name=H264 ! "
         "rtph264depay ! "
         "h264parse ! avdec_h264 ! videoconvert ! appsink";
 
-    // Открываем видеопоток через OpenCV
     cv::VideoCapture cap(gst_pipeline, cv::CAP_GSTREAMER);
     if (!cap.isOpened()) {
-        std::cerr << "Не удалось открыть видеопоток через GStreamer" << std::endl;
+        std::cerr << "Error opening video stream with GStreamer" << std::endl;
         return;
     }
 
     cv::Mat frame, rotatedFrame;
-    while (true) {
-        cap >> frame;  // Получаем кадр
+    while (running) {
+        cap >> frame;
+        if (!running || frame.empty()) break;
+
         if (frame.empty()) {
-            std::cerr << "Пустой кадр. Завершение..." << std::endl;
+            std::cerr << "Empty frame." << std::endl;
             break;
         }
 
         cv::rotate(frame, rotatedFrame, cv::ROTATE_180);
-
-        cv::imshow("Video Stream", rotatedFrame);  // Отображаем кадр
-        if (cv::waitKey(1) == 27) {  // Нажмите Esc для выхода
+        cv::imshow("Video Stream", rotatedFrame);  
+        if (cv::waitKey(1) == 27) {  
             break;
         }
     }
@@ -48,7 +62,124 @@ void receive_video_stream() {
     cv::destroyAllWindows();
 }
 
+void receive_logs() {
+    SOCKET log_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (log_sock == INVALID_SOCKET) {
+        std::cerr << "Error creating socket for logs." << std::endl;
+        return;
+    }
+
+    u_long mode = 1; // 1 to enable non-blocking mode
+    if (ioctlsocket(log_sock, FIONBIO, &mode) != 0) {
+        std::cerr << "Failed to set socket to non-blocking mode. Error: " << WSAGetLastError() << std::endl;
+        closesocket(log_sock);
+        return;
+    }
+
+    sockaddr_in localAddr;
+    localAddr.sin_family = AF_INET;
+    localAddr.sin_port = htons(LOGS_PORT);
+    localAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if (bind(log_sock, (sockaddr*)&localAddr, sizeof(localAddr)) < 0) {
+        std::cerr << "Error binding log socket." << std::endl;
+        closesocket(log_sock);
+        return;
+    }
+
+    std::ofstream logFile("logs.txt", std::ios::trunc);
+    if (!logFile.is_open()) {
+        std::cerr << "Failed to open log file." << std::endl;
+        closesocket(log_sock);
+        return;
+    }
+
+    std::cout << "Log receiver started. Saving logs to 'logs.txt'." << std::endl;
+
+    char buffer[256];
+    sockaddr_in clientAddr;
+    int clientAddrLen = sizeof(clientAddr);
+
+    while (running_logs && running) {  // Проверяем флаг завершения
+        int received = recvfrom(log_sock, buffer, sizeof(buffer) - 1, 0, (sockaddr*)&clientAddr, &clientAddrLen);
+        if (received > 0) {
+            buffer[received] = '\0';
+            std::cout << "Log: " << buffer << std::endl;
+            logFile << buffer << std::endl;
+            logFile.flush();
+        }
+    }
+
+    logFile.close();
+    closesocket(log_sock);
+}
+
+std::string trim(const std::string& str) {
+    auto start = str.begin();
+    while (start != str.end() && std::isspace(*start)) {
+        ++start;
+    }
+
+    auto end = str.end();
+    do {
+        --end;
+    } while (std::distance(start, end) > 0 && std::isspace(*end));
+
+    return std::string(start, end + 1);
+}
+
+void clean_logs() {
+    std::ifstream inputFile("logs.txt");
+    if (!inputFile.is_open()) {
+        std::cerr << "Failed to open logs.txt for reading." << std::endl;
+        return;
+    }
+
+    std::vector<std::string> lines;
+    std::string line;
+
+    // Читаем строки, удаляем пробелы и пропускаем пустые строки
+    while (std::getline(inputFile, line)) {
+        std::string trimmedLine = trim(line);
+        if (!trimmedLine.empty()) {
+            lines.push_back(trimmedLine);
+        }
+    }
+
+    inputFile.close();
+
+    // Обрабатываем строки, объединяя те, где отсутствует символ "%"
+    std::vector<std::string> cleanedLines;
+    for (size_t i = 0; i < lines.size(); ++i) {
+        std::string currentLine = lines[i];
+
+        // Пока строка не заканчивается на "%" и есть следующая строка
+        while (!currentLine.empty() && currentLine.back() != '%' && i + 1 < lines.size()) {
+            currentLine += " " + lines[++i]; // Объединяем с следующей строкой
+        }
+
+        cleanedLines.push_back(currentLine);
+    }
+
+    // Перезаписываем файл
+    std::ofstream outputFile("logs.txt", std::ios::trunc);
+    if (!outputFile.is_open()) {
+        std::cerr << "Failed to open logs.txt for writing." << std::endl;
+        return;
+    }
+
+    for (const auto& validLine : cleanedLines) {
+        outputFile << validLine << std::endl;
+    }
+
+    outputFile.close();
+    std::cout << "Logs cleaned successfully." << std::endl;
+}
+
 int main() {
+    // Устанавливаем обработчик сигнала
+    signal(SIGINT, signalHandler);
+
     // Инициализация Winsock
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -64,44 +195,91 @@ int main() {
         return -1;
     }
 
-    // Настройка адреса сервера для отправки команд
     sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(SERVER_PORT);
     inet_pton(AF_INET, SERVER_IP, &serverAddr.sin_addr);
 
-    // Запуск потока для приема видеопотока
-    std::thread videoThread(receive_video_stream);
-
-    // Основной цикл обработки клавиш
-    while (true) {
-        if (_kbhit()) {  // Проверяем, была ли нажата клавиша
-            char key = _getch();  // Считываем клавишу
-
-            char command = 0;  // Команда, которая будет отправлена
-            switch (key) {
-                case 'w': command = '1'; break;
-                case 's': command = '2'; break;
-                case 'd': command = '3'; break;
-                case 'a': command = '4'; break;
-                case 72: command = '5'; break;  // Вверх
-                case 80: command = '6'; break;  // Вниз
-                case 75: command = '7'; break;  // Влево
-                case 77: command = '8'; break;  // Вправо
-            }
-
-            if (command != 0) {
-                // Отправляем команду на сервер
-                sendto(command_sock, &command, sizeof(command), 0, (sockaddr*)&serverAddr, sizeof(serverAddr));
-            }
-        }
+    // Инициализация SDL
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
+        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
+        return 1;
     }
 
-    // Завершаем поток видеопотока
-    videoThread.join();
+    SDL_Window* window = SDL_CreateWindow("Robot Controller", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
+    if (!window) {
+        std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return 1;
+    }
 
-    // Закрываем сокет и освобождаем ресурсы
+    std::thread videoThread(receive_video_stream);
+    std::thread logThread(receive_logs);
+
+    SDL_Event e;
+
+    while (running) {
+        while (SDL_PollEvent(&e) != 0) {  // Обрабатываем события SDL
+            if (e.type == SDL_QUIT) {  // Закрытие окна
+                running = false;
+                running_logs = false;
+            } else if (e.type == SDL_KEYDOWN) {  // Нажатие клавиши
+                char command = 0;
+
+                switch (e.key.keysym.sym) {
+                    case SDLK_w:      command = '1'; break;  // Вперёд
+                    case SDLK_s:      command = '2'; break;  // Назад
+                    case SDLK_d:      command = '3'; break;  // Вправо
+                    case SDLK_a:      command = '4'; break;  // Влево
+                    case SDLK_SPACE:  command = 's'; break;  // Стоп
+                    case SDLK_1:      command = 'f'; break;  // Дополнительная команда
+                    case SDLK_UP:     command = '5'; break;  // Вверх
+                    case SDLK_DOWN:   command = '6'; break;  // Вниз
+                    case SDLK_LEFT:   command = '7'; break;  // Поворот влево
+                    case SDLK_RIGHT:  command = '8'; break;  // Поворот вправо
+                    case SDLK_ESCAPE: running = false;
+                                      running_logs = false; break;  // Завершение программы
+                    default: break;
+                }
+
+                if (command != 0) {
+                    sendto(command_sock, &command, sizeof(command), 0, (sockaddr*)&serverAddr, sizeof(serverAddr));
+                }
+            } else if (e.type == SDL_KEYUP) {
+                char command = 's';
+                sendto(command_sock, &command, sizeof(command), 0, (sockaddr*)&serverAddr, sizeof(serverAddr));
+            }
+
+            if (!running) {
+                std::cout << "Quiting process..." << std::endl;
+                break;
+            }
+        }
+
+        // Видеопоток и логи продолжают работать параллельно
+        SDL_Delay(10);  // Небольшая задержка для снижения нагрузки на CPU
+    }
+
+    running = false;
+    running_logs = false;
+
+    if (videoThread.joinable()) {
+        videoThread.join();
+        std::cout << "Video thread terminated." << std::endl;
+    }
+
+    if (logThread.joinable()) {
+        logThread.join();
+        std::cout << "Log thread terminated." << std::endl;
+    }
+
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
     closesocket(command_sock);
     WSACleanup();
+
+    clean_logs();
+
     return 0;
 }
