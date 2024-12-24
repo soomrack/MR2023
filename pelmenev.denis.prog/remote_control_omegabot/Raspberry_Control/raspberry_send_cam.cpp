@@ -12,20 +12,50 @@
 #include <atomic>
 #include <csignal>
 
-#pragma comment(lib, "ws2_32.lib")  // Подключение библиотеки Winsock
+#pragma comment(lib, "ws2_32.lib")      // Подключение библиотеки Winsock
 
-#define SERVER_IP "192.168.110.232" // IP адрес Raspberry
-#define SERVER_PORT 12345           // Порт для передачи команд
-#define VIDEO_PORT  12346           // Порт для приёма видеопотока
-#define LOGS_PORT   12347           // Порт для приёма логов
+// #define SERVER_IP "192.168.110.232"     // IP адрес Raspberry
+#define SERVER_IP "192.168.1.46"
+#define SERVER_PORT     12345           // Порт для передачи команд
+#define VIDEO_PORT      12346           // Порт для приёма видеопотока
+#define LOGS_PORT       12347           // Порт для приёма логов
+#define HEARTBEAT_PORT  12348           // Порт для отслеживания соединения
 
 std::atomic<bool> running_logs(true);
 std::atomic<bool> running(true);
+std::atomic<bool> new_log_file(true);
+std::atomic<bool> do_not_stop(false);
 
 void signalHandler(int signum) {
     std::cout << "Signal " << signum << " received, stopping program..." << std::endl;
     running = false;
     running_logs = false;
+}
+
+void send_heartbeat() {
+    SOCKET heartbeat_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (heartbeat_sock == INVALID_SOCKET) {
+        std::cerr << "Error creating heartbeat socket." << std::endl;
+        return;
+    }
+
+    sockaddr_in heartbeatAddr;
+    heartbeatAddr.sin_family = AF_INET;
+    heartbeatAddr.sin_port = htons(HEARTBEAT_PORT);
+    inet_pton(AF_INET, SERVER_IP, &heartbeatAddr.sin_addr);
+
+    while (running) {
+        const char* heartbeat_msg = "1";
+        int sent = sendto(heartbeat_sock, heartbeat_msg, strlen(heartbeat_msg), 0, (sockaddr*)&heartbeatAddr, sizeof(heartbeatAddr));
+        if (sent < 0) {
+            std::cerr << "Failed to send heartbeat: " << strerror(errno) << std::endl;
+        } /* else {
+            std::cout << "Heartbeat sent." << std::endl;
+        } */
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+    }
+
+    closesocket(heartbeat_sock);
 }
 
 void receive_video_stream() {
@@ -44,7 +74,6 @@ void receive_video_stream() {
     cv::Mat frame, rotatedFrame;
     while (running) {
         cap >> frame;
-        if (!running || frame.empty()) break;
 
         if (frame.empty()) {
             std::cerr << "Empty frame." << std::endl;
@@ -87,7 +116,12 @@ void receive_logs() {
         return;
     }
 
-    std::ofstream logFile("logs.txt", std::ios::trunc);
+    int logging_flag;
+
+    if (new_log_file) logging_flag = std::ios::trunc;
+    else logging_flag = std::ios::app;
+
+    std::ofstream logFile("logs.txt", logging_flag);
     if (!logFile.is_open()) {
         std::cerr << "Failed to open log file." << std::endl;
         closesocket(log_sock);
@@ -158,6 +192,8 @@ void clean_logs() {
             currentLine += " " + lines[++i]; // Объединяем с следующей строкой
         }
 
+        currentLine.pop_back();
+
         cleanedLines.push_back(currentLine);
     }
 
@@ -215,11 +251,13 @@ int main() {
 
     std::thread videoThread(receive_video_stream);
     std::thread logThread(receive_logs);
+    std::thread heartbeatThread(send_heartbeat);
 
     SDL_Event e;
 
     while (running) {
         while (SDL_PollEvent(&e) != 0) {  // Обрабатываем события SDL
+            new_log_file = false;
             if (e.type == SDL_QUIT) {  // Закрытие окна
                 running = false;
                 running_logs = false;
@@ -227,18 +265,23 @@ int main() {
                 char command = 0;
 
                 switch (e.key.keysym.sym) {
-                    case SDLK_w:      command = '1'; break;  // Вперёд
-                    case SDLK_s:      command = '2'; break;  // Назад
-                    case SDLK_d:      command = '3'; break;  // Вправо
-                    case SDLK_a:      command = '4'; break;  // Влево
-                    case SDLK_SPACE:  command = 's'; break;  // Стоп
-                    case SDLK_1:      command = 'f'; break;  // Дополнительная команда
-                    case SDLK_UP:     command = '5'; break;  // Вверх
-                    case SDLK_DOWN:   command = '6'; break;  // Вниз
-                    case SDLK_LEFT:   command = '7'; break;  // Поворот влево
-                    case SDLK_RIGHT:  command = '8'; break;  // Поворот вправо
-                    case SDLK_ESCAPE: running = false;
-                                      running_logs = false; break;  // Завершение программы
+                    case SDLK_w:        command = '1'; break;         // Вперёд
+                    case SDLK_s:        command = '2'; break;         // Назад
+                    case SDLK_d:        command = '3'; break;         // Вправо
+                    case SDLK_a:        command = '4'; break;         // Влево
+                    case SDLK_y:        command = 'y';
+                                        do_not_stop = true; break;    // Обследовать зону без связи
+                    case SDLK_o:        command = 'o';
+                                        do_not_stop = true; break;    // Разворот на месте
+                    case SDLK_SPACE:    command = 's'; break;         // Стоп
+                    case SDLK_1:        command = 'f'; 
+                                        do_not_stop = true; break;    // До препятствия
+                    case SDLK_UP:       command = '5'; break;         // Вверх
+                    case SDLK_DOWN:     command = '6'; break;         // Вниз
+                    case SDLK_LEFT:     command = '7'; break;         // Поворот влево
+                    case SDLK_RIGHT:    command = '8'; break;         // Поворот вправо
+                    case SDLK_ESCAPE:   running = false;
+                                        running_logs = false; break;  // Завершение программы
                     default: break;
                 }
 
@@ -246,6 +289,10 @@ int main() {
                     sendto(command_sock, &command, sizeof(command), 0, (sockaddr*)&serverAddr, sizeof(serverAddr));
                 }
             } else if (e.type == SDL_KEYUP) {
+                if (do_not_stop) {
+                    do_not_stop = false;
+                    continue;
+                }
                 char command = 's';
                 sendto(command_sock, &command, sizeof(command), 0, (sockaddr*)&serverAddr, sizeof(serverAddr));
             }
@@ -254,23 +301,23 @@ int main() {
                 std::cout << "Quiting process..." << std::endl;
                 break;
             }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
 
-        // Видеопоток и логи продолжают работать параллельно
         SDL_Delay(10);  // Небольшая задержка для снижения нагрузки на CPU
     }
-
-    running = false;
-    running_logs = false;
 
     if (videoThread.joinable()) {
         videoThread.join();
         std::cout << "Video thread terminated." << std::endl;
     }
-
     if (logThread.joinable()) {
         logThread.join();
         std::cout << "Log thread terminated." << std::endl;
+    }
+    if (heartbeatThread.joinable()) {
+        heartbeatThread.join();
     }
 
     SDL_DestroyWindow(window);
