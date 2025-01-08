@@ -2,13 +2,15 @@
 
 Driver Wheels(6, 5, 7, 4, A1, A2, 200);  // Инициализация с пинами для моторов
 
-void setup() {
+void setup()
+{
     Serial.begin(9600);
     delay(3000);
     Serial.println("Arduino started. Logging initialized... %");
 }
 
-void loop() {
+void loop()
+{
     char command = Wheels.read_command();
     if (command != '0') { 
         unsigned long currentMillis = millis();
