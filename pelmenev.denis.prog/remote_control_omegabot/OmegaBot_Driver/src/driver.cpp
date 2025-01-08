@@ -179,7 +179,7 @@ void Driver::connection_lost_case()
 
     sound_signal(50);
     sound_signal(100);
-    sound_signal(150);
+    sound_signal(200);
 }
 
 void Driver::turn_on_degree(const int degree)
@@ -273,7 +273,7 @@ void Driver::get_command_wheels(char command)
             set_motors(-speed, speed);  // Поворот влево
             break;
         default:
-            stop_motors();  // Если команда неизвестна, останавливаем моторы
+            stop_motors();
             break;
     }
 }
