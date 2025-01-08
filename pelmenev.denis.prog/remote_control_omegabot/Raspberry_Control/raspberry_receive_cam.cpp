@@ -101,7 +101,8 @@ void monitor_heartbeat()
     close(heartbeat_sock);
 }
 
-void video_stream_sender() {
+void video_stream_sender()
+{
     // Инициализация GStreamer
     gst_init(nullptr, nullptr);
 
@@ -142,7 +143,8 @@ void video_stream_sender() {
     gst_object_unref(pipeline);
 }
 
-void send_logs(int uart, const char* server_ip) {
+void send_logs(int uart, const char* server_ip)
+{
     int log_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (log_sock < 0) {
         std::cerr << "Error binding log socket." << std::endl;
@@ -168,7 +170,8 @@ void send_logs(int uart, const char* server_ip) {
     close(log_sock);
 }
 
-int main() {
+int main()
+{
     // Инициализация pigpio
     if (gpioInitialise() < 0) {
         std::cerr << "Pigpio init error." << std::endl;
