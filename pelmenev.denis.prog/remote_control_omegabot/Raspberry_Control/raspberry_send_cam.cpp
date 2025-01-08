@@ -26,7 +26,7 @@ std::atomic<bool> running(true);
 std::atomic<bool> new_log_file(true);
 std::atomic<bool> do_not_stop(false);
 
-void signalHandler(int signum) {
+void signal_handler(int signum) {
     std::cout << "Signal " << signum << " received, stopping program..." << std::endl;
     running = false;
     running_logs = false;
@@ -39,14 +39,14 @@ void send_heartbeat() {
         return;
     }
 
-    sockaddr_in heartbeatAddr;
-    heartbeatAddr.sin_family = AF_INET;
-    heartbeatAddr.sin_port = htons(HEARTBEAT_PORT);
-    inet_pton(AF_INET, SERVER_IP, &heartbeatAddr.sin_addr);
+    sockaddr_in heartbeat_addr;
+    heartbeat_addr.sin_family = AF_INET;
+    heartbeat_addr.sin_port = htons(HEARTBEAT_PORT);
+    inet_pton(AF_INET, SERVER_IP, &heartbeat_addr.sin_addr);
 
     while (running) {
         const char* heartbeat_msg = "1";
-        int sent = sendto(heartbeat_sock, heartbeat_msg, strlen(heartbeat_msg), 0, (sockaddr*)&heartbeatAddr, sizeof(heartbeatAddr));
+        int sent = sendto(heartbeat_sock, heartbeat_msg, strlen(heartbeat_msg), 0, (sockaddr*)&heartbeat_addr, sizeof(heartbeat_addr));
         if (sent < 0) {
             std::cerr << "Failed to send heartbeat: " << strerror(errno) << std::endl;
         } /* else {
@@ -71,7 +71,7 @@ void receive_video_stream() {
         return;
     }
 
-    cv::Mat frame, rotatedFrame;
+    cv::Mat frame, rotated_frame;
     while (running) {
         cap >> frame;
 
@@ -80,8 +80,8 @@ void receive_video_stream() {
             break;
         }
 
-        cv::rotate(frame, rotatedFrame, cv::ROTATE_180);
-        cv::imshow("Video Stream", rotatedFrame);  
+        cv::rotate(frame, rotated_frame, cv::ROTATE_180);
+        cv::imshow("Video Stream", rotated_frame);  
         if (cv::waitKey(1) == 27) {  
             break;
         }
@@ -105,12 +105,12 @@ void receive_logs() {
         return;
     }
 
-    sockaddr_in localAddr;
-    localAddr.sin_family = AF_INET;
-    localAddr.sin_port = htons(LOGS_PORT);
-    localAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    sockaddr_in local_addr;
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(LOGS_PORT);
+    local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    if (bind(log_sock, (sockaddr*)&localAddr, sizeof(localAddr)) < 0) {
+    if (bind(log_sock, (sockaddr*)&local_addr, sizeof(local_addr)) < 0) {
         std::cerr << "Error binding log socket." << std::endl;
         closesocket(log_sock);
         return;
@@ -121,8 +121,8 @@ void receive_logs() {
     if (new_log_file) logging_flag = std::ios::trunc;
     else logging_flag = std::ios::app;
 
-    std::ofstream logFile("logs.txt", logging_flag);
-    if (!logFile.is_open()) {
+    std::ofstream log_file("logs.txt", logging_flag);
+    if (!log_file.is_open()) {
         std::cerr << "Failed to open log file." << std::endl;
         closesocket(log_sock);
         return;
@@ -131,20 +131,20 @@ void receive_logs() {
     std::cout << "Log receiver started. Saving logs to 'logs.txt'." << std::endl;
 
     char buffer[256];
-    sockaddr_in clientAddr;
-    int clientAddrLen = sizeof(clientAddr);
+    sockaddr_in client_addr;
+    int client_addr_len = sizeof(client_addr);
 
     while (running_logs && running) {  // Проверяем флаг завершения
-        int received = recvfrom(log_sock, buffer, sizeof(buffer) - 1, 0, (sockaddr*)&clientAddr, &clientAddrLen);
+        int received = recvfrom(log_sock, buffer, sizeof(buffer) - 1, 0, (sockaddr*)&client_addr, &client_addr_len);
         if (received > 0) {
             buffer[received] = '\0';
             std::cout << "Log: " << buffer << std::endl;
-            logFile << buffer << std::endl;
-            logFile.flush();
+            log_file << buffer << std::endl;
+            log_file.flush();
         }
     }
 
-    logFile.close();
+    log_file.close();
     closesocket(log_sock);
 }
 
@@ -163,8 +163,8 @@ std::string trim(const std::string& str) {
 }
 
 void clean_logs() {
-    std::ifstream inputFile("logs.txt");
-    if (!inputFile.is_open()) {
+    std::ifstream input_file("logs.txt");
+    if (!input_file.is_open()) {
         std::cerr << "Failed to open logs.txt for reading." << std::endl;
         return;
     }
@@ -173,52 +173,52 @@ void clean_logs() {
     std::string line;
 
     // Читаем строки, удаляем пробелы и пропускаем пустые строки
-    while (std::getline(inputFile, line)) {
-        std::string trimmedLine = trim(line);
-        if (!trimmedLine.empty()) {
-            lines.push_back(trimmedLine);
+    while (std::getline(input_file, line)) {
+        std::string trimmed_line = trim(line);
+        if (!trimmed_line.empty()) {
+            lines.push_back(trimmed_line);
         }
     }
 
-    inputFile.close();
+    input_file.close();
 
     // Обрабатываем строки, объединяя те, где отсутствует символ "%"
-    std::vector<std::string> cleanedLines;
+    std::vector<std::string> cleaned_lines;
     for (size_t i = 0; i < lines.size(); ++i) {
-        std::string currentLine = lines[i];
+        std::string current_line = lines[i];
 
         // Пока строка не заканчивается на "%" и есть следующая строка
-        while (!currentLine.empty() && currentLine.back() != '%' && i + 1 < lines.size()) {
-            currentLine += " " + lines[++i]; // Объединяем с следующей строкой
+        while (!current_line.empty() && current_line.back() != '%' && i + 1 < lines.size()) {
+            current_line += " " + lines[++i]; // Объединяем с следующей строкой
         }
 
-        currentLine.pop_back();
+        current_line.pop_back();
 
-        cleanedLines.push_back(currentLine);
+        cleaned_lines.push_back(current_line);
     }
 
     // Перезаписываем файл
-    std::ofstream outputFile("logs.txt", std::ios::trunc);
-    if (!outputFile.is_open()) {
+    std::ofstream output_file("logs.txt", std::ios::trunc);
+    if (!output_file.is_open()) {
         std::cerr << "Failed to open logs.txt for writing." << std::endl;
         return;
     }
 
-    for (const auto& validLine : cleanedLines) {
-        outputFile << validLine << std::endl;
+    for (const auto& valid_line : cleaned_lines) {
+        output_file << valid_line << std::endl;
     }
 
-    outputFile.close();
+    output_file.close();
     std::cout << "Logs cleaned successfully." << std::endl;
 }
 
 int main() {
     // Устанавливаем обработчик сигнала
-    signal(SIGINT, signalHandler);
+    signal(SIGINT, signal_handler);
 
     // Инициализация Winsock
-    WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+    WSADATA wsa_data;
+    if (WSAStartup(MAKEWORD(2, 2), &wsa_data) != 0) {
         std::cerr << "Winsock initialization error." << std::endl;
         return -1;
     }
@@ -231,10 +231,10 @@ int main() {
         return -1;
     }
 
-    sockaddr_in serverAddr;
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(SERVER_PORT);
-    inet_pton(AF_INET, SERVER_IP, &serverAddr.sin_addr);
+    sockaddr_in server_addr;
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(SERVER_PORT);
+    inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr);
 
     // Инициализация SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
@@ -286,7 +286,7 @@ int main() {
                 }
 
                 if (command != 0) {
-                    sendto(command_sock, &command, sizeof(command), 0, (sockaddr*)&serverAddr, sizeof(serverAddr));
+                    sendto(command_sock, &command, sizeof(command), 0, (sockaddr*)&server_addr, sizeof(server_addr));
                 }
             } else if (e.type == SDL_KEYUP) {
                 if (do_not_stop) {
@@ -294,7 +294,7 @@ int main() {
                     continue;
                 }
                 char command = 's';
-                sendto(command_sock, &command, sizeof(command), 0, (sockaddr*)&serverAddr, sizeof(serverAddr));
+                sendto(command_sock, &command, sizeof(command), 0, (sockaddr*)&server_addr, sizeof(server_addr));
             }
 
             if (!running) {
