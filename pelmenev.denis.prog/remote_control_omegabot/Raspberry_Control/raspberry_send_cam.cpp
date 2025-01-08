@@ -26,13 +26,15 @@ std::atomic<bool> running(true);
 std::atomic<bool> new_log_file(true);
 std::atomic<bool> do_not_stop(false);
 
-void signal_handler(int signum) {
+void signal_handler(int signum)
+{
     std::cout << "Signal " << signum << " received, stopping program..." << std::endl;
     running = false;
     running_logs = false;
 }
 
-void send_heartbeat() {
+void send_heartbeat()
+{
     SOCKET heartbeat_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (heartbeat_sock == INVALID_SOCKET) {
         std::cerr << "Error creating heartbeat socket." << std::endl;
@@ -58,7 +60,8 @@ void send_heartbeat() {
     closesocket(heartbeat_sock);
 }
 
-void receive_video_stream() {
+void receive_video_stream()
+{
     std::string gst_pipeline =
         "udpsrc port=" + std::to_string(VIDEO_PORT) + " ! "
         "application/x-rtp, encoding-name=H264 ! "
@@ -91,7 +94,8 @@ void receive_video_stream() {
     cv::destroyAllWindows();
 }
 
-void receive_logs() {
+void receive_logs()
+{
     SOCKET log_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (log_sock == INVALID_SOCKET) {
         std::cerr << "Error creating socket for logs." << std::endl;
@@ -148,7 +152,8 @@ void receive_logs() {
     closesocket(log_sock);
 }
 
-std::string trim(const std::string& str) {
+std::string trim(const std::string& str)
+{
     auto start = str.begin();
     while (start != str.end() && std::isspace(*start)) {
         ++start;
@@ -173,10 +178,16 @@ void clean_logs() {
     std::string line;
 
     // Читаем строки, удаляем пробелы и пропускаем пустые строки
-    while (std::getline(input_file, line)) {
+    /* while (std::getline(input_file, line)) {
         std::string trimmed_line = trim(line);
         if (!trimmed_line.empty()) {
             lines.push_back(trimmed_line);
+        }
+    } */
+
+    while (std::getline(input_file, line)) {
+        if (!line.empty()) {
+            lines.push_back(line);
         }
     }
 
@@ -212,7 +223,8 @@ void clean_logs() {
     std::cout << "Logs cleaned successfully." << std::endl;
 }
 
-int main() {
+int main()
+{
     // Устанавливаем обработчик сигнала
     signal(SIGINT, signal_handler);
 
