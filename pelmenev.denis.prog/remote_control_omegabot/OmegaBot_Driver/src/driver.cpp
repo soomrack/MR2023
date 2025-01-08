@@ -127,13 +127,15 @@ void Driver::stop_motors()
     set_motors(0, 0);
 }
 
-double Driver::get_temperature() {
+double Driver::get_temperature()
+{
     float temp = dht_sensor.readTemperature();
     if (isnan(temp)) return -1;
     return temp;
 }
 
-double Driver::get_humidity() {
+double Driver::get_humidity()
+{
     float hum = dht_sensor.readHumidity();
     if (isnan(hum)) return -1;
     return hum;
