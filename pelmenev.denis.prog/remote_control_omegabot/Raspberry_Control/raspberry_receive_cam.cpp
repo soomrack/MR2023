@@ -30,12 +30,12 @@ void monitor_heartbeat()
         return;
     }
 
-    sockaddr_in localAddr{};
-    localAddr.sin_family = AF_INET;
-    localAddr.sin_port = htons(HEARTBEAT_PORT);
-    localAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    sockaddr_in local_addr{};
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(HEARTBEAT_PORT);
+    local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    if (bind(heartbeat_sock, (sockaddr*)&localAddr, sizeof(localAddr)) < 0) {
+    if (bind(heartbeat_sock, (sockaddr*)&local_addr, sizeof(local_addr)) < 0) {
         std::cerr << "Error binding heartbeat socket." << std::endl;
         close(heartbeat_sock);
         return;
@@ -55,24 +55,24 @@ void monitor_heartbeat()
     }
 
     char buffer[2] = {0};
-    sockaddr_in clientAddr{};
-    socklen_t clientAddrLen = sizeof(clientAddr);
+    sockaddr_in client_addr{};
+    socklen_t client_addr_len = sizeof(client_addr);
 
-    auto lastHeartbeat = std::chrono::steady_clock::now();
-    bool wasConnectionLost = false;
+    auto last_heartbeat = std::chrono::steady_clock::now();
+    bool was_connection_lost = false;
 
     std::cout << "Entering heartbeat loop..." << std::endl;
 
     while (heartbeat_running) {
-        int received = recvfrom(heartbeat_sock, buffer, sizeof(buffer) - 1, 0, (sockaddr*)&clientAddr, &clientAddrLen);
+        int received = recvfrom(heartbeat_sock, buffer, sizeof(buffer) - 1, 0, (sockaddr*)&client_addr, &client_addr_len);
         if (received > 0) {
             buffer[received] = '\0';
             if (buffer[0] == '1') {
                 // std::cout << "Heartbeat received." << std::endl;
-                lastHeartbeat = std::chrono::steady_clock::now();
-                if (wasConnectionLost) {
+                last_heartbeat = std::chrono::steady_clock::now();
+                if (was_connection_lost) {
                     std::cout << "Connection restored." << std::endl;
-                    wasConnectionLost = false;
+                    was_connection_lost = false;
                     connection_lost = false;
                     connection_restored = true;
                 }
@@ -84,12 +84,12 @@ void monitor_heartbeat()
         }
 
         auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastHeartbeat).count();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - last_heartbeat).count();
 
         if (elapsed >= CRITICAL_TIMEOUT.count()) {
-            if (!wasConnectionLost) {
+            if (!was_connection_lost) {
                 std::cout << "Connection lost detected." << std::endl;
-                wasConnectionLost = true;
+                was_connection_lost = true;
                 connection_lost = true;
             }
         }
@@ -101,7 +101,7 @@ void monitor_heartbeat()
     close(heartbeat_sock);
 }
 
-void videoStreamSender() {
+void video_stream_sender() {
     // Инициализация GStreamer
     gst_init(nullptr, nullptr);
 
@@ -142,24 +142,24 @@ void videoStreamSender() {
     gst_object_unref(pipeline);
 }
 
-void sendLogs(int uart, const char* server_ip) {
+void send_logs(int uart, const char* server_ip) {
     int log_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (log_sock < 0) {
         std::cerr << "Error binding log socket." << std::endl;
         return;
     }
 
-    sockaddr_in logAddr;
-    logAddr.sin_family = AF_INET;
-    logAddr.sin_port = htons(LOGS_PORT);
-    inet_pton(AF_INET, server_ip, &logAddr.sin_addr);
+    sockaddr_in log_addr;
+    log_addr.sin_family = AF_INET;
+    log_addr.sin_port = htons(LOGS_PORT);
+    inet_pton(AF_INET, server_ip, &log_addr.sin_addr);
 
     while (logs_running) {
         char uart_buffer[256] = {0};
-        int bytesRead = serRead(uart, uart_buffer, sizeof(uart_buffer) - 1); // Чтение строки от Arduino
-        if (bytesRead > 0) {
-            uart_buffer[bytesRead] = '\0'; // Добавляем терминальный символ
-            sendto(log_sock, uart_buffer, strlen(uart_buffer), 0, (sockaddr*)&logAddr, sizeof(logAddr));
+        int bytes_read = serRead(uart, uart_buffer, sizeof(uart_buffer) - 1); // Чтение строки от Arduino
+        if (bytes_read > 0) {
+            uart_buffer[bytes_read] = '\0'; // Добавляем терминальный символ
+            sendto(log_sock, uart_buffer, strlen(uart_buffer), 0, (sockaddr*)&log_addr, sizeof(log_addr));
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Задержка для снижения нагрузки (100 мс)
@@ -192,11 +192,11 @@ int main() {
         return -1;
     }
 
-    sockaddr_in localAddr;
-    localAddr.sin_family = AF_INET;
-    localAddr.sin_port = htons(SERVER_PORT);
-    localAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    if (bind(sock, (sockaddr*)&localAddr, sizeof(localAddr)) < 0) {
+    sockaddr_in local_addr;
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = htons(SERVER_PORT);
+    local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    if (bind(sock, (sockaddr*)&local_addr, sizeof(local_addr)) < 0) {
         std::cerr << "Error binding socket." << std::endl;
         close(sock);
         serClose(uart);
@@ -220,8 +220,8 @@ int main() {
     }
 
     // Запуск потоков
-    std::thread logThread(sendLogs, uart, SERVER_IP);               // Поток для отправки логов
-    std::thread videoThread(videoStreamSender);                     // Поток для видеопотока
+    std::thread logThread(send_logs, uart, SERVER_IP);               // Поток для отправки логов
+    std::thread videoThread(video_stream_sender);                     // Поток для видеопотока
     std::thread heartbeatThread(monitor_heartbeat);                 // Поток для мониторинга сердцебиения
 
     // Основной цикл: приём команд и управление UART
@@ -240,10 +240,10 @@ int main() {
         }
 
         char buffer[1];
-        sockaddr_in clientAddr;
-        socklen_t addrLen = sizeof(clientAddr);
+        sockaddr_in client_addr;
+        socklen_t addr_len = sizeof(client_addr);
 
-        int received = recvfrom(sock, buffer, sizeof(buffer), 0, (sockaddr*)&clientAddr, &addrLen);
+        int received = recvfrom(sock, buffer, sizeof(buffer), 0, (sockaddr*)&client_addr, &addr_len);
         if (received > 0) {
             std::cout << "Received command: " << buffer[0] << std::endl;
             serWriteByte(uart, buffer[0]);
