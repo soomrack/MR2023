@@ -132,7 +132,7 @@ void video_stream_sender()
         return;
     }
 
-    // Ожидание завершения (или можно сделать основной цикл)
+    // Ожидание завершения
     std::cout << "Video stream is sending. Press Ctrl+C to exit." << std::endl;
     GstBus* bus = gst_element_get_bus(pipeline);
     gst_bus_timed_pop_filtered(bus, GST_CLOCK_TIME_NONE, static_cast<GstMessageType>(GST_MESSAGE_ERROR | GST_MESSAGE_EOS));
