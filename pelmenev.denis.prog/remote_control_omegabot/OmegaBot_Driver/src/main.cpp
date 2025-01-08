@@ -5,7 +5,7 @@ Driver Wheels(6, 5, 7, 4, A1, A2, 200);  // Инициализация с пин
 void setup() {
     Serial.begin(9600);
     delay(3000);
-    Serial.println("Arduino started. Logging initialized...");
+    Serial.println("Arduino started. Logging initialized... %");
 }
 
 void loop() {
