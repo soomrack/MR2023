@@ -2,7 +2,8 @@
 
 #define CRITICAL_DISTANCE       30
 
-#define SENSOR_DIST             A3
+#define SENSOR_DIST_FRONT       A3
+#define SENSOR_DIST_SIDE        A0
 #define SENSOR_LIGHT            A1
 #define AUDIO_PIN               11
 #define LAMP_PIN                10
@@ -22,7 +23,8 @@ Driver::Driver(int left_pin, int right_pin, int left_dir_pin, int right_dir_pin,
     pinMode(pin_motor_right, OUTPUT);
     pinMode(pin_motor_dir_left, OUTPUT);
     pinMode(pin_motor_dir_right, OUTPUT);
-    pinMode(SENSOR_DIST, INPUT);
+    pinMode(SENSOR_DIST_FRONT, INPUT);
+    pinMode(SENSOR_DIST_SIDE, INPUT);
     pinMode(AUDIO_PIN, OUTPUT);
     pinMode(LAMP_PIN, OUTPUT);
     dht_sensor.begin();
@@ -34,7 +36,7 @@ Driver::Driver(int left_pin, int right_pin, int left_dir_pin, int right_dir_pin,
     last_msg_hand   = '0';
     previos_command = '0';
     rotation_speed  = 0.5 * speed;
-    rotation_time   = 1750;
+    rotation_time   = 1120;
 
     set_motors(0, 0);
     servo_arm.write(0);
@@ -84,12 +86,13 @@ void Driver::write_logs(char command, unsigned long time)
     double temp = get_temperature();
     double hum  = get_humidity();
     int brightness = analogRead(SENSOR_LIGHT);
-    int dist = get_distance();
+    int dist_forw = get_distance(SENSOR_DIST_FRONT);
+    int dist_side = get_distance(SENSOR_DIST_SIDE);
 
     String log_msg;
-    log_msg = "Time: " + String(time) + "; Command: " + String(command) + "; Distance: " + String(dist) 
-            + "; Temperature: " + String(temp, 2) + "; Humidity: " + String(hum, 2) + "; Brightness: "
-            + String(brightness) + " %";
+    log_msg = "Time: " + String(time) + "; Command: " + String(command) + "; Dist. Forw.: " + String(dist_forw) 
+            + "; Dist. Side: " + String(dist_side) + "; Temperature: " + String(temp, 2) + "; Humidity: "
+            + String(hum, 2) + "; Brightness: " + String(brightness) + " %";
 
     Serial.println(log_msg);
 }
@@ -141,23 +144,46 @@ double Driver::get_humidity()
     return hum;
 }
 
-long int Driver::get_distance()
+long int Driver::get_distance(uint8_t sensor)
 {
-    int IR_value = analogRead(SENSOR_DIST);
-    int distance = pow(10, log10(IR_value / 1821.2) / -0.65);
+    long int IR_value = analogRead(sensor);
+    long int distance = pow(10, log10(IR_value / 1821.2) / -0.65);
     if (distance <= 0) distance = 3 * CRITICAL_DISTANCE;
     return distance;
 }
 
 void Driver::drive_forward_until(const int dist)
 {
-    while (get_distance() > dist) {
+    while (get_distance(SENSOR_DIST_FRONT) > dist) {
         set_motors(speed, speed);
         if (read_command() == 's' || STOP_COMMAND) break;
     }
 
     stop_motors();
     sound_signal(100);
+}
+
+void Driver::autonomous_drive()
+{
+    long int dist_front, dist_side;
+    int e, u;
+
+    double kp = 2.5;
+
+    while (read_command() != 's' && !STOP_COMMAND) {
+        dist_front = get_distance(SENSOR_DIST_FRONT);
+        dist_side = get_distance(SENSOR_DIST_SIDE);
+
+        if (dist_front <= CRITICAL_DISTANCE) {
+            stop_motors();
+            turn_on_degree(45);
+        }
+
+        e = CRITICAL_DISTANCE * 0.9 - dist_side;
+        u = kp * e;
+        set_motors(110 - u, 110 + u);
+        delay(10);
+    }
 }
 
 void Driver::connection_lost_case()
@@ -186,7 +212,7 @@ void Driver::connection_lost_case()
 
 void Driver::turn_on_degree(const int degree)
 {
-    int millisecs = rotation_time / 360 * degree;
+    int millisecs = rotation_time / 360 * abs(degree);
     int delay_counter = 0;
 
     set_motors(-copysign(speed, degree), copysign(speed, degree));
@@ -207,7 +233,7 @@ void Driver::inspection()
 
     while (forward_counter < counter_limit) {
         set_motors(150, 150);
-        if (get_distance() < CRITICAL_DISTANCE * 1.5) break;
+        if (get_distance(SENSOR_DIST_FRONT) < CRITICAL_DISTANCE * 1.5) break;
         if (read_command() == 's' || STOP_COMMAND) break;
         delay(delay_time);
         forward_counter++;
@@ -263,16 +289,16 @@ void Driver::get_command_wheels(char command)
             stop_motors();
             break;
         case '1':
-            set_motors(speed, speed);  // Вперед
+            set_motors(speed, speed);    // Вперед
             break;
         case '2':
             set_motors(-speed, -speed);  // Назад
             break;
         case '3':
-            set_motors(speed, -speed);  // Поворот вправо
+            set_motors(speed, -speed);   // Поворот вправо
             break;
         case '4':
-            set_motors(-speed, speed);  // Поворот влево
+            set_motors(-speed, speed);   // Поворот влево
             break;
         default:
             stop_motors();
@@ -342,6 +368,8 @@ void Driver::get_command_other(char command)
             case 'o':
                 turn_on_degree(360);
                 break;
+            case 'g':
+                autonomous_drive();
             default:
                 break;
         }
