@@ -1,0 +1,20 @@
+logger:
+  debug: true           # output debug information
+  save: true            # write data to file
+driver:
+  max_leaner_vel: 0.5   # m/s
+tcp_server:
+  port: 10000
+  timeout: 500          # ms
+lidar:
+  device_name: "/dev/ttyACM1"
+  baudrate: 115200
+streamer:
+  server_ip: "0.0.0.0"
+  camera_dev: 0
+  port: 10001
+  quality: 70
+  interval: 50
+  pack_size: 4096
+  delay: 30
+  stream_switch: true

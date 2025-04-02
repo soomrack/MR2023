@@ -1,0 +1,13 @@
+[submodule "lib/youbot_driver"]
+	path = lib/youbot_driver
+	url = https://github.com/youbot/youbot_driver.git
+	branch = cmake
+[submodule "lib/yaml-cpp"]
+	path = lib/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "lib/urg_library"]
+	path = lib/urg_library
+	url = https://github.com/UrgNetwork/urg_library.git
+[submodule "lib/udp_streamer"]
+	path = lib/udp_streamer
+	url = https://github.com/KirillHit/udp_streamer.git
