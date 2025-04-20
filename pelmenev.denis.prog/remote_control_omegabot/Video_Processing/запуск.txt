@@ -1,0 +1,5 @@
+In MSYS2 run:
+
+python C:/Users/1/Desktop/Visual_Studio/pelmenev.denis.prog/remote_control_omegabot/Video_Processing/receive_gst.py
+
+/home/denispelm/.local/share/pipx/venvs/ultralytics/bin/python PowerShell
